@@ -8,14 +8,30 @@ description: Switchboard troubleshooting map.
 Troubleshooting pages should start from the exact failing stage and then point
 to the narrowest safe command.
 
-## Planned Pages
+## First Rule
 
-- Deployment and funding failures.
-- DNS and ACME failures.
-- Route activation and gateway failures.
-- Validator evidence failures.
-- Public SNI SSH diagnosis.
-- Local state, resume, and late-funding recovery.
+Do not retry a spend command until you know whether the previous attempt
+created an Acurast deployment, funded a Hub session, registered a job, or
+activated a route.
 
-Each page should include JSON output paths where available and redact secrets
-by default.
+Start read-only:
+
+```fish
+switchboard preflight --quote --json
+switchboard deploy status
+switchboard deploy doctor --report <report.json>
+switchboard status --json
+```
+
+## Pages
+
+- [Deployment Failures](./deploy.md): preflight, upload, funding, Acurast,
+  registration, timeout, and resume diagnosis.
+- [DNS And ACME Failures](./dns-acme.md): canonical DNS, customer CNAME,
+  challenge delegation, certificate authorization, and SNI probes.
+
+## Redaction
+
+Do not paste decrypted logs, full private workflow snapshots, local secret
+files, private keys, seeds, bearer tokens, DNS tokens, or raw runtime env into
+public issues.

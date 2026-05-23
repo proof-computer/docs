@@ -6,27 +6,72 @@ description: User documentation map for Switchboard.
 
 # Switchboard
 
-Switchboard provides production HTTPS ingress for supported long-running
-Acurast Node.js jobs.
+Switchboard gives supported long-running Acurast jobs a stable public HTTPS
+endpoint.
 
-The v1 documentation should stay focused on the supported private-beta path:
-install the CLI, configure local identities, launch a demo or deploy a
-webserver job, inspect status, and diagnose DNS, certificate, route, funding,
-or validation failures.
+It is not generic hosting and not a generic reverse proxy. The private-beta
+product is narrower: PROOF-operated ingress for Acurast webserver jobs where
+the job keeps the TLS private key, payment is funded through a signed Polkadot
+Hub quote, and route-open evidence is checked before activation and
+settlement.
+
+## What You Can Do Today
+
+- Launch the bundled Switchboard Express demo and get a public proof page.
+- Deploy a supported Node.js webserver project from `switchboard.json`.
+- Use job-owned TLS for canonical Switchboard hostnames.
+- Attach customer hostnames with DNS validation and certificate authorization.
+- Read deployment status, local workflow state, logs, and recovery hints.
+- Inspect claimable rewards, refundable sessions, validator script pins, and
+  signed service catalogs.
+- Prepare an early gateway host when PROOF has admitted the operator.
 
 ## Documentation Map
 
-- **Quickstart**: install, configure, preflight, deploy, and status.
-- **Guides**: common tasks such as customer domains and Cargo SSH jobs.
-- **Concepts**: trust model, lifecycle, settlement, validation, DNS, and TLS.
-- **SDK & Adapters**: runtime helpers, Express, Fastify, and workflow APIs.
-- **Operator Preview**: gateway-oriented material for early operators.
-- **Reference**: CLI, config, relay API, challenge endpoint, and env fields.
-- **Troubleshooting**: diagnosis paths for deployment and DNS/ACME failures.
+- [Quickstart](./quickstart/): install the CLI, configure a context, run
+  preflight, launch the demo, and deploy a project.
+- [Guides](./guides/): customer domains, Cargo SSH jobs, and task-oriented
+  workflows after the first deploy.
+- [Concepts](./concepts/): trust model, deployment lifecycle, Hub funding,
+  gateway routing, job-owned TLS, and validation.
+- [SDK & Adapters](./sdk-adapters/): Express, Fastify, core runtime helpers,
+  and deploy workflow primitives.
+- [Operator Preview](./operator-preview/): gateway host setup, discovery,
+  status, and upgrade flows for early operators.
+- [Reference](./reference/): CLI, config, environment, relay API, manifest,
+  and catalog surfaces.
+- [Troubleshooting](./troubleshooting/): diagnosis paths for deploy, funding,
+  DNS, ACME, route, and recovery failures.
 
 ## Product Boundary
 
-Switchboard is not generic hosting and not a generic reverse proxy. It is an
-operator-backed ingress layer for supported Acurast deployments where TLS
-terminates inside the job, quote funding lands on Polkadot Hub, and route-open
-evidence is validated before activation and settlement.
+Supported v1 workloads are long-running Node.js webserver jobs on Acurast. The
+normal app path serves:
+
+- `GET /` for application traffic.
+- `GET /health` for runtime health.
+- `GET /.well-known/proofcomputer/challenge?nonce=<value>` for validation.
+
+Not v1: arbitrary hosting, arbitrary runtimes, permissionless gateway
+marketplaces, delegated operator DNS zones, or gateway-terminated application
+TLS.
+
+## Install Surface
+
+Switchboard is available two ways:
+
+```fish
+npm install --global @proof-computer/proof-cli
+proof plugins install @proof-computer/proof-cli-switchboard
+proof switchboard --help
+```
+
+The standalone compatibility binary is also supported:
+
+```fish
+npm install --global @proof-computer/switchboard-cli
+switchboard help
+```
+
+The examples in these docs use `switchboard` for readability. The same user
+commands are available as `proof switchboard ...` through the PROOF CLI plugin.
