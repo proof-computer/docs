@@ -1,6 +1,6 @@
 ---
 title: Deployment Failures
-description: Deployment troubleshooting content target.
+description: Diagnose failed preflight, deploy, funding, and route stages.
 ---
 
 # Deployment Failures
@@ -10,9 +10,9 @@ Deployment failures are easier to handle when you name the failing stage first.
 ## Start Read-Only
 
 ```fish
-switchboard deploy status
-switchboard deploy doctor --report <report.json>
-switchboard status --json
+proof switchboard deploy status
+proof switchboard deploy doctor --report <report.json>
+proof switchboard status --json
 ```
 
 If you do not have a report path, check `.switchboard/` in the project
@@ -23,7 +23,7 @@ directory.
 Run:
 
 ```fish
-switchboard preflight --quote --json
+proof switchboard preflight --quote --json
 ```
 
 Common causes:
@@ -34,7 +34,6 @@ Common causes:
 - Polkadot payment address or seed is missing
 - Hub RPC is unreachable
 - accepted payment asset balance is low
-- DNS authority is missing for the current private-beta DNS path
 - deploy runner or local package artifacts are missing
 
 Fix preflight before running a spend command.
@@ -58,8 +57,8 @@ A signed quote must match the chain ID, registry, developer, accepted asset,
 and session terms. If funding fails:
 
 ```fish
-switchboard preflight --quote --json
-switchboard refundable --session-id <bytes32> --json
+proof switchboard preflight --quote --json
+proof switchboard refundable --session-id <bytes32> --json
 ```
 
 Do not assume refundability until the read-only command says the session is
@@ -75,7 +74,7 @@ For Script/Cargo SSH jobs, ensure the selected processor advertises the Shell
 module and use:
 
 ```fish
-switchboard deploy doctor --report <report.json> --probe
+proof switchboard deploy doctor --report <report.json> --probe
 ```
 
 ## Session Funded But Not Registered
@@ -83,8 +82,8 @@ switchboard deploy doctor --report <report.json> --probe
 The Acurast job has not completed job-signed registration. Check:
 
 ```fish
-switchboard status --json
-switchboard deploy doctor --report <report.json>
+proof switchboard status --json
+proof switchboard deploy doctor --report <report.json>
 ```
 
 Likely causes include job startup failure, missing runtime env, relay
@@ -96,14 +95,14 @@ Local timeouts can happen after remote actions succeeded. Do not run another
 spend command first.
 
 ```fish
-switchboard deploy status
-switchboard deploy doctor --report <report.json>
+proof switchboard deploy status
+proof switchboard deploy doctor --report <report.json>
 ```
 
 If the local private workflow state supports one safe recovery step:
 
 ```fish
-switchboard deploy resume --yes
+proof switchboard deploy resume --yes
 ```
 
 The CLI refuses late funding by default. Only use `--allow-late-funding` when

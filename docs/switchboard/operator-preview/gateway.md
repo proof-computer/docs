@@ -1,24 +1,73 @@
 ---
 title: Gateway Runtime
-description: Gateway operator content target.
+description: Gateway host setup and operations.
 ---
 
 # Gateway Runtime
 
-Gateway hosts provide L4/SNI route capacity for Switchboard.
+Gateway hosts provide L4/SNI route capacity for Switchboard. If you already
+run Acurast processors, the gateway is how those processors become useful for
+web workloads that need a public HTTPS endpoint.
+
+The host does not need to be expensive. Use existing compute first: a spare
+desktop, a small form-factor machine, an old laptop, or a laptop with a broken
+screen is fine when it can stay online. Save the high-value hardware for
+processor work; the gateway needs steady networking more than raw compute.
+The gateway host does not need to be one of your Acurast processors.
+
+## Requirements
+
+Before setup, make sure you have:
+
+- an Acurast manager address and manager ID
+- processors under that manager that can accept Switchboard workloads
+- a Linux host with Docker and Docker Compose
+- a stable public address or hostname for gateway traffic
+- firewall or router rules for the ports named in your admission bundle
+- local storage for Docker images, Envoy config, gateway state, and logs
+- a payout address for USDC route earnings
+
+Put the gateway near the processors it advertises. It must be able to reach
+their job ports reliably, and public clients must be able to reach the gateway
+for HTTPS/SNI traffic.
+
+Avoid machines that sleep when the lid closes, depend on Wi-Fi that drops
+under load, lose clock sync, or need hands-on recovery after power loss.
+
+## Earnings
+
+Gateways can earn USDC from paid Switchboard routes. The configured payout
+recipient accrues rewards after route validation and settlement. Uptime,
+fresh capability reports, route health, and demand for your advertised
+processors all matter.
+
+Read earnings before withdrawing:
+
+```fish
+proof switchboard claimable --recipient '<gateway payout address>'
+```
+
+Withdraw only with the payout key and an explicit confirmation:
+
+```fish
+proof switchboard claim --claim-private-key-env OPERATOR_CLAIM_PRIVATE_KEY --yes
+```
+
+Keep the payout private key off the gateway host when you can; claiming can be
+done from a separate trusted machine.
 
 ## Setup
 
 Run setup on the host that will run the gateway stack:
 
 ```fish
-switchboard gateway setup
+proof switchboard gateway setup
 ```
 
-For a PROOF-assisted admission request:
+To prepare an admission request:
 
 ```fish
-switchboard gateway setup \
+proof switchboard gateway setup \
   --manager-address '<acurast manager address>' \
   --manager-id '<manager id>' \
   --generate-report-seed \
@@ -27,12 +76,12 @@ switchboard gateway setup \
 
 This can write local Docker/Compose config, generate a local sr25519 report
 seed, and produce a redacted admission request. The seed is stored only in the
-operator env file with restrictive permissions.
+gateway env file with restrictive permissions.
 
-Apply an admission bundle from PROOF:
+Apply the admission bundle from PROOF:
 
 ```fish
-switchboard gateway setup --admission-file operator-admission.json --yes
+proof switchboard gateway setup --admission-file operator-admission.json --yes
 ```
 
 ## Discovery
@@ -40,25 +89,28 @@ switchboard gateway setup --admission-file operator-admission.json --yes
 Use discovery to check manager-scoped capacity and suggest gateway env values:
 
 ```fish
-switchboard gateway discover --manager-id '<manager id>' --public-address '<ip-or-host>'
+proof switchboard gateway discover --manager-id '<manager id>' --public-address '<ip-or-host>'
 ```
 
 Useful options:
 
 ```fish
-switchboard gateway discover --limit 20
-switchboard gateway discover --smoke-hostname '<sni hostname>'
-switchboard gateway discover --write-env .operator-host/operator.env
+proof switchboard gateway discover --limit 20
+proof switchboard gateway discover --smoke-hostname '<sni hostname>'
+proof switchboard gateway discover --write-env .operator-host/operator.env
 ```
 
 Discovery can check existing Acurast schedules by default. Use
 `--skip-availability` only when you intentionally want to skip conflict
 checks.
 
+Discovery is useful before you ask for admission. It shows which processors
+look reachable and which ones are already busy, stale, or schedule-conflicted.
+
 ## Status
 
 ```fish
-switchboard gateway status
+proof switchboard gateway status
 ```
 
 Status checks local Compose state, the gateway-agent API, and relay capability
@@ -68,13 +120,13 @@ restart, admission change, or route-state issue.
 ## Upgrade
 
 ```fish
-switchboard gateway upgrade --yes
+proof switchboard gateway upgrade --yes
 ```
 
 Dry-run the Docker Compose commands first:
 
 ```fish
-switchboard gateway upgrade --dry-run
+proof switchboard gateway upgrade --dry-run
 ```
 
 Use `--keep-image-override` if the host intentionally uses old or custom image

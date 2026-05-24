@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img" aria-labelledby="title desc">
+  <title id="title">Switchboard mark</title>
+  <desc id="desc">Two Beacon endpoint dots connected by an Ink cable arc.</desc>
+  <path d="M40 110 Q120 10 200 110" stroke="#0E1218" stroke-width="14" stroke-linecap="round" fill="none"/>
+  <circle cx="40" cy="110" r="22" fill="#FF6A2C"/>
+  <circle cx="200" cy="110" r="22" fill="#FF6A2C"/>
+</svg>

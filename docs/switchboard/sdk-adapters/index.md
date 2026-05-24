@@ -12,8 +12,8 @@ you need lower-level runtime or workflow control.
 
 ## Packages
 
-The current public runtime packages use the `@proofcomputer` npm scope and are
-available through GitHub installs during private beta:
+Runtime packages use the `@proofcomputer` npm scope and are installed from
+GitHub:
 
 - `@proofcomputer/switchboard-sdk`
 - `@proofcomputer/switchboard-express`
@@ -24,7 +24,6 @@ The CLI packages use the `@proof-computer` scope:
 
 - `@proof-computer/proof-cli`
 - `@proof-computer/proof-cli-switchboard`
-- `@proof-computer/switchboard-cli`
 
 ## Choose A Surface
 

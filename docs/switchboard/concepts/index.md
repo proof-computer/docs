@@ -13,13 +13,15 @@ Concept pages explain why Switchboard behaves the way it does.
   job, developer, relay, gateway, and PROOF.
 - [Deployment Lifecycle](./deployment-lifecycle.md): the stages from local
   intent to a validated public route.
+- [Ingress Session Flow](../reference/ingress-session-flow.md): sequence
+  diagrams for user deploys, Switchboard coordination, and HTTPS traffic.
 
 ## Core Model
 
 ```text
 Public client
   -> HTTPS
-  -> PROOF/operator gateway
+  -> Switchboard gateway
   -> L4/SNI passthrough
   -> Acurast processor job
   -> job-owned TLS termination
@@ -30,11 +32,11 @@ Switchboard coordinates three separate systems:
 
 - Acurast runs the job.
 - Polkadot Hub holds the paid ingress session and settlement state.
-- PROOF relays, gateways, validators, DNS, and ACME automation provide the v1
+- PROOF relays, gateways, validators, DNS, and ACME automation provide the
   ingress service.
 
 The CLI is the local signer and progress shell. Long-lived coordination moves
-through the relay/control plane and gateway read models.
+through the relay/control plane and gateway state.
 
 ## Stable Invariants
 
@@ -45,9 +47,8 @@ through the relay/control plane and gateway read models.
   gateway route readiness, and validator evidence.
 - Customer hostname changes require developer authority for the funded session.
 
-## Beta Details
+## Operational Details
 
-Some operational details are private-beta implementation choices rather than
-permanent product requirements. For example, the current private-beta DNS path
-may require a Cloudflare token in local developer context, while the target
-public trust model keeps DNS authority PROOF-operated or explicitly delegated.
+Customer hostnames may require you to create CNAME or TXT records in your own
+DNS zone. PROOF-managed DNS and ACME provider credentials stay in
+PROOF-operated infrastructure, not in normal builder contexts.

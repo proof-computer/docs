@@ -1,6 +1,6 @@
 ---
 title: Relay API
-description: Relay and control-plane API content target.
+description: Manifests, observability, registration, and hostname APIs.
 ---
 
 # Relay API
@@ -33,8 +33,8 @@ Service catalogs are referenced by the signed manifest and verified under the
 Read-only diagnostics:
 
 ```fish
-switchboard catalog inspect --url '<catalog url>' --json
-switchboard catalog verify --manifest-url '<manifest url>' --manifest-signer '<signer>'
+proof switchboard catalog inspect --url '<catalog url>' --json
+proof switchboard catalog verify --manifest-url '<manifest url>' --manifest-signer '<signer>'
 ```
 
 Catalog references must name a trusted signer or pin the exact response body
@@ -67,7 +67,7 @@ Relay requests use action-specific authority:
 - job registration is signed by the expected job signer
 - certificate requests are signed by the expected job signer
 - customer-hostname changes are signed by the funded session developer
-- operator/admin routes require scoped bearer tokens
+- gateway or admin routes require scoped bearer tokens
 
 The relay can submit signed material, but it should not be able to forge the
 job or developer authority.
@@ -77,7 +77,7 @@ job or developer authority.
 Use the CLI for readback:
 
 ```fish
-switchboard hostname status app.example.com --json
+proof switchboard hostname status app.example.com --json
 ```
 
 Status can report DNS validation, `_acme-challenge` delegation, manual TXT

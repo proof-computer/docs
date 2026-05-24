@@ -6,6 +6,29 @@ const config: Config = {
   title: 'PROOF Docs',
   tagline: 'Documentation for PROOF products',
   favicon: 'img/proof-mark.svg',
+  stylesheets: [
+    {
+      href: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap',
+      type: 'text/css',
+    },
+  ],
+  headTags: [
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'preconnect',
+        href: 'https://fonts.googleapis.com',
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'preconnect',
+        href: 'https://fonts.gstatic.com',
+        crossorigin: 'anonymous',
+      },
+    },
+  ],
 
   url: 'https://docs.proof.computer',
   baseUrl: '/',
@@ -15,6 +38,7 @@ const config: Config = {
 
   onBrokenLinks: 'throw',
   markdown: {
+    mermaid: true,
     hooks: {
       onBrokenMarkdownLinks: 'warn',
     },
@@ -43,11 +67,13 @@ const config: Config = {
     ],
   ],
 
+  themes: ['@docusaurus/theme-mermaid'],
+
   themeConfig: {
     navbar: {
-      title: 'PROOF Docs',
+      title: 'PROOF',
       logo: {
-        alt: 'PROOF',
+        alt: 'PROOF Beacon mark',
         src: 'img/proof-mark.svg',
       },
       items: [
@@ -84,8 +110,8 @@ const config: Config = {
               href: 'https://www.npmjs.com/package/@proof-computer/proof-cli',
             },
             {
-              label: 'Switchboard CLI',
-              href: 'https://www.npmjs.com/package/@proof-computer/switchboard-cli',
+              label: 'Switchboard Plugin',
+              href: 'https://www.npmjs.com/package/@proof-computer/proof-cli-switchboard',
             },
           ],
         },

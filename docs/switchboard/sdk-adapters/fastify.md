@@ -1,6 +1,6 @@
 ---
 title: Fastify Adapter
-description: Fastify adapter content target.
+description: Add Switchboard endpoints to a Fastify app.
 ---
 
 # Fastify Adapter
@@ -10,7 +10,7 @@ Switchboard.
 
 ## Install
 
-During private beta, install from GitHub:
+Install from GitHub:
 
 ```fish
 npm install github:proof-computer/switchboard-fastify#v0.1.2 fastify
@@ -49,4 +49,4 @@ directly with `switchboardFastify`.
 
 Keep local development separate from live deploy configuration. Do not commit
 Acurast seeds, Polkadot payment seeds, EVM developer keys, DNS tokens, or
-PROOF operator material into a Fastify app repo.
+PROOF gateway admission material into a Fastify app repo.

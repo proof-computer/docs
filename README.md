@@ -1,10 +1,11 @@
 # PROOF Docs
 
-Public documentation site for PROOF products.
+Public documentation site for running services on PROOF's confidential-compute
+stack.
 
-Switchboard is the first published product area. Slipway, Blackbox, and
-Lockbox are reserved as future product areas, but this site should not expose
-placeholder navigation for them until their public docs are ready.
+Switchboard docs cover secure HTTP ingress for supported Acurast jobs. Slipway,
+Blackbox, and Lockbox are in progress and stay out of navigation until their
+public docs are ready.
 
 ## Development
 
@@ -22,9 +23,9 @@ The site is a Docusaurus TypeScript project. Switchboard docs live under
 
 - Keep user-facing docs aligned with public package surfaces, not internal
   monorepo paths.
-- Mark unfinished pages as content targets instead of publishing stale
-  operational instructions.
-- Keep Switchboard's v1 scope narrow: production HTTPS ingress for supported
-  long-running Acurast Node.js jobs, not generic hosting.
+- Keep unfinished pages short and clear about the user's next useful step.
+- Describe Switchboard as secure HTTPS ingress for supported long-running
+  Acurast Node.js jobs. Explain unsupported hosting cases as requirements, not
+  internal release staging.
 - Do not add Slipway, Blackbox, or Lockbox navigation until their public docs
   are ready.

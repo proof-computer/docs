@@ -5,15 +5,15 @@ description: The first path from install to public HTTPS endpoint.
 
 # Quickstart
 
-This is the shortest private-beta path from a local machine to a public
-Switchboard HTTPS endpoint.
+This is the fastest path from a local machine to a public Switchboard HTTPS
+endpoint.
 
 Use the bundled demo first. It exercises the real deploy path, spends only
 when you pass `--yes-spend`, and renders a proof page showing route, Acurast
 job, Hub registration, job-owned TLS, challenge traffic, and observability
 state.
 
-## 1. Install
+## 1. Install The PROOF CLI
 
 ```fish
 npm install --global @proof-computer/proof-cli
@@ -21,92 +21,53 @@ proof plugins install @proof-computer/proof-cli-switchboard
 proof switchboard --help
 ```
 
-Or install the standalone binary:
+The PROOF CLI currently requires Node.js 22 or newer.
 
-```fish
-npm install --global @proof-computer/switchboard-cli
-switchboard help
-```
-
-Switchboard CLI packages currently require Node.js 22 or newer.
-
-## 2. Configure Local Secrets
-
-Use the private-beta values PROOF gives you. Keep them in your shell, password
-manager, or a local secret file. Do not commit them.
-
-```fish
-set -gx ACURAST_NETWORK mainnet
-set -gx ACURAST_MAINNET_SEED '<funded acurast mnemonic>'
-set -gx ACURAST_MAINNET_ADDRESS '<expected acurast ss58 address>'
-
-set -gx POLKADOT_ADDRESS '<funded polkadot ss58 address>'
-set -gx POLKADOT_SEED '<funded polkadot seed uri or mnemonic>'
-
-set -gx OPERATOR_ID '<proof beta operator id>'
-set -gx CLOUDFLARE_API_TOKEN '<proof beta dns token>'
-```
-
-Do not put PROOF relayer keys, recorder keys, validator signing seeds,
-operator gateway secrets, ACME account keys, or control-plane bearer tokens in
-developer app repos.
-
-## 3. Create A Context
+## 2. Use The Wizard
 
 Contexts store non-secret metadata and environment variable names under
 `~/.switchboard/contexts.json`.
 
 ```fish
-switchboard context add mainnet
-switchboard context dns set cloudflare --token-env CLOUDFLARE_API_TOKEN
-switchboard context current
+proof switchboard context add mainnet
+proof switchboard context current
 ```
 
 `context add` is interactive. It prompts for Acurast and Polkadot identities,
 derives addresses from configured seeds, and runs soft balance checks for ACU,
 Hub native token, and the default accepted Hub asset.
 
-For scripted setup, use `context set`:
+Keep secret values in your shell, password manager, or local secret file. Do
+not put local signing material or deployment credentials in app repos.
+
+## 3. Run Preflight
 
 ```fish
-switchboard context set mainnet \
-  --use \
-  --operator-id $OPERATOR_ID \
-  --acurast-seed-env ACURAST_MAINNET_SEED \
-  --acurast-address-env ACURAST_MAINNET_ADDRESS \
-  --polkadot-address-env POLKADOT_ADDRESS \
-  --polkadot-seed-env POLKADOT_SEED \
-  --cloudflare-api-token-env CLOUDFLARE_API_TOKEN
-```
-
-## 4. Run Preflight
-
-```fish
-switchboard preflight --quote
+proof switchboard preflight --quote
 ```
 
 Preflight checks the signed network manifest, control-plane health, Hub RPCs,
-Acurast identity, Polkadot payment identity, accepted assets, DNS authority,
-and local deploy runner availability.
+Acurast identity, Polkadot payment identity, accepted assets, and local deploy
+runner availability.
 
 Use JSON for automation or support tickets:
 
 ```fish
-switchboard preflight --quote --json
+proof switchboard preflight --quote --json
 ```
 
-## 5. Launch The Demo
+## 4. Launch The Demo
 
 Inspect the plan without spending:
 
 ```fish
-switchboard launch-demo --dry-run
+proof switchboard launch-demo --dry-run
 ```
 
 Launch when you are ready to spend ACU and the configured Hub payment asset:
 
 ```fish
-switchboard launch-demo --yes-spend
+proof switchboard launch-demo --yes-spend
 ```
 
 The CLI selects live capacity, creates a temporary project using
@@ -114,25 +75,25 @@ The CLI selects live capacity, creates a temporary project using
 Switchboard quote, waits for registration and route readiness, then prints the
 public URL.
 
-## 6. Deploy Your Own Project
+## 5. Deploy Your Own Project
 
 From your app directory:
 
 ```fish
-switchboard init \
+proof switchboard init \
   --project hello-api \
-  --endpoint hello-<name>.ingress.works \
   --context mainnet \
   --quote \
   --activate
 
-switchboard preflight --quote
-switchboard deploy --yes --dry-run --json
-switchboard deploy --yes --duration-minutes 60
-switchboard status
+proof switchboard preflight --quote
+proof switchboard deploy --yes --dry-run --json
+proof switchboard deploy --yes --duration-minutes 60
+proof switchboard status
 ```
 
-`switchboard init` writes `switchboard.json` and `.switchboard/`. Deployment
+`proof switchboard init` writes `switchboard.json` and `.switchboard/`.
+Switchboard allocates the public PROOF endpoint during deployment. Deployment
 state, reports, and workflow snapshots stay under `.switchboard/` in the
 project directory.
 

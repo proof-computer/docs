@@ -1,11 +1,11 @@
 ---
 title: Launch The Demo
-description: Demo launch IA for the Switchboard public proof page.
+description: Run the bundled Switchboard proof page.
 ---
 
 # Launch The Demo
 
-`switchboard launch-demo` deploys the supported Switchboard Express demo and
+`proof switchboard launch-demo` deploys the supported Switchboard Express demo and
 prints a public HTTPS URL.
 
 Use it before deploying your own app. It proves the whole path with a known
@@ -38,7 +38,7 @@ GET /v1/deployment-intents/:intentId/observability
 Dry-run mode does not deploy, fund, mutate DNS, or create routes:
 
 ```fish
-switchboard launch-demo --dry-run
+proof switchboard launch-demo --dry-run
 ```
 
 Use it to check selected capacity, planned config, and quote preview behavior
@@ -47,22 +47,21 @@ before spend.
 ## Live Launch
 
 ```fish
-switchboard launch-demo --yes-spend
+proof switchboard launch-demo --yes-spend
 ```
 
 `--yes-spend` is required because the command spends ACU for the Acurast job
 and the configured Hub payment asset for the Switchboard ingress quote.
 
-The command uses a fixed 3 minute Acurast start delay. It auto-selects live
-operator capacity unless you pin capacity with flags such as `--gateway-id` or
-`--processor`.
+The command uses a fixed 3 minute Acurast start delay and auto-selects live
+gateway capacity.
 
 Useful options:
 
 ```fish
-switchboard launch-demo --yes-spend --duration-minutes 60
-switchboard launch-demo --yes-spend --ha
-switchboard launch-demo --dry-run --json
+proof switchboard launch-demo --yes-spend --duration-minutes 60
+proof switchboard launch-demo --yes-spend --ha
+proof switchboard launch-demo --dry-run --json
 ```
 
 ## Required Upload Configuration
@@ -98,9 +97,9 @@ If the local command times out after remote progress, do not immediately rerun
 with spend. Check state first:
 
 ```fish
-switchboard deploy status
-switchboard deploy doctor --report <report.json>
-switchboard status --json
+proof switchboard deploy status
+proof switchboard deploy doctor --report <report.json>
+proof switchboard status --json
 ```
 
 Use `deploy resume` only when `deploy status` or `deploy doctor` reports a

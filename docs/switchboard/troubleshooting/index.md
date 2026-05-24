@@ -17,10 +17,10 @@ activated a route.
 Start read-only:
 
 ```fish
-switchboard preflight --quote --json
-switchboard deploy status
-switchboard deploy doctor --report <report.json>
-switchboard status --json
+proof switchboard preflight --quote --json
+proof switchboard deploy status
+proof switchboard deploy doctor --report <report.json>
+proof switchboard status --json
 ```
 
 ## Pages

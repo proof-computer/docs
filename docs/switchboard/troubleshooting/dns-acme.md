@@ -1,6 +1,6 @@
 ---
 title: DNS And ACME Failures
-description: DNS and certificate troubleshooting content target.
+description: Diagnose DNS, ACME, and SNI route problems.
 ---
 
 # DNS And ACME Failures
@@ -11,28 +11,29 @@ problems, or hostname/SNI probe mistakes.
 ## Start With Status
 
 ```fish
-switchboard hostname status app.example.com --json
-switchboard status --json
+proof switchboard hostname status app.example.com --json
+proof switchboard status --json
 ```
 
 For deploy-level diagnosis:
 
 ```fish
-switchboard deploy doctor --report <report.json> --probe
+proof switchboard deploy doctor --report <report.json> --probe
 ```
 
-## DNS Authority Missing
+## Canonical DNS Not Ready
 
-If preflight says DNS authority is missing, confirm:
+The canonical Switchboard endpoint uses PROOF-managed DNS and ACME authority.
+Builders should not configure Cloudflare or other PROOF zone credentials in
+their local context.
+
+If the canonical endpoint is not resolving or the job-owned certificate is not
+progressing, run read-only diagnostics and share the report with PROOF support:
 
 ```fish
-set -gx CLOUDFLARE_API_TOKEN '<proof beta dns token>'
-switchboard context dns set cloudflare --token-env CLOUDFLARE_API_TOKEN
-switchboard preflight --quote
+proof switchboard preflight --quote --json
+proof switchboard deploy doctor --report <report.json> --probe
 ```
-
-`preflight --no-dns` is useful for diagnostics, but the normal job-owned ACME
-deploy path expects real DNS.
 
 ## Customer CNAME Not Validated
 
@@ -40,7 +41,7 @@ Check that your traffic CNAME points at the canonical endpoint Switchboard
 printed. Then check status:
 
 ```fish
-switchboard hostname status app.example.com
+proof switchboard hostname status app.example.com
 ```
 
 The CLI may show DNS control-panel hints from NS records. Those hints are not
@@ -86,7 +87,7 @@ curl -v https://app.example.com/
 For SNI route diagnosis:
 
 ```fish
-switchboard deploy doctor --report <report.json> --probe
+proof switchboard deploy doctor --report <report.json> --probe
 ```
 
 ## BYO TLS

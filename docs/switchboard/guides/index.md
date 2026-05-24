@@ -27,19 +27,19 @@ Most Switchboard workflows follow the same pattern:
 For deploys, use:
 
 ```fish
-switchboard preflight --quote
-switchboard deploy --yes --dry-run --json
-switchboard deploy --yes
-switchboard status
+proof switchboard preflight --quote
+proof switchboard deploy --yes --dry-run --json
+proof switchboard deploy --yes
+proof switchboard status
 ```
 
 For local recovery, start read-only:
 
 ```fish
-switchboard deploy status
-switchboard deploy doctor --report <report.json>
+proof switchboard deploy status
+proof switchboard deploy doctor --report <report.json>
 ```
 
-Do not use admin or operator-only recovery commands from old runbooks unless
-PROOF support asks you to. Public user workflows should stay on the normal
-Switchboard CLI surface.
+Do not use admin recovery commands from old runbooks unless PROOF support asks
+you to. Public user workflows should stay on the normal Switchboard CLI
+surface.

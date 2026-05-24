@@ -1,6 +1,6 @@
 ---
 title: SDK Workflows
-description: Deploy workflow API content target.
+description: Build trusted deploy tooling on Switchboard APIs.
 ---
 
 # SDK Workflows
@@ -8,7 +8,7 @@ description: Deploy workflow API content target.
 The SDK contains runtime helpers and deploy workflow primitives for callers
 that are not the interactive CLI.
 
-Most users should use `switchboard deploy`. Use SDK workflow APIs when you are
+Most users should use `proof switchboard deploy`. Use SDK workflow APIs when you are
 building another trusted shell that can provide its own Acurast, Hub funding,
 confirmation, and persistence adapters.
 

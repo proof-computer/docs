@@ -34,7 +34,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Operator Preview',
+      label: 'Gateway Operators',
       link: {type: 'doc', id: 'operator-preview/index'},
       items: ['operator-preview/gateway'],
     },
@@ -42,7 +42,12 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Reference',
       link: {type: 'doc', id: 'reference/index'},
-      items: ['reference/cli', 'reference/config', 'reference/relay-api'],
+      items: [
+        'reference/ingress-session-flow',
+        'reference/cli',
+        'reference/config',
+        'reference/relay-api',
+      ],
     },
     {
       type: 'category',

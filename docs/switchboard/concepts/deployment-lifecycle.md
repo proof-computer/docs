@@ -1,17 +1,17 @@
 ---
 title: Deployment Lifecycle
-description: Switchboard deployment lifecycle content target.
+description: What happens after deploy starts.
 ---
 
 # Deployment Lifecycle
 
-Switchboard deploys cross local signing, Acurast compute, Hub funding, relay
-coordination, DNS, certificate issuance, gateway routing, and validator
+A Switchboard deploy crosses local signing, Acurast compute, Hub funding,
+relay coordination, DNS, certificate issuance, gateway routing, and validator
 evidence. Diagnose failures by stage.
 
 ## 1. Local Project And Context
 
-`switchboard init` writes directory-local project config:
+`proof switchboard init` writes directory-local project config:
 
 ```text
 switchboard.json
@@ -23,7 +23,7 @@ names for secrets.
 
 ## 2. Preflight
 
-`switchboard preflight --quote` checks the local and network prerequisites
+`proof switchboard preflight --quote` checks the local and network prerequisites
 before spend:
 
 - signed network manifest
@@ -32,7 +32,6 @@ before spend:
 - Acurast deploy identity
 - Polkadot payment identity
 - accepted quote asset
-- DNS authority
 - deploy runner availability
 
 ## 3. Dry Run
@@ -41,8 +40,8 @@ Dry runs inspect the plan without deploying, funding, creating DNS, or
 mutating routes:
 
 ```fish
-switchboard launch-demo --dry-run
-switchboard deploy --yes --dry-run --json
+proof switchboard launch-demo --dry-run
+proof switchboard deploy --yes --dry-run --json
 ```
 
 `deploy --yes --dry-run` accepts `--yes` because it exercises the deployer
@@ -97,9 +96,9 @@ fulfillment is written.
 Start with read-only commands:
 
 ```fish
-switchboard status
-switchboard deploy status
-switchboard deploy doctor --report <report.json>
+proof switchboard status
+proof switchboard deploy status
+proof switchboard deploy doctor --report <report.json>
 ```
 
 Use `deploy resume --yes` only when local workflow state says a single-replica

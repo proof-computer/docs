@@ -1,6 +1,6 @@
 ---
 title: Trust Model
-description: Switchboard trust boundary content target.
+description: Who holds keys, routes, and authority.
 ---
 
 # Trust Model
@@ -79,7 +79,7 @@ Do not commit or bundle:
 - PROOF control-plane bearer tokens
 - PROOF relayer or recorder keys
 - validator signing seeds
-- operator gateway admission or route-state tokens
+- gateway admission or route-state tokens
 - ACME account private keys
 
 Switchboard contexts store environment variable names and non-secret metadata,

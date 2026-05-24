@@ -10,6 +10,8 @@ locations, config precedence, and API boundaries.
 
 ## Pages
 
+- [Ingress Session Flow](./ingress-session-flow.md): visual sequence diagrams
+  for user deploys, Switchboard coordination, and HTTPS traffic.
 - [CLI Reference](./cli.md): public commands, advanced commands, mutating
   surfaces, and read-only diagnostics.
 - [Config Reference](./config.md): project config, contexts, secret files,
@@ -21,7 +23,7 @@ locations, config precedence, and API boundaries.
 
 Current public CLI packages:
 
-- `@proof-computer/switchboard-cli@0.2.0`
+- `@proof-computer/proof-cli`
 - `@proof-computer/proof-cli-switchboard@0.2.0`
 
 Current runtime packages in the public repos:
@@ -31,6 +33,6 @@ Current runtime packages in the public repos:
 - `@proofcomputer/switchboard-fastify@0.1.2`
 - `@proofcomputer/switchboard-express-demo@0.1.8`
 
-During private beta, package publication channels may differ between CLI and
-runtime packages. Treat installed package help and release notes as the final
-source for the exact version on your machine.
+CLI and runtime packages can be released on different cadences. Treat
+installed package help and release notes as the final source for the exact
+version on your machine.

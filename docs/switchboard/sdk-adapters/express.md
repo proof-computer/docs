@@ -1,6 +1,6 @@
 ---
 title: Express Adapter
-description: Express adapter content target.
+description: Add Switchboard endpoints to an Express app.
 ---
 
 # Express Adapter
@@ -10,7 +10,7 @@ Switchboard.
 
 ## Install
 
-During private beta, install from GitHub:
+Install from GitHub:
 
 ```fish
 npm install github:proof-computer/switchboard-express#v0.1.1 express
@@ -54,5 +54,5 @@ Run your app locally with certificate automation disabled or with local test
 values. Do not use production Acurast, payment, DNS, or PROOF secrets for a
 local-only Express preview.
 
-For the packaged demo app, use `switchboard launch-demo` rather than copying
+For the packaged demo app, use `proof switchboard launch-demo` rather than copying
 demo renderer code into your project.

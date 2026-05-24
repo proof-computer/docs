@@ -1,6 +1,6 @@
 ---
 title: Cargo SSH Jobs
-description: Cargo SSH and Script runtime documentation target.
+description: Run inspectable Script runtime jobs over Switchboard.
 ---
 
 # Cargo SSH Jobs
@@ -17,7 +17,7 @@ and certificate requests.
 
 ```fish
 mkdir -p switchboard-ssh-demo
-switchboard init \
+proof switchboard init \
   --template ssh \
   --distro ubuntu \
   --project-dir ./switchboard-ssh-demo \
@@ -37,9 +37,9 @@ It does not fall back to `JOB_SIGNER_PRIVATE_KEY` inside the job.
 
 ```fish
 cd switchboard-ssh-demo
-switchboard preflight --quote
-switchboard deploy --yes --dry-run --json
-switchboard deploy --yes
+proof switchboard preflight --quote
+proof switchboard deploy --yes --dry-run --json
+proof switchboard deploy --yes
 ```
 
 Script runtime deploys require Acurast processors that advertise the Shell
@@ -54,7 +54,7 @@ TLS/SNI passthrough to the job, which then exposes the SSH banner.
 If you are diagnosing the route, start with:
 
 ```fish
-switchboard deploy doctor --report <report.json> --probe
+proof switchboard deploy doctor --report <report.json> --probe
 ```
 
 `--probe` is read-only. It performs public TLS/SNI and SSH banner checks. It

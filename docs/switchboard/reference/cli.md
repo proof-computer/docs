@@ -1,21 +1,17 @@
 ---
 title: CLI Reference
-description: CLI command reference content target.
+description: Command names, flags, and mutation boundaries.
 ---
 
 # CLI Reference
 
-Switchboard commands are available through the PROOF plugin and the standalone
-compatibility binary.
+Switchboard commands are available through the PROOF CLI plugin.
 
 ```fish
 proof switchboard --help
-switchboard help
 ```
 
-The examples below use `switchboard`.
-
-## Public Beta Commands
+## Primary Commands
 
 | Command | Purpose | Mutates or spends |
 | --- | --- | --- |
@@ -23,7 +19,6 @@ The examples below use `switchboard`.
 | `project show` | inspect project config and latest state | no |
 | `context add` | interactive context setup | local context file |
 | `context set/use/list/current` | manage named contexts | local context file except list/current |
-| `context dns set/clear` | attach or detach DNS token env name | local context file |
 | `preflight` | check readiness | no |
 | `launch-demo` | deploy bundled demo | yes with `--yes-spend` |
 | `deploy` | deploy project workload | yes with `--yes` |
@@ -47,7 +42,7 @@ The examples below use `switchboard`.
 Run:
 
 ```fish
-switchboard --help --advanced
+proof switchboard --help --advanced
 ```
 
 Advanced surfaces include:
@@ -55,6 +50,7 @@ Advanced surfaces include:
 - `session register/status/refund/refundable`
 - `validator launch/script`
 - `catalog build/inspect/verify/set-state`
+- PROOF support DNS context commands, such as `context dns set/clear`
 - relay and bootstrap admin commands
 - ops profile commands under `ops`
 
@@ -93,13 +89,13 @@ Payment and signing flags include:
 Many read-only commands support `--json`:
 
 ```fish
-switchboard preflight --quote --json
-switchboard status --json
-switchboard deploy status --json
-switchboard deploy doctor --report report.json --json
-switchboard hostname status app.example.com --json
-switchboard validator script --json
-switchboard catalog inspect --url '<catalog url>' --json
+proof switchboard preflight --quote --json
+proof switchboard status --json
+proof switchboard deploy status --json
+proof switchboard deploy doctor --report report.json --json
+proof switchboard hostname status app.example.com --json
+proof switchboard validator script --json
+proof switchboard catalog inspect --url '<catalog url>' --json
 ```
 
 JSON output should be redacted by default. Do not paste raw deployment reports

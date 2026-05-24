@@ -1,16 +1,16 @@
 ---
 title: Config Reference
-description: Switchboard configuration content target.
+description: Project config, contexts, secrets, and overrides.
 ---
 
 # Config Reference
 
 Switchboard deliberately separates project config, local identity context,
-secret values, and operator/admin config.
+secret values, and gateway/admin config.
 
 ## Project Files
 
-Created by `switchboard init`:
+Created by `proof switchboard init`:
 
 ```text
 switchboard.json
@@ -18,7 +18,9 @@ switchboard.json
 ```
 
 `switchboard.json` stores directory-local project defaults such as project
-name, endpoint, context, and Acurast runtime settings.
+name, context, and Acurast runtime settings. The public PROOF endpoint is
+allocated during deployment; app builders do not choose hostnames under
+PROOF-owned domains.
 
 `.switchboard/` stores local deployment state, latest report pointers,
 workflow snapshots, and local caches. Treat it as local state, not source code.
@@ -55,7 +57,7 @@ PROOF/admin operations use a separate profile area:
 Inspect paths with:
 
 ```fish
-switchboard ops paths mainnet
+proof switchboard ops paths mainnet
 ```
 
 Normal app deploys should not require ops profiles.
@@ -70,10 +72,25 @@ ACURAST_MAINNET_SEED
 ACURAST_MAINNET_ADDRESS
 POLKADOT_ADDRESS
 POLKADOT_SEED
-OPERATOR_ID
-CLOUDFLARE_API_TOKEN
 DEVELOPER_PRIVATE_KEY
 ```
+
+Gateway/admin context:
+
+```text
+OPERATOR_ID
+```
+
+`OPERATOR_ID` is for gateway operation and explicit capacity pinning. Normal
+app deploys select available gateway capacity without requiring a gateway ID
+in the builder context.
+
+## DNS And ACME Authority
+
+DNS-provider tokens for PROOF-managed zones, including Cloudflare tokens, are
+PROOF infrastructure credentials. Normal app deploys and customer-domain
+setup should not require `CLOUDFLARE_API_TOKEN` in a builder context or app
+repository.
 
 Network and manifest overrides:
 
@@ -90,8 +107,8 @@ ACURAST_IPFS_URL
 ACURAST_IPFS_API_KEY
 ```
 
-Use overrides only when PROOF gives you alternate beta values or when you are
-running a controlled local lab.
+Use overrides only when PROOF gives you alternate environment values or when
+you are running a controlled local lab.
 
 ## Precedence
 

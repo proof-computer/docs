@@ -1,45 +1,54 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 520" role="img" aria-labelledby="title desc">
   <title id="title">Switchboard route flow</title>
   <desc id="desc">A public client reaches a PROOF gateway, which routes TLS through to an Acurast job with job-owned certificate material.</desc>
-  <rect width="760" height="520" fill="#f8faf7"/>
-  <rect x="44" y="56" width="672" height="408" rx="22" fill="#ffffff" stroke="#dfe4df" stroke-width="2"/>
-  <text x="72" y="104" fill="#17695d" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Switchboard ingress path</text>
-  <text x="72" y="132" fill="#5f6368" font-family="Inter, Arial, sans-serif" font-size="15">TLS private key stays inside the Acurast job</text>
+  <rect width="760" height="520" rx="0" fill="#F7F8FA"/>
+  <rect x="36" y="42" width="688" height="436" rx="20" fill="#FFFFFF" stroke="#E7EAEE" stroke-width="2"/>
+  <path d="M98 360 Q380 34 662 360" stroke="#E7EAEE" stroke-width="34" stroke-linecap="round" fill="none"/>
+  <path d="M98 360 Q380 34 662 360" stroke="#1A2538" stroke-width="14" stroke-linecap="round" fill="none"/>
+  <circle cx="98" cy="360" r="25" fill="#FF6A2C"/>
+  <circle cx="662" cy="360" r="25" fill="#FF6A2C"/>
 
-  <g transform="translate(78 194)">
-    <rect width="150" height="118" rx="14" fill="#f4f7f4" stroke="#cad4cc"/>
-    <circle cx="38" cy="44" r="18" fill="#17695d"/>
-    <path d="M30 44h16M38 36v16" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
-    <text x="24" y="86" fill="#1b1b1f" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700">Public client</text>
-    <text x="24" y="108" fill="#5f6368" font-family="Inter, Arial, sans-serif" font-size="13">HTTPS request</text>
+  <text x="70" y="96" fill="#0E1218" font-family="Space Grotesk, Inter, Arial, sans-serif" font-size="28" font-weight="700">Switchboard ingress path</text>
+  <text x="70" y="126" fill="#3D4654" font-family="Inter, Arial, sans-serif" font-size="15">TLS private key stays inside the Acurast job.</text>
+
+  <g transform="translate(70 190)">
+    <rect width="174" height="132" rx="10" fill="#F7F8FA" stroke="#E7EAEE"/>
+    <circle cx="46" cy="44" r="18" fill="#1A2538"/>
+    <path d="M36 44h20M46 34v20" stroke="#F7F8FA" stroke-width="4" stroke-linecap="round"/>
+    <text x="24" y="92" fill="#0E1218" font-family="Space Grotesk, Inter, Arial, sans-serif" font-size="18" font-weight="700">Public client</text>
+    <text x="24" y="114" fill="#3D4654" font-family="Inter, Arial, sans-serif" font-size="13">HTTPS request</text>
   </g>
 
-  <g transform="translate(306 194)">
-    <rect width="150" height="118" rx="14" fill="#fdf6f1" stroke="#ead3c2"/>
-    <path d="M38 28h46a18 18 0 0 1 0 36H38a18 18 0 0 1 0-36Z" fill="#d76835"/>
-    <path d="M55 46h39" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
-    <text x="24" y="86" fill="#1b1b1f" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700">PROOF gateway</text>
-    <text x="24" y="108" fill="#5f6368" font-family="Inter, Arial, sans-serif" font-size="13">L4/SNI passthrough</text>
+  <g transform="translate(293 176)">
+    <rect width="174" height="158" rx="10" fill="#1A2538" stroke="#1A2538"/>
+    <path d="M38 58 Q87 10 136 58" stroke="#F7F8FA" stroke-width="8" stroke-linecap="round" fill="none"/>
+    <circle cx="38" cy="58" r="14" fill="#FF6A2C"/>
+    <circle cx="136" cy="58" r="14" fill="#FF6A2C"/>
+    <text x="24" y="110" fill="#F7F8FA" font-family="Space Grotesk, Inter, Arial, sans-serif" font-size="18" font-weight="700">PROOF gateway</text>
+    <text x="24" y="132" fill="#E7EAEE" font-family="Inter, Arial, sans-serif" font-size="13">L4/SNI passthrough</text>
   </g>
 
-  <g transform="translate(534 194)">
-    <rect width="150" height="118" rx="14" fill="#f4f7f4" stroke="#cad4cc"/>
-    <rect x="28" y="27" width="52" height="42" rx="8" fill="#17695d"/>
-    <path d="M42 27v-7a12 12 0 0 1 24 0v7" fill="none" stroke="#17695d" stroke-width="7" stroke-linecap="round"/>
-    <circle cx="54" cy="49" r="5" fill="#fff"/>
-    <text x="24" y="86" fill="#1b1b1f" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700">Acurast job</text>
-    <text x="24" y="108" fill="#5f6368" font-family="Inter, Arial, sans-serif" font-size="13">Job-owned TLS</text>
+  <g transform="translate(516 190)">
+    <rect width="174" height="132" rx="10" fill="#F7F8FA" stroke="#E7EAEE"/>
+    <rect x="31" y="28" width="52" height="42" rx="8" fill="#1A2538"/>
+    <path d="M44 28v-7a13 13 0 0 1 26 0v7" fill="none" stroke="#1A2538" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="57" cy="50" r="5" fill="#FF6A2C"/>
+    <text x="24" y="92" fill="#0E1218" font-family="Space Grotesk, Inter, Arial, sans-serif" font-size="18" font-weight="700">Acurast job</text>
+    <text x="24" y="114" fill="#3D4654" font-family="Inter, Arial, sans-serif" font-size="13">Job-owned TLS</text>
   </g>
 
-  <path d="M238 253h55" stroke="#17695d" stroke-width="4" stroke-linecap="round"/>
-  <path d="m288 242 15 11-15 11" fill="none" stroke="#17695d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M466 253h55" stroke="#17695d" stroke-width="4" stroke-linecap="round"/>
-  <path d="m516 242 15 11-15 11" fill="none" stroke="#17695d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M254 256h26" stroke="#FF6A2C" stroke-width="5" stroke-linecap="round"/>
+  <path d="m274 245 14 11-14 11" fill="none" stroke="#FF6A2C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M477 256h26" stroke="#FF6A2C" stroke-width="5" stroke-linecap="round"/>
+  <path d="m497 245 14 11-14 11" fill="none" stroke="#FF6A2C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
 
-  <g transform="translate(92 364)">
-    <rect width="576" height="54" rx="12" fill="#f8faf7" stroke="#dfe4df"/>
-    <text x="22" y="34" fill="#1b1b1f" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">Hub quote funding</text>
-    <text x="172" y="34" fill="#1b1b1f" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">Job-signed registration</text>
-    <text x="392" y="34" fill="#1b1b1f" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">Validator evidence</text>
+  <g transform="translate(82 390)">
+    <rect width="596" height="58" rx="12" fill="#0E1218"/>
+    <circle cx="34" cy="29" r="6" fill="#FF6A2C"/>
+    <text x="52" y="34" fill="#F7F8FA" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Hub quote funding</text>
+    <circle cx="236" cy="29" r="6" fill="#FF6A2C"/>
+    <text x="254" y="34" fill="#F7F8FA" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Job-signed registration</text>
+    <circle cx="458" cy="29" r="6" fill="#FF6A2C"/>
+    <text x="476" y="34" fill="#F7F8FA" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700">Validator evidence</text>
   </g>
 </svg>
