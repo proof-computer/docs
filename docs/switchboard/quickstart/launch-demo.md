@@ -56,6 +56,10 @@ and the configured Hub payment asset for the Switchboard ingress quote.
 The command uses a fixed 3 minute Acurast start delay and auto-selects live
 gateway capacity.
 
+The default demo package is pinned to the current route-activation contract. If
+you override `--demo-package`, use `switchboard-express-demo` `0.1.9` or newer;
+older known demo tags fail before spend.
+
 Useful options:
 
 ```fish

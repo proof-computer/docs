@@ -29,9 +29,9 @@ Current public CLI packages:
 Current runtime packages in the public repos:
 
 - `@proofcomputer/switchboard-sdk@0.1.3`
-- `@proofcomputer/switchboard-express@0.1.1`
-- `@proofcomputer/switchboard-fastify@0.1.2`
-- `@proofcomputer/switchboard-express-demo@0.1.8`
+- `@proofcomputer/switchboard-express@0.1.2`
+- `@proofcomputer/switchboard-fastify@0.1.3`
+- `@proofcomputer/switchboard-express-demo@0.1.9`
 
 CLI and runtime packages can be released on different cadences. Treat
 installed package help and release notes as the final source for the exact
