@@ -1,6 +1,7 @@
 node_modules
 .docusaurus
 build
+.slipway/dist
 .env
 .env.*
 !.env.example

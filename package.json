@@ -9,7 +9,12 @@
     "build": "docusaurus build",
     "serve": "docusaurus serve",
     "clear": "docusaurus clear",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "acurast:build": "node scripts/build-acurast-bundle.mjs",
+    "acurast:start": "node scripts/acurast-docs-server.mjs",
+    "slipway:artifact": "node scripts/build-acurast-bundle.mjs --json",
+    "slipway:upload": "node scripts/upload-acurast-artifact.mjs --json",
+    "slipway:post-pin": "node scripts/post-slipway-artifact-pin.mjs --json"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.1",

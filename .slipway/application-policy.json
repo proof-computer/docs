@@ -1,0 +1,87 @@
+{
+  "domain": "proof.slipway.application-policy.v3",
+  "applicationId": "proof-docs",
+  "displayName": "PROOF Docs",
+  "replicas": 1,
+  "metadata": {
+    "displayName": "PROOF Docs",
+    "appType": "managed-web-app",
+    "labels": [
+      "proof",
+      "docs",
+      "switchboard-canary"
+    ]
+  },
+  "source": {
+    "provider": "github",
+    "repository": "proof-computer/docs",
+    "branch": "main",
+    "path": ".slipway/application-policy.json"
+  },
+  "artifact": {
+    "mode": "planned-ipfs",
+    "status": "missing"
+  },
+  "artifactAutomation": {
+    "github": {
+      "autoPublish": true,
+      "repository": "proof-computer/docs",
+      "branch": "main",
+      "workflowRef": "proof-computer/docs/.github/workflows/slipway-artifact.yml@refs/heads/main"
+    }
+  },
+  "runtime": {
+    "role": "docs-web",
+    "runtime": "NodeJSWithBundle",
+    "durationMs": 3600000,
+    "resources": {
+      "memory": 256,
+      "storage": 128,
+      "networkRequests": 700
+    },
+    "requiredModules": [
+      "network"
+    ],
+    "replacementRunwayMs": 600000,
+    "desiredCount": 1,
+    "keyVersion": 1,
+    "launch": {
+      "networkRequests": 700,
+      "requiredModules": [
+        "network"
+      ],
+      "reward": 40000000000,
+      "slots": 1
+    }
+  },
+  "acurast": {
+    "pinnedProcessors": [],
+    "verifiedOnly": false,
+    "maxStartDelayMs": 600000,
+    "budgetCaps": {
+      "maxRewardPerLaunch": 50000000000,
+      "maxNativeFeePerLaunch": 10000000000
+    },
+    "quote": {
+      "required": true
+    }
+  },
+  "environment": {
+    "variables": []
+  },
+  "ingress": {
+    "mode": "required",
+    "hostname": "proof-docs.example",
+    "port": 3000,
+    "protocol": "https",
+    "tlsMode": "job-owned",
+    "healthPath": "/health",
+    "childSessionDurationMs": 3600000
+  },
+  "secrets": {
+    "declarations": []
+  },
+  "blackbox": {
+    "enabled": false
+  }
+}

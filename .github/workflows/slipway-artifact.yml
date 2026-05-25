@@ -1,0 +1,62 @@
+name: Slipway Artifact
+
+on:
+  workflow_dispatch:
+    inputs:
+      script_ipfs:
+        description: "Already-pinned ipfs:// URI to publish instead of uploading"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  package:
+    name: Build and post docs artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build Acurast bundle
+        run: pnpm --silent slipway:artifact
+
+      - name: Upload local bundle manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: proof-docs-acurast
+          path: |
+            .slipway/dist/proof-docs-acurast.mjs
+            .slipway/dist/proof-docs-acurast-manifest.json
+
+      - name: Upload bundle to IPFS
+        env:
+          ACURAST_SCRIPT_IPFS: ${{ inputs.script_ipfs || '' }}
+          ACURAST_IPFS_URL: ${{ secrets.ACURAST_IPFS_URL }}
+          ACURAST_IPFS_API_KEY: ${{ secrets.ACURAST_IPFS_API_KEY }}
+        run: pnpm --silent slipway:upload
+
+      - name: Post Slipway artifact pin
+        env:
+          SLIPWAY_ARTIFACT_PIN_URL: ${{ vars.SLIPWAY_ARTIFACT_PIN_URL }}
+          SLIPWAY_APPLICATION_IDS: proof-docs
+          GITHUB_WORKFLOW_REF: ${{ github.workflow_ref }}
+        run: pnpm --silent slipway:post-pin
