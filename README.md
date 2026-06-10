@@ -17,7 +17,8 @@ pnpm start
 ```
 
 The site is a Docusaurus TypeScript project. Switchboard docs live under
-`docs/switchboard` and are served at `/switchboard`.
+`docs/switchboard` and are served at the site root (`/`). Legacy
+`/switchboard/*` URLs redirect to `/*` via `vercel.json`.
 
 ## Slipway Canary
 

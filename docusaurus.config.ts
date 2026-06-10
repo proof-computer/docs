@@ -55,7 +55,7 @@ const config: Config = {
       {
         docs: {
           path: 'docs/switchboard',
-          routeBasePath: 'switchboard',
+          routeBasePath: '/',
           sidebarPath: './sidebars.ts',
           editUrl: 'https://github.com/proof-computer/docs/tree/main/',
         },
@@ -98,7 +98,7 @@ const config: Config = {
           items: [
             {
               label: 'Switchboard',
-              to: '/switchboard',
+              to: '/',
             },
           ],
         },
