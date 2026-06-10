@@ -55,6 +55,12 @@
   --ifm-global-radius: 8px;
 }
 
+/* Public-alpha announcement bar sits on ink; links need beacon orange to read. */
+div[class^='announcementBar'] a {
+  color: var(--proof-beacon);
+  text-decoration: underline;
+}
+
 [data-theme='dark'] {
   --proof-page: #0e1218;
   --proof-surface: #141b26;

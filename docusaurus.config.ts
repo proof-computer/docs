@@ -70,6 +70,14 @@ const config: Config = {
   themes: ['@docusaurus/theme-mermaid'],
 
   themeConfig: {
+    announcementBar: {
+      id: 'public_alpha',
+      content:
+        'Switchboard is in <strong>public alpha</strong> — APIs, CLIs, and workflows may change. <a href="https://github.com/proof-computer" target="_blank" rel="noopener noreferrer">Feedback welcome</a>.',
+      backgroundColor: '#0e1218',
+      textColor: '#f7f8fa',
+      isCloseable: true,
+    },
     navbar: {
       title: 'PROOF',
       logo: {
