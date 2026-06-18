@@ -1,0 +1,83 @@
+{
+  "domain": "proof.slipway.application-policy.v3",
+  "applicationId": "runtime-image-smoke",
+  "displayName": "Runtime Image Smoke",
+  "metadata": {
+    "displayName": "Runtime Image Smoke",
+    "appType": "runtime-image-smoke",
+    "labels": [
+      "proof",
+      "liskov",
+      "runtime-image-smoke"
+    ]
+  },
+  "source": {
+    "provider": "github",
+    "repository": "proof-computer/docs",
+    "branch": "liskov-runtime-image-smoke-20260618",
+    "path": ".slipway/runtime-image-smoke.policy.json"
+  },
+  "scriptCid": "QmRuntimeImageSmoke",
+  "artifact": {
+    "mode": "manual-cid",
+    "status": "ready",
+    "cid": "QmRuntimeImageSmoke"
+  },
+  "runtimeImageAutomation": {
+    "github": {
+      "repository": "proof-computer/docs",
+      "branch": "liskov-runtime-image-smoke-20260618",
+      "workflowRef": "proof-computer/docs/.github/workflows/liskov-runtime-image-smoke.yml@refs/heads/liskov-runtime-image-smoke-20260618"
+    }
+  },
+  "runtime": {
+    "role": "runtime-image-smoke",
+    "runtime": "NodeJSWithBundle",
+    "durationMs": 3600000,
+    "resources": {
+      "memory": 256,
+      "storage": 128,
+      "networkRequests": 10
+    },
+    "requiredModules": [
+      "network"
+    ],
+    "replacementRunwayMs": 600000,
+    "desiredCount": 1,
+    "keyVersion": 1,
+    "launch": {
+      "networkRequests": 10,
+      "requiredModules": [
+        "network"
+      ],
+      "reward": 40000000000,
+      "slots": 1
+    }
+  },
+  "acurast": {
+    "pinnedProcessors": [
+      "runtime-image-smoke-no-processor"
+    ],
+    "verifiedOnly": false,
+    "maxStartDelayMs": 600000,
+    "budgetCaps": {
+      "maxRewardPerLaunch": 50000000000,
+      "maxNativeFeePerLaunch": 10000000000
+    },
+    "quote": {
+      "required": false
+    }
+  },
+  "environment": {
+    "variables": []
+  },
+  "ingress": {
+    "mode": "none"
+  },
+  "secrets": {
+    "declarations": []
+  },
+  "blackbox": {
+    "enabled": false
+  }
+}
