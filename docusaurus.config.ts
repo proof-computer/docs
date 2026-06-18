@@ -54,8 +54,10 @@ const config: Config = {
       'classic',
       {
         docs: {
-          path: 'docs/switchboard',
-          routeBasePath: '/',
+          // Baran is the default docs instance, served at /baran. Liskov is a
+          // second instance registered as a plugin below.
+          path: 'docs/baran',
+          routeBasePath: 'baran',
           sidebarPath: './sidebars.ts',
           editUrl: 'https://github.com/proof-computer/docs/tree/main/',
         },
@@ -67,13 +69,26 @@ const config: Config = {
     ],
   ],
 
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'liskov',
+        path: 'docs/liskov',
+        routeBasePath: 'liskov',
+        sidebarPath: './sidebarsLiskov.ts',
+        editUrl: 'https://github.com/proof-computer/docs/tree/main/',
+      },
+    ],
+  ],
+
   themes: ['@docusaurus/theme-mermaid'],
 
   themeConfig: {
     announcementBar: {
       id: 'public_alpha',
       content:
-        'Switchboard is in <strong>public alpha</strong> — APIs, CLIs, and workflows may change. <a href="https://github.com/proof-computer" target="_blank" rel="noopener noreferrer">Feedback welcome</a>.',
+        'PROOF docs are in <strong>public alpha</strong> — APIs, CLIs, and workflows may change. <a href="https://github.com/proof-computer" target="_blank" rel="noopener noreferrer">Feedback welcome</a>.',
       backgroundColor: '#0e1218',
       textColor: '#f7f8fa',
       isCloseable: true,
@@ -87,9 +102,16 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'switchboardSidebar',
+          sidebarId: 'baranSidebar',
           position: 'left',
-          label: 'Switchboard',
+          label: 'Baran',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'liskovSidebar',
+          docsPluginId: 'liskov',
+          position: 'left',
+          label: 'Liskov',
         },
         {
           href: 'https://github.com/proof-computer',
@@ -105,8 +127,12 @@ const config: Config = {
           title: 'Docs',
           items: [
             {
-              label: 'Switchboard',
-              to: '/',
+              label: 'Baran',
+              to: '/baran',
+            },
+            {
+              label: 'Liskov',
+              to: '/liskov',
             },
           ],
         },
@@ -118,8 +144,8 @@ const config: Config = {
               href: 'https://www.npmjs.com/package/@proof-computer/proof-cli',
             },
             {
-              label: 'Switchboard Plugin',
-              href: 'https://www.npmjs.com/package/@proof-computer/proof-cli-switchboard',
+              label: 'Baran Plugin',
+              href: 'https://www.npmjs.com/package/@proof-computer/proof-cli-baran',
             },
           ],
         },

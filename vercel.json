@@ -1,6 +1,6 @@
 {
   "redirects": [
-    { "source": "/switchboard", "destination": "/", "permanent": true },
-    { "source": "/switchboard/:path*", "destination": "/:path*", "permanent": true }
+    { "source": "/switchboard", "destination": "/baran", "permanent": true },
+    { "source": "/switchboard/:path*", "destination": "/baran/:path*", "permanent": true }
   ]
 }
