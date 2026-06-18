@@ -1,10 +1,7 @@
-import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
 import Heading from '@theme/Heading';
 import styles from './styles.module.css';
-
-const futureProducts = ['Blackbox', 'Lockbox'];
 
 function ProductCard({
   name,
@@ -16,37 +13,20 @@ function ProductCard({
   name: string;
   label: string;
   description: string;
-  href?: string;
+  href: string;
   status: string;
 }) {
-  const content = (
-    <article className={clsx(styles.productCard, !href && styles.productCardMuted)}>
-      <span className={styles.productStatus}>{status}</span>
-      <Heading as="h2" className={styles.cardTitle}>
-        {name}
-        <span>.</span>
-      </Heading>
-      <p>{description}</p>
-      <span className={styles.cardAction}>{label}</span>
-    </article>
-  );
-
-  if (!href) {
-    return (
-      <article className={clsx(styles.productCard, styles.productCardMuted)}>
+  return (
+    <Link className={styles.cardLink} to={href}>
+      <article className={styles.productCard}>
         <span className={styles.productStatus}>{status}</span>
         <Heading as="h2" className={styles.cardTitle}>
           {name}
+          <span>.</span>
         </Heading>
         <p>{description}</p>
         <span className={styles.cardAction}>{label}</span>
       </article>
-    );
-  }
-
-  return (
-    <Link className={styles.cardLink} to={href}>
-      {content}
     </Link>
   );
 }
@@ -121,32 +101,6 @@ export default function Home() {
                 href="/baran"
                 description="Put a long-running Acurast Node.js service behind a stable HTTPS endpoint with job-owned TLS, route validation, and CLI diagnostics."
               />
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.contentBand} aria-labelledby="next-heading">
-          <div className={styles.contentInner}>
-            <div className={styles.sectionHeader}>
-              <span className={styles.sectionKicker}>What comes next</span>
-              <Heading as="h2" id="next-heading">
-                More of the PROOF stack is on the way.
-              </Heading>
-              <p>
-                Sealed-secret delivery and encrypted logging already ship
-                inside Liskov. Their standalone products are still being built.
-              </p>
-            </div>
-            <div className={styles.productGrid}>
-              {futureProducts.map((name) => (
-                <ProductCard
-                  key={name}
-                  name={name}
-                  status="In development"
-                  label="Not public yet"
-                  description="We're still building this."
-                />
-              ))}
             </div>
           </div>
         </section>
