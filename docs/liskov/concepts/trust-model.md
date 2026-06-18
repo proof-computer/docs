@@ -16,8 +16,10 @@ coordinate deployment, funding, and ingress.
 | Developer machine | local context, payment signer, deploy inputs | PROOF control-plane / recorder keys |
 | Acurast job (TEE) | runtime config, job signer, TLS private key, decrypted secrets | developer payment seed |
 | PROOF control plane | signed policy + manifest, quote service, registration submission path | job TLS private key, secret plaintext |
-| Baran gateway | route state, Envoy config, capability reporting | DNS zone authority, app secrets |
-| Validators | route-open evidence signing material | developer app secrets |
+
+If you front the deployment with public ingress, the gateway and validators
+have their own trust boundaries — those belong to Baran, not Liskov. See the
+[Baran trust model](/baran/concepts/trust-model) for the ingress side.
 
 ## Code Boundary
 
@@ -36,8 +38,9 @@ your policy declares.
 ## TLS Boundary
 
 The Acurast job generates and holds its TLS private key and terminates HTTPS
-itself. The Baran gateway performs L4/SNI passthrough and never sees the
-application TLS session key.
+itself. The private key never leaves the enclave. If you add public ingress,
+the front door only routes encrypted traffic and never terminates your TLS — but
+that boundary is owned by [Baran](/baran/concepts/trust-model), not Liskov.
 
 ## Funding Boundary
 
