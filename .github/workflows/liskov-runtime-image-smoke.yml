@@ -1,6 +1,6 @@
 name: 'Liskov Runtime Image Smoke'
 
-on:
+"on":
   workflow_dispatch:
     inputs:
       image_url:
