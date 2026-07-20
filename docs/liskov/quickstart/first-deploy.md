@@ -55,7 +55,9 @@ like this:
 
 Every field is documented in the [policy schema reference](../reference/policy-schema.md).
 The `domain` string is a stable contract identifier and does not change with the
-brand.
+brand. In policy v3, `displayName` is a deprecated source hint: it seeds the
+application-owned name on first creation, while later name changes belong to the
+application's Settings and do not republish this policy.
 
 ## 2. Import And Publish
 

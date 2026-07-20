@@ -15,9 +15,13 @@ change with the brand).
 | --- | --- | --- |
 | `domain` | string | Always `"proof.slipway.application-policy.v3"`. |
 | `applicationId` | string | Unique application id. |
-| `displayName` | string | User-visible name. |
+| `displayName` | string | Deprecated v3 source hint used only to seed a newly created application's name. The application-owned Settings name is authoritative and later policy imports never overwrite it. Planned for removal in v4. |
 | `replicas` | number | Desired concurrent deployments. |
-| `metadata` | object | `displayName`, `appType` (e.g. `managed-web-app`), `labels`. |
+| `metadata` | object | `displayName` (the same deprecated, non-authoritative v3 source hint), `appType` (e.g. `managed-web-app`), `labels`. |
+
+The v3 policy digest still covers both display-name fields for compatibility.
+Changing an application's name in Settings does not edit or republish its policy,
+change its slug, or alter any policy version or digest.
 
 ## `source`
 
