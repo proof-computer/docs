@@ -21,15 +21,17 @@ environment-variable names for secrets, never the secret values.
 
 - the published policy version and its digest
 - declared secrets are granted
-- budget caps and the accepted quote asset
+- `deployment.spend` caps and the accepted quote asset
+- placement capability and account entitlement
 - ingress requirements
 
 Preflight returns a signed quote. It does not spend.
 
 ## 3. Submit To Acurast
 
-The CLI prepares the runtime bundle, uploads the encrypted artifact, and submits
-the job to the Acurast chain. Node web apps use the `NodeJSWithBundle` runtime.
+The build authority prepares the runtime artifact and binds its CID/digest to
+the published policy. The executor submits the exact normalized runtime and
+schedule to the Acurast chain.
 
 ## 4. Fund The Quote
 
@@ -48,12 +50,12 @@ authority.
 The job generates its TLS private key inside the enclave, creates a CSR, and
 obtains its certificate. The private key never leaves the Acurast runtime.
 
-## 7. Baran Ingress
+## 7. HTTP Ingress
 
-If the policy requests ingress (`ingress.implementor: "baran"`), the Baran
-gateway opens a route to the job and the service becomes reachable over public
-HTTPS. The gateway does L4/SNI passthrough — it routes, it does not terminate
-your TLS. See [Baran ingress](../guides/baran-ingress.md).
+If the policy requests `ingress.http.mode: "required"`, Liskov opens a route to
+the declared port and accepts readiness at the declared `healthPath`. Provider
+selection and route metadata are launch facts, not authored policy fields. See
+[HTTP ingress](../guides/baran-ingress.md).
 
 ## 8. Validation And Settlement
 
@@ -76,6 +78,7 @@ and the [recovery guide](../troubleshooting/recovery.md) before re-running with
 
 ## 10. Replacement
 
-As the active job approaches expiry, replacement custody launches its successor.
-The same lifecycle runs again for the replacement, overlapping the outgoing job
-by `replacementRunwayMs`. See [Replacement custody](./replacement-custody.md).
+At the target selected by `deployment.lifecycle.renewal`, replacement custody
+plans the next slot generation. Readiness for the exact successor advances the
+slot; actual scheduled overlap, ready overlap, queue delay, and coverage gap are
+recorded rather than inferred. See [Lifecycle design](../policy/lifecycle.md).

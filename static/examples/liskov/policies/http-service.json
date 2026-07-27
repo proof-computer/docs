@@ -1,0 +1,161 @@
+{
+  "schema": "proof.liskov.application-policy",
+  "schemaVersion": 4,
+  "applicationId": "customer-api",
+  "metadata": {
+    "appType": "managed-web-app",
+    "labels": [
+      "api",
+      "production"
+    ],
+    "description": "An HTTP API with bounded overlap, encrypted logs, and sealed credentials."
+  },
+  "artifact": {
+    "kind": "ipfs",
+    "cid": "bafy-replace-with-your-cid",
+    "digest": "sha256:replace-with-your-artifact-digest",
+    "encryption": {
+      "mode": "aes256_gcm"
+    }
+  },
+  "build": {
+    "github": {
+      "repository": "example/customer-api",
+      "allowedRefs": [
+        "refs/heads/main",
+        "refs/tags/v*"
+      ],
+      "workflowRef": "example/customer-api/.github/workflows/liskov.yml@refs/heads/main",
+      "path": "liskov.json"
+    }
+  },
+  "runtime": {
+    "engine": "nodejs",
+    "command": "node server.js",
+    "role": "http-api",
+    "resources": {
+      "memoryMiB": 512,
+      "storageMiB": 256,
+      "networkRequestQuota": 5000
+    },
+    "requiredModules": [
+      "network"
+    ]
+  },
+  "deployment": {
+    "parallelism": 1,
+    "schedule": {
+      "durationMs": 3600000,
+      "maxStartDelayMs": 300000
+    },
+    "placement": {
+      "requirements": {
+        "trustProfile": "proof.liskov.attested-runtime.v1",
+        "machine": {
+          "class": "confidential-general",
+          "profileVersion": "v1",
+          "minimums": {
+            "memoryMiB": 512,
+            "storageMiB": 256
+          }
+        }
+      },
+      "processorSelection": {
+        "mode": "open_market",
+        "excludeManagers": [
+          "untrusted-manager"
+        ],
+        "allowUnknownManager": false,
+        "requireScheduleClear": true,
+        "requireConsumerAccess": true,
+        "maxHeartbeatAgeSeconds": 180,
+        "candidateLimit": 16,
+        "scanLimit": 64
+      }
+    },
+    "lifecycle": {
+      "renewal": {
+        "mode": "before_scheduled_end",
+        "leadTime": {
+          "mode": "fixed",
+          "durationMs": 600000
+        }
+      },
+      "update": {
+        "timing": "immediate",
+        "existingJobs": {
+          "mode": "cooperative_cease",
+          "trigger": "successor_runtime_ready"
+        }
+      },
+      "recovery": {
+        "launch": {
+          "maxRetries": 5
+        },
+        "runtimeFailure": {
+          "mode": "wait_until_scheduled_end"
+        }
+      }
+    },
+    "spend": {
+      "maxRewardPlanckPerJob": "50000000000",
+      "maxNativeFeePlanckPerJob": "10000000000",
+      "maxServiceCreditMicrosPerGeneration": 2500000
+    }
+  },
+  "ingress": {
+    "http": {
+      "mode": "required",
+      "port": 3000,
+      "healthPath": "/health"
+    }
+  },
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "profileId": "encrypted-json-v1",
+      "sinkName": "primary",
+      "context": {
+        "service": "customer-api",
+        "environment": "production"
+      }
+    },
+    "runtimeDiagnostics": {
+      "signed": true
+    }
+  },
+  "configuration": {
+    "variables": [
+      {
+        "name": "LOG_LEVEL",
+        "required": false,
+        "default": "info",
+        "managed": false
+      },
+      {
+        "name": "LISKOV_DEPLOYMENT_ID",
+        "required": true,
+        "managed": true
+      }
+    ],
+    "secrets": [
+      {
+        "secretId": "database-url",
+        "required": true,
+        "destination": {
+          "kind": "env",
+          "name": "DATABASE_URL"
+        }
+      },
+      {
+        "secretId": "service-config",
+        "required": true,
+        "destination": {
+          "kind": "file",
+          "path": "/run/secrets/service.json"
+        },
+        "bundleId": "customer-api-production"
+      }
+    ]
+  }
+}

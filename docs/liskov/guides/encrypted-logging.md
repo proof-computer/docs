@@ -21,9 +21,21 @@ Logging is opt-in through the policy:
 
 ```json title="liskov.json (excerpt)"
 {
-  "blackbox": { "enabled": true }
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "profileId": "encrypted-json-v1",
+      "sinkName": "primary",
+      "context": {
+        "service": "my-app"
+      }
+    }
+  }
 }
 ```
+
+`context` is non-secret structured metadata. Do not put credentials or customer
+payloads in policy JSON.
 
 When enabled, the runtime writes log lines into a sealed local spool and flushes
 them to your sink. The writer keeps a local spool by default so first-boot output

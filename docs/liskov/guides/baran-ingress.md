@@ -1,60 +1,68 @@
 ---
-title: Baran Ingress
-description: Give your Liskov deployment a public HTTPS front door.
+title: HTTP Ingress
+description: Require a public HTTPS route and readiness path for a Liskov deployment.
 ---
 
-# Baran Ingress
+# HTTP Ingress
 
-A Liskov deployment can request a public HTTPS front door from one line of
-policy. The front door is [Baran](/baran), PROOF's ingress product — Liskov wires
-it for you as part of the launch.
+A V4 policy requests the ingress capability it needs without authoring
+provider-owned route, hostname, certificate, or session state.
 
-## Requesting Ingress
-
-Declare the ingress block in your policy:
+## Request HTTP Ingress
 
 ```json title="liskov.json (excerpt)"
 {
   "ingress": {
-    "mode": "required",
-    "implementor": "baran",
-    "port": 3000,
-    "protocol": "https",
-    "tlsMode": "job-owned",
-    "healthPath": "/health",
-    "baran": { "transport": "forward" }
+    "http": {
+      "mode": "required",
+      "port": 3000,
+      "healthPath": "/health"
+    }
   }
 }
 ```
 
 | Field | Meaning |
 | --- | --- |
-| `mode` | `required` makes a working route a launch precondition. |
-| `implementor` | `baran` selects Baran as the ingress provider. |
-| `port` | The port your app listens on inside the job. |
-| `tlsMode` | `job-owned` — the job holds its TLS private key (recommended). |
-| `healthPath` | Path Baran and validators probe for readiness. |
+| `mode` | `required` makes a working route a launch requirement. `disabled` expresses no route. `optional` is typed but capability-gated. |
+| `port` | Port the service listens on inside the job. |
+| `healthPath` | Readiness path used to accept the exact successor runtime. |
 
-## What Happens At Launch
+Provider selection, public hostname, certificate identity, transport, and route
+status are dynamic server-owned facts. They do not belong in authored policy.
 
-During [stage 7 of the lifecycle](../concepts/deployment-lifecycle.md), the job
-generates its own TLS key inside the enclave, obtains its certificate, and the
-Baran gateway opens a route to it. The gateway does L4/SNI passthrough — it routes
-by SNI and never terminates your TLS session.
+## Readiness Responsibilities
 
-Validators then probe the public endpoint and `healthPath` and submit signed
-route-open evidence.
+Your service must:
 
-## Your App's Responsibilities
+- listen on the declared port;
+- return success from `healthPath` only when it can accept real traffic;
+- keep runtime diagnostics signed; and
+- preserve identity-bound bootstrap and secret handling.
 
-To work behind Baran ingress your service must:
+Readiness is lifecycle evidence. The earliest accepted ready event for the exact
+successor job advances its stable slot generation.
 
-- listen on the declared `port`
-- serve the `healthPath` with a success response
-- terminate HTTPS with its job-owned certificate
+## SSH
 
-## Full Ingress Docs
+V4 also types SSH ingress:
 
-This guide covers requesting ingress from Liskov. For custom hostnames, DNS
-validation, certificate authorization, and gateway operation, see the full
-[Baran documentation](/baran).
+```json
+{
+  "ingress": {
+    "ssh": {
+      "mode": "required",
+      "port": 22
+    }
+  }
+}
+```
+
+Simultaneous HTTP and SSH and optional ingress require explicit platform
+capability.
+
+## Baran
+
+[Baran](/baran) remains the standalone secure-ingress product for supported
+Acurast jobs. A Liskov policy does not name Baran as an implementor; product
+binding and route state stay outside the immutable application policy.

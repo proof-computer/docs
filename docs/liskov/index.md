@@ -35,8 +35,9 @@ Liskov is built from a set of systems you compose through one application policy
   (see [Baran ingress](./guides/baran-ingress.md)).
 - **Encrypted code** — plaintext only lives in your repo and inside the TEE;
   ciphertext in transit.
-- **Launch schedules** — replicas, windows, durations, and rolling replacements
-  (see [Schedules and replicas](./guides/schedules-and-replicas.md)).
+- **Lifecycle policy** — stable slots, bounded schedules, renewal, updates,
+  recovery, and measured overlap (see the
+  [Policy handbook](./policy/index.md)).
 - **Dollars in, dollars out** — budgets, quotes, and settlement in USDC
   (see [Budgets and spend](./guides/budgets-and-spend.md)).
 - **Spend controls** — caps, preflights, and explicit `--yes-spend` gates.
@@ -48,12 +49,15 @@ phone) are still being built.
 
 - [Quickstart](./quickstart/index.md): install the CLI, write a `liskov.json`,
   preflight, and run your first custody deploy.
+- [Policy handbook](./policy/index.md): learn the strict V4 contract from a
+  minimum worker through lifecycle, placement, fleets, and complete field
+  reference.
 - [Concepts](./concepts/index.md): the replacement-custody model, the deployment
   lifecycle, the trust model, and how policies are versioned.
 - [Guides](./guides/index.md): GitHub launches, sealed secrets, encrypted
   logging, Baran ingress, schedules, and spend.
-- [Reference](./reference/index.md): the `proof liskov` CLI, the `liskov.json`
-  policy schema, and the reconcile-state vocabulary.
+- [Reference](./reference/index.md): the `proof liskov` CLI, every V4 policy
+  field and bound, and the reconcile-state vocabulary.
 - [Troubleshooting](./troubleshooting/index.md): replacement holds, preflight and
   spend failures, and recovery.
 

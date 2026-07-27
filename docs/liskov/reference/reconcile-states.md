@@ -23,13 +23,27 @@ successor entering `candidate` before the predecessor drains.
 
 ## Launch Decisions
 
-Each reconcile records an action and the reason for it:
+V4 reconciliation records a durable lifecycle reason:
 
 | Action | Reason | Trigger |
 | --- | --- | --- |
 | `launch` | `missing` | No deployment exists — create the first. |
-| `replace` | `near_expiry` | Current job expires within `replacementRunwayMs`. |
-| `replace` | `invalid_observed` | Observed state no longer matches policy. |
+| `renew` | `renewal` | The slot reached its after-end or fixed-lead renewal target. |
+| `update` | `update` | The active policy digest differs from the predecessor digest. |
+| `recover` | `launch_recovery` | A bounded launch retry is authorized. |
+| `recover` | `runtime_recovery` | Accepted runtime failure evidence and policy authorize replacement. |
+
+## Rollout Intent States
+
+| State | Meaning |
+| --- | --- |
+| `queued` | Deterministic successor intent exists but has not entered execution preflight. |
+| `preflight` | Exact policy, placement, schedule, and spend inputs are being checked. |
+| `submitted` | Successor deployment is linked and submitted. |
+| `claimed` | Canonical positive processor claim exists for the exact successor job. |
+| `ready` | Earliest accepted readiness event advanced the slot generation. |
+| `completed` | Predecessor scheduled end released surge occupancy. |
+| `failed` | Successor terminalized before readiness or accepted evidence conflicted. |
 
 ## Holds
 

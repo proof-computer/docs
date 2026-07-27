@@ -1,40 +1,30 @@
 {
   "schema": "proof.liskov.application-policy",
   "schemaVersion": 4,
-  "applicationId": "proof-docs",
+  "applicationId": "partner-webhook",
   "metadata": {
     "appType": "managed-web-app",
     "labels": [
-      "proof",
-      "docs",
-      "liskov-canary"
+      "webhook",
+      "partner-pool"
     ],
-    "description": "PROOF public documentation served as a Liskov canary workload."
+    "description": "A webhook receiver restricted to one processor manager."
   },
   "artifact": {
     "kind": "ipfs",
+    "cid": "bafy-replace-with-your-cid",
     "encryption": {
       "mode": "none"
     }
   },
-  "build": {
-    "github": {
-      "repository": "proof-computer/docs",
-      "allowedRefs": [
-        "refs/heads/main"
-      ],
-      "workflowRef": "proof-computer/docs/.github/workflows/slipway-artifact.yml@refs/heads/main",
-      "path": ".slipway/application-policy.json"
-    }
-  },
   "runtime": {
     "engine": "nodejs",
-    "command": "node proof-docs-acurast.mjs",
-    "role": "docs-web",
+    "command": "node webhook.js",
+    "role": "webhook",
     "resources": {
       "memoryMiB": 256,
       "storageMiB": 128,
-      "networkRequestQuota": 700
+      "networkRequestQuota": 2500
     },
     "requiredModules": [
       "network"
@@ -48,13 +38,14 @@
     },
     "placement": {
       "processorSelection": {
-        "mode": "open_market",
+        "mode": "manager",
+        "managerId": "partner-manager",
         "allowUnknownManager": false,
         "requireScheduleClear": true,
         "requireConsumerAccess": true,
         "maxHeartbeatAgeSeconds": 300,
-        "candidateLimit": 16,
-        "scanLimit": 64
+        "candidateLimit": 8,
+        "scanLimit": 32
       }
     },
     "lifecycle": {
@@ -62,7 +53,7 @@
         "mode": "before_scheduled_end",
         "leadTime": {
           "mode": "fixed",
-          "durationMs": 600000
+          "durationMs": 300000
         }
       },
       "update": {
@@ -73,35 +64,19 @@
       },
       "recovery": {
         "launch": {
-          "maxRetries": 5
+          "maxRetries": 3
         },
         "runtimeFailure": {
           "mode": "wait_until_scheduled_end"
         }
       }
-    },
-    "spend": {
-      "maxRewardPlanckPerJob": "50000000000",
-      "maxNativeFeePlanckPerJob": "10000000000"
     }
   },
   "ingress": {
     "http": {
       "mode": "required",
-      "port": 3000,
-      "healthPath": "/health"
+      "port": 8080,
+      "healthPath": "/ready"
     }
-  },
-  "observability": {
-    "logs": {
-      "enabled": false
-    },
-    "runtimeDiagnostics": {
-      "signed": true
-    }
-  },
-  "configuration": {
-    "variables": [],
-    "secrets": []
   }
 }

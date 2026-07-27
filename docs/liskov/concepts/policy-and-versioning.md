@@ -1,54 +1,77 @@
 ---
 title: Policy And Versioning
-description: How Liskov drafts become immutable, signed policy versions.
+description: How strict V4 drafts become immutable authored and effective policy versions.
 ---
 
 # Policy And Versioning
 
-A `liskov.json` file is the source for an application policy. Liskov separates a
-mutable **draft** from the immutable **published versions** it deploys.
+A `liskov.json` file is the authored source for one V4 application policy.
+Liskov separates an editable **draft** from immutable **published versions** and
+from the dynamic facts captured for each launch.
+
+## Contract Identity
+
+Every policy starts with:
+
+```json
+{
+  "schema": "proof.liskov.application-policy",
+  "schemaVersion": 4,
+  "applicationId": "my-app"
+}
+```
+
+`applicationId` is authored. Optional `applicationUid` is an immutable
+server-issued identity pin; never invent it. Display name, organization, owner,
+status, publication timestamps, and import provenance are server-owned.
 
 ## Drafts
 
-A draft is the editable policy for an application. You read and update it with
-the CLI and the control plane:
+A draft is editable and is never deployed directly:
 
-- `proof liskov application status my-app` shows the current state.
-- `proof liskov application import --github my-org/my-app` updates the draft from
-  your repository.
+```fish
+proof liskov application import --github my-org/my-app
+proof liskov application status my-app
+```
 
-Drafts are convenient but are never what gets deployed directly.
+V4 parsing is strict. Unknown fields and misspelled enum arms fail with a stable
+code and JSON Pointer.
 
 ## Published Versions
 
-Publishing freezes the current draft into an immutable, numbered, signed policy
-version:
+Publishing freezes the draft:
 
 ```fish
 proof liskov application import --github my-org/my-app --publish
 ```
 
-Each published version records:
+Each immutable version records:
 
-- `applicationId`, a `policyVersionId`, and the `previousVersionId`
-- owner and timestamps
-- a `policyDigest` (a content hash the signatures cover)
-- the runtime, Acurast placement and cost constraints, secret declarations, and
-  ingress requirements
+- a server-owned envelope with schema identity, policy version, predecessor,
+  timestamp, and source;
+- exact authored JSON and its `authoredDigest`;
+- normalized effective JSON and its `policyDigest`; and
+- deterministic diagnostics.
 
-Because versions are immutable and content-addressed by digest, a deployment
-always refers to an exact, signed policy — not whatever the draft happens to say
-later. `proof liskov application plans my-app` lists the versions and the plan
-items derived from them.
+`policyDigest` binds jobs, runtime registration, and identity-bound secret
+grants. Processor choice, market price, schedule availability, resolved
+profiles, and secret versions are dynamic launch facts stored with the attempt
+or grant.
+
+## Policy Updates
+
+Publishing does not rewrite running jobs. When a new version becomes active,
+`deployment.lifecycle.update` determines whether it targets the next scheduled
+renewal or begins immediately, and whether existing jobs run until schedule end
+or receive a cooperative cease request.
+
+See [Validation and versioning](../policy/validation-and-versioning.md) for the
+read contract, canonical digests, and review checklist.
 
 ## Secrets Are Versioned Separately
 
-Secret material is **not** stored in the policy. Policies reference sealed-secret
-records by id and digest; the plaintext is sealed to the enclave and delivered at
-deploy time. See [Sealed secrets](../guides/sealed-secrets.md).
+Secret plaintext is never policy JSON. A policy declares a stable `secretId`,
+whether it is required, and an env or file destination. The actual secret
+version is sealed and bound to an exact job and policy digest.
 
-## The `domain` Field
-
-Every policy declares `"domain": "proof.slipway.application-policy.v3"`. This is
-the stable schema-contract identifier for the policy format. It is an internal
-contract string and does not change with the product brand.
+See [Sealed secrets](../guides/sealed-secrets.md).

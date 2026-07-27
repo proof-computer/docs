@@ -1,0 +1,58 @@
+{
+  "schema": "proof.liskov.application-policy",
+  "schemaVersion": 4,
+  "applicationId": "queue-worker",
+  "metadata": {
+    "appType": "background-worker",
+    "labels": [
+      "worker"
+    ],
+    "description": "A single scheduled worker with no ingress or secrets."
+  },
+  "artifact": {
+    "kind": "ipfs",
+    "cid": "bafy-replace-with-your-cid",
+    "encryption": {
+      "mode": "none"
+    }
+  },
+  "runtime": {
+    "engine": "nodejs",
+    "command": "node worker.js",
+    "role": "worker",
+    "resources": {
+      "memoryMiB": 256,
+      "storageMiB": 64,
+      "networkRequestQuota": 100
+    },
+    "requiredModules": [
+      "network"
+    ]
+  },
+  "deployment": {
+    "parallelism": 1,
+    "schedule": {
+      "durationMs": 1800000,
+      "maxStartDelayMs": 300000
+    },
+    "lifecycle": {
+      "renewal": {
+        "mode": "after_scheduled_end"
+      },
+      "update": {
+        "timing": "next_scheduled_renewal",
+        "existingJobs": {
+          "mode": "run_until_scheduled_end"
+        }
+      },
+      "recovery": {
+        "launch": {
+          "maxRetries": 3
+        },
+        "runtimeFailure": {
+          "mode": "wait_until_scheduled_end"
+        }
+      }
+    }
+  }
+}

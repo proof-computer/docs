@@ -1,0 +1,57 @@
+{
+  "schema": "proof.liskov.application-policy",
+  "schemaVersion": 4,
+  "applicationId": "failure-sensitive-worker",
+  "metadata": {
+    "appType": "background-worker",
+    "labels": [
+      "recovery",
+      "advanced"
+    ],
+    "description": "A single-slot worker using the typed replacement-after-failure contract."
+  },
+  "artifact": {
+    "kind": "ipfs",
+    "cid": "bafy-replace-with-your-cid"
+  },
+  "runtime": {
+    "engine": "nodejs",
+    "command": "node worker.js",
+    "role": "worker",
+    "resources": {
+      "memoryMiB": 512,
+      "storageMiB": 256,
+      "networkRequestQuota": 1000
+    }
+  },
+  "deployment": {
+    "parallelism": 1,
+    "schedule": {
+      "durationMs": 7200000,
+      "maxStartDelayMs": 300000
+    },
+    "lifecycle": {
+      "renewal": {
+        "mode": "after_scheduled_end"
+      },
+      "update": {
+        "timing": "next_scheduled_renewal",
+        "existingJobs": {
+          "mode": "run_until_scheduled_end"
+        }
+      },
+      "recovery": {
+        "launch": {
+          "maxRetries": 5
+        },
+        "runtimeFailure": {
+          "mode": "replace_after_failure",
+          "contactLossAfterMs": 300000,
+          "restartGraceMs": 600000,
+          "maxSameJobRestarts": 3,
+          "maxFreshRegistrationReplacements": 2
+        }
+      }
+    }
+  }
+}

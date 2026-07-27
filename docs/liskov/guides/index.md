@@ -13,9 +13,11 @@ Task-oriented guides for the systems you compose through a Liskov policy.
   with Lockbox.
 - [Encrypted logging](./encrypted-logging.md): stream end-to-end encrypted logs
   with Blackbox.
-- [Baran ingress](./baran-ingress.md): give your deployment a public HTTPS front
-  door from one line of policy.
-- [Schedules and replicas](./schedules-and-replicas.md): replicas, durations, and
-  rolling replacements.
+- [HTTP ingress](./baran-ingress.md): require a public HTTPS route and readiness
+  path.
+- [Schedules and slots](./schedules-and-slots.md): stable slot parallelism,
+  durations, renewal, and measured replacements.
 - [Budgets and spend](./budgets-and-spend.md): quotes, caps, USDC settlement, and
   spend gates.
+- [Policy handbook](../policy/index.md): complete V4 design guidance and
+  workload recipes.

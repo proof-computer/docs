@@ -8,6 +8,9 @@ description: The ideas behind Liskov deployments.
 Liskov is a managed deploy that keeps confidential-compute properties intact.
 These pages explain the model so the CLI output and policy fields make sense.
 
+- [Policy handbook](../policy/index.md): learn the strict V4 contract from a
+  minimum policy through lifecycle, placement, capability gates, and advanced
+  workload design.
 - [Replacement custody](./replacement-custody.md): why deployments are replaced
   rather than kept alive forever, and the states they move through.
 - [Deployment lifecycle](./deployment-lifecycle.md): the stages a launch crosses,

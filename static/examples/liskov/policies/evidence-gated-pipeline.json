@@ -1,0 +1,139 @@
+{
+  "schema": "proof.liskov.application-policy",
+  "schemaVersion": 4,
+  "applicationId": "confidential-pipeline",
+  "metadata": {
+    "appType": "data-pipeline",
+    "labels": [
+      "confidential",
+      "evidence-gated"
+    ],
+    "description": "A confidential pipeline requiring recent placement evidence."
+  },
+  "artifact": {
+    "kind": "runtime_image",
+    "runtimeImage": "proof-runtime-node-v1",
+    "digest": "sha256:replace-with-your-runtime-image-digest",
+    "encryption": {
+      "mode": "aes256_gcm"
+    }
+  },
+  "runtime": {
+    "engine": "nodejs",
+    "command": "node pipeline.js",
+    "role": "pipeline",
+    "resources": {
+      "memoryMiB": 2048,
+      "storageMiB": 4096,
+      "networkRequestQuota": 20000
+    },
+    "requiredModules": [
+      "network"
+    ]
+  },
+  "deployment": {
+    "parallelism": 1,
+    "schedule": {
+      "durationMs": 10800000,
+      "maxStartDelayMs": 600000
+    },
+    "placement": {
+      "requirements": {
+        "trustProfile": "proof.liskov.attested-runtime.v1",
+        "machine": {
+          "class": "confidential-compute",
+          "profileVersion": "v2",
+          "minimums": {
+            "memoryMiB": 2048,
+            "storageMiB": 4096
+          }
+        },
+        "evidence": [
+          {
+            "profile": "proof.liskov.processor-evidence.v1",
+            "metric": "successful_attested_launches",
+            "minimum": 20,
+            "maxAgeMs": 86400000,
+            "minimumSamples": 20,
+            "minimumConfidenceBps": 9500,
+            "strength": "required"
+          }
+        ]
+      },
+      "processorSelection": {
+        "mode": "open_market",
+        "allowUnknownManager": false,
+        "requireScheduleClear": true,
+        "requireConsumerAccess": true,
+        "maxHeartbeatAgeSeconds": 120,
+        "candidateLimit": 32,
+        "scanLimit": 128
+      }
+    },
+    "lifecycle": {
+      "renewal": {
+        "mode": "before_scheduled_end",
+        "leadTime": {
+          "mode": "fixed",
+          "durationMs": 1200000
+        }
+      },
+      "update": {
+        "timing": "next_scheduled_renewal",
+        "existingJobs": {
+          "mode": "run_until_scheduled_end"
+        }
+      },
+      "recovery": {
+        "launch": {
+          "maxRetries": 2
+        },
+        "runtimeFailure": {
+          "mode": "wait_until_scheduled_end"
+        }
+      }
+    },
+    "spend": {
+      "maxRewardPlanckPerJob": "150000000000",
+      "maxNativeFeePlanckPerJob": "15000000000",
+      "maxServiceCreditMicrosPerGeneration": 7500000
+    }
+  },
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "profileId": "encrypted-json-v1",
+      "sinkName": "audit",
+      "context": {
+        "workload": "confidential-pipeline"
+      }
+    }
+  },
+  "configuration": {
+    "variables": [
+      {
+        "name": "BATCH_SIZE",
+        "default": "100",
+        "managed": false
+      }
+    ],
+    "secrets": [
+      {
+        "secretId": "pipeline-source",
+        "destination": {
+          "kind": "file",
+          "path": "/run/secrets/source.json"
+        },
+        "bundleId": "pipeline-production"
+      },
+      {
+        "secretId": "pipeline-sink",
+        "destination": {
+          "kind": "file",
+          "path": "/run/secrets/sink.json"
+        },
+        "bundleId": "pipeline-production"
+      }
+    ]
+  }
+}

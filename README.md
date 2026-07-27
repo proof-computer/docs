@@ -25,9 +25,10 @@ redirect to `/baran/*` via `vercel.json`.
 
 ## Slipway Canary
 
-The `.slipway/application-policy.json` file declares the docs site as the
-`proof-docs` internal canary Application. It is intentionally no-secret and
-uses a generated single-file Node entrypoint for Acurast:
+The `.slipway/application-policy.json` file declares the docs site with the
+strict Liskov application-policy V4 contract as the `proof-docs` internal
+canary Application. It is intentionally no-secret and uses a generated
+single-file Node entrypoint for Acurast:
 
 ```fish
 pnpm acurast:build

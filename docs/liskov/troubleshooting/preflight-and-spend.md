@@ -21,8 +21,10 @@ proceed. Grant the missing secrets and preflight again. See
 ## Quote Exceeds A Cap
 
 If the signed quote is higher than a policy cap
-(`budgetCaps.maxRewardPerLaunch` or `maxNativeFeePerLaunch`), the launch is
-refused before spend. Either:
+(`deployment.spend.maxRewardPlanckPerJob`,
+`maxNativeFeePlanckPerJob`, or
+`maxServiceCreditMicrosPerGeneration`), the launch is refused before spend.
+Either:
 
 - raise the cap in `liskov.json` and publish a new version, or
 - wait for cheaper capacity and re-quote.
@@ -31,9 +33,9 @@ See [Budgets and spend](../guides/budgets-and-spend.md).
 
 ## Ingress Not Satisfiable
 
-With `ingress.mode: "required"`, a route that cannot be opened blocks the launch.
-Check the `port`, `healthPath`, and that your app terminates HTTPS with its
-job-owned certificate. See [Baran ingress](../guides/baran-ingress.md).
+With `ingress.http.mode: "required"`, a route that cannot be opened blocks the
+launch. Check the port and `healthPath`, and confirm the runtime reports ready
+only when it can accept traffic. See [HTTP ingress](../guides/baran-ingress.md).
 
 ## Launch Will Not Fund
 

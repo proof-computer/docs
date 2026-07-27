@@ -8,7 +8,7 @@ description: Install, declare, preflight, and run your first Liskov deploy.
 Liskov deploys from a single application policy. The path is always the same:
 
 1. [Install the CLI and sign in](./install.md).
-2. Declare your app in a `liskov.json` policy.
+2. Declare your app with the strict V4 contract in `liskov.json`.
 3. Preflight to validate budget, secrets, and ingress and get a signed quote.
 4. Run one custody execution with an explicit spend confirmation.
 
@@ -18,6 +18,8 @@ This quickstart links the two pages you need:
   open a session.
 - [First deploy](./first-deploy.md) — write a minimal `liskov.json`, preflight,
   and launch.
+- [Policy handbook](../policy/index.md) — understand every field before
+  expanding the first policy.
 
 ## The Shape Of A Deploy
 

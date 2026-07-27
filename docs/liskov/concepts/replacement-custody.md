@@ -16,9 +16,10 @@ service stays up.
 
 ## Desired State vs Observed State
 
-You declare *desired* state in `liskov.json` — how many replicas, how long each
-job runs, how much runway before expiry to start a replacement. Liskov observes
-the *actual* on-chain state and decides what to do to close the gap.
+You declare *desired* state in `liskov.json` — stable slot parallelism, schedule
+duration, renewal timing, update behavior, and bounded recovery authority.
+Liskov observes canonical deployment, job, claim, readiness, and schedule
+evidence and decides what to do to close the gap.
 
 ## Deployment States
 
@@ -38,13 +39,16 @@ When Liskov reconciles, it decides on an action and records why:
 | Action | Reason | When |
 | --- | --- | --- |
 | `launch` | `missing` | No deployment exists yet — create the first one. |
-| `replace` | `near_expiry` | The current job will expire within `replacementRunwayMs` — launch its successor now. |
-| `replace` | `invalid_observed` | Observed state no longer matches the policy — correct it. |
+| `renew` | `renewal` | The slot reached the target defined by `deployment.lifecycle.renewal`. |
+| `update` | `update` | The active policy digest differs from the slot's predecessor digest. |
+| `recover` | `launch_recovery` | A bounded launch retry is authorized. |
+| `recover` | `runtime_recovery` | Accepted failure evidence and policy authorize recovery. |
 
-`replacementRunwayMs` is the safety margin: set it large enough that a
-replacement can be launched, registered, and have its route opened before the
-outgoing job ends. The pitchdeck reference app uses a 10-minute runway
-(`600000`) on a 15-minute job (`900000`).
+V4 renewal is explicit. `after_scheduled_end` targets no paid overlap.
+`before_scheduled_end` with fixed lead targets a bounded overlap of 1–30
+minutes, no more than half the schedule duration. The target is never described
+as guaranteed readiness; Liskov records actual start, queue delay, ready
+overlap, and coverage gap. See [Lifecycle design](../policy/lifecycle.md).
 
 ## Replacement Holds
 

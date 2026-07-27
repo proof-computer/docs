@@ -17,10 +17,24 @@ becomes at runtime. It declares names and targets only — never values:
 
 ```json title="liskov.json (excerpt)"
 {
-  "secrets": {
-    "declarations": [
-      { "secretId": "stripe-key", "required": true, "target": "env", "name": "STRIPE_KEY" },
-      { "secretId": "database-url", "required": true, "target": "env", "name": "DATABASE_URL" }
+  "configuration": {
+    "secrets": [
+      {
+        "secretId": "stripe-key",
+        "required": true,
+        "destination": {
+          "kind": "env",
+          "name": "STRIPE_KEY"
+        }
+      },
+      {
+        "secretId": "database-url",
+        "required": true,
+        "destination": {
+          "kind": "env",
+          "name": "DATABASE_URL"
+        }
+      }
     ]
   }
 }
@@ -29,8 +43,8 @@ becomes at runtime. It declares names and targets only — never values:
 | Field | Meaning |
 | --- | --- |
 | `secretId` | Stable id for the secret within the policy. |
-| `name` | Environment variable the secret becomes inside the job. |
-| `target` | Delivery target; `env` injects it as an environment variable. |
+| `destination.kind` | Delivery mechanism. V4 supports `env`. |
+| `destination.name` | Environment variable the secret becomes inside the job. |
 | `required` | Whether the secret must be granted before deploy. |
 
 ## Delivery From CI
@@ -42,10 +56,10 @@ leaves the runner unencrypted.
 
 ## What The Control Plane Stores
 
-Only sealed-secret records and their digests. Policies reference secret versions
-by id and digest, so a published policy commits to exactly which sealed secrets
-it expects. The plaintext exists only inside the TEE after the loader decrypts
-it.
+Only sealed-secret records and their digests. The policy declares the stable
+`secretId` and destination; the launch-time grant selects the sealed version and
+records its digest as dynamic evidence. The plaintext exists only inside the TEE
+after the loader decrypts it.
 
 ## Preflight Catches Missing Grants
 

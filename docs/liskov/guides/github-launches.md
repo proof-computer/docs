@@ -1,66 +1,64 @@
 ---
 title: GitHub Launches
-description: Reviewable, repeatable, OIDC-pinned launches with no key files.
+description: Reviewable, repeatable, OIDC-pinned V4 builds with no key files.
 ---
 
 # GitHub Launches
 
-Liskov is GitHub-first. Your application policy lives in your repository, and the
-encrypted artifact is built and published by a GitHub Actions workflow that
-authenticates with OIDC — so there are no long-lived key files to manage.
+V4 separates GitHub build authority from the immutable artifact it produces.
+The policy lives in your repository and names the workflow identity allowed to
+publish build evidence. Artifact publication remains a separate
+server-authorized action; policy JSON does not contain an auto-publish switch.
 
-## Why GitHub-First
-
-- **Reviewable** — the policy is a file in your repo, changed through pull
-  requests.
-- **Repeatable** — the same policy produces the same launch from CI.
-- **OIDC-pinned** — the artifact publish is authorized by a pinned workflow
-  identity, not a stored secret.
-
-## Declaring The Source
-
-Point the policy at the repository, branch, and policy path:
+## Declare Build Authority
 
 ```json title="liskov.json (excerpt)"
 {
-  "source": {
-    "provider": "github",
-    "repository": "my-org/my-app",
-    "branch": "main",
-    "path": "liskov.json"
-  },
   "artifact": {
-    "mode": "planned-ipfs",
-    "requiredEncryptionMode": "aes-256-gcm-loader-v1"
+    "kind": "ipfs",
+    "cid": "bafy-replace-with-your-cid",
+    "digest": "sha256:replace-with-your-digest",
+    "encryption": {
+      "mode": "aes256_gcm"
+    }
   },
-  "artifactAutomation": {
+  "build": {
     "github": {
-      "autoPublish": true,
       "repository": "my-org/my-app",
-      "branch": "main",
-      "workflowRef": "my-org/my-app/.github/workflows/liskov-artifact.yml@refs/heads/main"
+      "allowedRefs": [
+        "refs/heads/main",
+        "refs/tags/v*"
+      ],
+      "workflowRef": "my-org/my-app/.github/workflows/liskov.yml@refs/heads/main",
+      "path": "liskov.json"
     }
   }
 }
 ```
 
-With `artifactAutomation.github.autoPublish` set, the workflow builds the bundle,
-encrypts it (`aes-256-gcm-loader-v1`), and publishes a content-addressed
-`ipfs://` artifact pinned to the policy version.
+| Field | Meaning |
+| --- | --- |
+| `repository` | GitHub repository authorized to build the workload. |
+| `allowedRefs` | Branches or tags the build authority accepts. |
+| `workflowRef` | Exact GitHub OIDC workflow identity. |
+| `path` | Policy path inside the repository. |
 
-## Importing And Publishing
+The workflow builds and, when requested, encrypts the artifact, then publishes
+an OIDC-authenticated artifact pin. The resulting CID and digest are immutable
+policy intent.
 
-From your machine, register the app and cut a signed policy version from the
-draft:
+## Import And Publish
 
 ```fish
 proof liskov application import --github my-org/my-app --publish
 ```
 
-The `workflowRef` in the policy is what the OIDC trust is pinned to: only that
-workflow, on that ref, can publish artifacts for the application.
+Review both the authored and effective policy. A workflow can publish an
+artifact pin only through its separately authorized server endpoint; possessing
+a matching repository name is not enough.
 
 ## Related
 
 - [Policy and versioning](../concepts/policy-and-versioning.md)
-- [Sealed secrets](./sealed-secrets.md) for the secrets the workflow seals
+- [Policy schema: artifact and build](../reference/policy-schema.md#artifact)
+- [Sealed secrets](./sealed-secrets.md)

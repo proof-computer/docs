@@ -1,69 +1,70 @@
 ---
 title: Budgets And Spend
-description: Quotes, caps, USDC settlement, and spend gates.
+description: V4 reward, native-fee, and Service Credit caps plus preflight and explicit spend gates.
 ---
 
 # Budgets And Spend
 
-Liskov is explicit about money: dollars in, dollars out. Every launch is quoted
-before it runs, capped by policy, and gated behind an explicit confirmation.
+Every launch and successor is bounded by immutable policy caps, checked in
+preflight, and submitted only through an explicit spend-bearing action.
 
-## The Spend Path
-
-1. **Preflight** returns a signed quote — no spend.
-2. You read the quote.
-3. **`custody execution run-one --yes-spend`** funds the quote and launches.
-
-```fish
-proof liskov custody preflight my-app          # quote, no spend
-proof liskov custody execution run-one my-app --yes-spend
-```
-
-`--yes-spend` is a stricter gate than a plain `--yes`. A command without it never
-moves money.
-
-## Budget Caps
-
-The policy caps per-launch spend so a runaway reconcile cannot drain a budget:
+## Spend Policy
 
 ```json title="liskov.json (excerpt)"
 {
-  "acurast": {
-    "budgetCaps": {
-      "maxRewardPerLaunch": 50000000000,
-      "maxNativeFeePerLaunch": 10000000000
-    },
-    "quote": { "required": true }
-  },
-  "runtime": {
-    "launch": { "reward": 40000000000, "slots": 1 }
+  "deployment": {
+    "spend": {
+      "maxRewardPlanckPerJob": "50000000000",
+      "maxNativeFeePlanckPerJob": "10000000000",
+      "maxServiceCreditMicrosPerGeneration": 2500000
+    }
   }
 }
 ```
 
-| Field | Meaning |
+| Field | Boundary |
 | --- | --- |
-| `runtime.launch.reward` | Acurast reward offered per launch, in planck (smallest units). |
-| `budgetCaps.maxRewardPerLaunch` | Hard ceiling on the reward per launch. |
-| `budgetCaps.maxNativeFeePerLaunch` | Hard ceiling on native chain fees per launch. |
-| `quote.required` | Require a signed quote before funding. |
+| `maxRewardPlanckPerJob` | Maximum Acurast processor reward for one job. |
+| `maxNativeFeePlanckPerJob` | Maximum native chain fee for one job. |
+| `maxServiceCreditMicrosPerGeneration` | Maximum platform Service Credit charge for one slot generation. |
 
-If a quote exceeds a cap, the launch is refused before spend.
+Planck values are decimal strings to avoid JSON number precision loss. Caps are
+maximum authority, not target prices.
 
-## Settlement In USDC
+## Preflight Before Spend
 
-Quote funding settles through the accepted payment asset (USDC). This is separate
-from the Acurast compute reward: the reward pays the processor; the quote funds
-the registry. Read-only commands (`application status`, `application plans`,
-`custody preflight`) never settle.
+```fish
+proof liskov custody preflight my-app
+proof liskov custody execution run-one my-app --yes-spend
+```
 
-## Replacements Cost Money Too
+Preflight checks the exact policy digest, processor eligibility, schedule,
+quote, custody balance, Service Credit balance, secrets, and ingress without
+spending. A quote above any cap is refused.
 
-Every rolling replacement is a funded launch subject to the same caps. Size
-`replacementRunwayMs` and `replicas` with that in mind — see
-[Schedules and replicas](./schedules-and-replicas.md).
+`--yes-spend` is stricter than a plain confirmation. Read-only status, plan, and
+preflight commands never move money.
+
+## Successors Also Cost Money
+
+Renewal, update, launch recovery, and runtime recovery can each create a new
+paid job only when separately authorized by lifecycle policy and execution
+capability. Fixed overlap can mean two paid schedules temporarily coexist.
+
+Budget using:
+
+```text
+maximum per-job reward
+× stable slot generations
++ native fees
++ Service Credit per generation
+```
+
+The application-wide surge of one limits simultaneous submitted successors; it
+does not remove their cost.
 
 ## Related
 
+- [Lifecycle design](../policy/lifecycle.md)
 - [Preflight and spend troubleshooting](../troubleshooting/preflight-and-spend.md)
-- [Policy schema](../reference/policy-schema.md)
+- [Policy schema: spend](../reference/policy-schema.md#deploymentspend)

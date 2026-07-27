@@ -23,6 +23,19 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
+      label: 'Policy handbook',
+      link: {type: 'doc', id: 'policy/index'},
+      collapsed: false,
+      items: [
+        'policy/fundamentals',
+        'policy/workload-recipes',
+        'policy/lifecycle',
+        'policy/placement-and-capabilities',
+        'policy/validation-and-versioning',
+      ],
+    },
+    {
+      type: 'category',
       label: 'Guides',
       link: {type: 'doc', id: 'guides/index'},
       items: [
@@ -30,7 +43,7 @@ const sidebars: SidebarsConfig = {
         'guides/sealed-secrets',
         'guides/encrypted-logging',
         'guides/baran-ingress',
-        'guides/schedules-and-replicas',
+        'guides/schedules-and-slots',
         'guides/budgets-and-spend',
       ],
     },
