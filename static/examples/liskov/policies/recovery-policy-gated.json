@@ -1,5 +1,5 @@
 {
-  "schema": "proof.liskov.application-policy",
+  "schema": "proof.liskov.application-manifest",
   "schemaVersion": 4,
   "applicationId": "failure-sensitive-worker",
   "metadata": {
@@ -9,10 +9,6 @@
       "advanced"
     ],
     "description": "A single-slot worker using the typed replacement-after-failure contract."
-  },
-  "artifact": {
-    "kind": "ipfs",
-    "cid": "bafy-replace-with-your-cid"
   },
   "runtime": {
     "engine": "nodejs",
@@ -52,6 +48,24 @@
           "maxFreshRegistrationReplacements": 2
         }
       }
+    }
+  },
+  "release": {
+    "mode": "build",
+    "artifact": {
+      "kind": "ipfs_bundle",
+      "encryption": {
+        "mode": "none"
+      }
+    },
+    "builder": {
+      "kind": "github",
+      "repository": "example/failure-sensitive-worker",
+      "allowedRefs": [
+        "refs/heads/main"
+      ],
+      "workflowRef": "example/failure-sensitive-worker/.github/workflows/liskov-release.yml@refs/heads/main",
+      "manifestPath": ".liskov/application-manifest.json"
     }
   }
 }

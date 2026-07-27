@@ -5,9 +5,10 @@ description: Complete V4 policies for workers, HTTP services, static and managed
 
 # Workload Recipes
 
-These policies are complete strict V4 documents. Replace placeholder artifact
-CIDs, digests, processor IDs, manager IDs, profiles, and spend caps with values
-appropriate to your application.
+These are complete strict V4 build manifests. Give each example the exact
+repository, allowed refs, workflow identity, and manifest path that owns its
+build. The checked-in examples contain no placeholder CIDs or artifact digests;
+the authorized workflow produces an immutable artifact version separately.
 
 ## Choose A Starting Point
 
@@ -28,14 +29,23 @@ public ingress:
 
 ```json
 {
-  "schema": "proof.liskov.application-policy",
+  "schema": "proof.liskov.application-manifest",
   "schemaVersion": 4,
   "applicationId": "queue-worker",
-  "artifact": {
-    "kind": "ipfs",
-    "cid": "bafy-replace-with-your-cid",
-    "encryption": {
-      "mode": "none"
+  "release": {
+    "mode": "build",
+    "artifact": {
+      "kind": "ipfs_bundle",
+      "encryption": {
+        "mode": "none"
+      }
+    },
+    "builder": {
+      "kind": "github",
+      "repository": "example/queue-worker",
+      "allowedRefs": ["refs/heads/main"],
+      "workflowRef": "example/queue-worker/.github/workflows/liskov-release.yml@refs/heads/main",
+      "manifestPath": ".liskov/application-manifest.json"
     }
   },
   "runtime": {
@@ -93,8 +103,7 @@ Why it is conservative:
 
 The HTTP example adds:
 
-- a GitHub build authority;
-- an encrypted IPFS artifact;
+- a GitHub build release requiring an encrypted IPFS artifact;
 - open-market processor safety gates;
 - ten minutes of scheduled renewal lead;
 - immediate updates that request cease only after the successor is ready;
@@ -281,14 +290,14 @@ in [Lifecycle design](./lifecycle.md).
 
 Change one concern at a time:
 
-1. set the exact artifact and build provenance;
+1. set the exact release requirement and builder authority;
 2. size runtime resources and network quota;
 3. choose schedule duration and renewal mode;
 4. select processors and placement requirements;
 5. set spend caps from a reviewed preflight;
 6. add ingress and its readiness path;
 7. declare variables and secret destinations; and
-8. add observability without putting sensitive values in policy JSON.
+8. add observability without putting sensitive values in manifest JSON.
 
 After each change, validate both schema semantics and the target control
 plane's capability/entitlement response.

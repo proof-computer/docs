@@ -1,5 +1,5 @@
 {
-  "schema": "proof.liskov.application-policy",
+  "schema": "proof.liskov.application-manifest",
   "schemaVersion": 4,
   "applicationId": "partner-webhook",
   "metadata": {
@@ -9,13 +9,6 @@
       "partner-pool"
     ],
     "description": "A webhook receiver restricted to one processor manager."
-  },
-  "artifact": {
-    "kind": "ipfs",
-    "cid": "bafy-replace-with-your-cid",
-    "encryption": {
-      "mode": "none"
-    }
   },
   "runtime": {
     "engine": "nodejs",
@@ -77,6 +70,24 @@
       "mode": "required",
       "port": 8080,
       "healthPath": "/ready"
+    }
+  },
+  "release": {
+    "mode": "build",
+    "artifact": {
+      "kind": "ipfs_bundle",
+      "encryption": {
+        "mode": "none"
+      }
+    },
+    "builder": {
+      "kind": "github",
+      "repository": "example/partner-webhook",
+      "allowedRefs": [
+        "refs/heads/main"
+      ],
+      "workflowRef": "example/partner-webhook/.github/workflows/liskov-release.yml@refs/heads/main",
+      "manifestPath": ".liskov/application-manifest.json"
     }
   }
 }

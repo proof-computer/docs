@@ -1,29 +1,33 @@
 ---
-title: Policy Fundamentals
-description: Understand the V4 policy mental model, minimum shape, defaults, identity, and immutable effective state.
+title: Manifest and Policy Fundamentals
+description: Understand authored manifests, release resolution, effective policies, identities, and digests.
 ---
 
-# Policy Fundamentals
+# Manifest and Policy Fundamentals
 
-Start with a policy as a declaration of boundaries, not a deployment script.
-You describe acceptable outcomes and authority; Liskov resolves dynamic facts
-such as the chosen processor, current price, schedule availability, and secret
-version at launch time.
+An application manifest declares acceptable release, execution, and security
+boundaries. It is not a deployment script and it is not the policy consumed by
+the executor. Liskov resolves its release and materializes the effective policy.
 
-## A Minimum Useful Worker
+## A Build Release
 
-This complete policy declares one 30-minute Node.js worker:
-
-```json title="liskov.json"
+```json title=".liskov/application-manifest.json"
 {
-  "schema": "proof.liskov.application-policy",
+  "schema": "proof.liskov.application-manifest",
   "schemaVersion": 4,
   "applicationId": "queue-worker",
-  "artifact": {
-    "kind": "ipfs",
-    "cid": "bafy-replace-with-your-cid",
-    "encryption": {
-      "mode": "none"
+  "release": {
+    "mode": "build",
+    "artifact": {
+      "kind": "ipfs_bundle",
+      "encryption": { "mode": "none" }
+    },
+    "builder": {
+      "kind": "github",
+      "repository": "example/queue-worker",
+      "allowedRefs": ["refs/heads/main"],
+      "workflowRef": "example/queue-worker/.github/workflows/liskov-release.yml@refs/heads/main",
+      "manifestPath": ".liskov/application-manifest.json"
     }
   },
   "runtime": {
@@ -34,9 +38,7 @@ This complete policy declares one 30-minute Node.js worker:
       "storageMiB": 64,
       "networkRequestQuota": 100
     },
-    "requiredModules": [
-      "network"
-    ]
+    "requiredModules": ["network"]
   },
   "deployment": {
     "parallelism": 1,
@@ -45,147 +47,72 @@ This complete policy declares one 30-minute Node.js worker:
       "maxStartDelayMs": 300000
     },
     "lifecycle": {
-      "renewal": {
-        "mode": "after_scheduled_end"
-      },
+      "renewal": { "mode": "after_scheduled_end" },
       "update": {
         "timing": "next_scheduled_renewal",
-        "existingJobs": {
-          "mode": "run_until_scheduled_end"
-        }
+        "existingJobs": { "mode": "run_until_scheduled_end" }
       },
       "recovery": {
-        "launch": {
-          "maxRetries": 3
-        },
-        "runtimeFailure": {
-          "mode": "wait_until_scheduled_end"
-        }
+        "launch": { "maxRetries": 3 },
+        "runtimeFailure": { "mode": "wait_until_scheduled_end" }
       }
     }
   }
 }
 ```
 
-[Download this policy](/examples/liskov/policies/minimal-worker.json).
+[Download the complete manifest](/examples/liskov/policies/minimal-worker.json).
 
-## Required Top-Level Fields
+The required top-level fields are `schema`, `schemaVersion`, `applicationId`,
+`release`, and `deployment`. Runtime, ingress, observability, configuration,
+and metadata have deterministic defaults, although an omitted runtime may not
+be useful.
 
-Only four top-level fields are required:
+## Release Is A Tagged Union
 
-| Field | Meaning |
-| --- | --- |
-| `schema` | Exact contract identity: `proof.liskov.application-policy`. |
-| `schemaVersion` | Exact version: `4`. |
-| `applicationId` | Stable author-facing application identifier. |
-| `deployment` | Schedule and lifecycle authority. |
+A manifest has exactly one release arm:
 
-Everything else has an empty or secure default, but omission does not
-necessarily make a workload launchable. A real launch normally needs an
-artifact and runtime description.
+- `mode: "build"` declares an artifact requirement and exact GitHub builder
+  authority. It contains no CID, artifact digest, image URL, upload session, or
+  publication switch.
+- `mode: "pinned"` declares one resolved artifact. An IPFS bundle has a
+  canonical `ipfs://` CID, a `sha256:` digest, and explicit encryption. A
+  runtime image has an immutable image digest plus its generated bootstrap CID
+  and bootstrap digest.
 
-## Identity: `applicationId` And `applicationUid`
+Build results are immutable artifact versions. Publication of a build release
+selects an exact `artifactVersionId`; it never means “use the latest build.”
 
-`applicationId` is authored and required. It is 1–64 lowercase letters,
-numbers, dots, underscores, or dashes, and must start with a letter or number.
+## Application Identity
 
-`applicationUid` is different: it is an optional immutable identity pin issued
-by the server. Do not invent one. Add it only after Liskov has assigned the
-application UID and you want publication to fail if the repository is imported
-into the wrong application.
+`applicationId` is the authored identifier. `applicationUid` is an optional
+server-issued immutable identity guard. Never invent a UID; add the issued
+value only when the manifest should fail against any other application record.
 
-Display name, organization, owner, publication timestamps, status, and import
-provenance are server-owned. They do not belong in the authored policy.
+Metadata is authored, but it is not copied into the effective policy. Owner,
+organization, status, timestamps, source commit, workflow evidence, and
+publication state are server-owned envelope or artifact evidence.
 
-## Authored, Effective, And Dynamic Facts
+## Three Digests
 
-Liskov preserves three layers:
-
-| Layer | Contains | Digest |
+| Digest | Identifies | Ordering |
 | --- | --- | --- |
-| Authored | Exact JSON you reviewed and published. | `authoredDigest` |
-| Effective | Authored policy with deterministic defaults normalized. | `policyDigest` |
-| Launch facts | Processor, price, availability, secret versions, resolved profiles, and other observations for one attempt. | Stored with that attempt or grant |
+| `authoredDigest` | Exact canonical authored manifest | Array order remains evidence-visible |
+| `releaseIntentDigest` | Application ID plus normalized release requirements and builder authority | `allowedRefs` is set-normalized |
+| `policyDigest` | Complete normalized effective policy, including UID and resolved artifact | Set-like execution collections are normalized |
 
-The job, runtime registration, and identity-bound secret grants bind to
-`policyDigest`, not to a mutable draft.
+Metadata changes affect only `authoredDigest`. Builder or release requirement
+changes affect `authoredDigest` and `releaseIntentDigest`. Resolved artifact,
+runtime, deployment, ingress, observability, configuration, or application UID
+changes affect `policyDigest`.
 
-Two policies with different whitespace or object-key order have the same
-canonical digest. Adding an omitted field whose value equals its default can
-change `authoredDigest` while leaving the normalized policy intent equivalent.
+Jobs, runtime registration, and identity-bound secret grants bind only to
+`policyDigest`. Dynamic processor choice, price, availability, and secret
+version remain launch facts.
 
-## Secure Defaults
+## Strict Collections
 
-The most important defaults are:
-
-```json
-{
-  "runtime": {
-    "bootstrap": {
-      "trustProfile": "proof.liskov.attested-runtime.v1",
-      "signedDiagnosticsRequired": true,
-      "identityBoundSecretsRequired": true
-    }
-  },
-  "deployment": {
-    "parallelism": 1,
-    "placement": {
-      "requirements": {
-        "trustProfile": "proof.liskov.attested-runtime.v1"
-      },
-      "processorSelection": {
-        "mode": "open_market",
-        "allowUnknownManager": false,
-        "requireScheduleClear": false,
-        "requireConsumerAccess": false
-      }
-    }
-  },
-  "observability": {
-    "logs": {
-      "enabled": false
-    },
-    "runtimeDiagnostics": {
-      "signed": true
-    }
-  }
-}
-```
-
-The trust profile, signed diagnostics, identity-bound secrets, and signed
-runtime diagnostics cannot be weakened. Explicit `false` is rejected for the
-mandatory booleans.
-
-## Units And Large Integers
-
-- Durations and timestamps are milliseconds.
-- `maxHeartbeatAgeSeconds` is seconds.
-- Memory and storage use MiB.
-- Confidence uses basis points.
-- Acurast reward and native-fee caps use decimal strings in planck so JSON
-  number precision cannot corrupt them.
-- Service Credit caps use integer micros per generation.
-
-## Strict Means Strict
-
-Every object rejects unknown fields:
-
-```json
-{
-  "deployment": {
-    "lifecycle": {
-      "renewal": {
-        "mode": "after_scheduled_end",
-        "renewalWindowMs": 300000
-      }
-    }
-  }
-}
-```
-
-The example above fails with `unknown_field` at
-`/deployment/lifecycle/renewal/renewalWindowMs`. V4 never guesses that an
-old or misspelled field means something else.
-
-Next, choose a [workload recipe](./workload-recipes.md) and then learn how its
-[lifecycle](./lifecycle.md) behaves.
+Required modules, excluded managers, static processor IDs, placement groups,
+topology constraints, variables, and secrets are normalized before effective
+hashing. Duplicate or conflicting keyed entries fail validation; Liskov never
+silently deduplicates them.

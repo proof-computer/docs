@@ -1,5 +1,5 @@
 {
-  "schema": "proof.liskov.application-policy",
+  "schema": "proof.liskov.application-manifest",
   "schemaVersion": 4,
   "applicationId": "global-api",
   "metadata": {
@@ -10,13 +10,6 @@
       "advanced"
     ],
     "description": "A typed multi-region fleet policy that requires gated capabilities."
-  },
-  "artifact": {
-    "kind": "ipfs",
-    "cid": "bafy-replace-with-your-cid",
-    "encryption": {
-      "mode": "aes256_gcm"
-    }
   },
   "runtime": {
     "engine": "nodejs",
@@ -136,6 +129,24 @@
       "enabled": true,
       "profileId": "encrypted-json-v1",
       "sinkName": "primary"
+    }
+  },
+  "release": {
+    "mode": "build",
+    "artifact": {
+      "kind": "ipfs_bundle",
+      "encryption": {
+        "mode": "aes256_gcm"
+      }
+    },
+    "builder": {
+      "kind": "github",
+      "repository": "example/global-api",
+      "allowedRefs": [
+        "refs/heads/main"
+      ],
+      "workflowRef": "example/global-api/.github/workflows/liskov-release.yml@refs/heads/main",
+      "manifestPath": ".liskov/application-manifest.json"
     }
   }
 }

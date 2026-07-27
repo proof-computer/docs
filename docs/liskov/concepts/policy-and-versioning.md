@@ -1,77 +1,71 @@
 ---
-title: Policy And Versioning
-description: How strict V4 drafts become immutable authored and effective policy versions.
+title: Manifest, Policy, and Versioning
+description: How strict V4 manifests become immutable effective policies.
 ---
 
-# Policy And Versioning
+# Manifest, Policy, and Versioning
 
-A `liskov.json` file is the authored source for one V4 application policy.
-Liskov separates an editable **draft** from immutable **published versions** and
-from the dynamic facts captured for each launch.
+A repository owns an authored application manifest. Liskov owns the immutable
+effective policy produced from that manifest and a resolved artifact.
 
-## Contract Identity
-
-Every policy starts with:
+## Contract Identities
 
 ```json
 {
-  "schema": "proof.liskov.application-policy",
+  "schema": "proof.liskov.application-manifest",
   "schemaVersion": 4,
-  "applicationId": "my-app"
+  "applicationId": "my-app",
+  "release": {}
 }
 ```
 
-`applicationId` is authored. Optional `applicationUid` is an immutable
-server-issued identity pin; never invent it. Display name, organization, owner,
-status, publication timestamps, and import provenance are server-owned.
+The materialized document instead uses
+`proof.liskov.application-policy` V4 and contains the server-resolved
+`applicationUid`, resolved artifact, runtime, deployment, ingress,
+observability, and configuration. It contains no metadata, builder authority,
+source provenance, mutable URL, upload session, or publication switch.
 
-## Drafts
+## Drafts And Artifact Versions
 
-A draft is editable and is never deployed directly:
-
-```fish
-proof liskov application import --github my-org/my-app
-proof liskov application status my-app
-```
-
-V4 parsing is strict. Unknown fields and misspelled enum arms fail with a stable
-code and JSON Pointer.
-
-## Published Versions
-
-Publishing freezes the draft:
+Import stores a manifest draft and returns `authoredDigest` plus
+`releaseIntentDigest`:
 
 ```fish
-proof liskov application import --github my-org/my-app --publish
+proof liskov application import \
+  --github my-org/my-app:.liskov/application-manifest.json@main \
+  --server-fetch
 ```
 
-Each immutable version records:
+Import never publishes. A build workflow presents exact OIDC commit, ref, and
+workflow evidence and receives a deterministic `artifactVersionId`. Pinned
+releases materialize their author-declared artifact version transactionally.
 
-- a server-owned envelope with schema identity, policy version, predecessor,
-  timestamp, and source;
-- exact authored JSON and its `authoredDigest`;
-- normalized effective JSON and its `policyDigest`; and
-- deterministic diagnostics.
+## Published Policy Versions
 
-`policyDigest` binds jobs, runtime registration, and identity-bound secret
-grants. Processor choice, market price, schedule availability, resolved
-profiles, and secret versions are dynamic launch facts stored with the attempt
-or grant.
+Publication selects the exact manifest and artifact evidence, runs the complete
+preflight, and freezes an effective policy:
 
-## Policy Updates
+```fish
+proof liskov application publish my-app \
+  --artifact-version av-... \
+  --dry-run
+proof liskov application publish my-app \
+  --artifact-version av-... \
+  --yes
+```
 
-Publishing does not rewrite running jobs. When a new version becomes active,
-`deployment.lifecycle.update` determines whether it targets the next scheduled
-renewal or begins immediately, and whether existing jobs run until schedule end
-or receive a cooperative cease request.
+`policyDigest` binds rollout, jobs, runtime registration, and identity-bound
+secret grants. Metadata and builder edits do not change it. Processor choice,
+market price, availability, and concrete secret versions remain launch facts.
 
-See [Validation and versioning](../policy/validation-and-versioning.md) for the
-read contract, canonical digests, and review checklist.
+Publishing does not itself deploy or spend. A later lifecycle slice decides
+when a changed policy digest creates a successor.
 
-## Secrets Are Versioned Separately
+## Secrets
 
-Secret plaintext is never policy JSON. A policy declares a stable `secretId`,
-whether it is required, and an env or file destination. The actual secret
-version is sealed and bound to an exact job and policy digest.
+Secret plaintext is never manifest or policy JSON. A manifest declares a
+stable secret ID and env or file destination. The actual secret version is
+sealed and bound to the exact job and `policyDigest`.
 
-See [Sealed secrets](../guides/sealed-secrets.md).
+See [Validation and versioning](../policy/validation-and-versioning.md) and
+[Sealed secrets](../guides/sealed-secrets.md).

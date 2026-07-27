@@ -1,18 +1,20 @@
 ---
-title: Policy Schema
-description: Complete field, enum, default, bound, and cross-field reference for the strict Liskov application-policy V4 contract.
+title: Manifest and Effective Policy Schema
+description: The authored application-manifest V4 and server-materialized application-policy V4 contracts.
 ---
 
-# Policy Schema
+# Manifest and Effective Policy Schema
 
-This is the complete authored contract for
-`proof.liskov.application-policy` version `4`. Every object rejects unknown
-fields. “Optional” means the field may be omitted from authored JSON; it does
-not imply that every resulting policy is executable.
+Repositories author `proof.liskov.application-manifest` version `4`. Liskov
+resolves its release and materializes `proof.liskov.application-policy`
+version `4`. Every object rejects unknown fields. “Optional” means a field may
+be omitted from authored JSON; it does not imply that the target can execute
+the resulting policy.
 
 The generated JSON Schema is available from:
 
 ```text
+GET /api/application-manifest/schema
 GET /api/application-policy/schema
 ```
 
@@ -30,17 +32,16 @@ For a guided introduction, start with the
 
 All duration fields use milliseconds unless their name says otherwise.
 
-## Top Level
+## Authored Manifest Top Level
 
 ```json
 {
-  "schema": "proof.liskov.application-policy",
+  "schema": "proof.liskov.application-manifest",
   "schemaVersion": 4,
   "applicationId": "customer-api",
   "applicationUid": "optional-server-issued-pin",
   "metadata": {},
-  "artifact": {},
-  "build": {},
+  "release": {},
   "runtime": {},
   "deployment": {},
   "ingress": {},
@@ -51,13 +52,12 @@ All duration fields use milliseconds unless their name says otherwise.
 
 | Field | Type | Presence | Default / rules |
 | --- | --- | --- | --- |
-| `schema` | string | Required | Must equal `proof.liskov.application-policy`. |
+| `schema` | string | Required | Must equal `proof.liskov.application-manifest`. |
 | `schemaVersion` | unsigned integer | Required | Must equal `4`. |
 | `applicationId` | string | Required | 1–64 lowercase letters, numbers, `.`, `_`, or `-`; starts with a letter or number. |
 | `applicationUid` | string | Optional | Immutable server-issued identity pin; if present, non-empty and must match the target application. |
 | `metadata` | object | Optional | `{}`. Author-facing classification only. |
-| `artifact` | object | Optional | Empty artifact policy with empty encryption settings. |
-| `build` | object | Optional | `{}`. |
+| `release` | tagged union | Required | Exactly one `build` or `pinned` release arm. |
 | `runtime` | object | Optional | Empty runtime settings plus mandatory bootstrap defaults. |
 | `deployment` | object | Required | Contains required `schedule` and `lifecycle`. |
 | `ingress` | object | Optional | `{}`; no ingress. |
@@ -76,45 +76,75 @@ fields.
 | `labels` | string[] | Optional | Defaults to `[]`; array order is digest-significant. |
 | `description` | string | Optional | Human explanation of workload intent. |
 
-Metadata is immutable within a published policy version and affects its
-digests, but it does not replace server-owned application settings.
+Metadata affects `authoredDigest`, but it does not enter the effective policy
+or `policyDigest`.
 
-## `artifact`
+## `release`
 
-| Field | Type | Presence | Notes |
+`release` is a strict tagged union. Mixed arms and contradictory artifact
+fields are invalid.
+
+### Build Release
+
+```json
+{
+  "mode": "build",
+  "artifact": {
+    "kind": "ipfs_bundle",
+    "encryption": { "mode": "aes256_gcm" }
+  },
+  "builder": {
+    "kind": "github",
+    "repository": "owner/repository",
+    "allowedRefs": ["refs/heads/main"],
+    "workflowRef": "owner/repository/.github/workflows/liskov.yml@refs/heads/main",
+    "manifestPath": ".liskov/application-manifest.json"
+  }
+}
+```
+
+| Field | Type | Presence | Rules |
 | --- | --- | --- | --- |
-| `kind` | enum | Optional | `ipfs` or `runtime_image`. |
-| `cid` | string | Optional | Content identifier for an IPFS artifact. |
-| `digest` | string | Optional | Content digest using the selected artifact convention. |
-| `encryption` | object | Optional | Defaults to `{}`. |
-| `runtimeImage` | string | Optional | Immutable runtime-image identifier. |
+| `mode` | enum | Required | `build`. |
+| `artifact` | tagged union | Required | `ipfs_bundle` with explicit encryption, or `runtime_image`. |
+| `builder` | tagged union | Required | Currently `kind: "github"`. |
 
-### `artifact.encryption`
+GitHub builder fields are all required. `repository` is `owner/repository`;
+`allowedRefs` is non-empty with no duplicates; `workflowRef` is exact; and
+`manifestPath` is a safe, repository-relative path. A build release contains no
+CID, artifact digest, image URL, upload session, or publication flag.
 
-| Field | Type | Presence | Values |
-| --- | --- | --- | --- |
-| `mode` | enum | Optional | `none`, `aes256_gcm` |
+### Pinned Release
 
-Artifact identity is immutable policy intent. Availability, pin state, and
-server-resolved runtime-image metadata are not authored fields.
+```json
+{
+  "mode": "pinned",
+  "artifact": {
+    "kind": "ipfs_bundle",
+    "cid": "ipfs://Qm...",
+    "digest": "sha256:...",
+    "encryption": { "mode": "none" }
+  }
+}
+```
 
-## `build`
+| Artifact kind | Required fields |
+| --- | --- |
+| `ipfs_bundle` | Canonical `ipfs://` CID, `sha256:` digest, and encryption mode `none` or `aes256_gcm`. |
+| `runtime_image` | Immutable `imageDigest`, canonical `bootstrapCid`, and `bootstrapDigest`. |
 
-| Field | Type | Presence | Notes |
-| --- | --- | --- | --- |
-| `github` | object | Optional | GitHub build and publication authority. |
+Pinned releases contain no builder authority or source provenance.
 
-### `build.github`
+## Effective Policy Top Level
 
-| Field | Type | Presence | Notes |
-| --- | --- | --- | --- |
-| `repository` | string | Required | `owner/repository`. |
-| `allowedRefs` | string[] | Optional | Defaults to `[]`; allowed Git refs or patterns interpreted by the build authority. |
-| `workflowRef` | string | Optional | Exact OIDC-pinned workflow reference. |
-| `path` | string | Optional | Repository path to the authored policy. |
+The materialized policy contains required `applicationId`,
+server-resolved `applicationUid`, resolved `artifact`, and normalized
+`runtime`, `deployment`, `ingress`, `observability`, and `configuration`.
+Its schema is `proof.liskov.application-policy` V4.
 
-Build provenance belongs here. There is no policy boolean that grants automatic
-publication; publication remains a separate server-authorized action.
+It contains no metadata, builder authority, source provenance, mutable URLs,
+upload sessions, or publication-envelope fields. Runtime-image policies bind
+both the immutable image digest and generated bootstrap CID/digest.
 
 ## `runtime`
 
@@ -525,9 +555,10 @@ File destination:
 
 | Constant | Value |
 | --- | --- |
-| Schema | `proof.liskov.application-policy` |
+| Authored schema | `proof.liskov.application-manifest` |
+| Effective schema | `proof.liskov.application-policy` |
 | Schema version | `4` |
-| Read-contract version | `2` |
+| Read-contract version | `3` |
 | Mandatory trust profile | `proof.liskov.attested-runtime.v1` |
 | Automatic renewal profile | `proof.liskov.renewal-lead.v1` |
 | Contract maximum parallelism | 64 |

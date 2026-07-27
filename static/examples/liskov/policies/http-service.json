@@ -1,5 +1,5 @@
 {
-  "schema": "proof.liskov.application-policy",
+  "schema": "proof.liskov.application-manifest",
   "schemaVersion": 4,
   "applicationId": "customer-api",
   "metadata": {
@@ -9,25 +9,6 @@
       "production"
     ],
     "description": "An HTTP API with bounded overlap, encrypted logs, and sealed credentials."
-  },
-  "artifact": {
-    "kind": "ipfs",
-    "cid": "bafy-replace-with-your-cid",
-    "digest": "sha256:replace-with-your-artifact-digest",
-    "encryption": {
-      "mode": "aes256_gcm"
-    }
-  },
-  "build": {
-    "github": {
-      "repository": "example/customer-api",
-      "allowedRefs": [
-        "refs/heads/main",
-        "refs/tags/v*"
-      ],
-      "workflowRef": "example/customer-api/.github/workflows/liskov.yml@refs/heads/main",
-      "path": "liskov.json"
-    }
   },
   "runtime": {
     "engine": "nodejs",
@@ -157,5 +138,24 @@
         "bundleId": "customer-api-production"
       }
     ]
+  },
+  "release": {
+    "mode": "build",
+    "artifact": {
+      "kind": "ipfs_bundle",
+      "encryption": {
+        "mode": "aes256_gcm"
+      }
+    },
+    "builder": {
+      "kind": "github",
+      "repository": "example/customer-api",
+      "allowedRefs": [
+        "refs/heads/main",
+        "refs/tags/v*"
+      ],
+      "workflowRef": "example/customer-api/.github/workflows/liskov.yml@refs/heads/main",
+      "manifestPath": "liskov.json"
+    }
   }
 }

@@ -1,5 +1,5 @@
 {
-  "schema": "proof.liskov.application-policy",
+  "schema": "proof.liskov.application-manifest",
   "schemaVersion": 4,
   "applicationId": "proof-docs",
   "metadata": {
@@ -11,20 +11,22 @@
     ],
     "description": "PROOF public documentation served as a Liskov canary workload."
   },
-  "artifact": {
-    "kind": "ipfs",
-    "encryption": {
-      "mode": "none"
-    }
-  },
-  "build": {
-    "github": {
+  "release": {
+    "mode": "build",
+    "artifact": {
+      "kind": "ipfs_bundle",
+      "encryption": {
+        "mode": "none"
+      }
+    },
+    "builder": {
+      "kind": "github",
       "repository": "proof-computer/docs",
       "allowedRefs": [
         "refs/heads/main"
       ],
       "workflowRef": "proof-computer/docs/.github/workflows/slipway-artifact.yml@refs/heads/main",
-      "path": ".slipway/application-policy.json"
+      "manifestPath": ".slipway/application-policy.json"
     }
   },
   "runtime": {

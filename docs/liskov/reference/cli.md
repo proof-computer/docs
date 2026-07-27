@@ -17,8 +17,9 @@ proof liskov
 │   ├── list                               list your applications
 │   ├── status <APP>                       show one application's state
 │   ├── plans <APP>                        list policy versions and plan items
-│   └── import --github <owner/repo> [--publish]
-│                                          import from GitHub, optionally publish
+│   ├── manifest validate --file <PATH>     validate an authored V4 manifest
+│   ├── import --github <repo:path@ref>     import a manifest draft
+│   └── publish <APP> [flags]               preflight or publish an effective policy
 └── custody
     ├── preflight <APP>                     validate budget/secrets/ingress → quote
     └── execution
@@ -40,8 +41,14 @@ proof liskov
 | `proof liskov application list` | List applications for your session. |
 | `proof liskov application status <APP>` | Show an application's current state. |
 | `proof liskov application plans <APP>` | List published policy versions and derived plan items. |
-| `proof liskov application import --github <owner/repo>` | Import/update the draft from a repo. |
-| `proof liskov application import --github <owner/repo> --publish` | Also publish an immutable, signed policy version. |
+| `proof liskov application manifest validate --file <path>` | Validate a strict V4 manifest and print authored/release-intent digests. |
+| `proof liskov application import --github <owner/repo:path@ref> --server-fetch` | Import/update a manifest draft. Import never publishes. |
+| `proof liskov application import --file <path>` | Import a local manifest draft. |
+| `proof liskov application publish <APP> --artifact-version <id> --dry-run` | Run read-only publication preflight for a build release. |
+| `proof liskov application publish <APP> --artifact-version <id> --yes` | Publish after repeating preflight with an authored-digest race fence. |
+
+Pinned releases do not require `--artifact-version`. Actual publication always
+requires `--yes`; `--dry-run` never writes.
 
 ## Custody
 

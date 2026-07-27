@@ -1,158 +1,99 @@
 ---
-title: Validation And Versioning
-description: Validate strict V4 policies, understand errors and digests, and evolve immutable versions safely.
+title: Validation and Versioning
+description: Validate V4 manifests, resolve releases, preflight publication, and review immutable policy history.
 ---
 
-# Validation And Versioning
+# Validation and Versioning
 
-V4 validation is deterministic and fail closed. A server never silently drops,
-renames, or clamps authored behavior.
+V4 validation is deterministic and fail closed. Liskov never drops, renames,
+clamps, or guesses authored behavior.
 
-## Get The Authoritative JSON Schema
-
-The control plane exposes the generated Draft 2020-12 schema:
+## Schemas And Validation
 
 ```text
-GET /api/application-policy/schema
+GET  /api/application-manifest/schema
+POST /api/application-manifest/validate
+GET  /api/application-policy/schema
 ```
 
-Its schema identifier is:
-
-```text
-https://schemas.proof.computer/liskov/application-policy-v4.schema.json
-```
-
-The JSON Schema describes object shape, required fields, enums, defaults, and
-integer types. Server validation additionally enforces semantic, capability,
-entitlement, and application-identity rules.
-
-## Validation Layers
-
-| Layer | Examples |
-| --- | --- |
-| Strict parsing | Unknown field, wrong enum arm, missing required union field |
-| Semantic | Invalid application id, zero duration, bad fixed lead, group counts do not sum |
-| Capability | Automatic lead or topology requested before enablement |
-| Entitlement | `parallelism` exceeds the account maximum |
-| Identity | Authored `applicationUid` does not match the target application |
-
-## Error Contract
-
-Errors carry a stable code and JSON Pointer:
-
-```json
-{
-  "code": "unknown_field",
-  "message": "unknown field `renewalWindowMs`",
-  "pointer": "/deployment/lifecycle/renewal/renewalWindowMs"
-}
-```
-
-Stable codes include:
-
-- `invalid_policy`;
-- `unknown_field`;
-- `unsupported_policy_feature`;
-- `entitlement_exceeded`;
-- `application_identity_mismatch`.
-
-Treat pointers as the authoritative location. Do not parse human messages to
-drive automation.
-
-## Authored And Effective Digests
-
-Publishing stores:
-
-```json
-{
-  "contractVersion": 2,
-  "activePolicy": {
-    "envelope": {
-      "schema": "proof.liskov.application-policy",
-      "schemaVersion": 4,
-      "policyVersionId": "customer-api-v7",
-      "previousPolicyVersionId": "customer-api-v6",
-      "publishedAtMs": 0,
-      "authoredDigest": "...",
-      "policyDigest": "...",
-      "source": {}
-    },
-    "authored": {},
-    "effective": {},
-    "diagnostics": []
-  },
-  "previousPolicy": {},
-  "rollout": {}
-}
-```
-
-`authoredDigest` hashes canonical authored JSON. `policyDigest` hashes the
-normalized effective document after defaults. Both are SHA-256 hex digests.
-Canonicalization sorts object keys recursively; array order remains meaningful.
-
-The policy digest binds jobs, runtime identity, and identity-bound secret
-grants. A launch captures dynamic observations separately so changing market
-price or processor availability does not mutate a published policy.
-
-## Publish Immutable Versions
-
-A draft is editable. Publishing freezes an immutable version:
+The generated schemas identify
+`application-manifest-v4.schema.json` and
+`application-policy-v4.schema.json`. Validate locally with the same command
+surface used by CI:
 
 ```fish
-proof liskov application import --github example/customer-api --publish
+proof liskov application manifest validate \
+  --file .liskov/application-manifest.json
 ```
 
-Before publishing:
+The manifest response reports `manifestValid`, `authoredDigest`,
+`releaseIntentDigest`, and pointer-addressed errors. Capability diagnostics do
+not make a structurally valid manifest invalid.
 
-1. inspect the exact authored JSON;
-2. validate every returned pointer;
-3. review the effective document and diagnostics;
-4. confirm spend caps and lifecycle authority;
-5. confirm the target application UID if the policy pins one; and
-6. publish once, then refer to the returned policy version and digest.
+## Publication Preflight
 
-Never edit a published version. Publish a successor version and let
-`deployment.lifecycle.update` define how it reaches running slots.
+```fish
+proof liskov application publish my-app \
+  --artifact-version av-... \
+  --dry-run
+```
 
-## Defaults And Review Discipline
+Preflight is read-only and reports independent phases:
 
-Defaults are part of the effective digest, but experts often author
-behavior-bearing defaults explicitly:
-
-- `deployment.parallelism`;
-- runtime bootstrap requirements;
-- processor-selection safety checks;
-- launch retry count;
-- signed runtime diagnostics; and
-- whether logs are enabled.
-
-Explicit values make review easier. Omission is useful for empty optional
-sections such as ingress or secrets.
-
-## Safe Policy Evolution
-
-Classify a change before publishing:
-
-| Change | Typical effect |
+| Phase | Meaning |
 | --- | --- |
-| Metadata label or description | New digest; no runtime semantic change |
-| Artifact, runtime command, resources, configuration | New desired workload |
-| Placement requirement | New processor eligibility |
-| Spend cap | New maximum authority, even if lower |
-| Renewal or update timing | Changes successor scheduling |
-| Recovery policy | Changes failure authority and retry budget |
+| `manifestValid` | Strict parse and semantic checks pass |
+| `releaseResolved` | A pinned artifact or exact build artifact version is available |
+| `policyValid` | The materialized effective policy is valid |
+| `targetSupported` | The current target supports every requested capability |
+| `entitled` | Account limits cover the requested authority |
+| `publicationEnabled` | The V4 publication gate permits this application |
+| `publicationReady` | Every preceding phase passes |
 
-For high-impact changes, use `next_scheduled_renewal` and
-`run_until_scheduled_end` first. Move to immediate update or cooperative cease
-only when the runtime and operational acceptance criteria are ready.
+For a build release, `--artifact-version` is required. A stale manifest,
+cross-UID artifact, release-intent mismatch, wrong commit/ref/workflow, wrong
+artifact kind or encryption, or non-ready build fails closed.
 
-## Common Mistakes
+## Publication Race Fence
 
-- Adding server-owned fields such as display name, owner, status, or timestamps.
-- Inventing `applicationUid` instead of using the issued value.
-- Using JSON numbers for planck caps instead of decimal strings.
-- Treating a fixed renewal lead as a readiness guarantee.
-- Using parallelism as Acurast-native replicas rather than stable Liskov slots.
-- Assuming schema validity means a gated feature is executable.
-- Putting secret plaintext in `configuration.variables`; declare a secret id
-  and destination instead.
+Actual publication remains explicit:
+
+```fish
+proof liskov application publish my-app \
+  --artifact-version av-... \
+  --yes
+```
+
+The CLI first observes preflight, then submits that exact `authoredDigest` as
+the race fence. The server locks and revalidates the application UID, stored
+manifest, expected digest, selected artifact version, capabilities, and
+entitlements in the write transaction.
+
+Publication creates immutable policy history only. It does not create a
+deployment, job, proposal, reservation, billing record, lifecycle command, or
+runtime-control command.
+
+## Immutable History And Rollout
+
+An immutable policy version records:
+
+- `authoredDigest` and `releaseIntentDigest` in its publication envelope;
+- the complete effective policy;
+- `policyDigest`;
+- the selected artifact-version evidence; and
+- its predecessor and publication timestamp.
+
+Multiple publication versions may have the same `policyDigest`. Metadata or
+builder changes can therefore create new evidence history without creating a
+new lifecycle target. Execution-affecting changes must produce a new
+`policyDigest`.
+
+## Common Rejections
+
+- Unknown fields or mixed `release` arms.
+- Empty identifiers, unsafe manifest paths, malformed CIDs or digests.
+- Duplicate or conflicting set-like entries.
+- A CID or image digest inside a build release.
+- Builder authority inside a pinned release.
+- Server-owned source, upload, status, or publication fields.
+- Assuming manifest validity means the target is capable or entitled.

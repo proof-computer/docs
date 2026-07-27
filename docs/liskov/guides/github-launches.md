@@ -1,64 +1,68 @@
 ---
-title: GitHub Launches
-description: Reviewable, repeatable, OIDC-pinned V4 builds with no key files.
+title: GitHub Build Releases
+description: Bind GitHub OIDC build evidence to an exact V4 manifest and release intent.
 ---
 
-# GitHub Launches
+# GitHub Build Releases
 
-V4 separates GitHub build authority from the immutable artifact it produces.
-The policy lives in your repository and names the workflow identity allowed to
-publish build evidence. Artifact publication remains a separate
-server-authorized action; policy JSON does not contain an auto-publish switch.
+A build release authorizes one artifact requirement and one exact GitHub
+builder. It does not contain the artifact result and it cannot auto-publish.
 
-## Declare Build Authority
-
-```json title="liskov.json (excerpt)"
+```json title=".liskov/application-manifest.json (excerpt)"
 {
-  "artifact": {
-    "kind": "ipfs",
-    "cid": "bafy-replace-with-your-cid",
-    "digest": "sha256:replace-with-your-digest",
-    "encryption": {
-      "mode": "aes256_gcm"
-    }
-  },
-  "build": {
-    "github": {
+  "release": {
+    "mode": "build",
+    "artifact": {
+      "kind": "ipfs_bundle",
+      "encryption": {
+        "mode": "aes256_gcm"
+      }
+    },
+    "builder": {
+      "kind": "github",
       "repository": "my-org/my-app",
       "allowedRefs": [
         "refs/heads/main",
-        "refs/tags/v*"
+        "refs/tags/v1"
       ],
       "workflowRef": "my-org/my-app/.github/workflows/liskov.yml@refs/heads/main",
-      "path": "liskov.json"
+      "manifestPath": ".liskov/application-manifest.json"
     }
   }
 }
 ```
 
-| Field | Meaning |
-| --- | --- |
-| `repository` | GitHub repository authorized to build the workload. |
-| `allowedRefs` | Branches or tags the build authority accepts. |
-| `workflowRef` | Exact GitHub OIDC workflow identity. |
-| `path` | Policy path inside the repository. |
+`allowedRefs` must be non-empty. `workflowRef` is exact, and `manifestPath`
+must be a safe repository-relative path. A build release rejects CIDs, artifact
+digests, image URLs, upload sessions, and publication switches.
 
-The workflow builds and, when requested, encrypts the artifact, then publishes
-an OIDC-authenticated artifact pin. The resulting CID and digest are immutable
-policy intent.
+## Evidence Flow
 
-## Import And Publish
+1. Import the exact manifest and retain its `authoredDigest` and
+   `releaseIntentDigest`.
+2. Build and pin the artifact without spend.
+3. Submit the resolved artifact, both observed digests, and GitHub OIDC
+   repository/ref/SHA/workflow evidence.
+4. Retain the returned deterministic `artifactVersionId`.
+5. Run publication preflight with that exact artifact version.
+6. Publish explicitly with `--yes` only after every phase is ready.
 
 ```fish
-proof liskov application import --github my-org/my-app --publish
+proof liskov application publish my-app \
+  --artifact-version av-... \
+  --dry-run
 ```
 
-Review both the authored and effective policy. A workflow can publish an
-artifact pin only through its separately authorized server endpoint; possessing
-a matching repository name is not enough.
+Artifact-version identity includes the application UID, release-intent digest,
+source commit, and normalized resolved artifact. Identical bytes can therefore
+have distinct provenance and manifest bindings.
+
+For an IPFS bundle, the build result contains a canonical CID, SHA-256 digest,
+and the exact required encryption. For a runtime image it binds the immutable
+image digest and the generated launchable bootstrap CID and digest.
 
 ## Related
 
-- [Policy and versioning](../concepts/policy-and-versioning.md)
-- [Policy schema: artifact and build](../reference/policy-schema.md#artifact)
-- [Sealed secrets](./sealed-secrets.md)
+- [Manifest and policy fundamentals](../policy/fundamentals.md)
+- [Validation and versioning](../policy/validation-and-versioning.md)
+- [Manifest and effective-policy schema](../reference/policy-schema.md)

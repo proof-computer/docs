@@ -1,92 +1,89 @@
 ---
-title: Policy Handbook
-description: Learn the Liskov application-policy v4 contract from first principles to advanced lifecycle and placement design.
+title: Manifest and Policy Handbook
+description: Learn how authored Liskov application manifests become immutable effective V4 policies.
 ---
 
-# Policy Handbook
+# Manifest and Policy Handbook
 
-A Liskov policy is the versioned, reviewable contract for one application. It
-describes the artifact and runtime you want, how Liskov should place and
-schedule jobs, what lifecycle transitions it may perform, the maximum spend it
-may authorize, and which configuration, ingress, and observability capabilities
-the workload needs.
+Humans and repositories author an **application manifest**. Liskov resolves its
+release and materializes an immutable **effective policy**. Keeping those
+documents separate makes build authority reviewable without confusing it with
+the execution state that controls rollout, runtime identity, and Lockbox.
 
-Every authored policy uses the strict V4 identity:
+Every authored document uses:
 
 ```json
 {
-  "schema": "proof.liskov.application-policy",
+  "schema": "proof.liskov.application-manifest",
   "schemaVersion": 4,
   "applicationId": "my-application",
-  "deployment": {
-    "schedule": {
-      "durationMs": 1800000
+  "release": {
+    "mode": "build",
+    "artifact": {
+      "kind": "ipfs_bundle",
+      "encryption": { "mode": "none" }
     },
+    "builder": {
+      "kind": "github",
+      "repository": "my-org/my-application",
+      "allowedRefs": ["refs/heads/main"],
+      "workflowRef": "my-org/my-application/.github/workflows/liskov.yml@refs/heads/main",
+      "manifestPath": ".liskov/application-manifest.json"
+    }
+  },
+  "deployment": {
+    "schedule": { "durationMs": 1800000 },
     "lifecycle": {
-      "renewal": {
-        "mode": "after_scheduled_end"
-      },
+      "renewal": { "mode": "after_scheduled_end" },
       "update": {
         "timing": "next_scheduled_renewal",
-        "existingJobs": {
-          "mode": "run_until_scheduled_end"
-        }
+        "existingJobs": { "mode": "run_until_scheduled_end" }
       },
       "recovery": {
-        "runtimeFailure": {
-          "mode": "wait_until_scheduled_end"
-        }
+        "runtimeFailure": { "mode": "wait_until_scheduled_end" }
       }
     }
   }
 }
 ```
 
-V4 rejects unknown fields. It does not contain a compatibility or
-provider-specific passthrough block.
+V4 rejects unknown fields, mixed release arms, duplicate set members, malformed
+digests, and unsafe manifest paths. It has no provider passthrough block.
+
+## The Materialization Flow
+
+```text
+application manifest
+  → authoredDigest + releaseIntentDigest
+  → pinned artifact or verified build artifactVersionId
+  → publication preflight
+  → effective application policy + policyDigest
+```
+
+`authoredDigest` identifies the exact manifest. `releaseIntentDigest` binds the
+release requirements and GitHub authority to build evidence. `policyDigest`
+identifies normalized execution and security state; it is the sole rollout,
+runtime, and Lockbox identity.
 
 ## Learn In This Order
 
-1. [Policy fundamentals](./fundamentals.md) — the mental model, minimum valid
-   shape, defaults, and the difference between authored intent and launch-time
-   facts.
-2. [Workload recipes](./workload-recipes.md) — complete policies for workers,
-   HTTP services, static placement, manager pools, evidence-gated pipelines,
-   fleets, and recovery-sensitive workloads.
-3. [Lifecycle design](./lifecycle.md) — schedules, stable slots, renewal,
-   updates, recovery, surge, generations, and measured overlap.
-4. [Placement and capabilities](./placement-and-capabilities.md) — machine and
-   evidence requirements, processor selection, geography, topology, and
-   capability gates.
-5. [Validation and versioning](./validation-and-versioning.md) — strict parsing,
-   JSON pointers, semantic validation, digests, publication records, and safe
-   policy evolution.
-6. [Complete schema reference](../reference/policy-schema.md) — every field,
-   enum, default, bound, and cross-field rule.
+1. [Fundamentals](./fundamentals.md) — the two documents, release modes,
+   identity, and digests.
+2. [Workload recipes](./workload-recipes.md) — complete build manifests for
+   common workload shapes.
+3. [Lifecycle design](./lifecycle.md) — schedules, renewal, updates, and
+   recovery.
+4. [Placement and capabilities](./placement-and-capabilities.md) — placement,
+   capability gates, and entitlements.
+5. [Validation and versioning](./validation-and-versioning.md) — strict
+   validation, preflight, publication, and immutable history.
+6. [Schema reference](../reference/policy-schema.md) — authored release fields
+   and the materialized policy surface.
 
-## The Five Questions A Policy Answers
+## Validation Is Not Execution Authority
 
-| Question | Policy section |
-| --- | --- |
-| What code runs, and how was it built? | `artifact`, `build`, `runtime` |
-| How many jobs run, where, and for how long? | `deployment.parallelism`, `schedule`, `placement` |
-| What may Liskov do when time, policy, or health changes? | `deployment.lifecycle` |
-| What is the maximum authorized cost? | `deployment.spend` |
-| What must be delivered to and exposed from the job? | `configuration`, `ingress`, `observability` |
-
-## Schema Validity Is Not Execution Authority
-
-The schema is deliberately broader than the first executable capability set.
-For example, multi-slot fleets, automatic renewal lead calculation, topology
-constraints, and replacement after runtime failure are fully typed but may be
-capability-gated by a control plane.
-
-A policy passes three distinct checks:
-
-1. **Shape** — valid JSON with only known fields and enum values.
-2. **Semantics** — bounds and cross-field invariants are correct.
-3. **Capability and entitlement** — this control plane and account are
-   authorized to execute the requested behavior.
-
-Never remove safety intent just to make a capability check pass. Select an
-executable policy deliberately, or wait for the required capability.
+Contract validity, target capability, and account entitlement are independent.
+A manifest may remain a valid draft while publication is blocked because the
+target cannot deliver cooperative cease, a requested ingress combination, or
+another typed capability. Never remove safety intent merely to make a target
+gate pass.

@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const manifestPath = path.resolve(rootDir, stringFlag("--manifest") ?? ".slipway/dist/proof-docs-acurast-manifest.json");
+const authoredManifestPath = path.resolve(rootDir, ".slipway/application-policy.json");
 const audience = nonEmptyEnv("SLIPWAY_ARTIFACT_PIN_AUDIENCE") ?? "slipway-artifact-pin";
 const urlTemplate = nonEmptyEnv("SLIPWAY_ARTIFACT_PIN_URL") ?? "https://liskov.proof.computer/api/applications/{applicationId}/artifact-pins/github";
 const applicationIds = (nonEmptyEnv("SLIPWAY_APPLICATION_IDS") ?? "proof-docs")
@@ -17,6 +19,7 @@ const json = process.argv.includes("--json");
 if (applicationIds.length === 0) throw new Error("SLIPWAY_APPLICATION_IDS must include at least one Application id");
 
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+const authoredManifest = JSON.parse(await readFile(authoredManifestPath, "utf8"));
 const scriptCid = stringField(manifest, "scriptIpfs") ?? stringField(manifest, "scriptCid");
 const bundleDigest = stringField(manifest, "scriptHash") ?? prefixedSha256(stringField(manifest, "bundleSha256"));
 if (!scriptCid) throw new Error(`Manifest ${manifestPath} is missing scriptIpfs`);
@@ -25,12 +28,30 @@ if (!bundleDigest) throw new Error(`Manifest ${manifestPath} is missing scriptHa
 const token = await githubOidcToken(audience);
 const results = [];
 for (const applicationId of applicationIds) {
+  if (authoredManifest.applicationId !== applicationId) {
+    throw new Error(`Authored manifest applicationId does not match ${applicationId}`);
+  }
+  const release = objectField(authoredManifest, "release");
+  if (release?.mode !== "build") throw new Error("Docs artifact evidence requires a build release");
+  const builder = objectField(release, "builder");
+  if (!Array.isArray(builder?.allowedRefs)) throw new Error("GitHub builder allowedRefs must be an array");
+  const normalizedRelease = structuredClone(release);
+  objectField(normalizedRelease, "builder").allowedRefs = [...builder.allowedRefs].sort();
+  const authoredDigest = canonicalDigest(authoredManifest);
+  const releaseIntentDigest = canonicalDigest({
+    schema: "proof.liskov.release-intent",
+    schemaVersion: 4,
+    applicationId,
+    release: normalizedRelease
+  });
   const url = urlTemplate.replaceAll("{applicationId}", encodeURIComponent(applicationId));
   const body = {
     domain: "proof.slipway.github-artifact-pin.v1",
     applicationId,
     scriptCid,
     bundleDigest,
+    authoredDigest,
+    releaseIntentDigest,
     generatedAt: stringField(manifest, "generatedAt") ?? new Date().toISOString(),
     encryption: {
       mode: "none"
@@ -60,13 +81,18 @@ for (const applicationId of applicationIds) {
   if (!response.ok) {
     throw new Error(`Slipway artifact pin post failed for ${applicationId}: ${response.status} ${redactResponse(responseText)}`);
   }
-  results.push(summarizePinResult(JSON.parse(responseText), applicationId));
+  const result = JSON.parse(responseText);
+  if (!stringField(result, "artifactVersionId")) {
+    throw new Error(`Liskov artifact pin response for ${applicationId} omitted artifactVersionId`);
+  }
+  results.push(summarizePinResult(result, applicationId));
 }
 
 const output = {
   ok: true,
   applicationIds,
   posted: results.length,
+  artifactVersionIds: results.map((result) => result.artifactVersionId),
   scriptCid,
   bundleDigest,
   results
@@ -119,6 +145,19 @@ function stringField(record, field) {
   return typeof value === "string" && value.length > 0 ? value : undefined;
 }
 
+function canonicalDigest(value) {
+  return createHash("sha256").update(canonicalJson(value)).digest("hex");
+}
+
+function canonicalJson(value) {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.keys(value).sort().map((key) =>
+      `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
 function prefixedSha256(value) {
   return value ? `sha256:${value.replace(/^sha256:/u, "")}` : undefined;
 }
@@ -132,6 +171,7 @@ function summarizePinResult(result, fallbackApplicationId) {
   const policyArtifact = objectField(policy, "artifact");
   return {
     applicationId: stringField(result, "applicationId") ?? fallbackApplicationId,
+    artifactVersionId: stringField(result, "artifactVersionId"),
     pinId: stringField(pin, "pinId"),
     autoPublished: booleanField(pin, "autoPublished"),
     publishedPolicyVersionId: stringField(pin, "publishedPolicyVersionId"),

@@ -1,5 +1,5 @@
 {
-  "schema": "proof.liskov.application-policy",
+  "schema": "proof.liskov.application-manifest",
   "schemaVersion": 4,
   "applicationId": "queue-worker",
   "metadata": {
@@ -8,13 +8,6 @@
       "worker"
     ],
     "description": "A single scheduled worker with no ingress or secrets."
-  },
-  "artifact": {
-    "kind": "ipfs",
-    "cid": "bafy-replace-with-your-cid",
-    "encryption": {
-      "mode": "none"
-    }
   },
   "runtime": {
     "engine": "nodejs",
@@ -53,6 +46,24 @@
           "mode": "wait_until_scheduled_end"
         }
       }
+    }
+  },
+  "release": {
+    "mode": "build",
+    "artifact": {
+      "kind": "ipfs_bundle",
+      "encryption": {
+        "mode": "none"
+      }
+    },
+    "builder": {
+      "kind": "github",
+      "repository": "example/queue-worker",
+      "allowedRefs": [
+        "refs/heads/main"
+      ],
+      "workflowRef": "example/queue-worker/.github/workflows/liskov-release.yml@refs/heads/main",
+      "manifestPath": ".liskov/application-manifest.json"
     }
   }
 }

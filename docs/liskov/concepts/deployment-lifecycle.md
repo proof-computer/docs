@@ -54,7 +54,7 @@ obtains its certificate. The private key never leaves the Acurast runtime.
 
 If the policy requests `ingress.http.mode: "required"`, Liskov opens a route to
 the declared port and accepts readiness at the declared `healthPath`. Provider
-selection and route metadata are launch facts, not authored policy fields. See
+selection and route metadata are launch facts, not authored manifest fields. See
 [HTTP ingress](../guides/baran-ingress.md).
 
 ## 8. Validation And Settlement

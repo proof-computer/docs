@@ -1,41 +1,39 @@
 ---
-title: First Deploy
-description: Write a V4 liskov.json, preflight, and run your first custody execution.
+title: First Manifest and Publication Preflight
+description: Author, validate, import, resolve, and preflight a V4 application without deployment or spend.
 ---
 
-# First Deploy
+# First Manifest and Publication Preflight
 
-This page takes a GitHub Node.js webserver from a strict V4 policy to a sealed
-deployment on an Acurast phone.
+V4 publication is disabled in production while the materialization contract is
+rolled out. This guide stops at the safe, read-only preflight boundary; it does
+not deploy, reserve, bill, submit, or issue lifecycle commands.
 
-## 1. Declare The App
+## 1. Author A Manifest
 
-Create `liskov.json` in your repository:
+Create `.liskov/application-manifest.json`:
 
-```json title="liskov.json"
+```json
 {
-  "schema": "proof.liskov.application-policy",
+  "schema": "proof.liskov.application-manifest",
   "schemaVersion": 4,
   "applicationId": "my-app",
   "metadata": {
     "appType": "managed-web-app",
     "description": "My first Liskov HTTP service."
   },
-  "artifact": {
-    "kind": "ipfs",
-    "cid": "bafy-replace-with-your-cid",
-    "encryption": {
-      "mode": "none"
-    }
-  },
-  "build": {
-    "github": {
+  "release": {
+    "mode": "build",
+    "artifact": {
+      "kind": "ipfs_bundle",
+      "encryption": { "mode": "none" }
+    },
+    "builder": {
+      "kind": "github",
       "repository": "my-org/my-app",
-      "allowedRefs": [
-        "refs/heads/main"
-      ],
+      "allowedRefs": ["refs/heads/main"],
       "workflowRef": "my-org/my-app/.github/workflows/liskov.yml@refs/heads/main",
-      "path": "liskov.json"
+      "manifestPath": ".liskov/application-manifest.json"
     }
   },
   "runtime": {
@@ -47,9 +45,7 @@ Create `liskov.json` in your repository:
       "storageMiB": 128,
       "networkRequestQuota": 1000
     },
-    "requiredModules": [
-      "network"
-    ]
+    "requiredModules": ["network"]
   },
   "deployment": {
     "parallelism": 1,
@@ -58,26 +54,14 @@ Create `liskov.json` in your repository:
       "maxStartDelayMs": 300000
     },
     "lifecycle": {
-      "renewal": {
-        "mode": "before_scheduled_end",
-        "leadTime": {
-          "mode": "fixed",
-          "durationMs": 300000
-        }
-      },
+      "renewal": { "mode": "after_scheduled_end" },
       "update": {
         "timing": "next_scheduled_renewal",
-        "existingJobs": {
-          "mode": "run_until_scheduled_end"
-        }
+        "existingJobs": { "mode": "run_until_scheduled_end" }
       },
       "recovery": {
-        "launch": {
-          "maxRetries": 3
-        },
-        "runtimeFailure": {
-          "mode": "wait_until_scheduled_end"
-        }
+        "launch": { "maxRetries": 3 },
+        "runtimeFailure": { "mode": "wait_until_scheduled_end" }
       }
     },
     "spend": {
@@ -95,62 +79,37 @@ Create `liskov.json` in your repository:
 }
 ```
 
-V4 rejects unknown fields. The complete contract is in the
-[policy schema reference](../reference/policy-schema.md); the
-[Policy handbook](../policy/index.md) explains how the sections work together.
-
-## 2. Import And Publish
-
-Register the app from GitHub. `--publish` freezes an immutable policy version:
+## 2. Validate And Import
 
 ```fish
-proof liskov application import --github my-org/my-app --publish
+proof liskov application manifest validate \
+  --file .liskov/application-manifest.json
+
+proof liskov application import \
+  --github my-org/my-app:.liskov/application-manifest.json@main \
+  --server-fetch
 ```
 
-Inspect the authored and effective policy, version, digest, and rollout:
+Record both returned digests. Import is manifest-only and never publishes.
+
+## 3. Build And Record The Artifact Version
+
+The authorized workflow builds and pins the bundle, then submits its exact
+GitHub OIDC commit/ref/workflow plus the observed `authoredDigest` and
+`releaseIntentDigest`. Save the returned `artifactVersionId`.
+
+## 4. Run Read-Only Publication Preflight
 
 ```fish
-proof liskov application status my-app
-proof liskov application plans my-app
+proof liskov application publish my-app \
+  --artifact-version av-... \
+  --dry-run
 ```
 
-## 3. Preflight
+Review all seven phase flags. A valid manifest can still be blocked by
+unresolved release evidence, unsupported capability, missing entitlement, or
+the production publication gate.
 
-Preflight validates policy semantics, platform capability, account entitlement,
-artifact, placement, spend, secrets, and required ingress. It does not spend:
-
-```fish
-proof liskov custody preflight my-app
-```
-
-Read every diagnostic and quote cap before continuing. If a required secret is
-missing, grant it first — see [Sealed secrets](../guides/sealed-secrets.md).
-
-## 4. Launch
-
-Run exactly one custody execution:
-
-```fish
-proof liskov custody execution run-one my-app --yes-spend
-```
-
-`--yes-spend` is stricter than a plain confirmation. Liskov creates the bounded
-job, funds the accepted quote, waits for identity-bound runtime registration,
-and opens the required HTTP route.
-
-## 5. Watch Canonical State
-
-```fish
-proof liskov application status my-app
-```
-
-Watch the exact policy digest, deployment, job, processor claim, runtime
-readiness, and schedule boundary. The full sequence is in
-[Deployment lifecycle](../concepts/deployment-lifecycle.md).
-
-## Next
-
-- Learn the policy model: [Policy fundamentals](../policy/fundamentals.md).
-- Start from another workload: [Workload recipes](../policy/workload-recipes.md).
-- Understand renewal and updates: [Lifecycle design](../policy/lifecycle.md).
-- If launch stalls: [Troubleshooting](../troubleshooting/index.md).
+Do not proceed to deployment or spend while V4 publication remains disabled.
+See [Validation and versioning](../policy/validation-and-versioning.md) for the
+full phase contract.

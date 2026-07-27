@@ -1,5 +1,5 @@
 {
-  "schema": "proof.liskov.application-policy",
+  "schema": "proof.liskov.application-manifest",
   "schemaVersion": 4,
   "applicationId": "hardware-bound-indexer",
   "metadata": {
@@ -9,13 +9,6 @@
       "static-placement"
     ],
     "description": "A job pinned to an audited processor set."
-  },
-  "artifact": {
-    "kind": "ipfs",
-    "cid": "bafy-replace-with-your-cid",
-    "encryption": {
-      "mode": "aes256_gcm"
-    }
   },
   "runtime": {
     "engine": "nodejs",
@@ -90,5 +83,23 @@
         }
       }
     ]
+  },
+  "release": {
+    "mode": "build",
+    "artifact": {
+      "kind": "ipfs_bundle",
+      "encryption": {
+        "mode": "aes256_gcm"
+      }
+    },
+    "builder": {
+      "kind": "github",
+      "repository": "example/hardware-bound-indexer",
+      "allowedRefs": [
+        "refs/heads/main"
+      ],
+      "workflowRef": "example/hardware-bound-indexer/.github/workflows/liskov-release.yml@refs/heads/main",
+      "manifestPath": ".liskov/application-manifest.json"
+    }
   }
 }

@@ -29,7 +29,7 @@ provider-owned route, hostname, certificate, or session state.
 | `healthPath` | Readiness path used to accept the exact successor runtime. |
 
 Provider selection, public hostname, certificate identity, transport, and route
-status are dynamic server-owned facts. They do not belong in authored policy.
+status are dynamic server-owned facts. They do not belong in an authored manifest.
 
 ## Readiness Responsibilities
 

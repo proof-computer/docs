@@ -1,5 +1,5 @@
 {
-  "schema": "proof.liskov.application-policy",
+  "schema": "proof.liskov.application-manifest",
   "schemaVersion": 4,
   "applicationId": "confidential-pipeline",
   "metadata": {
@@ -9,14 +9,6 @@
       "evidence-gated"
     ],
     "description": "A confidential pipeline requiring recent placement evidence."
-  },
-  "artifact": {
-    "kind": "runtime_image",
-    "runtimeImage": "proof-runtime-node-v1",
-    "digest": "sha256:replace-with-your-runtime-image-digest",
-    "encryption": {
-      "mode": "aes256_gcm"
-    }
   },
   "runtime": {
     "engine": "nodejs",
@@ -135,5 +127,20 @@
         "bundleId": "pipeline-production"
       }
     ]
+  },
+  "release": {
+    "mode": "build",
+    "artifact": {
+      "kind": "runtime_image"
+    },
+    "builder": {
+      "kind": "github",
+      "repository": "example/confidential-pipeline",
+      "allowedRefs": [
+        "refs/heads/main"
+      ],
+      "workflowRef": "example/confidential-pipeline/.github/workflows/liskov-release.yml@refs/heads/main",
+      "manifestPath": ".liskov/application-manifest.json"
+    }
   }
 }
