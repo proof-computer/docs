@@ -4,14 +4,16 @@ Public documentation site for running services on PROOF's confidential-compute
 stack.
 
 Baran docs cover secure HTTP ingress for supported Acurast jobs. Liskov docs
-cover managed replacement-custody deployment into TEEs on real Acurast phones.
-Blackbox and Lockbox are in progress and stay out of navigation until their
-public docs are ready.
+cover the v1 customer path from Marketplace or GitHub through configuration,
+operation, proof, billing, reference, and recovery. The two products remain
+independent.
 
 ## Development
 
 ```fish
 pnpm install
+pnpm check:liskov
+pnpm typecheck:liskov-examples
 pnpm typecheck
 pnpm build
 pnpm start
@@ -41,16 +43,20 @@ evidence bound to the exact authored and release-intent digests.
 
 ## Content Rules
 
-- Keep user-facing docs aligned with public package surfaces, not internal
-  monorepo paths.
-- Keep unfinished pages short and clear about the user's next useful step.
-- Describe Baran as secure HTTPS ingress for supported long-running Acurast
-  Node.js jobs. Explain unsupported hosting cases as requirements, not internal
-  release staging.
-- Describe Liskov as managed replacement-custody deployment. Commands and
-  package names use the Baran/Liskov brand ahead of the CLI rename — keep prose
-  consistent with the marketing site, not the current `proof switchboard`/`proof
-  slipway` codenames.
-- Do not add Blackbox or Lockbox navigation until their public docs are ready.
+- Keep user-facing docs aligned with accepted product decisions and current
+  owner implementations, not internal monorepo paths or temporary rollout
+  gates.
+- Use the Liskov capability reference as the public availability owner. Label
+  an unavailable v1 step with its exact release gate; keep internal and
+  post-v1 recipes out of navigation.
+- Keep the Marketplace and GitHub paths complete for new readers, and preserve
+  exact commands, fields, status tokens, units, and boundaries in Reference.
+- Describe Baran as a separate secure HTTPS ingress product for supported
+  long-running Acurast jobs. Liskov does not imply hosted ingress.
+- Use the Liskov, Baran, managed secrets, Liskov logging, and USD Service Credit
+  names in public prose. Keep compatibility codenames only when a reader must
+  type or recognize a literal contract.
+- Run `pnpm check:liskov`, `pnpm typecheck:liskov-examples`, `pnpm typecheck`,
+  and `pnpm build` before publishing Liskov changes.
 - The `.slipway/` canary app, `slipway:*` scripts, and the `Slipway Artifact`
   workflow are internal infra and intentionally keep the `slipway` codename.
