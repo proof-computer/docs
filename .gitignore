@@ -1,6 +1,8 @@
 node_modules
 .docusaurus
 build
+!docs/liskov/build/
+!docs/liskov/build/**
 .slipway/dist
 .env
 .env.*
