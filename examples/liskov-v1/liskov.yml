@@ -1,0 +1,19 @@
+name: Build Liskov Application
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  artifact:
+    uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v1
+    with:
+      app-id: status-worker
+      working-directory: .
+      entrypoint: app.cjs
+      authored-manifest-path: .liskov/application-manifest.json

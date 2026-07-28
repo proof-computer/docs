@@ -1,14 +1,23 @@
 ---
 title: Reference
-description: Liskov CLI, policy schema, and state vocabulary.
+description: Look up exact Liskov commands, Manifest V4 fields, SDK behavior, capabilities, statuses, precedence, and terms.
 ---
 
 # Reference
 
-- [CLI](./cli.md): the full `proof liskov` command tree.
-- [Policy schema](./policy-schema.md): every strict V4 field, enum, default,
-  bound, and cross-field invariant.
-- [Policy handbook](../policy/index.md): the zero-to-expert learning path and
-  complete workload examples.
-- [Reconcile states](./reconcile-states.md): the deployment-state and
-  launch-decision vocabulary.
+Reference pages describe the exact public v1 contract. Use task pages for a
+guided workflow; use this section when names, defaults, bounds, units, or
+machine-readable values matter.
+
+- [CLI](./cli.md)
+- [Application Manifest V4](./manifest-v4.md)
+- [Runtime SDK](./runtime-sdk.md)
+- [Capabilities and limits](./capabilities.md)
+- [Statuses, actions, and errors](./statuses-actions-errors.md)
+- [Configuration and environment precedence](./configuration-precedence.md)
+- [Schema and discovery endpoints](./schema-endpoints.md)
+- [Glossary](./glossary.md)
+
+The presence of a field in the complete V4 schema does not necessarily mean
+that the first public capability set enables it. Availability is stated
+explicitly.

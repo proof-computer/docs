@@ -10,6 +10,8 @@
     "serve": "docusaurus serve",
     "clear": "docusaurus clear",
     "typecheck": "tsc --noEmit",
+    "typecheck:liskov-examples": "tsc --project examples/liskov-v1/tsconfig.json",
+    "check:liskov": "node scripts/check-liskov-docs.mjs",
     "acurast:build": "node scripts/build-acurast-bundle.mjs",
     "acurast:start": "node scripts/acurast-docs-server.mjs",
     "slipway:artifact": "node scripts/build-acurast-bundle.mjs --json",
@@ -31,6 +33,13 @@
     "@docusaurus/module-type-aliases": "3.10.1",
     "@docusaurus/tsconfig": "3.10.1",
     "@docusaurus/types": "3.10.1",
+    "@proof-computer/liskov-runtime": "github:proof-computer/liskov-runtime-js#v0.3.26",
+    "@types/node": "^24.13.3",
     "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@proof-computer/liskov-runtime"
+    ]
   }
 }

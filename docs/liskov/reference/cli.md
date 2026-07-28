@@ -1,75 +1,99 @@
 ---
 title: CLI
-description: The proof liskov command tree.
+description: Public proof liskov v1 command tree, confirmations, machine-readable output, and safe automation rules.
 ---
 
 # CLI
 
-All Liskov commands are subcommands of `proof liskov`. Read-only commands never
-spend; only `custody execution run-one --yes-spend` moves money.
+The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.3.3` and
+requires Node.js 22 or later. All commands begin with `proof liskov`.
 
-```text
-proof liskov
-├── login                                  open a browser-confirmed CLI session
-├── whoami                                 print the current session identity
-├── logout                                 clear local session state
-├── application
-│   ├── list                               list your applications
-│   ├── status <APP>                       show one application's state
-│   ├── plans <APP>                        list policy versions and plan items
-│   ├── manifest validate --file <PATH>     validate an authored V4 manifest
-│   ├── import --github <repo:path@ref>     import a manifest draft
-│   └── publish <APP> [flags]               preflight or publish an effective policy
-└── custody
-    ├── preflight <APP>                     validate budget/secrets/ingress → quote
-    └── execution
-        └── run-one <APP> [flags]           launch exactly one execution
+```bash
+npm install --global @proof-computer/proof-cli
+proof plugins install @proof-computer/proof-cli-liskov
+proof liskov --help
 ```
 
 ## Session
 
-| Command | Description |
+| Command | Effect |
 | --- | --- |
-| `proof liskov login` | Open a browser-confirmed session and save a local bearer token. |
-| `proof liskov whoami` | Read the session file, call the control plane, print identity. |
-| `proof liskov logout` | Remove local session state. |
+| `login` | Start browser-confirmed GitHub login. Use `--no-browser` to print the verification URL. |
+| `whoami` | Read current identity and selected organization. |
+| `logout` | Remove the local session. |
 
-## Applications
+Login stores a bearer token in an XDG-style local file with restricted
+permissions and never prints token material. `--config PATH` selects another
+session file.
 
-| Command | Description |
+## Organizations and billing
+
+| Command | Effect |
 | --- | --- |
-| `proof liskov application list` | List applications for your session. |
-| `proof liskov application status <APP>` | Show an application's current state. |
-| `proof liskov application plans <APP>` | List published policy versions and derived plan items. |
-| `proof liskov application manifest validate --file <path>` | Validate a strict V4 manifest and print authored/release-intent digests. |
-| `proof liskov application import --github <owner/repo:path@ref> --server-fetch` | Import/update a manifest draft. Import never publishes. |
-| `proof liskov application import --file <path>` | Import a local manifest draft. |
-| `proof liskov application publish <APP> --artifact-version <id> --dry-run` | Run read-only publication preflight for a build release. |
-| `proof liskov application publish <APP> --artifact-version <id> --yes` | Publish after repeating preflight with an authored-digest race fence. |
+| `organization list` | List readable organizations. |
+| `organization use ORG_ID` | Select the organization for this session. |
+| `organization billing ORG_ID` | Read plan and billing projection. |
+| `organization service-credits ORG_ID` | Read available, reserved, and used Service Credits. |
+| `organization billing transactions ORG_ID` | Page through ledger transactions with `--limit` and `--before`. |
 
-Pinned releases do not require `--artifact-version`. Actual publication always
-requires `--yes`; `--dry-run` never writes.
+These commands are read-only. Organization creation, invitations, plan change,
+and Stripe funding are Console tasks.
 
-## Custody
+## Application reads
 
-| Command | Description |
+| Command | Effect |
 | --- | --- |
-| `proof liskov custody preflight <APP>` | Validate budget, secrets, and ingress; return a signed quote. No spend. |
-| `proof liskov custody execution run-one <APP>` | Launch exactly one custody execution. |
+| `application list` | List readable Applications. |
+| `application status APPLICATION_ID` | Read customer-facing Application state. |
+| `application activity APP_REF` | Read activity; accepts `--limit` and `--before`. |
+| `application action-plan APP_REF` | Read current blockers and supported actions. |
+| `application secrets APPLICATION_ID` | Read declared secret requirements, never values. |
+| `application plans APPLICATION_ID` | Advanced effective-policy/plan inspection. |
+| `application deployment status APP_REF` | Advanced deployment evidence. |
+| `application artifact-pin list APP_REF` | Advanced artifact-version evidence. |
 
-### `run-one` flags
+An `APP_REF` can be the accepted Application UID, name, or ID. Prefer the UID
+for automation and support.
 
-| Flag | Description |
+## Authoring and publication
+
+| Command | Important flags and behavior |
 | --- | --- |
-| `--yes-spend` | Required to actually fund and launch. Stricter than `--yes`. |
-| `--plan-item-id <id>` | Target a specific plan item. |
-| `--idempotency-key <key>` | Make a retried launch safe to repeat. |
-| `--override-replacement-hold --reason <text>` | Clear a [replacement hold](../troubleshooting/replacement-holds.md) deliberately, with a reason. |
+| `application manifest validate --file PATH` | Strict local V4 validation; read-only. |
+| `application import --file PATH` | Import/update a local draft; never publishes. |
+| `application import --github OWNER/REPO:PATH@REF --server-fetch` | Ask Liskov to fetch and import the GitHub draft. |
+| `application publish APP_REF --artifact-version ID --dry-run` | Read-only publication preflight for a build release. |
+| `application publish APP_REF --artifact-version ID --yes` | Publish after fresh preflight and authored-digest race check. |
+| `application set-repository APP_REF OWNER/REPO` | Preview by default; `--yes` confirms. |
+| `application rename APP_REF DISPLAY_NAME` | Preview by default; `--yes` confirms. |
 
-## Global Flags
+Pinned releases do not require `--artifact-version`. `--paused --reason TEXT`
+can atomically leave a newly published policy paused when that deliberate
+workflow is needed.
 
-| Flag / variable | Description |
+## Operations
+
+| Command | Behavior |
 | --- | --- |
-| `--json` | Machine-readable output. Never prints token material. |
-| `--config <path>` | Override the session file location. |
-| `PROOF_LISKOV_SESSION_FILE` | Environment override for the session file (XDG-style, written `0600`). |
+| `application action-plan retry APP_REF --decision-id ID --reason TEXT --yes` | Perform the supported bounded retry for one current decision. |
+| `application pause APP_REF --reason TEXT` | Read preview; add `--yes` to stop future planning. |
+| `application resume APP_REF --reason TEXT` | Read preview; add `--yes` to resume future planning. |
+| `application retire APP_REF` | Read retirement preview/state; add `--reason` and `--yes` to start when available. |
+| `application retire cancel APP_REF` | Read cancellation preview; add `--yes` to cancel while allowed. |
+
+Pause and retirement do not force-stop existing Acurast jobs.
+
+## Common flags and automation
+
+- `--json` emits machine-readable output and never token material.
+- `--help` shows generated help for the installed version.
+- `--config PATH` selects a session file.
+- Mutations either preview/read by default or require an explicit `--yes`.
+
+In automation, parse stable IDs, codes, booleans, and timestamps from `--json`;
+do not scrape human labels. Stop on a nonzero exit. Never repeat a mutation
+until you have read the resulting state.
+
+The installed plugin also contains platform, compatibility, and recovery
+commands. Their presence is not a supported customer contract; they are
+intentionally omitted here.

@@ -1,69 +1,47 @@
 ---
 sidebar_position: 1
 title: Liskov
-description: User documentation map for Liskov.
+description: Deploy applications to secure Acurast phones, then inspect the evidence from source to running job.
 ---
 
-# Liskov
+# Deploy like a cloud. Verify what actually ran.
 
-**Deploy like it's a cloud. Prove it isn't.**
+Liskov helps you run an application on the Acurast network without managing
+the deployment machinery yourself. Acurast supplies phones with trusted
+execution environments (TEEs): hardware-isolated places where your code can
+run away from a conventional cloud server.
 
-Liskov takes one policy in your repo and one motion — and your app runs sealed
-in a TEE on a real Acurast phone, on real home broadband. Secrets are delivered
-sealed, logs stream back encrypted, and the public front door is wired for you.
+You can start in either of two ways:
 
-Use Liskov when you want the developer experience of a managed deploy without
-giving up the properties that make confidential compute worth running: your code
-stays encrypted in transit, your secrets are sealed to the enclave before they
-leave your machine, and the placement is provable.
+- **[Launch from Marketplace](./get-started/marketplace.md)** when you want a
+  curated application and do not need to maintain its source.
+- **[Deploy from GitHub](./get-started/github.md)** when you are bringing your
+  own repository and want a verifiable release trail.
 
-:::info Early access
-Liskov is in early access. APIs, command names, and pricing may still change.
-:::
+Both paths create a Liskov **Application**. The Application keeps your desired
+configuration, immutable artifact evidence, deployments, logs, billing, and
+lifecycle together. Liskov manages the Acurast jobs needed to keep that intent
+running over time.
 
-## What You Can Do
+## What v1 gives you
 
-Liskov is built from a set of systems you compose through one application policy:
+- A proof trail from a Marketplace version or GitHub commit to the artifact,
+  effective policy, Acurast job, processor, and runtime evidence.
+- Managed variables and secrets, with job-bound delivery.
+- Bounded spend through USD Service Credits. You do not manage an ACU wallet.
+- Clear Application status and an Action Plan when your input is required.
+- Time-boxed jobs, deliberate updates, pause/resume, bounded retry, and safe
+  retirement.
 
-- **GitHub-first launches** — reviewable, repeatable, OIDC-pinned launches with
-  no key files on disk.
-- **Sealed secrets** — secrets are encrypted to the enclave before they leave
-  your machine (delivered through [Lockbox](./guides/sealed-secrets.md)).
-- **Encrypted logging** — logs are end-to-end encrypted from the seal to your
-  terminal (through [Blackbox](./guides/encrypted-logging.md)).
-- **Baran ingress** — a public HTTPS front door from one line of policy
-  (see [Baran ingress](./guides/baran-ingress.md)).
-- **Encrypted code** — plaintext only lives in your repo and inside the TEE;
-  ciphertext in transit.
-- **Lifecycle policy** — stable slots, bounded schedules, renewal, updates,
-  recovery, and measured overlap (see the
-  [Policy handbook](./policy/index.md)).
-- **Dollars in, dollars out** — budgets, quotes, and settlement in USDC
-  (see [Budgets and spend](./guides/budgets-and-spend.md)).
-- **Spend controls** — caps, preflights, and explicit `--yes-spend` gates.
+Liskov coordinates execution; Acurast owns the external processor network and
+job schedules. Existing Acurast jobs are not ordinary virtual machines that
+Liskov can stop instantly. The docs call out this boundary whenever an action
+has a delayed or limited effect.
 
-Custom runtimes (a full proot image that CI builds and Liskov serves to the
-phone) are still being built.
+## Find your next step
 
-## Documentation Map
-
-- [Quickstart](./quickstart/index.md): install the CLI, write a `liskov.json`,
-  preflight, and run your first custody deploy.
-- [Policy handbook](./policy/index.md): learn the strict V4 contract from a
-  minimum worker through lifecycle, placement, fleets, and complete field
-  reference.
-- [Concepts](./concepts/index.md): the replacement-custody model, the deployment
-  lifecycle, the trust model, and how policies are versioned.
-- [Guides](./guides/index.md): GitHub launches, sealed secrets, encrypted
-  logging, Baran ingress, schedules, and spend.
-- [Reference](./reference/index.md): the `proof liskov` CLI, every V4 policy
-  field and bound, and the reconcile-state vocabulary.
-- [Troubleshooting](./troubleshooting/index.md): replacement holds, preflight and
-  spend failures, and recovery.
-
-## If You Only Need A Server
-
-If your app just needs a server, use a server. If it needs to be private,
-placed, and provable — Liskov is the ramp. For an app that only needs a public
-HTTPS route in front of an existing Acurast job, you may only need
-[Baran](/baran).
+- New to Liskov: [choose your path](./get-started/choose-your-path.md).
+- Evaluating security: [trust and data boundaries](./concepts/trust-boundaries.md).
+- Operating an Application: [Deploy & operate](./operate/index.md).
+- Looking for an exact field or command: [Reference](./reference/index.md).
+- Something is not working: [Troubleshooting](./troubleshooting/index.md).

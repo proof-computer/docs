@@ -1,6 +1,30 @@
 {
   "redirects": [
     { "source": "/switchboard", "destination": "/baran", "permanent": true },
-    { "source": "/switchboard/:path*", "destination": "/baran/:path*", "permanent": true }
+    { "source": "/switchboard/:path*", "destination": "/baran/:path*", "permanent": true },
+    { "source": "/liskov/quickstart", "destination": "/liskov/get-started", "permanent": true },
+    { "source": "/liskov/quickstart/install", "destination": "/liskov/get-started/github", "permanent": true },
+    { "source": "/liskov/quickstart/first-deploy", "destination": "/liskov/get-started/github", "permanent": true },
+    { "source": "/liskov/policy", "destination": "/liskov/build/manifest-v4", "permanent": true },
+    { "source": "/liskov/policy/fundamentals", "destination": "/liskov/build/manifest-v4", "permanent": true },
+    { "source": "/liskov/policy/workload-recipes", "destination": "/liskov/build/workload-requirements", "permanent": true },
+    { "source": "/liskov/policy/lifecycle", "destination": "/liskov/configure/schedules-updates", "permanent": true },
+    { "source": "/liskov/policy/placement-and-capabilities", "destination": "/liskov/reference/capabilities", "permanent": true },
+    { "source": "/liskov/policy/validation-and-versioning", "destination": "/liskov/build/validate-import-publish", "permanent": true },
+    { "source": "/liskov/guides", "destination": "/liskov/get-started", "permanent": true },
+    { "source": "/liskov/guides/github-launches", "destination": "/liskov/build/github-actions", "permanent": true },
+    { "source": "/liskov/guides/sealed-secrets", "destination": "/liskov/configure/secrets", "permanent": true },
+    { "source": "/liskov/guides/encrypted-logging", "destination": "/liskov/configure/logging-diagnostics", "permanent": true },
+    { "source": "/liskov/guides/baran-ingress", "destination": "/liskov/concepts/product-boundaries", "permanent": true },
+    { "source": "/liskov/guides/schedules-and-slots", "destination": "/liskov/configure/schedules-updates", "permanent": true },
+    { "source": "/liskov/guides/budgets-and-spend", "destination": "/liskov/organizations/charges", "permanent": true },
+    { "source": "/liskov/concepts/deployment-lifecycle", "destination": "/liskov/operate/deployments-jobs", "permanent": true },
+    { "source": "/liskov/concepts/policy-and-versioning", "destination": "/liskov/concepts/domain-model", "permanent": true },
+    { "source": "/liskov/concepts/trust-model", "destination": "/liskov/concepts/trust-boundaries", "permanent": true },
+    { "source": "/liskov/reference/policy-schema", "destination": "/liskov/reference/manifest-v4", "permanent": true },
+    { "source": "/liskov/reference/reconcile-states", "destination": "/liskov/reference/statuses-actions-errors", "permanent": true },
+    { "source": "/liskov/troubleshooting/replacement-holds", "destination": "/liskov/troubleshooting/deployment", "permanent": true },
+    { "source": "/liskov/troubleshooting/preflight-and-spend", "destination": "/liskov/troubleshooting/build-publish", "permanent": true },
+    { "source": "/liskov/troubleshooting/recovery", "destination": "/liskov/troubleshooting/deployment", "permanent": true }
   ]
 }

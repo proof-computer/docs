@@ -1,26 +1,23 @@
 ---
-title: Troubleshooting
-description: Diagnose stuck Liskov launches and replacements.
+title: Troubleshooting Liskov
+description: Start from an observable symptom, take the supported safe action, and collect useful evidence when you need help.
 ---
 
-# Troubleshooting
+# Troubleshooting Liskov
 
-Start every diagnosis with read-only commands — they never spend:
+Begin with the Application's **Overview** and **Action Plan**. Record the
+Application UID and the displayed error or blocker code before changing
+anything. A waiting deployment often needs time rather than a retry.
 
-```fish
-proof liskov application status my-app
-proof liskov application plans my-app
-```
+Choose the symptom you can observe:
 
-Then jump to the matching page:
+- [Sign-in, organization, and funding](./account-funding.md)
+- [Build, attestation, import, and publication](./build-publish.md)
+- [Deployment waiting or needs action](./deployment.md)
+- [Variables, secrets, and runtime bootstrap](./config-bootstrap.md)
+- [Logs and diagnostics](./logs.md)
+- [Billing, settlement, and retirement](./billing-retirement.md)
+- [Get support](./support.md)
 
-- [Replacement holds](./replacement-holds.md): a deployment is blocked from
-  resuming or replacing.
-- [Preflight and spend](./preflight-and-spend.md): preflight fails, a quote is
-  refused, or a launch will not fund.
-- [Recovery](./recovery.md): a launch is wedged mid-flight and needs to be
-  released or retried safely.
-
-Map symptoms to lifecycle stages using the
-[deployment lifecycle](../concepts/deployment-lifecycle.md) and the
-[reconcile states](../reference/reconcile-states.md).
+Do not repeatedly retry a spend-bearing action. If the Action Plan does not
+offer a supported action, collect the [support bundle](./support.md) and stop.

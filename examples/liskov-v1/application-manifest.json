@@ -1,0 +1,100 @@
+{
+  "schema": "proof.liskov.application-manifest",
+  "schemaVersion": 4,
+  "applicationId": "status-worker",
+  "metadata": {
+    "appType": "background-worker",
+    "description": "Checks an external service and records its status"
+  },
+  "release": {
+    "mode": "build",
+    "artifact": {
+      "kind": "ipfs_bundle",
+      "encryption": {
+        "mode": "aes256_gcm"
+      }
+    },
+    "builder": {
+      "kind": "github",
+      "repository": "example/status-worker",
+      "allowedRefs": [
+        "refs/heads/main"
+      ],
+      "workflowRef": "example/status-worker/.github/workflows/liskov.yml@refs/heads/main",
+      "manifestPath": ".liskov/application-manifest.json"
+    }
+  },
+  "runtime": {
+    "engine": "nodejs",
+    "command": "node app.cjs",
+    "requiredModules": [
+      "network"
+    ],
+    "resources": {
+      "memoryMiB": 256,
+      "storageMiB": 256,
+      "networkRequestQuota": 1000
+    }
+  },
+  "deployment": {
+    "parallelism": 1,
+    "schedule": {
+      "durationMs": 3600000
+    },
+    "placement": {
+      "processorSelection": {
+        "mode": "open_market"
+      }
+    },
+    "lifecycle": {
+      "renewal": {
+        "mode": "after_scheduled_end"
+      },
+      "update": {
+        "timing": "immediate",
+        "existingJobs": {
+          "mode": "run_until_scheduled_end"
+        }
+      },
+      "recovery": {
+        "launch": {
+          "maxRetries": 5
+        },
+        "runtimeFailure": {
+          "mode": "wait_until_scheduled_end"
+        }
+      }
+    },
+    "spend": {
+      "maxServiceCreditMicrosPerGeneration": 5000000
+    }
+  },
+  "observability": {
+    "logs": {
+      "enabled": true
+    },
+    "runtimeDiagnostics": {
+      "signed": true
+    }
+  },
+  "configuration": {
+    "variables": [
+      {
+        "name": "API_ENDPOINT",
+        "required": true,
+        "default": "https://example.com/api",
+        "managed": true
+      }
+    ],
+    "secrets": [
+      {
+        "secretId": "api-token",
+        "required": true,
+        "destination": {
+          "kind": "env",
+          "name": "API_TOKEN"
+        }
+      }
+    ]
+  }
+}

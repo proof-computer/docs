@@ -1,21 +1,21 @@
 ---
-title: Concepts
-description: The ideas behind Liskov deployments.
+title: Concepts & security
+description: Understand Liskov's domain model, trust boundaries, proof chain, custody, costs, and Acurast relationship.
 ---
 
-# Concepts
+# Concepts & security
 
-Liskov is a managed deploy that keeps confidential-compute properties intact.
-These pages explain the model so the CLI output and policy fields make sense.
+You can complete a first launch without reading this section. Return here when
+you need to evaluate a security boundary, explain a lifecycle state, or design
+an Application deliberately.
 
-- [Policy handbook](../policy/index.md): learn the strict V4 contract from a
-  minimum policy through lifecycle, placement, capability gates, and advanced
-  workload design.
-- [Replacement custody](./replacement-custody.md): why deployments are replaced
-  rather than kept alive forever, and the states they move through.
-- [Deployment lifecycle](./deployment-lifecycle.md): the stages a launch crosses,
-  from local policy to validated, settled traffic.
-- [Trust model](./trust-model.md): who holds which keys and what each actor can
-  and cannot do.
-- [Policy and versioning](./policy-and-versioning.md): how drafts become
-  immutable, signed policy versions.
+- [How Liskov works](./how-liskov-works.md)
+- [Applications, policies, artifacts, deployments, and jobs](./domain-model.md)
+- [Replacement custody and time-boxed execution](./replacement-custody.md)
+- [Trust and data boundaries](./trust-boundaries.md)
+- [Attestation and the proof chain](./attestation.md)
+- [Costs and custody](./costs-custody.md)
+- [Liskov, Acurast, and Baran](./product-boundaries.md)
+
+These pages explain why. Exact commands, fields, and tokens remain in
+[Reference](../reference/index.md).

@@ -76,7 +76,7 @@ export default function Home() {
         <section className={styles.contentBand} aria-labelledby="products-heading">
           <div className={styles.contentInner}>
             <div className={styles.sectionHeader}>
-              <span className={styles.sectionKicker}>Available now</span>
+              <span className={styles.sectionKicker}>Product documentation</span>
               <Heading as="h2" id="products-heading">
                 Two products, one confidential-compute stack.
               </Heading>
@@ -89,10 +89,10 @@ export default function Home() {
             <div className={styles.productGrid}>
               <ProductCard
                 name="Liskov"
-                status="Early access"
+                status="Version 1"
                 label="Read the docs"
                 href="/liskov"
-                description="Deploy a long-running Node.js service into a TEE on a real Acurast phone from one policy in your repo — with sealed secrets, encrypted logs, schedules, and USDC budgets."
+                description="Deploy and operate a long-running Node.js service on decentralized Acurast compute — with managed secrets, private logs, schedules, placement controls, and bounded USD Service Credit spend."
               />
               <ProductCard
                 name="Baran"
@@ -114,9 +114,10 @@ export default function Home() {
               </Heading>
             </div>
             <div className={styles.docsGrid}>
-              <Link to="/liskov/quickstart">Quickstart</Link>
+              <Link to="/liskov/get-started">Get started</Link>
+              <Link to="/liskov/build">Build</Link>
+              <Link to="/liskov/operate">Operate</Link>
               <Link to="/liskov/concepts">Concepts</Link>
-              <Link to="/liskov/guides">Guides</Link>
               <Link to="/liskov/reference">Reference</Link>
               <Link to="/liskov/troubleshooting">Troubleshooting</Link>
             </div>
