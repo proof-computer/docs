@@ -29,6 +29,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Manifest V4 repository import/publication | Release-gated v1 |
 | Reusable GitHub build/pin/OIDC workflow | Release-gated v1; the reviewed repository has no `v1` tag |
 | Pinned first-party IPFS bundle | v1 |
+| Private deployed customer code | Not v1; private source access and TEE execution do not make current artifact delivery confidential |
 | General customer-authored Cargo/runtime image | Internal |
 
 ## Runtime, placement, and lifecycle

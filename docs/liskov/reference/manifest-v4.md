@@ -73,7 +73,7 @@ CID in a build release.
   "mode": "build",
   "artifact": {
     "kind": "ipfs_bundle",
-    "encryption": { "mode": "aes256_gcm" }
+    "encryption": { "mode": "none" }
   },
   "builder": {
     "kind": "github",
@@ -91,7 +91,7 @@ All GitHub builder fields are required. `repository` is `owner/repository`;
 
 | Artifact kind | Contract | Availability |
 | --- | --- | --- |
-| `ipfs_bundle` | Explicit `encryption.mode`: `none` or `aes256_gcm`. CID/digest are resolved from an accepted artifact version. | Release-gated v1 |
+| `ipfs_bundle` | Explicit `encryption.mode`: `none` or `aes256_gcm`. The reviewed reusable action supports only `none`; `aes256_gcm` has no complete supported build-and-runtime path. CID/digest are resolved from an accepted artifact version. | Release-gated v1 |
 | `runtime_image` | Typed immutable image/bootstrap release authority. | Internal; no public authoring recipe |
 
 ### Pinned release — v1 for curated first-party versions

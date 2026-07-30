@@ -11,7 +11,8 @@ Review each data type at the boundary where it is visible.
 | Data or authority | Where it exists | Important boundary |
 | --- | --- | --- |
 | GitHub source | Your repository and GitHub runner | OIDC proves runner identity facts, not source safety. |
-| Artifact bytes | GitHub runner/IPFS and processor | CID/digest identify bytes; encryption mode is explicit. |
+| JavaScript artifact bytes | GitHub runner, IPFS providers/gateways, and processor | The current reusable action publishes unencrypted bundles. CID/digest identify bytes but do not make them private. |
+| Cargo rootfs bytes | Liskov object storage and the processor HTTP/cache path | The current image URL is public-by-capability. A future signed fetch must also define authorization for cache reuse. |
 | Authored manifest | Repository, CLI, and Liskov draft | Contains authority and names, never secret plaintext. |
 | Effective policy | Liskov immutable record and proof surfaces | Server-resolved, digest-bound execution contract. |
 | Secret plaintext at entry | Your browser and briefly PROOF over TLS | v1 uses server-wrap ingestion; PROOF can observe plaintext during wrapping. |
@@ -29,6 +30,21 @@ processor. It protects job execution from ordinary phone software and provides
 identity/signing capabilities used by Liskov. It does not make arbitrary code
 safe, validate an external API, or prevent your own process from leaking a
 secret.
+
+## Private source is not private deployed code
+
+A private GitHub repository controls who can read the source repository. It
+does not make an unencrypted IPFS deployment bundle private. The reviewed
+reusable pin action requires `encryption.mode: none`, and the current runtime
+does not fetch, verify, decrypt, and load a separate private code payload.
+
+A future JavaScript path needs a small public loader followed by job-authorized
+delivery or decryption of exact digest-bound Application bytes. A future Cargo
+path can keep the public IPFS bootstrap free of customer code and authorize the
+later rootfs fetch. Because processors may satisfy that fetch from a local
+digest cache, private code inside the image also requires Acurast to authorize
+cache reuse for the exact job or tenant. Neither path is a supported v1
+private-code capability today.
 
 ## Managed secret detail
 

@@ -27,7 +27,7 @@ capabilities fail closed.
     "mode": "build",
     "artifact": {
       "kind": "ipfs_bundle",
-      "encryption": { "mode": "aes256_gcm" }
+      "encryption": { "mode": "none" }
     },
     "builder": {
       "kind": "github",

@@ -34,11 +34,20 @@ attestation proves the whole system.
 
 ## Encryption modes
 
-An IPFS artifact declares `none` or `aes256_gcm`. A build release normally
-requests `aes256_gcm`; the released artifact record binds the resulting bytes
-and encryption facts. A curated Marketplace descriptor may deliberately pin
-an unencrypted public bundle. Encryption does not make untrusted source safe,
-and an unencrypted artifact does not weaken processor TEE isolation by itself.
+The V4 schema can declare `none` or `aes256_gcm`, but schema vocabulary is not
+evidence that an end-to-end execution path exists. At the reviewed release,
+the reusable GitHub pin action requires `none` and rejects an
+`aes256_gcm` build requirement. Current IPFS Application bytes are therefore
+not a private-code mechanism, even when their source repository is private.
+
+An encrypted path is complete only when the build produces ciphertext, the
+artifact record binds plaintext and ciphertext evidence, and a job-bound
+runtime loader obtains the key, verifies the expected bytes, decrypts, and
+loads the Application. That complete path is not supported today.
+
+Encryption does not make untrusted source safe, and an unencrypted artifact
+does not weaken processor TEE isolation by itself. Confidential artifact
+delivery and TEE execution are different guarantees.
 
 Do not put secrets in the bundle in either mode. Managed secrets are separate,
 versioned configuration delivered for a particular job.

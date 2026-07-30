@@ -208,6 +208,7 @@ for (const oldPath of [
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
 check(manifest.schema === 'proof.liskov.application-manifest', 'fixture: wrong manifest schema');
 check(manifest.schemaVersion === 4, 'fixture: wrong schemaVersion');
+check(manifest.release?.artifact?.encryption?.mode === 'none', 'fixture: reusable action supports only unencrypted IPFS bundles');
 check(manifest.deployment?.parallelism === 1, 'fixture: public parallelism must be 1');
 check(manifest.deployment?.placement?.processorSelection?.mode === 'open_market', 'fixture: public placement must be open_market');
 check(manifest.deployment?.lifecycle?.renewal?.mode === 'after_scheduled_end', 'fixture: unsupported renewal recipe');
@@ -233,8 +234,9 @@ for (const [fileId, required] of Object.entries({
   'operate/pause-resume': ['does not force-stop', 'scheduled end'],
   'operate/update': ['successor', 'without mutating'],
   'operate/retire': ['does not stop existing jobs', 'receipt'],
-  'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1'],
-  'concepts/trust-boundaries': ['briefly PROOF over TLS', 'Plaintext is not persisted'],
+  'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Private deployed customer code'],
+  'concepts/trust-boundaries': ['briefly PROOF over TLS', 'Plaintext is not persisted', 'Private source is not private deployed code', 'cache reuse'],
+  'build/artifacts-provenance': ['reusable GitHub pin action requires `none`', 'complete path is not supported today'],
   'troubleshooting/support': ['Never include', 'Application UID', 'runtime-instance ID'],
 })) {
   const page = readFileSync(join(docsRoot, `${fileId}.md`), 'utf8');
