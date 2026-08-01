@@ -58,8 +58,8 @@ output — to separate records from the earlier and later instances.
 
 Runtime readiness covers required SDK capabilities, not the success of every
 application operation. Check the workload's schedule/tick, external API, and
-its own bounded error handling. For Uptime Prober, the first screenshot can
-follow the five-minute tick after readiness.
+its own bounded error handling. An application-level event can follow its next
+configured tick after readiness.
 
 ## Signed fatal diagnostic appears
 

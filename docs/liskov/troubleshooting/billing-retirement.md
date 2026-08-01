@@ -8,11 +8,13 @@ description: Resolve insufficient credits, long-lived reserves, settlement revie
 ## Insufficient Service Credits
 
 Confirm the active organization and read available versus reserved credit.
-Review the deployment quote and policy cap. An admin can add USD Service Credits
-through Stripe; the customer does not fund a crypto wallet.
+Review the deployment quote and policy cap. Customer Stripe checkout and new
+Service Credit issuance are release-gated. If an existing organization lacks
+available credit, stop before retrying and contact support; do not call an
+internal funding endpoint. The customer does not fund a crypto wallet.
 
-Adding credit does not necessarily retry a blocked deployment. Return to the
-Action Plan.
+A balance change does not necessarily retry a blocked deployment. Return to
+the Action Plan.
 
 ## Reserve remains open
 

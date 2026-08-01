@@ -39,15 +39,13 @@ reported runtime readiness.
 
 ## Verify customer value
 
-First verify the output promised by your path:
-
-- **Uptime Prober:** a Telegram screenshot and status caption from your bot.
-- **GitHub worker:** the application-specific output or diagnostic your
-  repository defines.
+First verify the application-specific output or diagnostic that your GitHub
+repository defines. Marketplace and Uptime Prober remain release-gated and are
+not part of this customer first-deployment path.
 
 Then open **Proof** or the relevant deployment evidence and confirm:
 
-1. the Marketplace version or GitHub repo/ref/commit/workflow;
+1. the GitHub repo/ref/commit/workflow;
 2. the artifact content identifier (CID) and digest;
 3. the effective policy digest and version;
 4. the Acurast job and processor identifiers; and
