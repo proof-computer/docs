@@ -9,12 +9,6 @@ Retirement is the supported permanent lifecycle. It is asynchronous because
 Liskov cannot honestly force-stop an Acurast registration it no longer owns:
 existing jobs retain their chain schedules and financial consequences.
 
-:::caution Release gate
-The retirement contract is accepted for v1, but production availability is
-still gated. Treat these commands as the final v1 path only when the
-Console exposes retirement and this notice is removed.
-:::
-
 ## Preview
 
 Read current retirement state and blockers without mutating:
@@ -37,15 +31,18 @@ proof liskov application retire APPLICATION_ID \
 Starting retirement atomically pauses the Application and stops new Liskov
 work. It does not stop existing jobs, claw back chain spend, or erase evidence.
 
-Retirement advances through these customer phases:
+Retirement reports one of these phases while it is active:
 
-1. **waiting for execution** — existing schedules have not reached verified
-   chain end;
-2. **waiting for financial closure** — reserves, final charges, releases, or
-   reviews remain;
-3. **finalizing** — Liskov seals the durable record; and
-4. **retired** — ordinary mutable state is gone and an immutable receipt is
-   available.
+1. **`terminalizing_local`** — Liskov is closing only locally controlled work;
+2. **`waiting_for_schedule_end`** — existing schedules have not reached a
+   verified chain end;
+3. **`waiting_for_financial_tail`** — reserves, final charges, releases, or
+   reviews remain; or
+4. **`blocked`** — ambiguous or non-automatic evidence needs review.
+
+Completion requires execution, financial, and ambiguity blocker counts to be
+exactly zero. The Application then becomes deleted and the immutable receipt
+replaces mutable retirement state.
 
 ## Cancel while allowed
 
@@ -62,10 +59,10 @@ policy, funding, and any ended jobs.
 
 ## Verify the receipt
 
-The final receipt should bind the organization and Application UID, retirement
-request and completion times, last policy/artifact/deployment/job facts,
-execution and financial closure evidence, and receipt integrity identifier.
-Keep it with your own operational records.
+The final receipt binds the organization and Application UID, requester,
+reason, request and deletion times, initial and final assessments, retirement
+event-stream head, and receipt digest. Keep it with your own operational
+records.
 
 There is no public force-delete or force-stop bypass. If a phase remains
 blocked beyond its stated boundary, follow

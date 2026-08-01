@@ -78,7 +78,7 @@ workflow is needed.
 | `application action-plan retry APP_REF --decision-id ID --reason TEXT --yes` | Perform the supported bounded retry for one current decision. |
 | `application pause APP_REF --reason TEXT` | Read preview; add `--yes` to stop future planning. |
 | `application resume APP_REF --reason TEXT` | Read preview; add `--yes` to resume future planning. |
-| `application retire APP_REF` | Read retirement preview/state; add `--reason` and `--yes` to start when available. |
+| `application retire APP_REF` | Read retirement preview/state; add `--reason` and `--yes` to start. |
 | `application retire cancel APP_REF` | Read cancellation preview; add `--yes` to cancel while allowed. |
 
 Pause and retirement do not force-stop existing Acurast jobs.

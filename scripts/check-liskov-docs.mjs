@@ -170,6 +170,17 @@ check(!existsSync(join(docsRoot, 'preview')), 'Preview navigation exists without
 check(!existsSync(join(docsRoot, 'marketplace', 'openclaw.md')), 'OpenClaw page exists without a versioned descriptor');
 check(!existsSync(join(root, 'static', 'examples', 'liskov')), 'superseded downloadable Liskov examples remain public');
 
+const retirementPage = readFileSync(join(docsRoot, 'operate', 'retire.md'), 'utf8');
+const capabilitiesPage = readFileSync(join(docsRoot, 'reference', 'capabilities.md'), 'utf8');
+check(
+  !/retirement contract[\s\S]{0,120}(?:still gated|release gate)/i.test(retirementPage),
+  'retirement page retains the removed production release gate',
+);
+check(
+  /\| Safe retirement and immutable receipt \| v1 \|/.test(capabilitiesPage),
+  'capability matrix does not classify released retirement as v1',
+);
+
 const sidebar = readFileSync(sidebarPath, 'utf8');
 const publicEntry = allContent[0];
 check(!publicEntry.includes('to="/liskov/quickstart"'), 'homepage links to retired quickstart route');

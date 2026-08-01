@@ -62,7 +62,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Proof chain and signed runtime-instance evidence | v1 |
 | Pause/resume future planning | v1 |
 | Supported bounded Action Plan retry | v1 |
-| Safe retirement and immutable receipt | Release-gated v1 |
+| Safe retirement and immutable receipt | v1 |
 | Force stop/delete bypass | Internal; no public bypass |
 | Managed custody | v1 default |
 | Quote, reserve, final charge, release, history | v1 |
