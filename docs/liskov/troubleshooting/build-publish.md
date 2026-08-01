@@ -6,8 +6,9 @@ description: Diagnose GitHub workflow, OIDC, artifact evidence, Manifest V4, cap
 # Build, attestation, import, and publication
 
 :::note Release boundary
-The repository path is release-gated until Manifest V4 publication is enabled
-and `liskov-github-actions@v1` exists. A missing gate is not a repository bug.
+`liskov-github-actions@v1` is released. The complete repository path remains
+gated until Manifest V4 publication is enabled for your organization. A
+publication eligibility failure is not a repository build bug.
 :::
 
 ## Build or test fails

@@ -172,6 +172,7 @@ check(!existsSync(join(root, 'static', 'examples', 'liskov')), 'superseded downl
 
 const retirementPage = readFileSync(join(docsRoot, 'operate', 'retire.md'), 'utf8');
 const capabilitiesPage = readFileSync(join(docsRoot, 'reference', 'capabilities.md'), 'utf8');
+const githubActionsPage = readFileSync(join(docsRoot, 'build', 'github-actions.md'), 'utf8');
 check(
   !/retirement contract[\s\S]{0,120}(?:still gated|release gate)/i.test(retirementPage),
   'retirement page retains the removed production release gate',
@@ -179,6 +180,11 @@ check(
 check(
   /\| Safe retirement and immutable receipt \| v1 \|/.test(capabilitiesPage),
   'capability matrix does not classify released retirement as v1',
+);
+check(githubActionsPage.includes('v1.2.2'), 'GitHub Actions page omits the verified v1 release');
+check(
+  !/v1[^\n]{0,80}(?:not yet published|does not yet publish)/i.test(githubActionsPage),
+  'GitHub Actions page retains the removed v1 release gate',
 );
 
 const sidebar = readFileSync(sidebarPath, 'utf8');
@@ -228,7 +234,7 @@ check(manifest.deployment?.lifecycle?.recovery?.runtimeFailure?.mode === 'wait_u
 check(!('ingress' in manifest), 'fixture: general ingress must not appear in the public recipe');
 
 const workflow = readFileSync(workflowPath, 'utf8');
-check(workflow.includes('acurast-app.yml@v1'), 'workflow fixture: missing release-gated @v1 reference');
+check(workflow.includes('acurast-app.yml@v1'), 'workflow fixture: missing released @v1 reference');
 check(workflow.includes('id-token: write'), 'workflow fixture: missing OIDC permission');
 check(workflow.includes('contents: read'), 'workflow fixture: missing contents permission');
 check(workflow.includes('authored-manifest-path:'), 'workflow fixture: missing manifest input');
@@ -238,7 +244,7 @@ for (const [fileId, required] of Object.entries({
   'get-started/choose-your-path': ['Marketplace', 'GitHub'],
   'get-started/set-up-liskov': ['Stripe', 'Available', 'Reserved'],
   'get-started/marketplace': ['Uptime Prober', 'Telegram', 'Verify'],
-  'get-started/github': ['Release gate', 'artifact-version-id', 'Proof'],
+  'get-started/github': ['Publication availability', 'v1.2.2', 'artifact-version-id', 'Proof'],
   'operate/proof-chain': ['GitHub OIDC', 'policy digest', 'runtime instance'],
   'troubleshooting/deployment': ['Normal waiting', 'Needs action', 'decision-id'],
   'reference/configuration-precedence': ['Application-managed value', 'process.env', 'Signed runtime bootstrap'],

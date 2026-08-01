@@ -27,7 +27,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | OpenClaw offering | Release-gated v1; no versioned descriptor was present at the reviewed release |
 | Third-party Marketplace publishing/payouts | Not v1 |
 | Manifest V4 repository import/publication | Release-gated v1 |
-| Reusable GitHub build/pin/OIDC workflow | Release-gated v1; the reviewed repository has no `v1` tag |
+| Reusable GitHub build/pin/OIDC workflow | v1; moving `v1` tag verified at `v1.2.2` |
 | Pinned first-party IPFS bundle | v1 |
 | Private deployed customer code | Not v1; private source access and TEE execution do not make current artifact delivery confidential |
 | General customer-authored Cargo/runtime image | Internal |

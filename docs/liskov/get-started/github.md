@@ -10,11 +10,11 @@ Liskov Application. The workflow builds and tests your code, pins immutable
 bytes to the InterPlanetary File System (IPFS), a content-addressed storage network, and records GitHub OpenID Connect (OIDC) identity. Publication
 and deployment remain separate, explicit steps.
 
-:::caution Release gate
-The reusable workflow source is available, but the reviewed repository does
-not yet publish the `v1` tag used by the launch contract. Prepare and validate
-the repository now; do not treat the workflow step as live until the tag is
-published and this notice is removed.
+:::caution Publication availability
+The reusable build, pin, and OIDC workflow is live at `@v1` (verified with
+`v1.2.2`). Own-repository Manifest V4 publication is still rollout-gated by
+organization. Confirm that publication is enabled for your organization before
+treating this whole journey as available.
 :::
 
 ## Before you begin

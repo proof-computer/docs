@@ -10,11 +10,10 @@ evidence. GitHub OpenID Connect (OIDC) gives Liskov a short-lived statement of
 repository, ref, commit, and workflow identity. You do not store a Liskov
 bearer token or spend-capable credential in GitHub.
 
-:::caution Release gate
-The workflow source has been reviewed, but its `v1` tag is not yet published.
-The example below is the v1 contract; do not run it as a production path until
-that tag exists and this notice is removed.
-:::
+The moving `v1` release is live. The production acceptance recorded for this
+contract used `v1.2.2`; callers should use `@v1` to receive compatible v1 fixes.
+Security-sensitive callers may instead pin the reviewed commit
+`cbca2cde077df0cfd6be894519c6f8e4915e386a` and update it deliberately.
 
 ## Add the caller workflow
 
