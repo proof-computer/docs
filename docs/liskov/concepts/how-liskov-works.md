@@ -6,8 +6,9 @@ description: Understand the customer-to-runtime sequence and the responsibilitie
 # How Liskov works
 
 Liskov is a control plane for long-running intent over time-boxed Acurast jobs.
-You select or build immutable code, declare its authority, fund service in USD,
-and inspect evidence as Acurast phones execute it in trusted hardware.
+You build immutable code, declare its authority, use an eligible organization's
+existing Service Credit allocation, and inspect evidence as Acurast phones
+execute it in trusted hardware.
 
 ## End-to-end sequence
 
@@ -15,11 +16,11 @@ and inspect evidence as Acurast phones execute it in trusted hardware.
 sequenceDiagram
   participant U as Customer
   participant L as Liskov
-  participant G as GitHub / Marketplace
+  participant G as GitHub
   participant A as Acurast network
   participant P as Processor secure runtime
 
-  U->>L: Select offering or import Manifest V4
+  U->>L: Import Manifest V4
   G->>L: Attest exact artifact provenance
   U->>L: Review policy, quote, and reserve
   L->>A: Register bounded job
@@ -30,9 +31,11 @@ sequenceDiagram
   L-->>U: Posture, Action Plan, proof, logs, charges
 ```
 
-Marketplace starts from a curated pinned artifact and option schema. The
-GitHub path starts from a V4 manifest and an allowed workflow that builds,
-pins, and attests an artifact. Both converge on an immutable effective policy.
+The GitHub path starts from a V4 manifest and an allowed workflow that builds,
+pins, and attests an artifact before it converges on an immutable effective
+policy. Marketplace is intended to start from a curated pinned artifact and
+option schema, but customer launch remains release-gated and is not part of
+this sequence yet.
 
 ## Desired state and observed state
 

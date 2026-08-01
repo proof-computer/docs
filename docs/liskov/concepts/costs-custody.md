@@ -11,9 +11,14 @@ Application's effective policy and the organization's customer controls.
 
 ## Customer money model
 
-You fund USD Service Credits through Stripe. Liskov shows available, reserved,
-used, and transaction history in USD. It quotes work, reserves bounded credit,
-settles a final charge from evidence, and releases unused reserve.
+USD Service Credits are the account unit. Liskov supports read-only views of
+available, reserved, used, and transaction history in USD. It quotes work,
+reserves bounded credit, settles a final charge from evidence, and releases
+unused reserve for eligible, already-funded organizations.
+
+Customer Stripe checkout and issuance of new Service Credits remain
+release-gated. Internal first-party acceptance uses an existing pre-funded
+organization; it does not prove that customer funding is available.
 
 You do not:
 
@@ -52,5 +57,5 @@ It changes key and funding responsibility and has its own pairing/liveness
 boundary. Until an explicit Preview is available and documented, do not follow
 internal signer or custody commands.
 
-See [Plans and USD Service Credits](../organizations/service-credits.md) and
+See [Read USD Service Credits](../organizations/service-credits.md) and
 [Quotes, reserves, and final charges](../organizations/charges.md) for tasks.

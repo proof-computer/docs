@@ -20,7 +20,7 @@ Review each data type at the boundary where it is visible.
 | Job secret delivery | Liskov secrets service and processor TEE | Re-encrypted into a job/identity/policy/expiry-bound grant. |
 | Application logs | Job before encryption; authorized Liskov read path after decryption | Customer code chooses content; never log secrets. |
 | Runtime diagnostics | Processor identity signs bounded events | Supports identity/health claims, not business correctness. |
-| Customer funds | Stripe USD and Liskov Service Credit ledger | Customer has no Acurast crypto wallet. |
+| Customer balance | Liskov Service Credit ledger | Reads are supported; Stripe checkout and issuance remain release-gated. The customer has no Acurast crypto wallet. |
 | Network spend authority | Effective policy plus Liskov managed custody | Bounded by caps, quote/reserve, and server controls. |
 
 ## Trusted execution environment
@@ -64,10 +64,11 @@ Do not claim that plaintext never reaches PROOF.
 
 ## External boundaries
 
-GitHub, Stripe, IPFS/Acurast, Telegram, and any API your workload calls have
+GitHub, IPFS/Acurast, Telegram, and any API your workload calls have
 their own identities, availability, terms, logs, and costs. Liskov evidence
 should identify the crossing; it cannot absorb those parties into its trust
-boundary.
+boundary. Stripe will be an external boundary when customer checkout is
+released; its presence in the Console or implementation is not availability.
 
 See [Attestation and the proof chain](./attestation.md) for what each evidence
 link supports.

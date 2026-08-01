@@ -24,7 +24,8 @@ Complete [Set up Liskov](./set-up-liskov.md). You need:
 - a GitHub repository you can authorize for Liskov;
 - Node.js 22 or later and pnpm 10 for the supported example shape;
 - a background workload that can be bundled as `dist/app.cjs`; and
-- enough Service Credits for the displayed deployment reserve.
+- enough already-available Service Credits for the displayed deployment
+  reserve. Customer Stripe checkout is release-gated.
 
 Repository checks take as long as your project build; processor acceptance and runtime startup are external waits with no fixed duration.
 

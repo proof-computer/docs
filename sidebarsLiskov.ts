@@ -11,7 +11,6 @@ const sidebars: SidebarsConfig = {
       items: [
         'get-started/choose-your-path',
         'get-started/set-up-liskov',
-        'get-started/marketplace',
         'get-started/github',
         'get-started/first-deployment',
       ],
@@ -56,16 +55,6 @@ const sidebars: SidebarsConfig = {
         'operate/pause-resume',
         'operate/diagnose-retry',
         'operate/retire',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Marketplace',
-      link: {type: 'doc', id: 'marketplace/index'},
-      items: [
-        'marketplace/options',
-        'marketplace/uptime-prober',
-        'marketplace/verify',
       ],
     },
     {

@@ -1,12 +1,19 @@
 ---
-title: Launch options and prerequisites
-description: Review an offering's variables, secrets, external accounts, costs, and update behavior before creating an Application.
+title: Marketplace option contract
+description: Review the intended variables, secrets, prerequisites, costs, and update evidence for a future supported launch.
 ---
 
-# Launch options and prerequisites
+# Marketplace option contract
 
-Every Marketplace launch is a copy of an exact curated offering version into
-your organization. Its option form is part of that version's contract.
+:::caution Release-gated v1
+Marketplace launch is currently limited to internal first-party engineering
+acceptance. This page defines release criteria; it does not authorize a
+customer to enter secrets, approve spend, or create an Application.
+:::
+
+A supported Marketplace launch will copy an exact curated offering version
+into the selected organization. Its option form is part of that version's
+contract.
 
 ## Review before entering values
 
@@ -35,7 +42,7 @@ configuration.
 
 ## Names and ownership
 
-Choose an Application name meaningful inside the active organization. Liskov
+The supported form must accept an Application name meaningful inside the active organization. Liskov
 also assigns an immutable Application UID, which survives rename and binds
 evidence. Launching the same offering twice creates distinct Applications,
 configuration, costs, and histories.
@@ -49,9 +56,10 @@ inside a running Acurast job.
 
 ## Verify
 
-Before confirming, reread the active organization, Application name, every
-secret label and external account, displayed quote/reserve, and maximum
-commitment. After launch, check that the new Application shows the selected
-offering ID and version.
+Before public release, acceptance must prove that the review identifies the
+active organization, Application name, every secret label and external
+account, displayed quote/reserve, and maximum commitment. The created
+Application must show the selected offering ID and version.
 
-Continue with [Uptime Prober](./uptime-prober.md) for a concrete launch.
+Review [Uptime Prober](./uptime-prober.md) for the first-party acceptance
+fixture's exact contract.

@@ -1,86 +1,45 @@
 ---
-title: Launch from Marketplace
-description: Launch a curated first-party application, supply its options safely, and reach a verifiable Liskov Application.
+title: Marketplace release boundary
+description: Understand the intended curated launch path and why it is not yet available to customers.
 ---
 
-# Launch from Marketplace
+# Marketplace release boundary
 
-This quickstart launches **Uptime Prober**. It opens a URL every five minutes
-inside an Acurast phone, captures a screenshot, and sends the result to your
-own Telegram bot.
+:::caution Release-gated v1
+Marketplace launch and Uptime Prober are currently limited to internal
+first-party engineering acceptance. They are not supported customer paths. Do
+not enter a Telegram token, approve Marketplace spend, or rely on a listing to
+create an Application until the [capability matrix](../reference/capabilities.md)
+removes this gate.
+:::
 
-## Before you begin
+## Intended outcome
 
-Complete [Set up Liskov](./set-up-liskov.md). You also need:
+The first curated offering is intended to be **Uptime Prober**. It opens a
+public URL inside an Acurast phone, captures a screenshot, and sends the result
+to the operator's Telegram bot. A future supported launch should create a
+normal Liskov Application in the selected organization rather than attach the
+customer to a shared publisher deployment.
 
-- an `https://` URL that is reachable from the public internet;
-- a Telegram bot token from BotFather; and
-- the numeric chat ID for a conversation that has already sent `/start` to
-  that bot.
+## Release criteria
 
-The offering software and Marketplace fee are free. The launch still uses
-Acurast compute and Liskov service, shown in the preflight quote. Telegram is
-an external service with its own terms.
+A customer recipe will be appropriate only after the product owners confirm:
 
-## 1. Review the offering
+- the exact first-party listing and its admitted version;
+- listing-to-Application artifact and policy provenance;
+- clear prerequisites, option labels, secret handling, quote, reserve, and
+  maximum commitment;
+- collision-safe Application naming and an actionable post-launch timeline;
+- a supported customer funding and commercial-terms path; and
+- complete production acceptance and public release approval.
 
-Open **Marketplace**, select **Uptime Prober**, and review:
+Internal first-party acceptance may exercise these facts in production. That
+acceptance does not authorize a customer to repeat the journey.
 
-- source repository and listed version;
-- artifact content identifier (CID) and digest;
-- schedule and compute requirements;
-- required options; and
-- estimated reserve and external services.
+## Safe customer path today
 
-The listing identifies exact bytes. Launching creates a copy in your
-organization; it does not connect you to a shared PROOF bot.
-
-## 2. Enter launch options
-
-Provide:
-
-| Option | Value |
-| --- | --- |
-| **Host to probe** | A complete `https://` URL, such as `https://example.com`. |
-| **Telegram bot token** | The token BotFather issued. This is a managed secret. |
-| **Telegram chat ID** | The numeric chat ID that should receive results. |
-
-Choose an Application name you will recognize. Review the update choice if the
-Console offers one; a Marketplace update never changes your running job without
-the Application lifecycle creating a successor.
-
-The secret value travels to PROOF over TLS for server-side wrapping. It is not
-stored in the listing or retained as plaintext. See
-[Secrets](../configure/secrets.md) for the complete trust boundary.
-
-## 3. Review and launch
-
-Review the effective options, quote, reserve, and spend limits. Launch only
-when the organization and maximum commitment are correct.
-
-The launch creates the Application, stores its managed configuration, and
-starts the supported deployment flow. Do not resubmit if the page is waiting;
-open the new Application and follow its status.
-
-## 4. Verify the result
-
-Open the Application. Use [Follow your first deployment](./first-deployment.md)
-until runtime is ready. A successful result is a Telegram message from your
-bot with:
-
-- a screenshot of the configured host;
-- HTTP status;
-- observed latency; and
-- a timestamp.
-
-Allow time for external processor acceptance and the next five-minute probe tick; Liskov does not promise an exact startup time. The first result may arrive after the Application reports runtime contact.
-
-## What happens next
-
-The Acurast job is time-boxed. Liskov plans successors according to the
-effective policy; actual overlap or a gap is recorded as evidence rather than
-assumed. Your bot token remains managed by your Application and is delivered
-only through job-bound grants.
-
-Next, [verify the Marketplace Application](../marketplace/verify.md) or learn
-how to [monitor logs and activity](../operate/logs-activity.md).
+Use [Deploy from GitHub](./github.md) only if Manifest V4 publication is enabled
+for your organization and it already has enough available Service Credits.
+You can review the [Uptime Prober contract](../marketplace/uptime-prober.md) and
+[Marketplace evidence model](../marketplace/verify.md) as release-boundary
+reference, not as launch instructions.

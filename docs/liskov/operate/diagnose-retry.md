@@ -23,7 +23,8 @@ decision ID, disposition, next action, and evidence timestamp.
 
 Examples:
 
-- add Service Credits when the condition says funding is insufficient;
+- when funding is insufficient, verify the existing balance and stop; customer
+  Stripe checkout and new Service Credit issuance remain release-gated;
 - provide a required managed variable or secret;
 - import and publish a corrected manifest after a validation failure; or
 - wait when the condition says an external schedule or settlement boundary has
