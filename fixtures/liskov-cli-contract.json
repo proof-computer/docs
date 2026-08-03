@@ -1,6 +1,6 @@
 {
   "package": "@proof-computer/proof-cli-liskov",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "command": "liskov:application:logs",
   "arguments": ["APP_REF"],
   "flags": {
@@ -8,6 +8,11 @@
     "deployment": "string",
     "job": "string",
     "origin": ["all", "customer", "runtime-ssh"],
+    "organization": {
+      "environment": "LISKOV_ORGANIZATION",
+      "maximumUtf8Bytes": 255,
+      "resolution": "exact-id-before-exact-slug"
+    },
     "json": "boolean"
   },
   "retiredCommands": [

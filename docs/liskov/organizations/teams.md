@@ -19,13 +19,26 @@ The CLI can list and select an existing organization:
 
 ```bash
 proof liskov organization list
-proof liskov organization use ORGANIZATION_ID
+proof liskov organization use ORGANIZATION_ID_OR_SLUG
 proof liskov whoami
 ```
 
 `organization use` changes the organization attached to the current session.
 It does not move or share an Application. Verify the selected organization
 before every publish or lifecycle mutation.
+
+To select another active membership for only one command, use an exact ID or
+slug without changing the session default:
+
+```bash
+proof liskov application list --organization ORGANIZATION_ID_OR_SLUG
+LISKOV_ORGANIZATION=ORGANIZATION_ID_OR_SLUG proof liskov whoami
+```
+
+The flag takes precedence over the environment. An existing positional
+organization selector takes precedence over both. Slugs are exact and
+case-sensitive. `whoami` distinguishes the effective organization for the
+command from the persistent session organization.
 
 ## Invite a member
 

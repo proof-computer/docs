@@ -5,12 +5,12 @@ description: Public proof liskov v1 command tree, confirmations, machine-readabl
 
 # CLI
 
-The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.5.0` and
+The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.6.0` and
 requires Node.js 22 or later. All commands begin with `proof liskov`.
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov@0.5.0
+proof plugins install @proof-computer/proof-cli-liskov@0.6.0
 proof liskov --help
 ```
 
@@ -19,7 +19,7 @@ proof liskov --help
 | Command | Effect |
 | --- | --- |
 | `login` | Start browser-confirmed GitHub login. Use `--no-browser` to print the verification URL. |
-| `whoami` | Read current identity and selected organization. |
+| `whoami` | Read current identity, effective organization, and persistent session organization. |
 | `logout` | Remove the local session. |
 
 Login stores a bearer token in an XDG-style local file with restricted
@@ -31,13 +31,44 @@ session file.
 | Command | Effect |
 | --- | --- |
 | `organization list` | List readable organizations. |
-| `organization use ORG_ID` | Select the organization for this session. |
-| `organization billing ORG_ID` | Read plan and billing projection. |
-| `organization service-credits ORG_ID` | Read available, reserved, and used Service Credits. |
-| `organization billing transactions ORG_ID` | Page through ledger transactions with `--limit` and `--before`. |
+| `organization use [SELECTOR]` | Persistently select the organization for this session. |
+| `organization billing [SELECTOR]` | Read plan and billing projection. |
+| `organization service-credits [SELECTOR]` | Read available, reserved, and used Service Credits. |
+| `organization billing transactions [SELECTOR]` | Page through ledger transactions with `--limit` and `--before`. |
 
-These commands are read-only. Organization creation, invitations, plan change,
-and Stripe funding are Console tasks.
+Billing and transaction commands are read-only. `organization use` changes the
+persistent organization for the session. Organization creation, invitations,
+plan change, and Stripe funding are Console tasks.
+
+## Choose an organization for one command
+
+Network-backed organization-scoped commands accept an exact organization ID
+or slug without changing the session default:
+
+```bash
+proof liskov application list --organization proof
+LISKOV_ORGANIZATION=proof proof liskov application status APPLICATION_UID
+proof liskov whoami --organization proof
+```
+
+The precedence is an existing positional selector, then `--organization`, then
+`LISKOV_ORGANIZATION`, then the persistent session organization. A selector is
+required from one of those first three sources for billing and Runtime SSH
+integration routes. `organization use [SELECTOR]` accepts the
+same inputs but is persistently mutating by definition. `organization list`
+is always unscoped.
+
+Selectors are trimmed and matched exactly, with an ID match before a slug
+match. Slugs are case-sensitive. Empty values and values longer than 255 UTF-8
+bytes fail locally. The flag has no short alias. Login/logout, admin/access
+commands, local manifest validation, and local workflow generation do not
+accept it.
+
+Under an override, human `whoami` labels both the effective organization and
+the persistent organization. JSON includes `organizationContext.source`,
+`organizationContext.effective`, and `organizationContext.sessionDefault`.
+The override is never written to the local session or an Application runtime
+environment.
 
 ## Application reads
 
@@ -109,6 +140,8 @@ Pause and retirement do not force-stop existing Acurast jobs.
 - `--json` emits machine-readable output and never token material.
 - `--help` shows generated help for the installed version.
 - `--config PATH` selects a session file.
+- `--organization SELECTOR` selects an exact ID or slug for one scoped command;
+  `LISKOV_ORGANIZATION` is its lower-precedence environment input.
 - Mutations either preview/read by default or require an explicit `--yes`.
 
 In automation, parse stable IDs, codes, booleans, and timestamps from `--json`;

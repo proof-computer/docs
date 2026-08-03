@@ -20,7 +20,8 @@ code or session file.
 
 ```bash
 proof liskov organization list
-proof liskov organization use ORGANIZATION_ID
+proof liskov whoami --organization ORGANIZATION_ID_OR_SLUG
+proof liskov organization use ORGANIZATION_ID_OR_SLUG
 proof liskov whoami
 ```
 
@@ -30,6 +31,26 @@ to inspect Team; do not forward a private invitation link.
 
 Switching does not move Applications. If an Application is absent, verify both
 organization ID and Application UID before creating another.
+
+Use `--organization` when you need a different membership for only one
+command; use `organization use` only when you intend to change the session
+default. If `LISKOV_ORGANIZATION` is set in your shell, it applies below an
+explicit flag and above the session default.
+
+## Organization selector is rejected
+
+- `LISKOV_ORGANIZATION_SELECTOR_INVALID` or
+  `invalid_organization_selector`: remove surrounding-only whitespace and use
+  a non-empty exact ID or slug no longer than 255 UTF-8 bytes.
+- `not_a_member`: run `organization list`, confirm the invitation is accepted
+  and active, and copy the exact case-sensitive ID or slug. Do not guess or
+  create a replacement Application.
+- An unauthorized session error: run ordinary `whoami`. If that also fails,
+  log in again. Never print or paste the stored token while diagnosing it.
+
+Use `whoami --organization SELECTOR --json` to compare
+`organizationContext.effective` with `organizationContext.sessionDefault`.
+The command override must not change the latter.
 
 ## Plan or terms block setup
 

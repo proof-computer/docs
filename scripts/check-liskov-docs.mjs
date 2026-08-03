@@ -243,12 +243,18 @@ check(
 
 const cliPage = readFileSync(join(docsRoot, 'reference', 'cli.md'), 'utf8');
 check(cliContract.package === '@proof-computer/proof-cli-liskov', 'CLI fixture: wrong package');
-check(cliContract.version === '0.5.0', 'CLI fixture: wrong released version');
+check(cliContract.version === '0.6.0', 'CLI fixture: wrong released version');
 check(cliContract.command === 'liskov:application:logs', 'CLI fixture: missing logs command');
 check(cliContract.flags?.limit?.minimum === 1 && cliContract.flags?.limit?.maximum === 500, 'CLI fixture: wrong log limit bounds');
 check(
   JSON.stringify(cliContract.flags?.origin) === JSON.stringify(['all', 'customer', 'runtime-ssh']),
   'CLI fixture: wrong log origins',
+);
+check(
+  cliContract.flags?.organization?.environment === 'LISKOV_ORGANIZATION' &&
+    cliContract.flags?.organization?.maximumUtf8Bytes === 255 &&
+    cliContract.flags?.organization?.resolution === 'exact-id-before-exact-slug',
+  'CLI fixture: wrong request-scoped organization selector contract',
 );
 check(cliPage.includes(`\`${cliContract.package}\` \`${cliContract.version}\``), 'CLI page omits the fixture package version');
 for (const token of ['application logs APP_REF', '--limit', '--deployment', '--job', 'runtime-ssh', '--json']) {
@@ -272,18 +278,19 @@ for (const [fileId, required] of Object.entries({
   'get-started/github': ['Publication availability', 'v1.2.2', 'artifact-version-id', 'Proof'],
   'operate/proof-chain': ['GitHub OIDC', 'policy digest', 'runtime instance'],
   'troubleshooting/deployment': ['Normal waiting', 'Needs action', 'decision-id'],
-  'reference/configuration-precedence': ['Application-managed value', 'process.env', 'Signed runtime bootstrap'],
+  'reference/configuration-precedence': ['Application-managed value', 'process.env', 'Signed runtime bootstrap', 'LISKOV_ORGANIZATION', 'persistent organization'],
   'operate/pause-resume': ['does not force-stop', 'scheduled end'],
   'operate/update': ['successor', 'without mutating'],
   'operate/retire': ['does not stop existing jobs', 'receipt'],
   'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Private deployed customer code'],
-  'reference/cli': ['0.5.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero'],
+  'reference/cli': ['0.6.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault'],
   'reference/manifest-v4': ['deprecated_manifest_field', 'profileId', 'sinkName', 'future schema'],
   'configure/logging-diagnostics': ['only logging field needed', 'provisions', 'application logs'],
   'operate/logs-activity': ['application logs', '--deployment', '--job', 'follow, tail'],
   'troubleshooting/logs': ['exits zero', 'malformed-response failures'],
   'concepts/trust-boundaries': ['briefly PROOF over TLS', 'Plaintext is not persisted', 'Private source is not private deployed code', 'cache reuse'],
   'build/artifacts-provenance': ['reusable GitHub pin action requires `none`', 'complete path is not supported today'],
+  'troubleshooting/account-funding': ['not_a_member', 'organizationContext.effective', 'organizationContext.sessionDefault'],
   'troubleshooting/support': ['Never include', 'Application UID', 'runtime-instance ID'],
 })) {
   const page = readFileSync(join(docsRoot, `${fileId}.md`), 'utf8');

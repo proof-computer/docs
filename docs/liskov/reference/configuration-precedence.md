@@ -9,6 +9,24 @@ Configuration has an authored declaration, an Application-managed value, a
 deployment selection, and a final runtime installation. Keep those stages
 separate.
 
+## CLI organization selection
+
+For a network-backed organization-scoped `proof liskov` command, organization
+selection follows:
+
+1. the command's existing positional selector, when supplied;
+2. `--organization SELECTOR`;
+3. `LISKOV_ORGANIZATION`; then
+4. the persistent organization attached to the CLI session.
+
+The first three are exact organization IDs or case-sensitive slugs. They are
+invocation inputs, not Application configuration: they are not saved to the
+session, copied into a manifest, or installed in a runtime environment.
+`organization use [SELECTOR]` is the explicit exception because its purpose is
+to replace the persistent session organization. Explicit billing and Runtime
+SSH integration routes require a positional, flag, or environment selector.
+`organization list` remains unscoped.
+
 ## Authored variables
 
 For each manifest variable:
@@ -49,6 +67,7 @@ names for new customer variables. Do not declare, override, expose, or copy
 reserved values between jobs.
 
 New Liskov-owned environment contracts use `LISKOV_*`.
+`LISKOV_ORGANIZATION` is a CLI invocation input, not a runtime contract.
 
 ## Change timing
 

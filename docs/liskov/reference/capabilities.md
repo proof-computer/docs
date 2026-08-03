@@ -20,7 +20,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Capability | Availability |
 | --- | --- |
 | GitHub sign-in; browser-confirmed CLI login | v1 |
-| Organizations, switching, team invitations, assignable roles | v1 |
+| Organizations, persistent and request-scoped CLI selection, team invitations, assignable roles | v1 |
 | Plans, terms, Stripe USD funding, Service Credits | v1 |
 | Curated first-party Marketplace launch | v1 |
 | Uptime Prober | v1 |
