@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: Install And Configure
 description: Installation and first context setup for Baran.
 ---

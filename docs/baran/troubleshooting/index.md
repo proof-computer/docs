@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: Troubleshooting
 description: Baran troubleshooting map.
 ---

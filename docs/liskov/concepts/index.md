@@ -15,7 +15,7 @@ an Application deliberately.
 - [Trust and data boundaries](./trust-boundaries.md)
 - [Attestation and the proof chain](./attestation.md)
 - [Costs and custody](./costs-custody.md)
-- [Liskov, Acurast, and Baran](./product-boundaries.md)
+- [Liskov and Acurast](./product-boundaries.md)
 
 These pages explain why. Exact commands, fields, and tokens remain in
 [Reference](../reference/index.md).

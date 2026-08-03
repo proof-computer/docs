@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: CLI Reference
 description: Command names, flags, and mutation boundaries.
 ---

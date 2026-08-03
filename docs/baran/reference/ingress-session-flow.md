@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: Ingress Session Flow
 description: Visual reference for Baran deploy, coordination, and HTTPS traffic paths.
 ---

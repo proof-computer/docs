@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: Express Adapter
 description: Add Baran endpoints to an Express app.
 ---

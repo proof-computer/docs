@@ -3,6 +3,7 @@ import {dirname, extname, join, relative, resolve, sep} from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
 const docsRoot = join(root, 'docs', 'liskov');
+const baranRoot = join(root, 'docs', 'baran');
 const sidebarPath = join(root, 'sidebarsLiskov.ts');
 const manifestPath = join(root, 'examples', 'liskov-v1', 'application-manifest.json');
 const workflowPath = join(root, 'examples', 'liskov-v1', 'liskov.yml');
@@ -94,6 +95,7 @@ function idFor(file) {
 }
 
 const files = walk(docsRoot).filter((file) => extname(file) === '.md').sort();
+const baranFiles = walk(baranRoot).filter((file) => extname(file) === '.md').sort();
 const ids = files.map(idFor);
 check(
   JSON.stringify(ids) === JSON.stringify([...expectedIds].sort()),
@@ -153,6 +155,7 @@ for (const file of files) {
 }
 
 const combined = allContent.join('\n');
+check(!/\bBaran\b/.test(combined), 'normal Liskov documentation exposes private-alpha Baran');
 for (const [pattern, explanation] of [
   [/\bliskov\.json\b/i, 'retired manifest filename'],
   [/proof liskov (?:admin|custody)\b/i, 'internal command prefix'],
@@ -191,8 +194,17 @@ check(
 
 const sidebar = readFileSync(sidebarPath, 'utf8');
 const publicEntry = allContent[0];
+const siteConfig = readFileSync(join(root, 'docusaurus.config.ts'), 'utf8');
 check(!publicEntry.includes('to="/liskov/quickstart"'), 'homepage links to retired quickstart route');
 check(!publicEntry.includes('to="/liskov/guides"'), 'homepage links to retired guides route');
+check(!publicEntry.includes('Baran'), 'homepage exposes private-alpha Baran');
+check(!siteConfig.includes("label: 'Baran'"), 'navbar or footer exposes private-alpha Baran');
+check(!siteConfig.includes("label: 'Baran Plugin'"), 'footer exposes the private-alpha Baran plugin');
+for (const file of baranFiles) {
+  const content = readFileSync(file, 'utf8');
+  check(content.startsWith('---\nunlisted: true\n'), `${relative(baranRoot, file)}: private-alpha Baran page is not unlisted`);
+}
+check(readFileSync(join(baranRoot, 'index.md'), 'utf8').includes('Private alpha'), 'Baran landing omits private-alpha notice');
 for (const id of expectedIds) {
   check(sidebar.includes(`'${id}'`), `sidebar omits ${id}`);
 }

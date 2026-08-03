@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: Guides
 description: Task-oriented Baran guides.
 ---

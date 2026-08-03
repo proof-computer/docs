@@ -1,10 +1,19 @@
 ---
+unlisted: true
 sidebar_position: 1
 title: Baran
 description: User documentation map for Baran.
 ---
 
 # Baran
+
+:::caution Private alpha
+
+Baran is available by invitation while PROOF focuses product development on
+Liskov. These docs are retained for participating teams; APIs, pricing, and
+support boundaries may change.
+
+:::
 
 Baran gives a supported long-running Acurast web job a stable public
 HTTPS endpoint.

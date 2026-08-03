@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: Trust Model
 description: Who holds keys, routes, and authority.
 ---

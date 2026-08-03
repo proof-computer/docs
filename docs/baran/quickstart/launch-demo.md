@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: Launch The Demo
 description: Run the bundled Baran proof page.
 ---

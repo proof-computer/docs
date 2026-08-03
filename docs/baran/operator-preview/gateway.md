@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: Gateway Runtime
 description: Gateway host setup and operations.
 ---

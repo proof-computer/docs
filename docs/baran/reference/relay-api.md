@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: Relay API
 description: Manifests, observability, registration, and hostname APIs.
 ---
