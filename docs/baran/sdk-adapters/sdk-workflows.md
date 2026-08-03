@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: SDK Workflows
 description: Build trusted deploy tooling on Baran APIs.
 ---

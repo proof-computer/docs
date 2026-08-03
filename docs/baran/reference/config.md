@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: Config Reference
 description: Project config, contexts, secrets, and overrides.
 ---

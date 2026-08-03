@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: Fastify Adapter
 description: Add Baran endpoints to a Fastify app.
 ---

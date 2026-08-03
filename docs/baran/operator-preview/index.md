@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: Gateway Operators
 description: Gateway host setup and operations.
 ---

@@ -193,8 +193,9 @@
 .productGrid {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   margin-top: 32px;
+  max-width: 720px;
 }
 
 .cardLink {

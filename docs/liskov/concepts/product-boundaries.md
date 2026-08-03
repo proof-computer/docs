@@ -1,9 +1,9 @@
 ---
-title: Liskov, Acurast, and Baran
-description: Understand which product builds and governs Applications, which network executes jobs, and why Baran is separate.
+title: Liskov and Acurast
+description: Understand which product builds and governs Applications and which network executes jobs.
 ---
 
-# Liskov, Acurast, and Baran
+# Liskov and Acurast
 
 These products meet at explicit seams; they are not synonyms.
 
@@ -26,17 +26,6 @@ schedule, market assignment, processor identity, and network settlement facts.
 A curated Liskov offering can use an Acurast facility such as WebView or
 Tunnel. That capability belongs to the offering/network boundary, not every
 Liskov workload.
-
-## Baran
-
-Baran is a separate ingress product. It can route inbound work to supported
-Acurast jobs through its own contracts and trust model. Baran is not the Liskov
-v1 HTTP/SSH hosting layer, and adding Baran is not a hidden prerequisite for
-either Liskov quickstart.
-
-Use the [Baran documentation](/baran) when your independent task is ingress.
-Do not copy Baran configuration into a Liskov manifest unless a supported
-integration guide explicitly joins the two.
 
 ## External services
 

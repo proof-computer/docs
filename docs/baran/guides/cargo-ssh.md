@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: Cargo SSH Jobs
 description: Run inspectable Script runtime jobs over Baran.
 ---

@@ -56,17 +56,13 @@ export default function Home() {
                 PROOF<span>.</span>
               </Heading>
               <p className={styles.subtitle}>
-                Run confidential compute that people can actually reach.
-                Deploy a service into a TEE on a real Acurast phone with{' '}
-                <strong>Liskov</strong>, and give it a stable public HTTPS
-                route with <strong>Baran</strong>.
+                Deploy and operate services in trusted hardware on real
+                Acurast phones with <strong>Liskov</strong> — managed releases,
+                secrets, logs, lifecycle, and proof in one place.
               </p>
               <div className={styles.headerActions}>
                 <Link className="button button--primary" to="/liskov">
                   Open Liskov docs
-                </Link>
-                <Link className="button button--secondary" to="/baran">
-                  Open Baran docs
                 </Link>
               </div>
             </div>
@@ -78,12 +74,11 @@ export default function Home() {
             <div className={styles.sectionHeader}>
               <span className={styles.sectionKicker}>Product documentation</span>
               <Heading as="h2" id="products-heading">
-                Two products, one confidential-compute stack.
+                Deploy like it's a cloud. Prove it isn't.
               </Heading>
               <p>
-                Liskov deploys and keeps your service running. Baran puts a
-                public HTTPS front door on it. Use either on its own, or both
-                together.
+                Liskov turns an authored application into bounded deployments
+                on attested Acurast compute and keeps the evidence visible.
               </p>
             </div>
             <div className={styles.productGrid}>
@@ -93,13 +88,6 @@ export default function Home() {
                 label="Read the docs"
                 href="/liskov"
                 description="Deploy and operate a long-running Node.js service on decentralized Acurast compute — with managed secrets, private logs, schedules, placement controls, and bounded USD Service Credit spend."
-              />
-              <ProductCard
-                name="Baran"
-                status="Available now"
-                label="Read the docs"
-                href="/baran"
-                description="Put a long-running Acurast Node.js service behind a stable HTTPS endpoint with job-owned TLS, route validation, and CLI diagnostics."
               />
             </div>
           </div>
@@ -120,26 +108,6 @@ export default function Home() {
               <Link to="/liskov/concepts">Concepts</Link>
               <Link to="/liskov/reference">Reference</Link>
               <Link to="/liskov/troubleshooting">Troubleshooting</Link>
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.docsBand} aria-labelledby="baran-heading">
-          <div className={styles.contentInner}>
-            <div className={styles.sectionHeader}>
-              <span className={styles.sectionKicker}>Baran docs</span>
-              <Heading as="h2" id="baran-heading">
-                Give your Acurast job a public HTTPS route.
-              </Heading>
-            </div>
-            <div className={styles.docsGrid}>
-              <Link to="/baran/quickstart">Quickstart</Link>
-              <Link to="/baran/guides">Guides</Link>
-              <Link to="/baran/concepts">Concepts</Link>
-              <Link to="/baran/sdk-adapters">SDK and adapters</Link>
-              <Link to="/baran/operator-preview">Gateway preview</Link>
-              <Link to="/baran/reference">Reference</Link>
-              <Link to="/baran/troubleshooting">Troubleshooting</Link>
             </div>
           </div>
         </section>

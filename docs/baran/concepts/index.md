@@ -1,4 +1,5 @@
 ---
+unlisted: true
 title: Concepts
 description: Baran conceptual model.
 ---

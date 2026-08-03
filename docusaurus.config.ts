@@ -94,12 +94,6 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'baranSidebar',
-          position: 'left',
-          label: 'Baran',
-        },
-        {
-          type: 'docSidebar',
           sidebarId: 'liskovSidebar',
           docsPluginId: 'liskov',
           position: 'left',
@@ -119,10 +113,6 @@ const config: Config = {
           title: 'Docs',
           items: [
             {
-              label: 'Baran',
-              to: '/baran',
-            },
-            {
               label: 'Liskov',
               to: '/liskov',
             },
@@ -134,10 +124,6 @@ const config: Config = {
             {
               label: 'PROOF CLI',
               href: 'https://www.npmjs.com/package/@proof-computer/proof-cli',
-            },
-            {
-              label: 'Baran Plugin',
-              href: 'https://www.npmjs.com/package/@proof-computer/proof-cli-baran',
             },
           ],
         },

@@ -71,8 +71,8 @@ This page is the availability owner. Guides contain only supported recipes.
 
 ## Product boundaries
 
-Baran is separate and is not Liskov v1 ingress. Acurast Tunnel may be used by
-an exact curated offering; it does not become a general repository capability.
+Acurast Tunnel may be used by an exact curated offering; it does not become a
+general repository capability.
 Frozen historical implementations and migration workflows are not customer
 features.
 
