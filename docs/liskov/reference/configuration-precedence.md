@@ -43,10 +43,10 @@ must use `runtime.env` after bootstrap.
 
 ## Built-ins and reserved names
 
-Liskov supplies identity/bootstrap values. Literal names beginning with
-`PROOF_SLIPWAY_`, `PROOF_LOCKBOX_`, and `BLACKBOX_` remain where compatibility
-requires them. They are implementation-facing wire inputs, not names for new
-customer variables. Do not declare, override, or copy them between jobs.
+Liskov supplies reserved identity, bootstrap, secret, and logging values where
+compatibility requires them. They are implementation-facing wire inputs, not
+names for new customer variables. Do not declare, override, expose, or copy
+reserved values between jobs.
 
 New Liskov-owned environment contracts use `LISKOV_*`.
 

@@ -85,9 +85,8 @@ the current job, installs runtime-env values, obtains required secret grants,
 and then attaches logging. Application code should read through `runtime.env`
 only after bootstrap.
 
-Compact environment variables whose names retain `PROOF_SLIPWAY_*`,
-`PROOF_LOCKBOX_*`, or `BLACKBOX_*` are compatibility wire contracts supplied
-by Liskov. Customers should not create them manually.
+Reserved compact environment values are compatibility wire contracts supplied
+by Liskov. Customers should not create, expose, or copy them manually.
 
 ## Logging types
 

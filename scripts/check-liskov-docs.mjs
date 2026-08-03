@@ -6,6 +6,7 @@ const docsRoot = join(root, 'docs', 'liskov');
 const sidebarPath = join(root, 'sidebarsLiskov.ts');
 const manifestPath = join(root, 'examples', 'liskov-v1', 'application-manifest.json');
 const workflowPath = join(root, 'examples', 'liskov-v1', 'liskov.yml');
+const cliContractPath = join(root, 'fixtures', 'liskov-cli-contract.json');
 const errors = [];
 
 const expectedIds = [
@@ -158,6 +159,7 @@ for (const [pattern, explanation] of [
   [/override-replacement-hold/i, 'internal replacement override'],
   [/\bzero[- ]trust\b/i, 'unsupported zero-trust claim'],
   [/\b(?:just|simply|obviously)\b/i, 'unfriendly shortcut word'],
+  [/\bblackbox\b|BLACKBOX_/i, 'internal logging implementation name'],
   [/\bTBD\b|\bTODO\b|coming soon/i, 'placeholder copy'],
 ]) {
   check(!pattern.test(combined), `public content contains ${explanation}: ${pattern}`);
@@ -223,6 +225,7 @@ for (const oldPath of [
 }
 
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+const cliContract = JSON.parse(readFileSync(cliContractPath, 'utf8'));
 check(manifest.schema === 'proof.liskov.application-manifest', 'fixture: wrong manifest schema');
 check(manifest.schemaVersion === 4, 'fixture: wrong schemaVersion');
 check(manifest.release?.artifact?.encryption?.mode === 'none', 'fixture: reusable action supports only unencrypted IPFS bundles');
@@ -232,6 +235,28 @@ check(manifest.deployment?.lifecycle?.renewal?.mode === 'after_scheduled_end', '
 check(manifest.deployment?.lifecycle?.update?.existingJobs?.mode === 'run_until_scheduled_end', 'fixture: unsupported predecessor behavior');
 check(manifest.deployment?.lifecycle?.recovery?.runtimeFailure?.mode === 'wait_until_scheduled_end', 'fixture: unsupported runtime recovery');
 check(!('ingress' in manifest), 'fixture: general ingress must not appear in the public recipe');
+check(manifest.observability?.logs?.enabled === true, 'fixture: managed logging must be enabled explicitly');
+check(
+  JSON.stringify(Object.keys(manifest.observability?.logs ?? {})) === JSON.stringify(['enabled']),
+  'fixture: public logging recipe must use only observability.logs.enabled',
+);
+
+const cliPage = readFileSync(join(docsRoot, 'reference', 'cli.md'), 'utf8');
+check(cliContract.package === '@proof-computer/proof-cli-liskov', 'CLI fixture: wrong package');
+check(cliContract.version === '0.5.0', 'CLI fixture: wrong released version');
+check(cliContract.command === 'liskov:application:logs', 'CLI fixture: missing logs command');
+check(cliContract.flags?.limit?.minimum === 1 && cliContract.flags?.limit?.maximum === 500, 'CLI fixture: wrong log limit bounds');
+check(
+  JSON.stringify(cliContract.flags?.origin) === JSON.stringify(['all', 'customer', 'runtime-ssh']),
+  'CLI fixture: wrong log origins',
+);
+check(cliPage.includes(`\`${cliContract.package}\` \`${cliContract.version}\``), 'CLI page omits the fixture package version');
+for (const token of ['application logs APP_REF', '--limit', '--deployment', '--job', 'runtime-ssh', '--json']) {
+  check(cliPage.includes(token), `CLI page omits managed logging contract token: ${token}`);
+}
+for (const retired of cliContract.retiredCommands ?? []) {
+  check(!combined.includes(retired.replaceAll(':', ' ')), `public docs expose retired CLI command: ${retired}`);
+}
 
 const workflow = readFileSync(workflowPath, 'utf8');
 check(workflow.includes('acurast-app.yml@v1'), 'workflow fixture: missing released @v1 reference');
@@ -252,6 +277,11 @@ for (const [fileId, required] of Object.entries({
   'operate/update': ['successor', 'without mutating'],
   'operate/retire': ['does not stop existing jobs', 'receipt'],
   'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Private deployed customer code'],
+  'reference/cli': ['0.5.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero'],
+  'reference/manifest-v4': ['deprecated_manifest_field', 'profileId', 'sinkName', 'future schema'],
+  'configure/logging-diagnostics': ['only logging field needed', 'provisions', 'application logs'],
+  'operate/logs-activity': ['application logs', '--deployment', '--job', 'follow, tail'],
+  'troubleshooting/logs': ['exits zero', 'malformed-response failures'],
   'concepts/trust-boundaries': ['briefly PROOF over TLS', 'Plaintext is not persisted', 'Private source is not private deployed code', 'cache reuse'],
   'build/artifacts-provenance': ['reusable GitHub pin action requires `none`', 'complete path is not supported today'],
   'troubleshooting/support': ['Never include', 'Application UID', 'runtime-instance ID'],
@@ -271,6 +301,7 @@ for (const command of [
   'proof liskov application publish',
   'proof liskov application status',
   'proof liskov application action-plan',
+  'proof liskov application logs',
   'proof liskov application pause',
   'proof liskov application resume',
   'proof liskov application retire',

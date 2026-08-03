@@ -27,6 +27,10 @@ Neither should contain a secret.
 Signed diagnostics are a non-weakenable runtime requirement. Logging is
 optional and disabled by default unless policy enables it.
 
+`enabled` is the only logging field needed for new manifests. Liskov provisions
+the encrypted logging path automatically; authors do not choose a profile,
+sink, or logging context.
+
 ## Emit useful records
 
 ```ts
@@ -62,6 +66,12 @@ After deployment, emit a harmless known event. Confirm it appears under the
 intended organization, Application, deployment, job, and runtime instance;
 then compare the signed readiness event in the timeline. Redact log payloads
 before sharing support evidence.
+
+Read the same records from the CLI when needed:
+
+```bash
+proof liskov application logs APPLICATION_UID --limit 50
+```
 
 See [Monitor logs and activity](../operate/logs-activity.md) and
 [Logs and diagnostics troubleshooting](../troubleshooting/logs.md).

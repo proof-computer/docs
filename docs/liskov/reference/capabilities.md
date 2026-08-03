@@ -38,7 +38,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | --- | --- |
 | Node.js background bundle and runtime SDK `0.3.26` | v1 |
 | Managed variables and managed secrets | v1 |
-| Liskov logging and signed diagnostics | v1 |
+| Managed Application logging through Console and `proof liskov application logs`; signed diagnostics | v1 |
 | Outbound networking and declared quota | v1 |
 | Liskov-hosted HTTP/SSH ingress | Not v1 |
 | Parallelism | v1 at exactly `1`; schema maximum `64` is not enabled |

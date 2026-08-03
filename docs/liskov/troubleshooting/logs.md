@@ -19,6 +19,17 @@ Check in order:
 Early records can be buffered while logging configuration arrives. A process
 that exits before any successful flush may leave no remotely visible record.
 
+Check the bounded read directly:
+
+```bash
+proof liskov application logs APPLICATION_UID --limit 50
+```
+
+An authenticated response can succeed while logging is unavailable. The CLI
+then exits zero and prints the stable availability reason. Authentication,
+transport, and malformed-response failures exit nonzero; fix those before
+interpreting an empty log list.
+
 ## Application looks ready but a business event is absent
 
 Runtime readiness covers required SDK capabilities, not the success of every

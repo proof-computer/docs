@@ -17,10 +17,23 @@ Use the narrowest signal that answers your question:
 
 ## Read logs safely
 
-Filter by Application, time range, deployment, job, runtime instance, event
-name, or severity when those controls are available. A successor and its
-predecessor may log at the same time, so always keep deployment identity in
-view.
+The Console can narrow the returned window by product source, level,
+deployment, and job. A successor and its predecessor may log at the same time,
+so always keep deployment identity in view.
+
+The CLI provides the same bounded product read:
+
+```bash
+proof liskov application logs APPLICATION_UID \
+  --limit 100 \
+  --deployment DEPLOYMENT_ID \
+  --job JOB_ID \
+  --origin customer
+```
+
+Use `--origin runtime-ssh` for Runtime SSH records, or `--origin all` for both
+product sources. Deployment and job filters can be combined. The CLI does not
+follow, tail, or page by time.
 
 Application logs are selected by customer code. They can explain business
 behavior but are not an authoritative lifecycle ledger. Treat any accidental

@@ -73,7 +73,7 @@ Install the public command-line interface (CLI) if needed:
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov
+proof plugins install @proof-computer/proof-cli-liskov@0.5.0
 proof liskov login
 ```
 

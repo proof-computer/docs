@@ -361,14 +361,18 @@ document its own Acurast boundary.
 | `logs` | `{ "enabled": false }` |
 | `runtimeDiagnostics` | `{ "signed": true }`; false is invalid |
 
-`logs` supports:
+For new manifests, use only:
 
 | Field | Default / notes |
 | --- | --- |
-| `enabled` | false |
-| `profileId` | Optional versioned logging profile. |
-| `sinkName` | Optional configured sink name. |
-| `context` | `{}` map of non-secret strings. |
+| `enabled` | false; true asks Liskov to provision managed logging automatically. |
+
+Published Manifest V4 also accepts `profileId`, `sinkName`, and `context` as
+deprecated compatibility fields. Existing immutable effective policies keep
+their authored values. Validation returns a non-blocking
+`deprecated_manifest_field` diagnostic for each one. Do not add them to new
+manifests; a future schema will derive sink identity and context entirely in
+Liskov.
 
 ## `configuration`
 

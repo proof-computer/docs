@@ -5,12 +5,12 @@ description: Public proof liskov v1 command tree, confirmations, machine-readabl
 
 # CLI
 
-The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.3.3` and
+The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.5.0` and
 requires Node.js 22 or later. All commands begin with `proof liskov`.
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov
+proof plugins install @proof-computer/proof-cli-liskov@0.5.0
 proof liskov --help
 ```
 
@@ -46,6 +46,7 @@ and Stripe funding are Console tasks.
 | `application list` | List readable Applications. |
 | `application status APPLICATION_ID` | Read customer-facing Application state. |
 | `application activity APP_REF` | Read activity; accepts `--limit` and `--before`. |
+| `application logs APP_REF` | Read recent managed Application logs. |
 | `application action-plan APP_REF` | Read current blockers and supported actions. |
 | `application secrets APPLICATION_ID` | Read declared secret requirements, never values. |
 | `application plans APPLICATION_ID` | Advanced effective-policy/plan inspection. |
@@ -54,6 +55,26 @@ and Stripe funding are Console tasks.
 
 An `APP_REF` can be the accepted Application UID, name, or ID. Prefer the UID
 for automation and support.
+
+### Application log flags
+
+```bash
+proof liskov application logs APP_REF \
+  --limit 100 \
+  --deployment DEPLOYMENT_ID \
+  --job JOB_ID \
+  --origin runtime-ssh
+```
+
+`--limit` accepts 1–500. `--deployment` and `--job` can be combined. Origin is
+`all`, `customer`, or `runtime-ssh`; the last value is shown as **Runtime SSH**
+in human output. There is no follow/tail or time-pagination flag.
+
+`--json` emits the core Liskov `/logs` response. Human output prints the count,
+timestamp, normalized level, product origin, job ID, and message. Control and
+terminal escape characters in messages are escaped. An authenticated degraded
+response exits zero and reports its stable availability reason; authentication,
+transport, and malformed-response failures exit nonzero.
 
 ## Authoring and publication
 
