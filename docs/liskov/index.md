@@ -11,24 +11,31 @@ the deployment machinery yourself. Acurast supplies phones with trusted
 execution environments (TEEs): hardware-isolated places where your code can
 run away from a conventional cloud server.
 
-You can start in either of two ways:
+Start with **[Deploy from GitHub](./get-started/github.md)** when you are
+bringing your own repository and want a verifiable release trail. Publication
+is enabled only for eligible organizations, so check the availability note
+before preparing a release.
 
-- **[Launch from Marketplace](./get-started/marketplace.md)** when you want a
-  curated application and do not need to maintain its source.
-- **[Deploy from GitHub](./get-started/github.md)** when you are bringing your
-  own repository and want a verifiable release trail.
+:::caution Release boundary
+Marketplace launch, Uptime Prober, plan and terms acceptance, and Stripe USD
+checkout are still release-gated. Their current production use is limited to
+internal first-party engineering acceptance. Do not enter payment details or
+offering secrets until the [capability matrix](./reference/capabilities.md)
+classifies the path as supported customer behavior.
+:::
 
-Both paths create a Liskov **Application**. The Application keeps your desired
+A supported launch creates a Liskov **Application**. The Application keeps your desired
 configuration, immutable artifact evidence, deployments, logs, billing, and
 lifecycle together. Liskov manages the Acurast jobs needed to keep that intent
 running over time.
 
 ## What v1 gives you
 
-- A proof trail from a Marketplace version or GitHub commit to the artifact,
+- A proof trail from a GitHub commit to the artifact,
   effective policy, Acurast job, processor, and runtime evidence.
 - Managed variables and secrets, with job-bound delivery.
-- Bounded spend through USD Service Credits. You do not manage an ACU wallet.
+- Read-only visibility into available, reserved, and used USD Service Credits.
+  Customer checkout is not yet a supported way to add credit.
 - Clear Application status and an Action Plan when your input is required.
 - Time-boxed jobs, deliberate updates, pause/resume, bounded retry, and safe
   retirement.

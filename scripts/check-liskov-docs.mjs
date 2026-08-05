@@ -79,6 +79,14 @@ const expectedIds = [
   'troubleshooting/support',
 ];
 
+const releaseGatedIds = [
+  'get-started/marketplace',
+  'marketplace/index',
+  'marketplace/options',
+  'marketplace/uptime-prober',
+  'marketplace/verify',
+];
+
 function walk(directory) {
   return readdirSync(directory, {withFileTypes: true}).flatMap((entry) => {
     const path = join(directory, entry.name);
@@ -178,6 +186,11 @@ check(!existsSync(join(root, 'static', 'examples', 'liskov')), 'superseded downl
 const retirementPage = readFileSync(join(docsRoot, 'operate', 'retire.md'), 'utf8');
 const capabilitiesPage = readFileSync(join(docsRoot, 'reference', 'capabilities.md'), 'utf8');
 const githubActionsPage = readFileSync(join(docsRoot, 'build', 'github-actions.md'), 'utf8');
+const liskovIndexPage = readFileSync(join(docsRoot, 'index.md'), 'utf8');
+const setupPage = readFileSync(join(docsRoot, 'get-started', 'set-up-liskov.md'), 'utf8');
+const marketplaceStartPage = readFileSync(join(docsRoot, 'get-started', 'marketplace.md'), 'utf8');
+const serviceCreditsPage = readFileSync(join(docsRoot, 'organizations', 'service-credits.md'), 'utf8');
+const accountFundingPage = readFileSync(join(docsRoot, 'troubleshooting', 'account-funding.md'), 'utf8');
 check(
   !/retirement contract[\s\S]{0,120}(?:still gated|release gate)/i.test(retirementPage),
   'retirement page retains the removed production release gate',
@@ -191,6 +204,11 @@ check(
   !/v1[^\n]{0,80}(?:not yet published|does not yet publish)/i.test(githubActionsPage),
   'GitHub Actions page retains the removed v1 release gate',
 );
+check(!liskovIndexPage.includes('./get-started/marketplace.md'), 'Liskov landing page recommends release-gated Marketplace launch');
+check(!/Choose \*\*Add funds\*\*/i.test(setupPage), 'setup page contains a release-gated add-funds recipe');
+check(!/^## \d+\./m.test(marketplaceStartPage), 'Marketplace release-boundary page contains a step-by-step launch recipe');
+check(!/continue to Stripe|complete the Stripe checkout/i.test(serviceCreditsPage), 'Service Credit read page contains a release-gated checkout recipe');
+check(!/^## Stripe checkout succeeded/m.test(accountFundingPage), 'troubleshooting contains a customer Stripe checkout procedure');
 
 const sidebar = readFileSync(sidebarPath, 'utf8');
 const publicEntry = allContent[0];
@@ -205,10 +223,13 @@ for (const file of baranFiles) {
   check(content.startsWith('---\nunlisted: true\n'), `${relative(baranRoot, file)}: private-alpha Baran page is not unlisted`);
 }
 check(readFileSync(join(baranRoot, 'index.md'), 'utf8').includes('Private alpha'), 'Baran landing omits private-alpha notice');
-for (const id of expectedIds) {
+for (const id of expectedIds.filter((id) => !releaseGatedIds.includes(id))) {
   check(sidebar.includes(`'${id}'`), `sidebar omits ${id}`);
 }
-check(!/Preview|openclaw|cargo/i.test(sidebar), 'sidebar exposes an unavailable Preview/OpenClaw/Cargo path');
+for (const id of releaseGatedIds) {
+  check(!sidebar.includes(`'${id}'`), `sidebar exposes release-gated path ${id}`);
+}
+check(!/Preview|openclaw|cargo|marketplace/i.test(sidebar), 'sidebar exposes an unavailable Preview/OpenClaw/Cargo/Marketplace path');
 
 const redirectConfig = JSON.parse(readFileSync(join(root, 'vercel.json'), 'utf8'));
 const redirectSources = new Set(redirectConfig.redirects.map((item) => item.source));
@@ -284,9 +305,12 @@ check(workflow.includes('authored-manifest-path:'), 'workflow fixture: missing m
 check(!/yes-spend|bearer|LISKOV_TOKEN/i.test(workflow), 'workflow fixture: contains a spend or bearer credential');
 
 for (const [fileId, required] of Object.entries({
-  'get-started/choose-your-path': ['Marketplace', 'GitHub'],
-  'get-started/set-up-liskov': ['Stripe', 'Available', 'Reserved'],
-  'get-started/marketplace': ['Uptime Prober', 'Telegram', 'Verify'],
+  'get-started/choose-your-path': ['Marketplace', 'GitHub', 'Release-gated v1', 'customer add-funds'],
+  'get-started/set-up-liskov': ['read', 'release-gated', 'Available', 'Reserved'],
+  'get-started/marketplace': ['Release-gated v1', 'engineering acceptance', 'not supported customer paths'],
+  'marketplace/uptime-prober': ['Release-gated v1', 'engineering acceptance', 'not a supported customer offering'],
+  'organizations/service-credits': ['read-only', 'Customer funding is release-gated', 'payment details'],
+  'troubleshooting/account-funding': ['There is no supported customer checkout', 'Service Credit reads disagree'],
   'get-started/github': ['Publication availability', 'v1.2.2', 'artifact-version-id', 'Proof'],
   'operate/proof-chain': ['GitHub OIDC', 'policy digest', 'runtime instance'],
   'troubleshooting/deployment': ['Normal waiting', 'Needs action', 'decision-id'],
@@ -309,6 +333,15 @@ for (const [fileId, required] of Object.entries({
   for (const token of required) {
     check(page.toLowerCase().includes(token.toLowerCase()), `retrieval audit: ${fileId} omits "${token}"`);
   }
+}
+
+for (const [pattern, message] of [
+  [/\| Service Credit balance, reservation, and ledger reads \| v1; read-only surfaces are supported/, 'capability matrix omits supported read-only Service Credit surfaces'],
+  [/\| Stripe USD checkout and Service Credit issuance \| Release-gated v1;/, 'capability matrix does not gate Stripe funding'],
+  [/\| Curated first-party Marketplace launch \| Release-gated v1;/, 'capability matrix does not gate Marketplace launch'],
+  [/\| Uptime Prober \| Release-gated v1;/, 'capability matrix does not gate Uptime Prober'],
+]) {
+  check(pattern.test(capabilitiesPage), message);
 }
 
 for (const command of [

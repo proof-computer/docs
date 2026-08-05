@@ -1,22 +1,23 @@
 ---
 title: Choose your path
-description: Decide whether to launch a curated Marketplace application or deploy code from your own GitHub repository.
+description: Review the available own-repository path and the release gate on Marketplace launch.
 ---
 
 # Choose your path
 
-Liskov has two starting paths. Both finish with a normal Application in your
-organization and use the same status, proof, billing, and lifecycle tools.
+The documented customer path starts from a GitHub repository. It finishes with
+a normal Application in your organization and uses the same status, proof,
+billing, and lifecycle tools described throughout these docs.
 
-| Choose | When it fits | What you provide |
+| Path | Availability | What you provide |
 | --- | --- | --- |
-| **Marketplace** | You want to run a curated application without maintaining its source or build. | Offering options, required secret values, a name, and spend approval. |
-| **GitHub** | You own the workload and need source-to-runtime provenance. | A supported repository, Manifest V4, runtime integration, and a GitHub build workflow. |
+| **GitHub** | Available only where Manifest V4 publication is enabled for the organization. | A supported repository, Manifest V4, runtime integration, and a GitHub build workflow. |
+| **Marketplace** | Release-gated v1; internal first-party engineering acceptance only. | Do not provide offering secrets or approve spend as a customer yet. |
 
-Marketplace is usually the fastest first experience. The
-[Uptime Prober](../marketplace/uptime-prober.md) sends periodic screenshots of
-a URL to your Telegram bot and demonstrates managed secrets, outbound network
-access, time-boxed execution, and proof inspection.
+Uptime Prober is the first-party fixture used to accept the Marketplace path.
+Its production presence does not make it a supported customer offering. The
+[Marketplace release-boundary page](./marketplace.md) preserves the intended
+outcome without presenting a launch recipe.
 
 Choose GitHub when you need to change the code, build configuration, runtime
 resources, schedule, or release authority. You will validate a strict manifest
@@ -24,12 +25,17 @@ and record an immutable artifact version before publication.
 
 ## Shared prerequisites
 
-Both paths need:
+The GitHub path needs:
 
 - a GitHub account for Liskov sign-in;
 - a Liskov organization;
-- an eligible plan and accepted terms; and
-- enough available USD Service Credits for the displayed reserve.
+- an organization for which publication is enabled; and
+- enough already-available USD Service Credits for the displayed reserve.
+
+Customer plan selection, terms acceptance, Stripe checkout, and issuance of
+new Service Credits are release-gated. You can read an existing organization's
+balance, reservations, and ledger, but there is no supported customer add-funds
+path yet.
 
 You do not need an Acurast account, processor, mnemonic, or ACU wallet for the
 default managed-custody path.

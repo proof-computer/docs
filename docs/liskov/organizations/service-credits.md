@@ -1,36 +1,24 @@
 ---
-title: Plans and USD Service Credits
-description: Choose a plan, fund Liskov with Stripe USD, and read the only customer balance.
+title: Read USD Service Credits
+description: Read an organization's available, reserved, and used Service Credits while customer funding remains release-gated.
 ---
 
-# Plans and USD Service Credits
+# Read USD Service Credits
 
 USD Service Credits are the only customer balance. They are a non-transferable
 prepaid claim against Liskov service, not a bank account, stablecoin, crypto
 token, or withdrawable wallet.
 
-## Choose a plan
-
-Open **Billing & funding**, compare the displayed plan limits and fees, and
-select the plan appropriate to your organization. Accept the applicable terms.
-Only an organization admin can change billing settings.
-
-Plan limits can cover Applications, users, configuration, retention, and
-deployment capabilities. The Console's current plan catalog is authoritative;
-the docs do not hard-code commercial prices.
-
-## Add funds
-
-Choose **Add funds**, enter a positive USD amount with no more than two decimal
-places, and continue to Stripe's secure checkout. Return to Liskov after
-payment. Credits appear only after server-side payment confirmation.
-
-Do not retry checkout only because a browser redirect is slow. First refresh
-the authoritative balance and billing records.
+:::caution Customer funding is release-gated
+Plan selection, terms acceptance, Stripe checkout, and issuance of new Service
+Credits are not yet supported customer flows. Current production acceptance is
+limited to internal first-party organizations that are already pre-funded. Do
+not submit payment details or call an internal funding endpoint.
+:::
 
 ## Read the balance
 
-The Console separates:
+The supported read-only surface separates:
 
 - **Available** — usable for a new reserve;
 - **Reserved** — held for bounded in-progress work;
@@ -46,13 +34,18 @@ proof liskov organization billing ORGANIZATION_ID
 
 These commands are read-only.
 
+The billing projection and transaction history are authoritative for the
+selected organization. A visible plan or checkout control does not change the
+release classification. If a control is disabled or unavailable, do not seek
+an internal workaround.
+
 Liskov uses its treasury to settle Acurast reward and network fees. You do not
 deposit ACU or USDC, manage an Acurast wallet, perform a swap, or withdraw the
 underlying settlement assets.
 
 ## Verify
 
-Confirm the organization ID, plan, payment record, available/reserved/used
-amounts, and displayed currency. If Stripe succeeded but the balance did not
-change, collect the checkout/payment reference without card details and use
-[Sign-in, organization, and funding](../troubleshooting/account-funding.md).
+Confirm the organization ID, available/reserved/used amounts, transaction
+history, and displayed currency. If a read appears stale or belongs to the
+wrong organization, use
+[Sign-in, organization, and Service Credit reads](../troubleshooting/account-funding.md).

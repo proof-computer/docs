@@ -54,10 +54,11 @@ versioned configuration delivered for a particular job.
 
 ## Marketplace provenance
 
-A Marketplace launch selects an exact offering version and its pinned artifact
-evidence. Review the source repository, version, CID, and digest displayed by
-the listing. Marketplace curation is a product decision; it is not a general
-third-party publishing or payout system in v1.
+Marketplace launch is release-gated and limited to internal first-party
+acceptance. Its intended contract selects an exact offering version and pinned
+artifact evidence: source repository, version, CID, and digest. Marketplace
+curation is a product decision; it is not a general third-party publishing or
+payout system in v1.
 
 ## Repository provenance
 

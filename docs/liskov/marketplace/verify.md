@@ -1,12 +1,18 @@
 ---
 title: Verify a Marketplace Application
-description: Confirm the exact curated version, artifact, policy, job, runtime, and cost boundary behind a Marketplace launch.
+description: Review the evidence a supported Marketplace launch must expose after its release gate is removed.
 ---
 
 # Verify a Marketplace Application
 
-Marketplace makes launch short; it does not remove the evidence chain. Verify
-the selected version before launch and the realized deployment afterward.
+:::caution Release-gated v1
+Marketplace launch is limited to internal first-party engineering acceptance.
+This checklist records the public evidence contract; it is not a customer
+launch or spend procedure.
+:::
+
+A future Marketplace launch must not remove the evidence chain. Its release
+acceptance must verify the selected version and the realized deployment.
 
 ## Verify the listing
 

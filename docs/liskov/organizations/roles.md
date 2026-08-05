@@ -18,7 +18,7 @@ current Liskov permission model.
 | **Maintainer** | Manage broader Application configuration and lifecycle decisions. |
 | **Operator** | Monitor and perform supported operational actions. |
 | **Spender** | Confirm permitted actions that create a customer financial commitment. |
-| **Admin** | Manage organization settings, members, plans, and funding. |
+| **Admin** | Manage organization settings and members; plan and funding controls remain release-gated. |
 
 The Console is authoritative about the exact action enabled for the current
 role. A label describes responsibility; it is not a guarantee that every future
