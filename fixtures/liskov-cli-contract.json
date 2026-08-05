@@ -15,6 +15,16 @@
     },
     "json": "boolean"
   },
+  "sshCommand": "liskov:ssh",
+  "sshArguments": ["APP"],
+  "sshFlags": {
+    "identity": "string",
+    "deployment": "string",
+    "job": "string",
+    "accept-host-key": "boolean",
+    "print-command": "boolean",
+    "json": "boolean"
+  },
   "retiredCommands": [
     "liskov:application:blackbox",
     "liskov:application:blackbox:configure"

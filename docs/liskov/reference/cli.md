@@ -135,6 +135,27 @@ workflow is needed.
 
 Pause and retirement do not force-stop existing Acurast jobs.
 
+## Runtime SSH
+
+| Command | Behavior |
+| --- | --- |
+| `ssh APP` | Open a shell in one of your running jobs. |
+| `ssh APP --print-command --json` | Resolve and verify the connection without opening a session or consuming an access ticket. |
+
+`--identity` names the private key file; it is read locally and never sent.
+`--deployment` and `--job` select an exact target when an Application has more
+than one running job. `--accept-host-key` trusts a job's key on first use
+without prompting, for automation; a **mismatch** on a job you already trusted
+is always refused rather than re-prompted.
+
+The first connection to a job prints its host key for confirmation and pins it.
+Each connection consumes a one-time ticket, so a replayed ticket is rejected;
+reconnecting issues a new one.
+
+Every grant, session open, and session close is recorded in the Application
+activity feed with the duration and bytes transferred. See
+[Open a shell in a running job](../operate/runtime-ssh.md).
+
 ## Common flags and automation
 
 - `--json` emits machine-readable output and never token material.

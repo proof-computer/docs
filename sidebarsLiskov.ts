@@ -52,6 +52,7 @@ const sidebars: SidebarsConfig = {
         'operate/deployments-jobs',
         'operate/proof-chain',
         'operate/logs-activity',
+        'operate/runtime-ssh',
         'operate/update',
         'operate/pause-resume',
         'operate/diagnose-retry',

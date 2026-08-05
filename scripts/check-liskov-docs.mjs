@@ -42,6 +42,7 @@ const expectedIds = [
   'operate/pause-resume',
   'operate/diagnose-retry',
   'operate/retire',
+  'operate/runtime-ssh',
   'marketplace/index',
   'marketplace/options',
   'marketplace/uptime-prober',
@@ -272,6 +273,32 @@ check(cliPage.includes(`\`${cliContract.package}\` \`${cliContract.version}\``),
 for (const token of ['application logs APP_REF', '--limit', '--deployment', '--job', 'runtime-ssh', '--json']) {
   check(cliPage.includes(token), `CLI page omits managed logging contract token: ${token}`);
 }
+check(cliContract.sshCommand === 'liskov:ssh', 'CLI fixture: missing Runtime SSH command');
+check(
+  JSON.stringify(cliContract.sshArguments) === JSON.stringify(['APP']),
+  'CLI fixture: wrong Runtime SSH arguments',
+);
+for (const flag of ['identity', 'print-command', 'accept-host-key']) {
+  check(cliContract.sshFlags?.[flag] !== undefined, `CLI fixture: missing Runtime SSH flag ${flag}`);
+  check(cliPage.includes(`--${flag}`), `CLI page omits Runtime SSH flag: --${flag}`);
+}
+
+// Availability transition (2026-08-05): Runtime SSH moved from an internal
+// allowlist to plan entitlement. The capability page owns that claim, and it
+// must stay distinct from hosted inbound ingress, which remains outside v1.
+check(
+  /\| Runtime SSH into your own running job, Liskov-operated relay \| Preview on Starter and above/.test(capabilitiesPage),
+  'capabilities: managed Runtime SSH must be classified Preview on Starter and above',
+);
+check(
+  /\| Runtime SSH into your own running job, your own Tailscale network \| Preview on Starter and above/.test(capabilitiesPage),
+  'capabilities: customer-owned Tailscale Runtime SSH must be classified Preview on Starter and above',
+);
+check(
+  /\| Liskov-hosted HTTP\/SSH ingress \| Not v1 \|/.test(capabilitiesPage),
+  'capabilities: hosted inbound ingress must stay Not v1 and distinct from Runtime SSH',
+);
+
 for (const retired of cliContract.retiredCommands ?? []) {
   check(!combined.includes(retired.replaceAll(':', ' ')), `public docs expose retired CLI command: ${retired}`);
 }
@@ -295,7 +322,7 @@ for (const [fileId, required] of Object.entries({
   'operate/update': ['successor', 'without mutating'],
   'operate/retire': ['does not stop existing jobs', 'receipt'],
   'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Private deployed customer code'],
-  'reference/cli': ['0.6.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault'],
+  'reference/cli': ['0.6.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP'],
   'reference/manifest-v4': ['deprecated_manifest_field', 'profileId', 'sinkName', 'future schema'],
   'configure/logging-diagnostics': ['only logging field needed', 'provisions', 'application logs'],
   'operate/logs-activity': ['application logs', '--deployment', '--job', 'follow, tail'],

@@ -41,6 +41,8 @@ This page is the availability owner. Guides contain only supported recipes.
 | Managed Application logging through Console and `proof liskov application logs`; signed diagnostics | v1 |
 | Outbound networking and declared quota | v1 |
 | Liskov-hosted HTTP/SSH ingress | Not v1 |
+| Runtime SSH into your own running job, Liskov-operated relay | Preview on Starter and above; Liskov operates the relay and cannot read the session, and the relay is a single instance |
+| Runtime SSH into your own running job, your own Tailscale network | Preview on Starter and above; requires a Tailscale account you own |
 | Parallelism | v1 at exactly `1`; schema maximum `64` is not enabled |
 | Open-market processor selection | v1 |
 | Manager/static selection, placement groups, topology constraints | Internal |
