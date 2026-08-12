@@ -97,11 +97,35 @@ function idFor(file) {
 
 const files = walk(docsRoot).filter((file) => extname(file) === '.md').sort();
 const baranFiles = walk(baranRoot).filter((file) => extname(file) === '.md').sort();
-const ids = files.map(idFor);
+
+// Unreleased contracts drafted ahead of implementation. They are written as
+// though final so the design can be reviewed for inconsistency before coding
+// starts, so they must build and be link-checked — but they document a
+// capability no customer can reach, and `reference/capabilities.md` stays the
+// availability owner. Same treatment as the private-alpha Baran pages: kept out
+// of the sidebar, out of the sitemap, and out of the inventory.
+const unlistedIds = new Set([
+  'build/manifest-v5',
+  'configure/clustering',
+  'reference/manifest-v5',
+]);
+
+const ids = files.map(idFor).filter((id) => !unlistedIds.has(id));
 check(
   JSON.stringify(ids) === JSON.stringify([...expectedIds].sort()),
   `page inventory differs\nexpected: ${[...expectedIds].sort().join(', ')}\nactual: ${ids.join(', ')}`,
 );
+
+for (const id of unlistedIds) {
+  const file = join(docsRoot, `${id}.md`);
+  if (!existsSync(file)) {
+    check(false, `unlisted page ${id} is declared but missing`);
+    continue;
+  }
+  const content = readFileSync(file, 'utf8');
+  check(content.startsWith('---\nunlisted: true\n'), `${id}: unreleased page is not unlisted`);
+  check(content.includes(':::danger[Not released]'), `${id}: unreleased page omits the not-released notice`);
+}
 
 const allContent = [readFileSync(join(root, 'src', 'pages', 'index.tsx'), 'utf8')];
 for (const file of files) {
@@ -210,6 +234,9 @@ for (const id of expectedIds) {
   check(sidebar.includes(`'${id}'`), `sidebar omits ${id}`);
 }
 check(!/Preview|openclaw|cargo/i.test(sidebar), 'sidebar exposes an unavailable Preview/OpenClaw/Cargo path');
+for (const id of unlistedIds) {
+  check(!sidebar.includes(`'${id}'`), `sidebar exposes unreleased page ${id}`);
+}
 
 const redirectConfig = JSON.parse(readFileSync(join(root, 'vercel.json'), 'utf8'));
 const redirectSources = new Set(redirectConfig.redirects.map((item) => item.source));
