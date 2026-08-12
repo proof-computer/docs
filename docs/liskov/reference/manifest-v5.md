@@ -27,6 +27,9 @@ complete field list.
   — `30s`, `6h`, `1d`. There is no unitless form and no `1mo`: a calendar month
   is 28–31 days, so an authored rate would mean different money in February than
   in July.
+- **Byte sizes** follow the same one-unit-bearing-term rule: `B`, `KiB`, `MiB`,
+  `GiB`, `TiB`, `KB`, `MB`, `GB`, `TB`. Binary and decimal suffixes both mean
+  what they say. Unitless numbers are rejected.
 - **Amounts** are exact integers as decimal **strings**, never numbers. Money
   does not go through a float.
 - **Timestamps** are RFC 3339 with an explicit offset.
@@ -150,12 +153,35 @@ current-evidence profile.
 
 | Field | Type | Notes |
 | --- | --- | --- |
+| `minimums` | object | Minimum processor capability. At least one key |
 | `evidence.profile` ✱ | string | One versioned profile replaces V4's per-metric array. Units, thresholds, age, sample counts, confidence and unknown-handling evolve together |
 | `processorSelection` | union | `manager` (`managerId` ✱) or `exact` (`processorIds` ✱). Omitted means open market |
 | `allow` | rule[] | Hard eligibility filters |
 | `exclude` | rule[] | Any match removes the candidate |
 | `spread` | item[] | Inter-job diversity |
 | `distribution` | item[] | Exact allocation across dimension values |
+
+**`minimums`** — a floor the processor must clear, enforced **on-chain** through
+`RequiredMinMetrics` rather than by Liskov. At least one key; an empty block is
+rejected because it reads like a constraint and is not one.
+
+| Key | Type | Matched against |
+| --- | --- | --- |
+| `memory` | byte size | **Total** device RAM — not a budget reserved for your process |
+| `storage` | byte size | **Available** free space |
+| `cpuSingleCoreScore` | integer | Single-core benchmark score |
+| `cpuMultiCoreScore` | integer | Multi-core benchmark score |
+
+Byte sizes are one unit-bearing term — `4GiB`, `512MiB`, `100GB`. Binary and
+decimal suffixes are both accepted and mean what they say. `4096` is rejected:
+it is not a size, and reading it as MiB rather than bytes would be a guess.
+
+**Selection headroom is derived, not authored.** Liskov requires more than you
+ask for, because a benchmark score is not a guarantee — 1.1× on memory and
+storage, 1.5× on the CPU scores. The effective floor is in effective policy.
+
+Fails **closed**: a processor with no recent measurement for a constrained pool
+is excluded, not assumed adequate.
 
 **`allow` / `exclude`** — values within one rule are OR; rules over different
 dimensions are AND. **At most one `allow` rule per dimension**, so there is no
@@ -498,7 +524,7 @@ Absent by design. Each is rejected as an unknown field rather than ignored.
 | Removed | Because |
 | --- | --- |
 | `maxGenerations`, `maxRetries`, `maxRuntimeReplaces` | Authors express intent and money; how hard the platform retries is the platform's decision, bounded by spend |
-| `runtime.resources` | Nothing could honour it. Processors are independent devices measured by benchmark, not allocated by a scheduler |
+| `runtime.resources` | Authored, materialised into policy, and then mapped to nothing. Replaced by `deployment.placement.minimums`, which reaches the on-chain filter that was always there — and moved, because a floor is a property of *placement*, not a limit on the job |
 | `networkRequestLimit` | A match-time processor-capability filter that was never a job limit and never priced. Non-zero only narrowed placement |
 | `ingress.ssh` | Operator access is `access.ssh`; it was never public ingress |
 | `healthPath`, `localService.readyPath` | Replaced by `health`. On JavaScript nothing could ever have read them |

@@ -96,7 +96,9 @@ That is the whole document. Five decisions:
   bundle. Saying so again would only let you contradict yourself.
 - **Recovery behaviour.** How hard and how fast Liskov retries is the
   platform's job, bounded by what you are willing to spend.
-- **Memory or storage.** See [Sizing](#sizing-and-placement).
+- **Memory or storage.** Only state a floor when your workload genuinely has
+  one — see [Sizing](#sizing-and-placement). A floor the whole fleet clears
+  narrows nothing.
 
 ## Choose how it runs
 
@@ -243,12 +245,61 @@ a cluster it is the difference between a rolling upgrade and losing quorum.
 
 ## Sizing and placement
 
-There is **no `resources` block**. You do not tell Liskov how much memory your
-application needs, because Liskov could not honour it: processors are
-independent devices whose capability is measured by benchmark, not allocated by
-a scheduler.
+There is **no `resources` block**, and the distinction matters: you are not
+allocating capacity, you are **filtering for it**. Processors are independent
+devices whose capability is measured by benchmark, not carved up by a scheduler.
+Nobody sets memory aside for you.
 
-What you can do is constrain *where* it runs:
+So you state a floor, and processors below it are excluded:
+
+```yaml
+deployment:
+  placement:
+    minimums:
+      memory: 4GiB
+      storage: 16GiB
+```
+
+This is enforced **on the chain**, not by Liskov, and it fails closed: a
+processor that has published no recent measurement for a pool you constrained is
+excluded rather than given the benefit of the doubt.
+
+Two things about it surprise people:
+
+- **`memory` is the device's total RAM, not a budget for your process.** The
+  operating system and any co-resident job take a share of it. `storage`, by
+  contrast, is *available* space. The asymmetry is in the underlying
+  measurements, not a naming slip.
+- **Liskov asks for more than you wrote.** A benchmark score is not a guarantee,
+  so selection adds headroom — 10% on memory and storage, 50% on the CPU scores.
+  The effective floor appears in the effective policy.
+
+You can also constrain CPU with `cpuSingleCoreScore` and `cpuMultiCoreScore`,
+which are raw benchmark scores rather than core counts. Omit any key you do not
+care about; each one you add narrows placement.
+
+:::warning[Every minimum costs you fleet, and the cliff is steep]
+
+Measured against the live fleet in August 2026:
+
+| `memory` | Processors that qualify |
+| --- | --- |
+| 2 GiB | ~85% |
+| 4 GiB | ~42% |
+| 8 GiB | ~12% |
+| 16 GiB | **~34 devices** |
+
+Memory is the binding constraint — 64 GiB of storage still leaves about half the
+fleet, while 8 GiB of memory removes seven eighths of it.
+
+**Do not size from your datastore vendor's documentation.** ClickHouse recommends
+32 GB, which reaches nine processors worldwide. Size from what your workload
+actually needs on this fleet, and if that number is large, the honest answer is
+that this is the wrong place to run it.
+
+:::
+
+You can also constrain *where* it runs:
 
 ```yaml
 deployment:
