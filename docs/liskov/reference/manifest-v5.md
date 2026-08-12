@@ -23,6 +23,15 @@ complete field list.
 
 - **Required** fields are marked ✱. Everything else is optional.
 - **Unknown fields are rejected.** There is no permissive mode.
+- **Duplicate keys are rejected**, in JSON and in YAML alike. Most YAML loaders
+  keep the last of a duplicate pair silently, which means one of two blocks wins
+  and the other leaves no trace; `serde_json` does the same. Rejection happens
+  while the file is being read, because by the time a document is an object the
+  duplicate is already gone.
+- **YAML is accepted as a spelling of JSON**, not as YAML. Anchors, aliases,
+  merge keys (`<<`), explicit tags (`!!str`) and multiple documents in one file
+  are each rejected by name. A digest is taken over a tree, and those turn a
+  document into a graph.
 - **Durations** are `<integer><unit>` with unit one of `ms`, `s`, `m`, `h`, `d`
   — `30s`, `6h`, `1d`. There is no unitless form and no `1mo`: a calendar month
   is 28–31 days, so an authored rate would mean different money in February than
@@ -32,7 +41,11 @@ complete field list.
   what they say. Unitless numbers are rejected.
 - **Amounts** are exact integers as decimal **strings**, never numbers. Money
   does not go through a float.
-- **Timestamps** are RFC 3339 with an explicit offset.
+- **Timestamps** are absolute UTC instants, `YYYY-MM-DDTHH:MM:SSZ`. Exactly one
+  spelling: offsets other than `Z` and fractional seconds are rejected, so one
+  instant has one authored form and therefore one digest. Calendar validity is
+  checked as well as shape — `2026-02-30T00:00:00Z` matches the pattern and is
+  not a date.
 - Unions are tagged by a discriminator (`mode`, `kind`, `source`) and are
   **closed**.
 
@@ -227,6 +240,12 @@ sized by what has to move rather than by launch latency.
 `existingJobs` is expressed as supported **outcomes**. V4's `rollout_started`
 and `processor_claimed` triggers exposed internal milestones and could sacrifice
 availability; they remain read-only evidence.
+
+**Omit the block to get the default, or write it and say what you mean.**
+`existingJobs: {}` is rejected rather than resolved — `mode` is required
+whenever the block is present, matching `renewal.leadTime`. This node once
+carried two defaults that disagreed, and resolving an empty block is what
+produced two answers to one authorial intent.
 
 :::warning[`stop_when_successor_ready` is not always right]
 
@@ -516,6 +535,12 @@ They are the hand-authoring traps:
     HTTPS, SSH and a second service cannot all claim them. HTTP can be
     multiplexed behind one, so the budget usually binds only when `access.ssh`
     also uses `acurast_tunnel`.
+
+Two further rules are enforced while the file is *read* rather than after it is
+parsed, because by then the evidence is gone: **duplicate keys** and the YAML
+constructs listed under Conventions. A duplicate `placement` block in a real
+draft discarded its `spread` rules at load time and validated clean for weeks,
+which is why the check lives where it does.
 
 ## Removed from V4
 
