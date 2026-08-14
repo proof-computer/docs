@@ -161,14 +161,15 @@ platform-owned profile, not authored.
 
 ### `deployment.placement`
 
-Omit it entirely for the common case: the open market plus the mandatory
-current-evidence profile.
+Omit it entirely for the common case: the open market with mandatory
+platform-owned processor intelligence. Evidence profiles, freshness,
+confidence, and ranking are operational controls; they are not customer
+manifest fields.
 
 | Field | Type | Notes |
 | --- | --- | --- |
 | `minimums` | object | Minimum processor capability. At least one key |
-| `evidence.profile` ✱ | string | One versioned profile replaces V4's per-metric array. Units, thresholds, age, sample counts, confidence and unknown-handling evolve together |
-| `processorSelection` | union | `manager` (`managerId` ✱) or `exact` (`processorIds` ✱). Omitted means open market |
+| `processorSelection` | union | `exact` (`processorIds` ✱). Omitted means open market |
 | `allow` | rule[] | Hard eligibility filters |
 | `exclude` | rule[] | Any match removes the candidate |
 | `spread` | item[] | Inter-job diversity |
@@ -198,7 +199,8 @@ is excluded, not assumed adequate.
 
 **`allow` / `exclude`** — values within one rule are OR; rules over different
 dimensions are AND. **At most one `allow` rule per dimension**, so there is no
-hidden merge precedence to learn.
+hidden merge precedence to learn. Manager identity belongs here as a hard
+`manager` filter; it is not a processor source.
 
 **`spread`** — `by` is `country`, `region`, `operator`, `manager` or `wan_ip`;
 plus `minimumDistinct` and `strength` (`required` | `preferred`, default
