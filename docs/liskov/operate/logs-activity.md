@@ -21,7 +21,7 @@ The Console can narrow the returned window by product source, level,
 deployment, and job. A successor and its predecessor may log at the same time,
 so always keep deployment identity in view.
 
-The CLI provides the same bounded product read:
+The CLI provides the same product read:
 
 ```bash
 proof liskov application logs APPLICATION_UID \
@@ -31,9 +31,26 @@ proof liskov application logs APPLICATION_UID \
   --origin customer
 ```
 
-Use `--origin runtime-ssh` for Runtime SSH records, or `--origin all` for both
-product sources. Deployment and job filters can be combined. The CLI does not
-follow, tail, or page by time.
+It can also stream new records live, page through the full retained history,
+filter by event name, and emit machine-readable lines:
+
+```bash
+# Stream new records until interrupted.
+proof liskov application logs APPLICATION_UID --follow
+
+# Page through the full retained history oldest-first.
+proof liskov application logs APPLICATION_UID --from-start
+
+# Filter by event name; emit one raw record JSON object per line.
+proof liskov application logs APPLICATION_UID --from-start --ndjson \
+  --event 'runtime.access.*'
+```
+
+Use `--origin runtime-ssh` (or `runtime_ssh`) for Runtime SSH records, or
+`--origin all` for both product sources. Deployment and job filters can be
+combined. `--follow` attaches at the newest record and then polls forward
+without losing records. `--from-start` uses cursor pagination, so a busy
+channel cannot push older records out of reach.
 
 Application logs are selected by customer code. They can explain business
 behavior but are not an authoritative lifecycle ledger. Treat any accidental
@@ -58,8 +75,11 @@ identifiers and typed conditions over raw internal event names.
 
 Check the organization and Application UID first. Then confirm the policy,
 deployment, job, processor, and runtime-instance IDs before correlating two
-records. Compare timestamps as evidence from distributed systems; do not assume
-every source has identical arrival time.
+records. Log records carry a `runtimeInstanceId` field — shown as the INSTANCE
+column in CLI human output — that identifies which runtime instance wrote the
+record, so a restarted instance within one deployment can be distinguished
+directly. Compare timestamps as evidence from distributed systems; do not
+assume every source has identical arrival time.
 
 For emitting records, see [Logging and diagnostics](../configure/logging-diagnostics.md).
 For missing output, see [Logs and diagnostics troubleshooting](../troubleshooting/logs.md).

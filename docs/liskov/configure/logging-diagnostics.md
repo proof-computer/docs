@@ -71,6 +71,12 @@ Read the same records from the CLI when needed:
 
 ```bash
 proof liskov application logs APPLICATION_UID --limit 50
+
+# Stream new records live while you verify.
+proof liskov application logs APPLICATION_UID --follow
+
+# Page through the full retained history oldest-first.
+proof liskov application logs APPLICATION_UID --from-start
 ```
 
 See [Monitor logs and activity](../operate/logs-activity.md) and

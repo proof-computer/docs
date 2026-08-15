@@ -283,11 +283,11 @@ check(
 
 const cliPage = readFileSync(join(docsRoot, 'reference', 'cli.md'), 'utf8');
 check(cliContract.package === '@proof-computer/proof-cli-liskov', 'CLI fixture: wrong package');
-check(cliContract.version === '0.6.0', 'CLI fixture: wrong released version');
+check(cliContract.version === '0.7.0', 'CLI fixture: wrong released version');
 check(cliContract.command === 'liskov:application:logs', 'CLI fixture: missing logs command');
 check(cliContract.flags?.limit?.minimum === 1 && cliContract.flags?.limit?.maximum === 500, 'CLI fixture: wrong log limit bounds');
 check(
-  JSON.stringify(cliContract.flags?.origin) === JSON.stringify(['all', 'customer', 'runtime-ssh']),
+  JSON.stringify(cliContract.flags?.origin) === JSON.stringify(['all', 'customer', 'runtime-ssh', 'runtime_ssh']),
   'CLI fixture: wrong log origins',
 );
 check(
@@ -297,7 +297,7 @@ check(
   'CLI fixture: wrong request-scoped organization selector contract',
 );
 check(cliPage.includes(`\`${cliContract.package}\` \`${cliContract.version}\``), 'CLI page omits the fixture package version');
-for (const token of ['application logs APP_REF', '--limit', '--deployment', '--job', 'runtime-ssh', '--json']) {
+for (const token of ['application logs APP_REF', '--limit', '--deployment', '--job', 'runtime-ssh', '--json', '--follow', '--from-start', '--event', '--ndjson']) {
   check(cliPage.includes(token), `CLI page omits managed logging contract token: ${token}`);
 }
 check(cliContract.sshCommand === 'liskov:ssh', 'CLI fixture: missing Runtime SSH command');
@@ -326,6 +326,13 @@ check(
   'capabilities: hosted inbound ingress must stay Not v1 and distinct from Runtime SSH',
 );
 
+// Availability transition (2026-08-15): CLI log reads gained live follow and
+// full-history cursor pagination (BKLG-20260815-k3tf). The CLI reference must
+// document the streaming flags and no longer claim they are absent.
+check(cliPage.includes('--follow'), 'CLI reference omits the released --follow streaming flag');
+check(cliPage.includes('--from-start'), 'CLI reference omits the released --from-start pagination flag');
+check(!/no follow\/tail/i.test(cliPage), 'CLI reference retains the removed no-follow/tail claim');
+
 for (const retired of cliContract.retiredCommands ?? []) {
   check(!combined.includes(retired.replaceAll(':', ' ')), `public docs expose retired CLI command: ${retired}`);
 }
@@ -349,10 +356,10 @@ for (const [fileId, required] of Object.entries({
   'operate/update': ['successor', 'without mutating'],
   'operate/retire': ['does not stop existing jobs', 'receipt'],
   'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Private deployed customer code'],
-  'reference/cli': ['0.6.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP'],
+  'reference/cli': ['0.7.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP'],
   'reference/manifest-v4': ['deprecated_manifest_field', 'profileId', 'sinkName', 'future schema'],
   'configure/logging-diagnostics': ['only logging field needed', 'provisions', 'application logs'],
-  'operate/logs-activity': ['application logs', '--deployment', '--job', 'follow, tail'],
+  'operate/logs-activity': ['application logs', '--deployment', '--job', '--follow', '--from-start'],
   'troubleshooting/logs': ['exits zero', 'malformed-response failures'],
   'concepts/trust-boundaries': ['briefly PROOF over TLS', 'Plaintext is not persisted', 'Private source is not private deployed code', 'cache reuse'],
   'build/artifacts-provenance': ['reusable GitHub pin action requires `none`', 'complete path is not supported today'],

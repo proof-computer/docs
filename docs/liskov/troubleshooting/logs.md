@@ -30,6 +30,30 @@ then exits zero and prints the stable availability reason. Authentication,
 transport, and malformed-response failures exit nonzero; fix those before
 interpreting an empty log list.
 
+## Older records seem missing
+
+The default read returns a bounded recent window. To read everything still
+retained, page through the full history oldest-first:
+
+```bash
+proof liskov application logs APPLICATION_UID --from-start
+```
+
+`--from-start` uses cursor pagination, so a busy channel cannot push older
+records out of reach. For a live investigation, stream new records until
+interrupted:
+
+```bash
+proof liskov application logs APPLICATION_UID --follow
+```
+
+Use `--origin runtime-ssh` (or `runtime_ssh`) to isolate Runtime SSH records.
+The human output ends with an `Origins: customer N, runtime_ssh M.` footer, so
+you can confirm how many records each product source contributed before
+concluding that one is silent. When a deployment restarted its runtime,
+compare each record's `runtimeInstanceId` — the INSTANCE column in human
+output — to separate records from the earlier and later instances.
+
 ## Application looks ready but a business event is absent
 
 Runtime readiness covers required SDK capabilities, not the success of every

@@ -1,13 +1,17 @@
 {
   "package": "@proof-computer/proof-cli-liskov",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "command": "liskov:application:logs",
   "arguments": ["APP_REF"],
   "flags": {
     "limit": { "minimum": 1, "maximum": 500 },
     "deployment": "string",
     "job": "string",
-    "origin": ["all", "customer", "runtime-ssh"],
+    "origin": ["all", "customer", "runtime-ssh", "runtime_ssh"],
+    "event": "string",
+    "follow": "boolean",
+    "from-start": "boolean",
+    "ndjson": "boolean",
     "organization": {
       "environment": "LISKOV_ORGANIZATION",
       "maximumUtf8Bytes": 255,

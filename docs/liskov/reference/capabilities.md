@@ -38,7 +38,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | --- | --- |
 | Node.js background bundle and runtime SDK `0.3.26` | v1 |
 | Managed variables and managed secrets | v1 |
-| Managed Application logging through Console and `proof liskov application logs`; signed diagnostics | v1 |
+| Managed Application logging through Console and `proof liskov application logs`, including live follow and full-history pagination through the CLI; signed diagnostics | v1 |
 | Outbound networking and declared quota | v1 |
 | Liskov-hosted HTTP/SSH ingress | Not v1 |
 | Runtime SSH into your own running job, Liskov-operated relay | Preview on Starter and above; Liskov operates the relay and cannot read the session, and the relay is a single instance |

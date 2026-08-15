@@ -5,12 +5,12 @@ description: Public proof liskov v1 command tree, confirmations, machine-readabl
 
 # CLI
 
-The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.6.0` and
+The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.7.0` and
 requires Node.js 22 or later. All commands begin with `proof liskov`.
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov@0.6.0
+proof plugins install @proof-computer/proof-cli-liskov@0.7.0
 proof liskov --help
 ```
 
@@ -77,7 +77,7 @@ environment.
 | `application list` | List readable Applications. |
 | `application status APPLICATION_ID` | Read customer-facing Application state. |
 | `application activity APP_REF` | Read activity; accepts `--limit` and `--before`. |
-| `application logs APP_REF` | Read recent managed Application logs. |
+| `application logs APP_REF` | Read managed Application logs: recent by default, streamed live with `--follow`, or the full retained history with `--from-start`. |
 | `application action-plan APP_REF` | Read current blockers and supported actions. |
 | `application secrets APPLICATION_ID` | Read declared secret requirements, never values. |
 | `application plans APPLICATION_ID` | Advanced effective-policy/plan inspection. |
@@ -97,15 +97,35 @@ proof liskov application logs APP_REF \
   --origin runtime-ssh
 ```
 
-`--limit` accepts 1–500. `--deployment` and `--job` can be combined. Origin is
-`all`, `customer`, or `runtime-ssh`; the last value is shown as **Runtime SSH**
-in human output. There is no follow/tail or time-pagination flag.
+```bash
+proof liskov application logs APP_REF --follow --event 'runtime.access.*'
+proof liskov application logs APP_REF --from-start --ndjson
+```
 
-`--json` emits the core Liskov `/logs` response. Human output prints the count,
-timestamp, normalized level, product origin, job ID, and message. Control and
-terminal escape characters in messages are escaped. An authenticated degraded
-response exits zero and reports its stable availability reason; authentication,
-transport, and malformed-response failures exit nonzero.
+`--limit` accepts 1–500 and bounds one page. `--deployment` and `--job` can be
+combined. Origin is `all`, `customer`, or `runtime-ssh` (also accepted as
+`runtime_ssh`); Runtime SSH records are shown as **Runtime SSH** in human
+output.
+
+`--follow` streams new records until interrupted: it attaches at the newest
+record, then polls forward every two seconds without losing records.
+`--from-start` pages through the full retained history oldest-first with
+cursor pagination. `--event GLOB` filters on the record `event` field; `*`
+matches any run of characters. `--ndjson` emits one raw record JSON object per
+line and works one-shot or with either streaming flag. A streaming read can
+return slightly more than `--limit` records per page because whole batches are
+kept together; no record is lost between pages.
+
+`--json` emits the core Liskov `/logs` response verbatim and is mutually
+exclusive with `--follow`, `--from-start`, `--ndjson`, and `--event`. Human
+output prints the count, then `TIMESTAMP LEVEL ORIGIN JOB_ID INSTANCE MESSAGE`
+columns — INSTANCE is the record's `runtimeInstanceId` (`-` when absent),
+identifying which runtime instance wrote the record — and ends with an
+`Origins: customer N, runtime_ssh M.` footer from the response summary.
+Control and terminal escape characters in messages are escaped. An
+authenticated degraded response exits zero and reports its stable availability
+reason; authentication, transport, and malformed-response failures exit
+nonzero.
 
 ## Authoring and publication
 
