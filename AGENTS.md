@@ -32,8 +32,8 @@ Before promoting a capability:
 
 Do not infer availability from source code alone. If authorities disagree,
 leave the public claim gated, record the conflict in the orchestrator
-documentation system, and ask the owner. Never use frozen `liskov-ts` as the
-current specification.
+documentation system, and ask the owner. Never use an archived implementation
+as the current specification.
 
 ## Required update when a feature goes live
 
