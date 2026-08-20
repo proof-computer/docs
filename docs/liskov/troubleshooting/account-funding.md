@@ -1,9 +1,16 @@
 ---
-title: Sign-in, organization, and funding
-description: Resolve GitHub session, organization selection, invitation, plan, Stripe checkout, and Service Credit problems safely.
+title: Sign-in, organization, and Service Credit reads
+description: Resolve GitHub session, organization selection, invitation, and read-only Service Credit problems safely.
 ---
 
-# Sign-in, organization, and funding
+# Sign-in, organization, and Service Credit reads
+
+:::caution Release boundary
+Plan selection, terms acceptance, Stripe checkout, and issuance of new Service
+Credits are release-gated. There is no supported customer checkout
+troubleshooting procedure yet. Do not submit payment details, retry a disabled
+control, or call an internal funding endpoint.
+:::
 
 ## GitHub sign-in does not complete
 
@@ -52,28 +59,29 @@ Use `whoami --organization SELECTOR --json` to compare
 `organizationContext.effective` with `organizationContext.sessionDefault`.
 The command override must not change the latter.
 
-## Plan or terms block setup
+## A commercial or funding control is unavailable
 
-Open **Billing & funding** and read the displayed requirement. Only an admin can
-change plan/funding settings. Accept terms for the correct legal organization.
-An unavailable plan or disabled control is not a reason to call an internal
-endpoint.
+This is the expected customer posture while the commercial gate remains. You
+can read the selected organization's billing projection, Service Credit
+balance, and transactions, but you cannot use the public path to accept terms,
+choose a plan, or add funds. A visible control does not override this boundary.
 
-## Stripe checkout succeeded but credit is unchanged
+## Service Credit reads disagree
 
-1. Return to the same organization's **Billing & funding** page.
-2. Refresh the authoritative Service Credit and transaction read.
-3. Confirm Stripe says the payment is paid, not pending or failed.
-4. Wait for the stated confirmation window; do not submit another payment.
+1. Confirm the active organization ID in the Console and CLI.
+2. Refresh the authoritative Service Credit and transaction reads.
+3. Compare exact available, reserved, and used values rather than rounded
+   browser values.
+4. Match reservations to the Application or deployment that owns them.
 
 ```bash
 proof liskov organization service-credits ORGANIZATION_ID --json
 proof liskov organization billing transactions ORGANIZATION_ID --limit 25 --json
 ```
 
-If still missing, contact support with organization ID, checkout/payment
-reference, UTC timestamp, amount/currency, and redacted CLI output. Never send
-card number, security code, session token, or a screenshot containing them.
+If the reads still disagree, contact support with the organization ID, UTC
+timestamp, expected record, and redacted CLI output. Never send a card number,
+security code, session token, or a screenshot containing them.
 
 ## Available credit is below the displayed balance
 

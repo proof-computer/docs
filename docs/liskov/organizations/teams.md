@@ -12,8 +12,10 @@ move when you switch to another organization.
 ## Create or switch
 
 Create an organization from the Console organization switcher. You become its
-owner and admin, and the new organization becomes active. Complete plan, terms,
-and funding setup before launching.
+owner and admin, and the new organization becomes active. Plan selection, terms
+acceptance, Stripe checkout, and new Service Credit issuance remain
+release-gated. An eligible deployment therefore requires an organization that
+already has enough available Service Credits.
 
 The CLI can list and select an existing organization:
 

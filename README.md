@@ -4,9 +4,10 @@ Public documentation site for running services on PROOF's confidential-compute
 stack.
 
 Baran docs cover secure HTTP ingress for supported Acurast jobs. Liskov docs
-cover the v1 customer path from Marketplace or GitHub through configuration,
-operation, proof, billing, reference, and recovery. The two products remain
-independent.
+cover the customer path from GitHub through configuration, operation, proof,
+billing, reference, and recovery. Marketplace material remains as unlisted
+release-boundary reference until customer launch is approved. The two products
+remain independent.
 
 ## Development
 
@@ -49,8 +50,9 @@ evidence bound to the exact authored and release-intent digests.
 - Use the Liskov capability reference as the public availability owner. Label
   an unavailable v1 step with its exact release gate; keep internal and
   post-v1 recipes out of navigation.
-- Keep the Marketplace and GitHub paths complete for new readers, and preserve
-  exact commands, fields, status tokens, units, and boundaries in Reference.
+- Keep supported paths complete for new readers. Keep release-gated Marketplace
+  material out of normal navigation while preserving exact commands, fields,
+  status tokens, units, and boundaries in Reference.
 - Describe Baran as a separate secure HTTPS ingress product for supported
   long-running Acurast jobs. Liskov does not imply hosted ingress.
 - Use the Liskov, Baran, managed secrets, Liskov logging, and USD Service Credit

@@ -36,9 +36,10 @@ session file.
 | `organization service-credits [SELECTOR]` | Read available, reserved, and used Service Credits. |
 | `organization billing transactions [SELECTOR]` | Page through ledger transactions with `--limit` and `--before`. |
 
-Billing and transaction commands are read-only. `organization use` changes the
-persistent organization for the session. Organization creation, invitations,
-plan change, and Stripe funding are Console tasks.
+These commands are read-only. Customer plan changes, terms acceptance, Stripe
+checkout, and new Service Credit issuance are release-gated; a Console control
+does not make them supported. `organization use` changes the persistent
+organization for the session.
 
 ## Choose an organization for one command
 
