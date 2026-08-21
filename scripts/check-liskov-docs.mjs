@@ -390,6 +390,14 @@ for (const token of [
 ]) {
   check(v5GuidePage.includes(token), `V5 guide omits ${token}`);
 }
+check(
+  v5ReferencePage.includes('GET /api/application-manifest/v5/schema'),
+  'V5 reference omits the owner-served authored schema endpoint',
+);
+check(
+  /\| Simultaneous jobs \| Manifest V4 is v1 at exactly `1`; retained V5 is (?:release-gated|v1) at one or two jobs;/.test(capabilitiesPage),
+  'capability matrix does not distinguish the V4 and retained V5 job bounds',
+);
 for (const token of [
   'runtime-ssh operator-key add',
   'runtime-ssh operator-key remove',

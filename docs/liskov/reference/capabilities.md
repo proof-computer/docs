@@ -48,7 +48,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Runtime SSH into your own running job, Liskov-operated relay | Preview on Starter and above; Liskov operates the relay and cannot read the session, and the relay is a single instance |
 | Retained V5 managed Runtime SSH policy path | Release-gated v1; native-image-only `access.ssh.provider.kind: liskov_managed`, distinct from the current V4 Preview path |
 | Runtime SSH into your own running job, your own Tailscale network | Preview on Starter and above; requires a Tailscale account you own |
-| Parallelism | v1 at exactly `1`; schema maximum `64` is not enabled |
+| Simultaneous jobs | Manifest V4 is v1 at exactly `1`; retained V5 is release-gated at one or two jobs; higher schema ceilings are not availability |
 | Open-market processor selection | v1 |
 | Manager/static selection, placement groups, topology constraints | Internal |
 | Job schedule | v1; `durationMs > 0`, account/platform limits also apply |
