@@ -1,16 +1,16 @@
 ---
-unlisted: true
 title: Retained Application Manifest V5 reference
 description: Exact retained V5 fields, defaults, bounds, cross-field rules, release identity, and deferred roots.
 ---
 
 # Retained Application Manifest V5 reference
 
-:::danger[Not released]
+:::note[Exact retained release]
 
-Production registration is V4-only and V5 activation is not authorized. This
-reference is prepared for the exact retained release candidate; it is not an
-availability claim. Use [Application Manifest V4](./manifest-v4.md) today.
+This reference covers RC
+`sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10`.
+[Capabilities and limits](./capabilities.md) owns current availability, and
+[Application Manifest V4](./manifest-v4.md) remains supported.
 
 :::
 
@@ -36,9 +36,9 @@ The generated authored schema is served read-only at:
 GET /api/application-manifest/v5/schema
 ```
 
-The route is available to authoring tools before publication activation. A
-schema response describes the exact document shape; it does not authorize an
-Application to publish or run.
+The route is available to authoring tools. A schema response describes the
+exact document shape; publication and execution still apply capability,
+entitlement, evidence, and spend gates.
 
 ## Conventions
 

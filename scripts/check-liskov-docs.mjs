@@ -134,7 +134,7 @@ const unlistedIds = new Set([
   'configure/clustering',
 ]);
 
-const ids = files.map(idFor).filter((id) => !unlistedIds.has(id));
+const ids = files.map(idFor).filter((id) => !unlistedIds.has(id)).sort();
 check(
   JSON.stringify(ids) === JSON.stringify([...expectedIds].sort()),
   `page inventory differs\nexpected: ${[...expectedIds].sort().join(', ')}\nactual: ${ids.join(', ')}`,
@@ -387,7 +387,6 @@ for (const token of [
   'proof liskov application manifest validate',
   'proof liskov application policy explain',
   'aa1b83f0fd4b08ac33a6c9970d2077885922d79c',
-  'not a released package',
 ]) {
   check(v5GuidePage.includes(token), `V5 guide omits ${token}`);
 }
@@ -414,10 +413,13 @@ for (const token of [
 if (v5Mode === 'release_gated') {
   check(v5ReleaseContract.availability === 'Release-gated v1', 'V5 gated source map has wrong availability');
   check(/Retained Manifest V5 \/ Policy V5 exact pair \| Release-gated v1/.test(capabilitiesPage), 'capabilities prematurely promote V5');
+  check(v5GuidePage.includes('not a released package'), 'V5 gated guide must not imply the CLI source commit is released');
   for (const id of v5PromotedIds) check(!sidebar.includes(`'${id}'`), `sidebar prematurely exposes ${id}`);
 } else {
   check(v5ReleaseContract.availability === 'v1', 'V5 promotion source map has wrong availability');
   check(/Retained Manifest V5 \/ Policy V5 exact pair \| v1/.test(capabilitiesPage), 'capabilities omit promoted V5');
+  check(v5GuidePage.includes('artifact recorded by the\nactivation packet'), 'V5 promotion omits its released CLI artifact precondition');
+  check(v5GuidePage.includes('supported release ref containing it'), 'V5 promotion omits its workflow release-ref precondition');
   for (const id of v5PromotedIds) check(sidebar.includes(`'${id}'`), `sidebar omits promoted ${id}`);
   for (const page of [v5GuidePage, v5ReferencePage, v5SshPage]) {
     check(!page.startsWith('---\nunlisted: true\n'), 'promoted V5 page remains unlisted');

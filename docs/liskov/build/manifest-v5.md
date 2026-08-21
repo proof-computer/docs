@@ -1,18 +1,16 @@
 ---
-unlisted: true
 title: Author a retained Application Manifest V5
 description: Prepare the retained V5 source, runtime, schedule, spend, configuration, logging, and managed Runtime SSH contract without using deferred fields.
 ---
 
 # Author a retained Application Manifest V5
 
-:::danger[Not released]
+:::note[Exact retained release]
 
-Manifest V5 is implemented but **not available in production**. Production
-registration remains V4-only and activation is not authorized. Keep this page
-out of customer workflows until [Capabilities and limits](../reference/capabilities.md)
-classifies the exact pair as available. Use
-[Application Manifest V4](./manifest-v4.md) for production today.
+This guide covers RC
+`sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10`.
+[Capabilities and limits](../reference/capabilities.md) owns the supported
+surface; [Application Manifest V4](./manifest-v4.md) remains supported.
 
 :::
 
@@ -83,11 +81,9 @@ proof liskov application manifest validate \
   --json
 ```
 
-The retained CLI validator is present in
-`@proof-computer/proof-cli-liskov` source commit
-`e135604ed2f6c59ffc737fce5fe08eaa19d77d0c`. It is newer than the `v0.7.0`
-release tag; that source commit is review evidence, not a released package
-claim.
+Use the released `@proof-computer/proof-cli-liskov` artifact recorded by the
+activation packet. It must contain source commit
+`e135604ed2f6c59ffc737fce5fe08eaa19d77d0c`; the earlier `v0.7.0` tag does not.
 
 ## 2. Bind the exact GitHub source
 
@@ -124,15 +120,14 @@ jobs:
           expected-manifest-path: .liskov/application-manifest.json
 ```
 
-This commit is two revisions after `v1.2.3`; there is no released workflow tag
-for the retained V5 binding yet. Do not replace the full commit with `@v1` until
-a release containing it is verified. The action imports a draft and spends
-nothing. It refuses a V4 document, a non-source V5 release, a deferred root, or
-any repository/ref/workflow/path mismatch.
+Keep the full commit pin unless a supported release ref containing it is
+verified. The action imports a draft and spends nothing. It refuses a V4
+document, a non-source V5 release, a deferred root, or any
+repository/ref/workflow/path mismatch.
 
 ## 3. Preflight, publish, and explain
 
-After activation and after the workflow has imported the intended draft:
+After the workflow has imported the intended draft:
 
 ```bash
 proof liskov application publish fetch --dry-run --json

@@ -29,8 +29,8 @@ This page is the availability owner. Guides contain only supported recipes.
 | OpenClaw offering | Release-gated v1; no versioned descriptor was present at the reviewed release |
 | Third-party Marketplace publishing/payouts | Not v1 |
 | Manifest V4 repository import/publication | Release-gated v1 |
-| Retained Manifest V5 / Policy V5 exact pair | Release-gated v1; RC `sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10` is implemented dark, but production registration remains V4-only and activation is not authorized |
-| Retained V5 GitHub source import | Release-gated v1; exact binding exists at `liskov-github-actions@aa1b83f0fd4b08ac33a6c9970d2077885922d79c`, which is not contained in a released tag |
+| Retained Manifest V5 / Policy V5 exact pair | v1; exact RC `sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10`, with one or two jobs and the retained source/runtime/schedule/spend/configuration/logging surface |
+| Retained V5 GitHub source import | v1; repository, ref, workflow, manifest, and optional artifact evidence are exact-bound before draft import |
 | Reusable GitHub build/pin/OIDC workflow | v1; moving `v1` tag verified at `v1.2.2` |
 | Pinned first-party IPFS bundle | v1 |
 | Private deployed customer code | Not v1; private source access and TEE execution do not make current artifact delivery confidential |
@@ -46,9 +46,9 @@ This page is the availability owner. Guides contain only supported recipes.
 | Outbound networking and declared quota | v1 |
 | Liskov-hosted HTTP/SSH ingress | Not v1 |
 | Runtime SSH into your own running job, Liskov-operated relay | Preview on Starter and above; Liskov operates the relay and cannot read the session, and the relay is a single instance |
-| Retained V5 managed Runtime SSH policy path | Release-gated v1; native-image-only `access.ssh.provider.kind: liskov_managed`, distinct from the current V4 Preview path |
+| Retained V5 managed Runtime SSH policy path | Preview on Starter and above; native-image-only `access.ssh.provider.kind: liskov_managed`, with organization operator keys snapshotted into each exact-job attachment |
 | Runtime SSH into your own running job, your own Tailscale network | Preview on Starter and above; requires a Tailscale account you own |
-| Simultaneous jobs | Manifest V4 is v1 at exactly `1`; retained V5 is release-gated at one or two jobs; higher schema ceilings are not availability |
+| Simultaneous jobs | Manifest V4 is v1 at exactly `1`; retained V5 is v1 at one or two jobs; higher schema ceilings are not availability |
 | Open-market processor selection | v1 |
 | Manager/static selection, placement groups, topology constraints | Internal |
 | Job schedule | v1; `durationMs > 0`, account/platform limits also apply |
