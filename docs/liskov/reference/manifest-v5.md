@@ -30,6 +30,16 @@ For a guided path, see
 | Production registration | `v4_only` |
 | Activation authorized | `false` |
 
+The generated authored schema is served read-only at:
+
+```text
+GET /api/application-manifest/v5/schema
+```
+
+The route is available to authoring tools before publication activation. A
+schema response describes the exact document shape; it does not authorize an
+Application to publish or run.
+
 ## Conventions
 
 - Fields marked **required** must be present. Unknown fields fail closed.
