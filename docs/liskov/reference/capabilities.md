@@ -29,6 +29,8 @@ This page is the availability owner. Guides contain only supported recipes.
 | OpenClaw offering | Release-gated v1; no versioned descriptor was present at the reviewed release |
 | Third-party Marketplace publishing/payouts | Not v1 |
 | Manifest V4 repository import/publication | Release-gated v1 |
+| Retained Manifest V5 / Policy V5 exact pair | Release-gated v1; RC `sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10` is implemented dark, but production registration remains V4-only and activation is not authorized |
+| Retained V5 GitHub source import | Release-gated v1; exact binding exists at `liskov-github-actions@aa1b83f0fd4b08ac33a6c9970d2077885922d79c`, which is not contained in a released tag |
 | Reusable GitHub build/pin/OIDC workflow | v1; moving `v1` tag verified at `v1.2.2` |
 | Pinned first-party IPFS bundle | v1 |
 | Private deployed customer code | Not v1; private source access and TEE execution do not make current artifact delivery confidential |
@@ -44,6 +46,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Outbound networking and declared quota | v1 |
 | Liskov-hosted HTTP/SSH ingress | Not v1 |
 | Runtime SSH into your own running job, Liskov-operated relay | Preview on Starter and above; Liskov operates the relay and cannot read the session, and the relay is a single instance |
+| Retained V5 managed Runtime SSH policy path | Release-gated v1; native-image-only `access.ssh.provider.kind: liskov_managed`, distinct from the current V4 Preview path |
 | Runtime SSH into your own running job, your own Tailscale network | Preview on Starter and above; requires a Tailscale account you own |
 | Parallelism | v1 at exactly `1`; schema maximum `64` is not enabled |
 | Open-market processor selection | v1 |
