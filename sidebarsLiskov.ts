@@ -23,6 +23,7 @@ const sidebars: SidebarsConfig = {
         'build/workload-requirements',
         'build/runtime-sdk',
         'build/manifest-v4',
+        'build/manifest-v5',
         'build/github-actions',
         'build/artifacts-provenance',
         'build/validate-import-publish',
@@ -52,6 +53,7 @@ const sidebars: SidebarsConfig = {
         'operate/proof-chain',
         'operate/logs-activity',
         'operate/runtime-ssh',
+        'operate/runtime-ssh-v5',
         'operate/update',
         'operate/pause-resume',
         'operate/diagnose-retry',
@@ -91,6 +93,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'reference/cli',
         'reference/manifest-v4',
+        'reference/manifest-v5',
         'reference/runtime-sdk',
         'reference/capabilities',
         'reference/statuses-actions-errors',
