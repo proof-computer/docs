@@ -1,6 +1,6 @@
 ---
 title: Reference
-description: Look up exact Liskov commands, Manifest V4 and retained V5 fields, SDK behavior, capabilities, statuses, precedence, and terms.
+description: Look up exact Liskov commands, Manifest V4 fields, SDK behavior, capabilities, statuses, precedence, and terms.
 ---
 
 # Reference
@@ -11,7 +11,6 @@ machine-readable values matter.
 
 - [CLI](./cli.md)
 - [Application Manifest V4](./manifest-v4.md)
-- [Retained Application Manifest V5](./manifest-v5.md)
 - [Runtime SDK](./runtime-sdk.md)
 - [Capabilities and limits](./capabilities.md)
 - [Statuses, actions, and errors](./statuses-actions-errors.md)
@@ -19,6 +18,6 @@ machine-readable values matter.
 - [Schema and discovery endpoints](./schema-endpoints.md)
 - [Glossary](./glossary.md)
 
-The presence of a field in a complete manifest schema does not necessarily mean
+The presence of a field in the complete V4 schema does not necessarily mean
 that the first public capability set enables it. Availability is stated
 explicitly.

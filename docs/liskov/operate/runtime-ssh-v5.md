@@ -1,16 +1,16 @@
 ---
+unlisted: true
 title: Use retained V5 Managed Runtime SSH
 description: Register operator keys, enable exact-job blind access, pin host trust, connect with one-time tickets, and revoke safely.
 ---
 
 # Use retained V5 Managed Runtime SSH
 
-:::info Preview
+:::danger[Not released]
 
-The retained V5 policy path is available on Starter, Team, and Enterprise. The
-Liskov-operated relay remains a single instance, so access can be briefly
-unavailable during maintenance. The job keeps running. For V4 policy syntax,
-use the [Manifest V4 Runtime SSH procedure](./runtime-ssh.md).
+The retained V5 policy path is implemented but production registration remains
+V4-only. Follow the current [Runtime SSH Preview](./runtime-ssh.md) for a
+production V4 Application. Use this page only to review the prepared V5 path.
 
 :::
 
@@ -28,7 +28,7 @@ is not attested by that verification.
 You need:
 
 - a Starter, Team, or Enterprise organization;
-- a retained V5 Application;
+- the retained V5 capability activated for that organization;
 - an `ssh-ed25519` key pair you control;
 - a `native_image` manifest with managed access; and
 - a running job whose attachment is ready.
