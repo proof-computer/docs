@@ -1,0 +1,81 @@
+{
+  "schema": "proof.liskov.docs-v5-release-contract.v1",
+  "verifiedAt": "2026-08-21",
+  "documentationMode": "release_gated",
+  "availability": "Release-gated v1",
+  "contract": {
+    "repository": "proof-computer/slipway-rs",
+    "contractCommit": "baa482792bfa2bf8abbe0ed3db2da04137e1835a",
+    "rcSchema": "proof.liskov.policy-v5-rc.v1",
+    "rcDigest": "sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10",
+    "manifestSchemaDigest": "sha256:38ca88eefe599d9a13b0906fb7ae86be002fb7aa15767925a2fe11908fec95da",
+    "effectivePolicySchemaDigest": "sha256:5907054022521f9926164d1e899fa89ecf931ea916da5d7989a6c58015053c30",
+    "productionRegistration": "v4_only",
+    "activationAuthorized": false,
+    "retainedCorpusCount": 25,
+    "implementationCloseoutRows": 31,
+    "firstPublicMaxJobs": 2,
+    "deferredRoots": [
+      "ingress",
+      "integrations",
+      "cohort",
+      "hooks"
+    ],
+    "deferredCapabilities": [
+      "state_beyond_off",
+      "placement_diversity",
+      "non_managed_ssh",
+      "self_custody_spend"
+    ]
+  },
+  "consumers": {
+    "cli": {
+      "package": "@proof-computer/proof-cli-liskov",
+      "packageVersion": "0.7.0",
+      "sourceCommit": "e135604ed2f6c59ffc737fce5fe08eaa19d77d0c",
+      "releasedRefContainingCommit": null
+    },
+    "console": {
+      "package": "slipway-ui",
+      "packageVersion": "0.0.0",
+      "sourceCommit": "f07323a13e7890614e1a5aec754b08523f485f94",
+      "releasedRefContainingCommit": null
+    },
+    "examples": {
+      "repository": "proof-computer/liskov-examples",
+      "retainedSetCommit": "f9b6330ac76f9c77a3a74567d1f44e47eade7f48",
+      "rcCorpusSourceCommit": "880ea6d8b6fb3bb9d0ff7b70cb6cd2c0cc6a0451",
+      "retainedCount": 25
+    },
+    "workflow": {
+      "package": "liskov-github-actions",
+      "packageVersion": "1.2.3",
+      "sourceCommit": "aa1b83f0fd4b08ac33a6c9970d2077885922d79c",
+      "releasedRefContainingCommit": null
+    },
+    "cargoRuntime": {
+      "repository": "proof-computer/liskov-runtime-cargo",
+      "sourceCommit": "20444a833bd9eb627362171737cbc26f9f70901d",
+      "nearestPriorRelease": "v0.10.36",
+      "releasedRefContainingCommit": null
+    },
+    "managedSshMatrix": {
+      "repository": "proof-computer/slipway-rs",
+      "sourceCommit": "6bce5181c4c6160fa48001a653070f351138cf89"
+    }
+  },
+  "promotionRequires": [
+    "the exact RC is authorized and production registration accepts Manifest V5 with Policy V5",
+    "the CLI, workflow, and Cargo runtime commits are present in verified released artifacts",
+    "offline and bounded live workload rehearsals are accepted",
+    "the Managed Runtime SSH live rehearsal is accepted",
+    "the intended audience and rollout evidence are recorded",
+    "the promoted docs build and production routes are verified"
+  ],
+  "demotionRestores": [
+    "Release-gated v1 capability classification",
+    "V5 pages removed from normal navigation",
+    "V4-only production guidance",
+    "exact affected production routes reverified"
+  ]
+}

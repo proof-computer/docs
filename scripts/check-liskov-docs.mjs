@@ -8,9 +8,11 @@ const sidebarPath = join(root, 'sidebarsLiskov.ts');
 const manifestPath = join(root, 'examples', 'liskov-v1', 'application-manifest.json');
 const workflowPath = join(root, 'examples', 'liskov-v1', 'liskov.yml');
 const cliContractPath = join(root, 'fixtures', 'liskov-cli-contract.json');
+const v5ReleaseContractPath = join(root, 'fixtures', 'liskov-v5-release-contract.json');
+const v5ManifestPath = join(root, 'fixtures', 'liskov-v5-retained-manifest.json');
 const errors = [];
 
-const expectedIds = [
+const baseExpectedIds = [
   'index',
   'get-started/index',
   'get-started/choose-your-path',
@@ -80,6 +82,20 @@ const expectedIds = [
   'troubleshooting/support',
 ];
 
+const v5ReleaseContract = JSON.parse(readFileSync(v5ReleaseContractPath, 'utf8'));
+const v5DocumentationModes = ['release_gated', 'promotion_prepared', 'public'];
+const v5Mode = v5ReleaseContract.documentationMode;
+const v5PromotedIds = [
+  'build/manifest-v5',
+  'operate/runtime-ssh-v5',
+  'reference/manifest-v5',
+];
+const v5PagesPromoted = v5Mode === 'promotion_prepared' || v5Mode === 'public';
+const expectedIds = [
+  ...baseExpectedIds,
+  ...(v5PagesPromoted ? v5PromotedIds : []),
+];
+
 const releaseGatedIds = [
   'get-started/marketplace',
   'marketplace/index',
@@ -113,9 +129,8 @@ const baranFiles = walk(baranRoot).filter((file) => extname(file) === '.md').sor
 // availability owner. Same treatment as the private-alpha Baran pages: kept out
 // of the sidebar, out of the sitemap, and out of the inventory.
 const unlistedIds = new Set([
-  'build/manifest-v5',
+  ...(!v5PagesPromoted ? v5PromotedIds : []),
   'configure/clustering',
-  'reference/manifest-v5',
 ]);
 
 const ids = files.map(idFor).filter((id) => !unlistedIds.has(id));
@@ -287,6 +302,120 @@ for (const oldPath of [
 
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
 const cliContract = JSON.parse(readFileSync(cliContractPath, 'utf8'));
+const v5Manifest = JSON.parse(readFileSync(v5ManifestPath, 'utf8'));
+const v5GuidePage = readFileSync(join(docsRoot, 'build', 'manifest-v5.md'), 'utf8');
+const v5ReferencePage = readFileSync(join(docsRoot, 'reference', 'manifest-v5.md'), 'utf8');
+const v5SshPage = readFileSync(join(docsRoot, 'operate', 'runtime-ssh-v5.md'), 'utf8');
+
+check(v5DocumentationModes.includes(v5Mode), `V5 release contract: invalid documentationMode ${String(v5Mode)}`);
+check(
+  v5ReleaseContract.schema === 'proof.liskov.docs-v5-release-contract.v1',
+  'V5 release contract: wrong schema',
+);
+check(v5ReleaseContract.verifiedAt === '2026-08-21', 'V5 release contract: wrong verification date');
+check(
+  v5ReleaseContract.contract?.rcDigest === 'sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10',
+  'V5 release contract: wrong RC digest',
+);
+check(
+  v5ReleaseContract.contract?.manifestSchemaDigest === 'sha256:38ca88eefe599d9a13b0906fb7ae86be002fb7aa15767925a2fe11908fec95da',
+  'V5 release contract: wrong manifest schema digest',
+);
+check(
+  v5ReleaseContract.contract?.effectivePolicySchemaDigest === 'sha256:5907054022521f9926164d1e899fa89ecf931ea916da5d7989a6c58015053c30',
+  'V5 release contract: wrong effective-policy schema digest',
+);
+check(v5ReleaseContract.contract?.productionRegistration === 'v4_only', 'V5 release contract: RC must remain V4-only');
+check(v5ReleaseContract.contract?.activationAuthorized === false, 'V5 release contract: RC must not claim activation authority');
+check(v5ReleaseContract.contract?.retainedCorpusCount === 25, 'V5 release contract: wrong retained corpus count');
+check(v5ReleaseContract.contract?.implementationCloseoutRows === 31, 'V5 release contract: wrong closeout row count');
+check(v5ReleaseContract.contract?.firstPublicMaxJobs === 2, 'V5 release contract: wrong first-public job bound');
+
+for (const [consumer, commit] of Object.entries({
+  cli: 'e135604ed2f6c59ffc737fce5fe08eaa19d77d0c',
+  console: 'f07323a13e7890614e1a5aec754b08523f485f94',
+  workflow: 'aa1b83f0fd4b08ac33a6c9970d2077885922d79c',
+  cargoRuntime: '20444a833bd9eb627362171737cbc26f9f70901d',
+  managedSshMatrix: '6bce5181c4c6160fa48001a653070f351138cf89',
+})) {
+  check(v5ReleaseContract.consumers?.[consumer]?.sourceCommit === commit, `V5 release contract: wrong ${consumer} commit`);
+}
+check(
+  v5ReleaseContract.consumers?.examples?.retainedSetCommit === 'f9b6330ac76f9c77a3a74567d1f44e47eade7f48',
+  'V5 release contract: wrong retained examples commit',
+);
+for (const consumer of ['cli', 'console', 'workflow', 'cargoRuntime']) {
+  check(
+    v5ReleaseContract.consumers?.[consumer]?.releasedRefContainingCommit === null,
+    `V5 release contract: ${consumer} must not claim an unreleased source commit is tagged`,
+  );
+}
+
+check(v5Manifest.schema === 'proof.liskov.application-manifest', 'V5 fixture: wrong manifest schema');
+check(v5Manifest.schemaVersion === 5, 'V5 fixture: wrong schemaVersion');
+check(v5Manifest.release?.mode === 'source', 'V5 fixture: first use must use source release');
+check(v5Manifest.runtime?.kind === 'javascript', 'V5 fixture: first use must use JavaScript');
+check(v5Manifest.execution?.mode === 'once', 'V5 fixture: first use must be one-shot');
+check(v5Manifest.deployment?.spend?.unit === 'service_credit_micros', 'V5 fixture: self-custody spend leaked into first use');
+check(v5Manifest.state?.mode === 'off', 'V5 fixture: retained state must be explicitly off');
+for (const deferredRoot of ['ingress', 'integrations', 'cohort', 'hooks']) {
+  check(!(deferredRoot in v5Manifest), `V5 fixture: deferred root present: ${deferredRoot}`);
+}
+const firstV5ManifestBlock = /```json title="\.liskov\/application-manifest\.json"\n([\s\S]*?)\n```/u.exec(v5GuidePage);
+check(firstV5ManifestBlock !== null, 'V5 guide: missing checked first-manifest block');
+if (firstV5ManifestBlock !== null) {
+  try {
+    check(
+      JSON.stringify(JSON.parse(firstV5ManifestBlock[1])) === JSON.stringify(v5Manifest),
+      'V5 guide: first manifest differs from the checked fixture',
+    );
+  } catch {
+    check(false, 'V5 guide: first manifest block is not JSON');
+  }
+}
+
+for (const page of [v5GuidePage, v5ReferencePage]) {
+  for (const deferredRoot of ['ingress', 'integrations', 'cohort', 'hooks']) {
+    check(!new RegExp(`"${deferredRoot}"\\s*:`, 'u').test(page), `V5 docs author deferred root ${deferredRoot}`);
+  }
+  check(!/"unit"\s*:\s*"acu_planck"/u.test(page), 'V5 docs author deferred self-custody spend');
+  check(!/"kind"\s*:\s*"(?:tailscale|acurast_tunnel|cloudflare_tunnel)"/u.test(page), 'V5 docs author a deferred provider');
+}
+for (const token of [
+  'first public capability and entitlement limit is **exactly 2**',
+  'proof liskov application manifest validate',
+  'proof liskov application policy explain',
+  'aa1b83f0fd4b08ac33a6c9970d2077885922d79c',
+  'not a released package',
+]) {
+  check(v5GuidePage.includes(token), `V5 guide omits ${token}`);
+}
+for (const token of [
+  'runtime-ssh operator-key add',
+  'runtime-ssh operator-key remove',
+  'future attachment snapshots only',
+  'no customer CLI',
+  'RUNTIME_SSH_HOST_KEY_MISMATCH',
+  'one-time ticket',
+  'leaves workload health unchanged',
+]) {
+  check(v5SshPage.includes(token), `V5 Managed SSH guide omits ${token}`);
+}
+
+if (v5Mode === 'release_gated') {
+  check(v5ReleaseContract.availability === 'Release-gated v1', 'V5 gated source map has wrong availability');
+  check(/Retained Manifest V5 \/ Policy V5 exact pair \| Release-gated v1/.test(capabilitiesPage), 'capabilities prematurely promote V5');
+  for (const id of v5PromotedIds) check(!sidebar.includes(`'${id}'`), `sidebar prematurely exposes ${id}`);
+} else {
+  check(v5ReleaseContract.availability === 'v1', 'V5 promotion source map has wrong availability');
+  check(/Retained Manifest V5 \/ Policy V5 exact pair \| v1/.test(capabilitiesPage), 'capabilities omit promoted V5');
+  for (const id of v5PromotedIds) check(sidebar.includes(`'${id}'`), `sidebar omits promoted ${id}`);
+  for (const page of [v5GuidePage, v5ReferencePage, v5SshPage]) {
+    check(!page.startsWith('---\nunlisted: true\n'), 'promoted V5 page remains unlisted');
+    check(!page.includes(':::danger[Not released]'), 'promoted V5 page retains not-released notice');
+  }
+}
+
 check(manifest.schema === 'proof.liskov.application-manifest', 'fixture: wrong manifest schema');
 check(manifest.schemaVersion === 4, 'fixture: wrong schemaVersion');
 check(manifest.release?.artifact?.encryption?.mode === 'none', 'fixture: reusable action supports only unencrypted IPFS bundles');

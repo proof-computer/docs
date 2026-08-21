@@ -1,0 +1,37 @@
+{
+  "schema": "proof.liskov.application-manifest",
+  "schemaVersion": 5,
+  "applicationId": "fetch",
+  "metadata": {
+    "description": "Fetch data from one API and send a result to another."
+  },
+  "release": {
+    "mode": "source"
+  },
+  "runtime": {
+    "kind": "javascript",
+    "entrypoint": {
+      "file": "bundle.js"
+    }
+  },
+  "execution": {
+    "mode": "once"
+  },
+  "deployment": {
+    "schedule": {
+      "duration": "30s"
+    },
+    "spend": {
+      "unit": "service_credit_micros",
+      "perJob": "50000"
+    }
+  },
+  "state": {
+    "mode": "off"
+  },
+  "observability": {
+    "logs": {
+      "enabled": true
+    }
+  }
+}
