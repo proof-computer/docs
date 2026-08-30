@@ -8,9 +8,16 @@ description: Register operator keys, enable exact-job blind access, pin host tru
 
 :::danger[Not released]
 
-The retained V5 policy path is implemented but production registration remains
-V4-only. Follow the current [Runtime SSH Preview](./runtime-ssh.md) for a
-production V4 Application. Use this page only to review the prepared V5 path.
+The platform seam behind this page is implemented end to end — a V5
+Application with `access.ssh` is served its managed SSH access block, checks
+in to ready, admits a connection ticket, and is reaped at schedule end
+(BKLG-20260830-sxl6 and its packet chain, merged 2026-08-31). Promotion of
+this page into normal navigation is gated by the V5 release contract on the
+accepted Managed Runtime SSH **live** rehearsal; until then, follow the
+current [Runtime SSH Preview](./runtime-ssh.md) for a production V4
+Application. The support boundary at promotion: managed provider only
+(`access.ssh.provider.kind: liskov_managed`), `native_image` (Cargo/PRoot)
+runtime; Tailscale is not yet available for V5 manifests.
 
 :::
 
