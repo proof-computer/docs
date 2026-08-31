@@ -38,6 +38,7 @@ const baseExpectedIds = [
   'operate/index',
   'operate/status-action-plan',
   'operate/deployments-jobs',
+  'operate/processors',
   'operate/proof-chain',
   'operate/logs-activity',
   'operate/update',
@@ -510,6 +511,7 @@ for (const [fileId, required] of Object.entries({
   'organizations/service-credits': ['read-only', 'Customer funding is release-gated', 'payment details'],
   'get-started/github': ['Publication availability', 'v1.2.2', 'artifact-version-id', 'Proof'],
   'operate/proof-chain': ['GitHub OIDC', 'policy digest', 'runtime instance'],
+  'operate/processors': ['your org', 'whole fleet', 'Enterprise', 'storageBytes', 'read-only', 'not-found', 'Redaction and missing data are not the same state'],
   'troubleshooting/deployment': ['Normal waiting', 'Needs action', 'decision-id'],
   'reference/configuration-precedence': ['Application-managed value', 'process.env', 'Signed runtime bootstrap', 'LISKOV_ORGANIZATION', 'persistent organization'],
   'operate/pause-resume': ['does not force-stop', 'scheduled end'],
@@ -543,6 +545,7 @@ for (const [pattern, message] of [
   [/\| Stripe USD checkout and Service Credit issuance \| Release-gated v1;/, 'capability matrix does not gate Stripe funding'],
   [/\| Curated first-party Marketplace launch \| Release-gated v1;/, 'capability matrix does not gate Marketplace launch'],
   [/\| Uptime Prober \| Release-gated v1;/, 'capability matrix does not gate Uptime Prober'],
+  [/\| Organization-gated processor record in Console \| v1;[^\n]+Enterprise \|/, 'capability matrix omits the released processor record or its Enterprise boundary'],
 ]) {
   check(pattern.test(capabilitiesPage), message);
 }

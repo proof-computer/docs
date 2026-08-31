@@ -49,6 +49,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'operate/status-action-plan',
         'operate/deployments-jobs',
+        'operate/processors',
         'operate/proof-chain',
         'operate/logs-activity',
         'operate/runtime-ssh',
