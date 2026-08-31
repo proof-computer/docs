@@ -48,6 +48,12 @@ Processor assignment is not runtime readiness. A registered job can still be
 waiting to boot, fetch configuration, obtain required secret grants, or report
 health.
 
+When the Console names a processor, select its identifier to open the
+organization-level [processor record](./processors.md). That record brings
+together your organization's deployment history on the processor, the chain's
+published hardware facts, and any Enterprise register intelligence. It is not
+a processor directory, and opening it does not change the deployment.
+
 ## Successors and overlaps
 
 For the first public capability, one logical slot has monotonic generations.

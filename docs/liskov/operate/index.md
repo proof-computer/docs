@@ -11,6 +11,7 @@ when Liskov needs a decision or new input.
 
 - [Application status and Action Plan](./status-action-plan.md)
 - [Deployments, jobs, and timelines](./deployments-jobs.md)
+- [Inspect a processor your organization used](./processors.md)
 - [Inspect the proof chain](./proof-chain.md)
 - [Monitor logs and activity](./logs-activity.md)
 - [Update an Application](./update.md)

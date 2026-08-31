@@ -52,6 +52,20 @@ registering a fresh job on runtime failure. Check signed fatal/contact evidence,
 external Acurast execution evidence, and scheduled end. A failure can remain
 **In progress** and non-actionable while Liskov waits for honest terminal facts.
 
+## Processor record is not found or redacted
+
+The processor page is organization-gated. Confirm that the active organization
+is the one whose deployment supplied the processor link. An unknown processor
+and one this organization has never used intentionally share the same not-found
+result.
+
+Redaction bars mean the active plan does not include Enterprise register
+intelligence. They do not hide your own deployment history, runtime contact,
+placement eligibility, attestation, or chain-published hardware. If an
+Enterprise page says register data was not reported, treat that as missing data
+rather than an entitlement failure. See
+[Inspect a processor your organization used](../operate/processors.md).
+
 ## Escalate
 
 If the same condition remains past its documented observation window, collect

@@ -66,6 +66,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Capability | Availability |
 | --- | --- |
 | Canonical posture, Action Plan, deployment/job timeline | v1 |
+| Organization-gated processor record in Console | v1; your deployment history, runtime contact, operability, and chain-published hardware are visible on every plan; fleet reliability, register liveness, placement assessments, confidence, conflict, and watermark require Enterprise |
 | Proof chain and signed runtime-instance evidence | v1 |
 | Pause/resume future planning | v1 |
 | Supported bounded Action Plan retry | v1 |
