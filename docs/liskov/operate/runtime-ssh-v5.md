@@ -1,18 +1,23 @@
 ---
+unlisted: true
 title: Use retained V5 Managed Runtime SSH
 description: Register operator keys, enable exact-job blind access, pin host trust, connect with one-time tickets, and revoke safely.
 ---
 
 # Use retained V5 Managed Runtime SSH
 
-:::info Preview
+:::danger[Not released]
 
-The retained V5 policy path is available on Starter, Team, and Enterprise for
-`native_image` (Cargo/PRoot) Applications using
-`access.ssh.provider.kind: liskov_managed`. The Liskov-operated relay remains a
-single instance, so access can be briefly unavailable during maintenance. The
-job keeps running. Tailscale is not available for V5 manifests. For V4 policy
-syntax, use the [Manifest V4 Runtime SSH procedure](./runtime-ssh.md).
+The platform seam behind this page is implemented end to end — a V5
+Application with `access.ssh` is served its managed SSH access block, checks
+in to ready, admits a connection ticket, and is reaped at schedule end
+(BKLG-20260830-sxl6 and its packet chain, merged 2026-08-31). Promotion of
+this page into normal navigation is gated by the V5 release contract on the
+accepted Managed Runtime SSH **live** rehearsal; until then, follow the
+current [Runtime SSH Preview](./runtime-ssh.md) for a production V4
+Application. The support boundary at promotion: managed provider only
+(`access.ssh.provider.kind: liskov_managed`), `native_image` (Cargo/PRoot)
+runtime; Tailscale is not yet available for V5 manifests.
 
 :::
 
@@ -30,7 +35,7 @@ is not attested by that verification.
 You need:
 
 - a Starter, Team, or Enterprise organization;
-- a retained V5 Application;
+- the retained V5 capability activated for that organization;
 - an `ssh-ed25519` key pair you control;
 - a `native_image` manifest with managed access; and
 - a running job whose attachment is ready.

@@ -1,8 +1,8 @@
 {
   "schema": "proof.liskov.docs-v5-release-contract.v1",
   "verifiedAt": "2026-08-21",
-  "documentationMode": "promotion_prepared",
-  "availability": "v1",
+  "documentationMode": "release_gated",
+  "availability": "Release-gated v1",
   "contract": {
     "repository": "proof-computer/slipway-rs",
     "contractCommit": "baa482792bfa2bf8abbe0ed3db2da04137e1835a",
