@@ -229,6 +229,8 @@ const capabilitiesPage = readFileSync(join(docsRoot, 'reference', 'capabilities.
 const githubActionsPage = readFileSync(join(docsRoot, 'build', 'github-actions.md'), 'utf8');
 const liskovIndexPage = readFileSync(join(docsRoot, 'index.md'), 'utf8');
 const setupPage = readFileSync(join(docsRoot, 'get-started', 'set-up-liskov.md'), 'utf8');
+const processorsPage = readFileSync(join(docsRoot, 'operate', 'processors.md'), 'utf8');
+const artifactPinHelper = readFileSync(join(root, 'scripts', 'post-slipway-artifact-pin.mjs'), 'utf8');
 const marketplaceStartPage = readFileSync(join(docsRoot, 'get-started', 'marketplace.md'), 'utf8');
 const serviceCreditsPage = readFileSync(join(docsRoot, 'organizations', 'service-credits.md'), 'utf8');
 const accountFundingPage = readFileSync(join(docsRoot, 'troubleshooting', 'account-funding.md'), 'utf8');
@@ -247,6 +249,14 @@ check(
 );
 check(!liskovIndexPage.includes('./get-started/marketplace.md'), 'Liskov landing page recommends release-gated Marketplace launch');
 check(!/Choose \*\*Add funds\*\*/i.test(setupPage), 'setup page contains a release-gated add-funds recipe');
+for (const [surface, content] of [['setup', setupPage], ['processor task', processorsPage]]) {
+  check(content.includes('https://console.liskov.proof.computer'), `${surface} omits the permanent console link`);
+  check(!content.includes('https://liskov.proof.computer'), `${surface} still recommends the retiring apex`);
+}
+check(
+  artifactPinHelper.includes('https://console.liskov.proof.computer/api/applications/{applicationId}/artifact-pins/github'),
+  'artifact-pin helper still defaults to the retiring apex',
+);
 check(!/^## \d+\./m.test(marketplaceStartPage), 'Marketplace release-boundary page contains a step-by-step launch recipe');
 check(!/continue to Stripe|complete the Stripe checkout/i.test(serviceCreditsPage), 'Service Credit read page contains a release-gated checkout recipe');
 check(!/^## Stripe checkout succeeded/m.test(accountFundingPage), 'troubleshooting contains a customer Stripe checkout procedure');

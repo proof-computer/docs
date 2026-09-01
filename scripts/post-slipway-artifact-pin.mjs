@@ -9,7 +9,7 @@ const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const manifestPath = path.resolve(rootDir, stringFlag("--manifest") ?? ".slipway/dist/proof-docs-acurast-manifest.json");
 const authoredManifestPath = path.resolve(rootDir, ".slipway/application-policy.json");
 const audience = nonEmptyEnv("SLIPWAY_ARTIFACT_PIN_AUDIENCE") ?? "slipway-artifact-pin";
-const urlTemplate = nonEmptyEnv("SLIPWAY_ARTIFACT_PIN_URL") ?? "https://liskov.proof.computer/api/applications/{applicationId}/artifact-pins/github";
+const urlTemplate = nonEmptyEnv("SLIPWAY_ARTIFACT_PIN_URL") ?? "https://console.liskov.proof.computer/api/applications/{applicationId}/artifact-pins/github";
 const applicationIds = (nonEmptyEnv("SLIPWAY_APPLICATION_IDS") ?? "proof-docs")
   .split(",")
   .map((item) => item.trim())
