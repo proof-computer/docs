@@ -24,7 +24,7 @@ displayed reserve.
 
 ## 1. Sign in
 
-Open the [Liskov Console](https://liskov.proof.computer) and choose **Continue with GitHub**. Review the GitHub
+Open the [Liskov Console](https://console.liskov.proof.computer) and choose **Continue with GitHub**. Review the GitHub
 authorization and return to Liskov.
 
 Liskov uses this identity for your session and, when you bring a repository,

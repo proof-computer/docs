@@ -27,7 +27,7 @@ submit a chain transaction, reserve Service Credits, or add a final charge.
 
 ## Open the processor record
 
-1. In the [Liskov Console](https://liskov.proof.computer), select the
+1. In the [Liskov Console](https://console.liskov.proof.computer), select the
    organization that ran the job.
 2. Open the Application and choose **Deployments** or **Executions**.
 3. Select the processor identifier.
