@@ -106,6 +106,25 @@ const releaseGatedIds = [
   'marketplace/verify',
 ];
 
+// Legal-review artifacts are versioned in the public source repository so
+// counsel and owners can review exact text, but they are not customer terms or
+// capability documentation until their publication gates close. Docusaurus'
+// `draft: true` excludes them from the production build. Keep the list explicit
+// so adding or accidentally publishing a legal document changes this check.
+const legalReviewDraftIds = [
+  'legal/index',
+  'legal/master-terms',
+  'legal/acceptable-use-policy',
+  'legal/billing-refund-policy',
+  'legal/service-availability',
+  'legal/privacy-notice',
+  'legal/data-processing-addendum',
+  'legal/subprocessors',
+  'legal/self-custody-schedule',
+  'legal/marketplace-user-terms',
+  'legal/marketplace-publisher-agreement',
+];
+
 function walk(directory) {
   return readdirSync(directory, {withFileTypes: true}).flatMap((entry) => {
     const path = join(directory, entry.name);
@@ -135,7 +154,9 @@ const unlistedIds = new Set([
   'configure/clustering',
 ]);
 
-const ids = files.map(idFor).filter((id) => !unlistedIds.has(id));
+const ids = files
+  .map(idFor)
+  .filter((id) => !unlistedIds.has(id) && !legalReviewDraftIds.includes(id));
 check(
   JSON.stringify(ids) === JSON.stringify([...expectedIds].sort()),
   `page inventory differs\nexpected: ${[...expectedIds].sort().join(', ')}\nactual: ${ids.join(', ')}`,
@@ -152,11 +173,24 @@ for (const id of unlistedIds) {
   check(content.includes(':::danger[Not released]'), `${id}: unreleased page omits the not-released notice`);
 }
 
+for (const id of legalReviewDraftIds) {
+  const file = join(docsRoot, `${id}.md`);
+  if (!existsSync(file)) {
+    check(false, `legal review draft ${id} is declared but missing`);
+    continue;
+  }
+  const content = readFileSync(file, 'utf8');
+  const frontmatterEnd = content.indexOf('\n---\n', 4);
+  const frontmatter = frontmatterEnd > 4 ? content.slice(4, frontmatterEnd) : '';
+  check(/^draft: true$/mu.test(frontmatter), `${id}: legal review page is not a Docusaurus draft`);
+  check(/not in force/i.test(content), `${id}: legal review page omits the not-in-force notice`);
+}
+
 const allContent = [readFileSync(join(root, 'src', 'pages', 'index.tsx'), 'utf8')];
 for (const file of files) {
   const id = idFor(file);
   const content = readFileSync(file, 'utf8');
-  allContent.push(content);
+  if (!legalReviewDraftIds.includes(id)) allContent.push(content);
 
   check(content.startsWith('---\n'), `${id}: missing frontmatter`);
   const frontmatterEnd = content.indexOf('\n---\n', 4);
@@ -336,6 +370,9 @@ for (const id of releaseGatedIds) {
 }
 for (const id of unlistedIds) {
   check(!sidebar.includes(`'${id}'`), `sidebar exposes unreleased page ${id}`);
+}
+for (const id of legalReviewDraftIds) {
+  check(!sidebar.includes(`'${id}'`), `sidebar exposes legal review draft ${id}`);
 }
 check(!/Preview|openclaw|cargo|marketplace/i.test(sidebar), 'sidebar exposes an unavailable Preview/OpenClaw/Cargo/Marketplace path');
 
