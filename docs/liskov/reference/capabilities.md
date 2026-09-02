@@ -24,6 +24,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Service Credit balance, reservation, and ledger reads | v1; read-only surfaces are supported for an existing organization |
 | Plan selection and terms acceptance | Release-gated v1; the commercial go-live decision is not complete |
 | Stripe USD checkout and Service Credit issuance | Release-gated v1; checkout is disabled for customer use and internal acceptance must not be treated as availability |
+| Paid subscription activation | Release-gated; a written plan id does not activate a paid plan. Usable only after reconciled Autumn/Stripe payment. Production paid billing is not enabled |
 | Curated first-party Marketplace launch | Release-gated v1; limited to internal first-party engineering acceptance |
 | Uptime Prober | Release-gated v1; an internal first-party acceptance fixture, not a supported customer offering |
 | OpenClaw offering | Release-gated v1; no versioned descriptor was present at the reviewed release |
