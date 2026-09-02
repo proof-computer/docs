@@ -68,6 +68,7 @@ const sidebars: SidebarsConfig = {
         'organizations/roles',
         'organizations/service-credits',
         'organizations/charges',
+        'organizations/network-costs-and-outcomes',
         'organizations/records-notifications',
       ],
     },
