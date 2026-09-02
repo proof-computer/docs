@@ -7,7 +7,8 @@ description: Resolve GitHub session, organization selection, invitation, and rea
 
 :::caution Release boundary
 Plan selection, terms acceptance, Stripe checkout, and issuance of new Service
-Credits are release-gated. There is no supported customer checkout
+Credits are release-gated. Writing a plan id does not activate a paid plan.
+Production paid billing is not enabled. There is no supported customer checkout
 troubleshooting procedure yet. Do not submit payment details, retry a disabled
 control, or call an internal funding endpoint.
 :::
