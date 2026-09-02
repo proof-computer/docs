@@ -12,6 +12,7 @@ other Liskov work. Every Application belongs to one organization.
 - [Roles and access](./roles.md)
 - [Read USD Service Credits](./service-credits.md)
 - [Quotes, reserves, and final charges](./charges.md)
+- [What each deployment outcome costs](./network-costs-and-outcomes.md)
 - [Billing records and notifications](./records-notifications.md)
 
 USD Service Credits are the only customer balance. Liskov uses its own

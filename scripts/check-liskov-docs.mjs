@@ -55,6 +55,7 @@ const baseExpectedIds = [
   'organizations/roles',
   'organizations/service-credits',
   'organizations/charges',
+  'organizations/network-costs-and-outcomes',
   'organizations/records-notifications',
   'concepts/index',
   'concepts/how-liskov-works',
@@ -234,6 +235,7 @@ const artifactPinHelper = readFileSync(join(root, 'scripts', 'post-slipway-artif
 const marketplaceStartPage = readFileSync(join(docsRoot, 'get-started', 'marketplace.md'), 'utf8');
 const serviceCreditsPage = readFileSync(join(docsRoot, 'organizations', 'service-credits.md'), 'utf8');
 const chargesPage = readFileSync(join(docsRoot, 'organizations', 'charges.md'), 'utf8');
+const outcomesPage = readFileSync(join(docsRoot, 'organizations', 'network-costs-and-outcomes.md'), 'utf8');
 const accountFundingPage = readFileSync(join(docsRoot, 'troubleshooting', 'account-funding.md'), 'utf8');
 check(
   !/retirement contract[\s\S]{0,120}(?:still gated|release gate)/i.test(retirementPage),
@@ -273,6 +275,23 @@ check(
   'charge task does not distinguish included zero from no submitted deregistration',
 );
 check(!/^## Stripe checkout succeeded/m.test(accountFundingPage), 'troubleshooting contains a customer Stripe checkout procedure');
+check(
+  /accepted execution report/i.test(outcomesPage),
+  'outcome page does not name accepted execution reports as the consumption driver',
+);
+check(
+  /no\s+deregistration was submitted[\s\S]{0,260}never be read as a zero\s+return/i.test(outcomesPage),
+  'outcome page does not distinguish a zero return from no submitted deregistration',
+);
+check(
+  !/never charged for[\s\S]{0,80}transaction fee/i.test(outcomesPage),
+  'outcome page claims native chain fees are never charged, which the net-reclaim path contradicts',
+);
+check(
+  /recovered through your plan/i.test(outcomesPage),
+  'outcome page does not state that native chain fees are recovered through the plan',
+);
+
 
 const sidebar = readFileSync(sidebarPath, 'utf8');
 const publicEntry = allContent[0];
