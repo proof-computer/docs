@@ -254,7 +254,7 @@ check(!liskovIndexPage.includes('./get-started/marketplace.md'), 'Liskov landing
 check(!/Choose \*\*Add funds\*\*/i.test(setupPage), 'setup page contains a release-gated add-funds recipe');
 for (const [surface, content] of [['setup', setupPage], ['processor task', processorsPage]]) {
   check(content.includes('https://console.liskov.proof.computer'), `${surface} omits the permanent console link`);
-  check(!content.includes('https://liskov.proof.computer'), `${surface} still recommends the retiring apex`);
+  check(!content.includes('https://liskov.proof.computer'), `${surface} still recommends the retired apex`);
 }
 check(
   artifactPinHelper.includes('https://console.liskov.proof.computer/api/applications/{applicationId}/artifact-pins/github'),

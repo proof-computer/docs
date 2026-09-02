@@ -20,7 +20,7 @@ jobs:
   upload-runtime-image:
     runs-on: ubuntu-latest
     env:
-      LISKOV_URL: 'https://liskov.proof.computer'
+      LISKOV_URL: 'https://api.liskov.proof.computer'
       LISKOV_APPLICATION_REF: 'runtime-image-smoke'
       LISKOV_OIDC_AUDIENCE: 'liskov-runtime-image-upload'
     steps:
