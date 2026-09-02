@@ -186,6 +186,44 @@ for (const id of legalReviewDraftIds) {
   check(/not in force/i.test(content), `${id}: legal review page omits the not-in-force notice`);
 }
 
+const publisherAgreementDraft = readFileSync(
+  join(docsRoot, 'legal', 'marketplace-publisher-agreement.md'),
+  'utf8',
+);
+const marketplaceUserTermsDraft = readFileSync(
+  join(docsRoot, 'legal', 'marketplace-user-terms.md'),
+  'utf8',
+);
+for (const [surface, content, required] of [
+  [
+    'Marketplace Publisher Agreement',
+    publisherAgreementDraft,
+    [
+      'publicly inspectable source',
+      'source snapshot → controlled build → signed provenance',
+      'Future confidential-source review',
+      'model training',
+      'Binary-only offerings are not eligible for public Marketplace listing',
+      'Neither party may combine those facts into a broad',
+    ],
+  ],
+  [
+    'Marketplace User Terms',
+    marketplaceUserTermsDraft,
+    [
+      'publicly inspectable source',
+      'confidential-source tier',
+      'Binary-only offerings are not eligible for public Marketplace listing',
+      'No combination of those facts means that PROOF certifies an offering as safe',
+    ],
+  ],
+]) {
+  const normalizedContent = content.replace(/\s+/gu, ' ');
+  for (const token of required) {
+    check(normalizedContent.includes(token), `${surface} omits source-assurance contract: ${token}`);
+  }
+}
+
 const allContent = [readFileSync(join(root, 'src', 'pages', 'index.tsx'), 'utf8')];
 for (const file of files) {
   const id = idFor(file);

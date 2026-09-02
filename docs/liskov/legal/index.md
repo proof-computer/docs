@@ -7,7 +7,8 @@ draft: true
 # Liskov legal documents — review draft
 
 :::caution Not in force
-Version 0.1, dated 2 September 2026. These documents are working drafts for
+Review collection updated 2 September 2026. Individual documents carry their
+own draft versions. These documents are working drafts for
 legal, privacy, security, finance, and product review. They are excluded from
 the production documentation build and do not bind MOOSE LABS LTD or any
 customer.
@@ -50,6 +51,11 @@ until all of the following are complete:
    complete released customer paths.
 8. The Console records the accepted document versions and makes a durable copy
    available to the Customer.
+9. Before any confidential-source Marketplace tier is offered, PROOF has the
+   approved review licence, isolated least-privilege environment, reviewer
+   controls, audit trail, source retention/deletion, incident response,
+   IP-contamination, no-model-training, and review-capacity processes required
+   by the Publisher Agreement. Public source remains mandatory until then.
 
 Questions or review comments should be sent to
 [support@proof.computer](mailto:support@proof.computer).

@@ -7,7 +7,7 @@ draft: true
 # Liskov Marketplace Publisher Agreement — review draft
 
 :::caution Not in force
-Version 0.1, dated 2 September 2026. Third-party Marketplace publishing and
+Version 0.2, dated 2 September 2026. Third-party Marketplace publishing and
 payouts are not v1 capabilities. This agreement requires legal and product
 approval before publisher onboarding.
 :::
@@ -31,21 +31,29 @@ obligation to list an offering.
 For each offering and version, the Publisher must provide complete and accurate:
 
 - name, description, Publisher identity, category, and support contact;
-- source repository, commit, build workflow, artifact, digest, licence, and
-  provenance requested by PROOF;
+- the complete human-readable source snapshot at an immutable repository
+  commit or tag, its licence, build scripts, workflow, lockfiles, toolchain,
+  dependency inputs, and generated-code origins;
+- an SBOM, third-party licence inventory, test/review instructions, artifact,
+  source and artifact digests, and signed build provenance requested by PROOF;
 - configuration, permissions, secrets, data, networking, schedule, placement,
   resource, and spend requirements;
 - pricing request and any external fees;
 - documentation, limitations, known risks, dependencies, regions, and
   end-of-life information;
+- every runtime-fetched code path or external service that can materially
+  change behavior;
 - security contact, vulnerability process, and material known vulnerabilities;
   and
 - privacy, data-processing, export, sanctions, regulatory, and age or user
   restrictions relevant to the offering.
 
 The Publisher must not conceal functionality, permissions, data flows,
-dependencies, or costs. Every update must be submitted as a new version where
-PROOF requires immutability.
+dependencies, generated code, remote code, external services, or costs. It
+must not include a credential, private key, production data, or unnecessary
+personal data in submitted source. Every update or material source, build,
+dependency, permission, data/network, licence, or artifact change must be
+submitted as a new immutable version and repeat the applicable review.
 
 ## 3. Publisher warranties
 
@@ -57,6 +65,9 @@ The Publisher warrants that:
   or breach another agreement;
 - provenance, security, performance, privacy, and compatibility statements are
   accurate and not misleading;
+- submitted source and build materials are complete and correspond to the
+  exact artifact, and no undeclared step or fetched code materially changes its
+  behavior;
 - the offering does not include malicious, deceptive, hidden, or unauthorized
   functionality;
 - it complies with the Acceptable Use Policy and applicable law; and
@@ -79,6 +90,14 @@ The licence includes reasonable internal testing and retention of immutable
 provenance, audit, security, billing, and dispute evidence after delisting. It
 does not transfer ownership of the offering or Publisher marks.
 
+The review licence includes access to complete source and build material for
+each submitted version and permission to perform automated and manual analysis
+in an isolated environment. PROOF will not use confidential Publisher source
+for model training, generalized code generation, or unrelated product
+development. Access, reviewer authorization, retention, deletion, and incident
+handling for a future confidential-source lane must follow the separately
+published review process and applicable confidentiality terms.
+
 The Customer licence must be stated in the listing. If no separate licence is
 approved, no offering will be published.
 
@@ -93,8 +112,57 @@ Public source or offering content is not the authoritative price or admission
 record. PROOF's approved Marketplace record controls the effective listing,
 price, supported version, and availability.
 
-PROOF may test or scan an offering but has no duty to find every defect. Review
-does not transfer Publisher responsibility to PROOF.
+### 5.1 Public Marketplace source requirement
+
+Every version admitted to the public Marketplace must expose complete,
+human-readable, publicly inspectable source at the exact immutable snapshot
+bound to its build provenance and artifact digest. The source may use an
+open-source or source-available licence, but the listing must state what
+Customers may copy, modify, redistribute, or use commercially.
+
+Source visibility alone is insufficient. The admitted evidence must bind:
+
+`source snapshot → controlled build → signed provenance → artifact digest → Marketplace version → deployed artifact`.
+
+An artifact that is attested but lacks complete inspectable source, or source
+that does not correspond to the exact artifact, is not eligible for public
+listing.
+
+### 5.2 Future confidential-source review
+
+PROOF may later invite a Publisher to apply for a confidential-source tier.
+That tier is unavailable until PROOF expressly enables it after approving its
+review licence, isolated access, reviewer controls, audit, retention/deletion,
+incident response, IP-contamination, no-training, and operational-capacity
+requirements.
+
+If enabled, the Publisher must give PROOF complete continuing access to the
+exact source and build materials for every listed version. Restricting or
+withdrawing required access blocks new versions and may delist an existing
+version. A confidential review is not public auditability and the listing must
+say so.
+
+### 5.3 Binary-only distribution
+
+Binary-only offerings are not eligible for public Marketplace listing,
+Marketplace curation, auto-upgrade, or Marketplace assurance labels. PROOF may
+separately agree a private Organization-specific Enterprise distribution. That
+distribution is not a public Marketplace offering and must state that source
+was not reviewed.
+
+### 5.4 Exact review claims
+
+PROOF may publish separate evidence-backed statements such as Publisher
+identity verified, public source available, build provenance verified,
+automated checks passed, or manual review completed on a specified date for a
+specified version and scope. Neither party may combine those facts into a broad
+"PROOF verified", "safe", or equivalent certification claim.
+
+PROOF may build, test, scan, or manually review an offering but has no duty or
+ability to find every defect, vulnerability, malicious behavior, licence
+problem, or unlawful use. Review does not transfer Publisher responsibility to
+PROOF and is not a warranty of security, correctness, lawfulness, maintenance,
+or fitness for purpose.
 
 ## 6. Security and vulnerability response
 
@@ -102,8 +170,8 @@ The Publisher must maintain a monitored security contact and promptly:
 
 - investigate credible vulnerability or abuse reports;
 - notify PROOF of a vulnerability, compromise, malicious dependency, provenance
-  failure, lost signing authority, or unlawful behavior that may affect a
-  Customer;
+  failure, source/artifact divergence, loss of required source access, lost
+  signing authority, or unlawful behavior that may affect a Customer;
 - provide impact, affected versions, mitigations, and a remediation plan;
 - cooperate on Customer notice, suspension, evidence preservation, and lawful
   disclosure; and
@@ -177,9 +245,10 @@ without clear lawful authority and Customer agreement.
 
 ## 11. Records and audit
 
-The Publisher will keep accurate source, licence, provenance, build, security,
-support, usage, pricing, tax, and payout records for the period required by law
-and the Publisher Schedule.
+The Publisher will keep accurate source, licence, SBOM, dependency,
+declaration, provenance, build, artifact, review, security, support, usage,
+pricing, tax, and payout records for the period required by law and the
+Publisher Schedule.
 
 On reasonable notice, PROOF may request evidence necessary to verify compliance.
 Where a material incident or credible breach exists, PROOF may require an
@@ -189,9 +258,10 @@ confidential information and avoid unnecessary access to source or systems.
 ## 12. Suspension, delisting, and termination
 
 PROOF may suspend or delist an offering immediately for legal, sanctions,
-security, provenance, fraud, payment, support, quality, compatibility,
-reputational, or Agreement concerns. Where practicable, PROOF will explain the
-reason and give an opportunity to remedy it.
+security, source-access, source/artifact correspondence, review-evidence,
+provenance, fraud, payment, support, quality, compatibility, reputational, or
+Agreement concerns. Where practicable, PROOF will explain the reason and give
+an opportunity to remedy it.
 
 Either party may terminate this Agreement on 30 days' written notice or for
 uncured material breach under the Master Terms. Termination stops new listings
