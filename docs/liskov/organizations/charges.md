@@ -38,6 +38,18 @@ the effective policy. That is a Liskov treasury mechanic. Customer records stay
 denominated in USD Service Credits and should explain the related Application,
 deployment, job, and reason.
 
+Execution evidence determines whether Liskov may settle a managed final charge.
+When Liskov submits a deregistration transaction, the gross refund in its
+finalized chain events determines how much of the reserved amount is reclaimed
+at the settlement's locked rate. The native transaction fee is recorded
+separately. Wallet balance movement corroborates those facts; it does not set
+the reclaim amount.
+
+An included deregistration with a gross refund of zero means the transaction
+finalized and returned no gross refund. That is different from a case where no
+deregistration was submitted: there is then no chain coordinate or refund
+amount. Missing chain evidence must not be presented as a zero return.
+
 ## Verify
 
 Open **Billing & funding** and match the reserve/final/release records to the
