@@ -43,6 +43,7 @@ the final charge is determined at settlement rather than predicted.
 | Nothing was ever broadcast to the network | None | Released in full |
 | The network refused the registration | None | Released in full |
 | The job ran and ended, and settlement evidence is complete | From evidence, up to the reserve | Remainder released |
+| Managed custody: the strict report deadline passed and the finalized scanner proves no report was filed | Zero — not billed | Released in full |
 | The registration ended and returned nothing | Up to the reserve, never more | Nothing to release |
 | The registration ended and returned everything | Zero | Released in full |
 | Settlement evidence is pending, unreadable, or outside coverage | None yet — settlement is deferred | Stays open |
@@ -53,6 +54,13 @@ Two of these look alike and are not. A registration that **ended and returned
 nothing** has a chain coordinate and a zero refund. A registration where **no
 deregistration was submitted** has neither, and missing chain evidence must
 never be read as a zero return — that case is deferred or reviewed, not charged.
+
+The managed no-report row is also distinct. It is authorized only after the
+strict deadline by a finalized, readable scanner result. It closes with
+`report_absent_not_billed`, no unresolved amount, and no customer action. An
+open deadline or unreadable, unavailable, outside-coverage, conflicting, or
+failed scan stays deferred. Self-custody does not use this Service Credit rule;
+its ACU movement remains immutable chain accounting, not a refund or reversal.
 
 ## Pausing, retiring, and renewing
 

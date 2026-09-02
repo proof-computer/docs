@@ -33,6 +33,11 @@ Examples:
 Changing something does not imply Liskov should immediately retry. Return to
 the Action Plan and read the refreshed action.
 
+Do not retry an ordinary managed **Not billed — no report filed** closeout. Its
+zero charge and full reserve release are terminal, and no customer action is
+required. A stronger signed-fatal or disagreement condition may still name a
+different action; follow that typed condition instead.
+
 ## 3. Use the bounded retry
 
 Only when retry is offered:

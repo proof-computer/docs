@@ -48,6 +48,14 @@ Processor assignment is not runtime readiness. A registered job can still be
 waiting to boot, fetch configuration, obtain required secret grants, or report
 health.
 
+After a job's strict reporting window closes, the timeline may say **Not billed
+— no report filed**. For managed custody this means the finalized scanner proved
+report absence, the charge is zero, the full reserve is released, and there is
+no review amount or customer action. It does not say whether customer code ran
+for any particular duration. Stronger signed-fatal or disagreement evidence
+keeps its own treatment, and an open or unreadable report window remains
+pending.
+
 When the Console names a processor, select its identifier to open the
 organization-level [processor record](./processors.md). That record brings
 together your organization's deployment history on the processor, the chain's

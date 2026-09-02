@@ -31,6 +31,13 @@ A reserve is not a charge and not proof of successful execution. A final
 charge can be below the cap and quote. A financial item can enter review when
 network evidence is incomplete or contradictory; Liskov must not guess.
 
+For managed custody, a finalized scanner can instead prove that the strict
+report deadline passed with no execution report. That terminal case is **not
+billed**: the final charge is zero, the full linked reserve is released, and
+the closeout carries `report_absent_not_billed`. It is closed, not an amount in
+review, and needs no customer action. Pending, unavailable, outside-coverage,
+conflicting, or failed evidence reads still defer settlement.
+
 ## Internal network settlement
 
 The service may pay Acurast reward and native fees in network units, bounded by
@@ -49,6 +56,12 @@ An included deregistration with a gross refund of zero means the transaction
 finalized and returned no gross refund. That is different from a case where no
 deregistration was submitted: there is then no chain coordinate or refund
 amount. Missing chain evidence must not be presented as a zero return.
+
+The managed zero-charge decision is made from report absence, not by erasing
+treasury facts. Liskov retains the admitted network budget, gross refund,
+processor payout, and deregistration fee for operator accounting. Those facts
+do not appear as a customer balance. Self-custody remains immutable ACU chain
+accounting and is not reclassified as an ACU refund or reversal.
 
 ## Verify
 

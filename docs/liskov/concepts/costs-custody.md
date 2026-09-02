@@ -30,6 +30,18 @@ You do not:
 
 Liskov's treasury mechanics are not a second customer balance.
 
+For managed custody, scanner-proven report absence has a specific closeout.
+Once the strict report deadline has passed and the finalized scanner still has
+no report, the customer is not billed: the final charge is zero, the whole
+linked reserve is released, and no customer action or review amount remains.
+The customer-facing reason is `report_absent_not_billed`. Any exact network
+reward, refund, processor payout, or deregistration fee remains Liskov treasury
+accounting rather than customer exposure.
+
+This rule does not turn an open or unreadable evidence window into zero. A
+pending scanner, unavailable reader, outside-coverage result, identity or timing
+conflict, or read failure still defers settlement.
+
 ## Layers of authority
 
 A deployment must fit all relevant boundaries:
@@ -55,7 +67,9 @@ therefore waits for execution and financial closure.
 A separate signer design exists as Preview work, not as the default v1 path.
 It changes key and funding responsibility and has its own pairing/liveness
 boundary. Until an explicit Preview is available and documented, do not follow
-internal signer or custody commands.
+internal signer or custody commands. The managed no-report rule does not apply
+to self-custody: ACU movement remains immutable chain accounting, never an ACU
+refund or reversal invented by Liskov.
 
 See [Read USD Service Credits](../organizations/service-credits.md) and
 [Quotes, reserves, and final charges](../organizations/charges.md) for tasks.

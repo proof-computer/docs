@@ -71,6 +71,11 @@ proof liskov application activity APPLICATION_ID \
 Use `--before EPOCH_MILLISECONDS` to page backward. Prefer stable public
 identifiers and typed conditions over raw internal event names.
 
+A managed settlement activity carrying `report_absent_not_billed` means **Not
+billed — no report filed**: zero charged, full reserve release, closed financial
+state, and no customer action. It is a settled activity, not a missing-report
+review. Application logs and signed runtime evidence remain separate facts.
+
 ## Verify a monitoring view
 
 Check the organization and Application UID first. Then confirm the policy,
