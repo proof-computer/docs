@@ -74,8 +74,9 @@ This page is the availability owner. Guides contain only supported recipes.
 | Force stop/delete bypass | Internal; no public bypass |
 | Managed custody | v1 default |
 | Quote, reserve, final charge, release, history | v1 |
+| Managed no-report settlement | v1 billing rule; after the strict report deadline, scanner-proven absence is not billed, closes at zero charge, releases the full reserve, and needs no customer action |
 | Customer crypto deposit, swap, balance, withdrawal | Not v1 |
-| Self-custody signer | Preview; not in normal navigation until availability is confirmed |
+| Self-custody signer | Preview; not in normal navigation until availability is confirmed, and the managed no-report billing rule does not reverse or refund immutable ACU movement |
 
 ## Product boundaries
 

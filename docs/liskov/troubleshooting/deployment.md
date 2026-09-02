@@ -52,6 +52,18 @@ registering a fresh job on runtime failure. Check signed fatal/contact evidence,
 external Acurast execution evidence, and scheduled end. A failure can remain
 **In progress** and non-actionable while Liskov waits for honest terminal facts.
 
+## Execution report was not filed
+
+If a managed row says **Not billed — no report filed**, the strict report
+deadline is closed and the finalized scanner proved absence. The customer was
+charged zero, the full reserve was released, the financial state is closed, and
+no customer action is required. Do not retry it to clear a review: there is no
+review amount.
+
+If the deadline is still open, the scanner is unavailable or outside coverage,
+the evidence conflicts, or a read failed, settlement remains deferred. Stronger
+signed-fatal and disagreement states keep their own Action Plan treatment.
+
 ## Processor record is not found or redacted
 
 The processor page is organization-gated. Confirm that the active organization

@@ -236,6 +236,9 @@ const marketplaceStartPage = readFileSync(join(docsRoot, 'get-started', 'marketp
 const serviceCreditsPage = readFileSync(join(docsRoot, 'organizations', 'service-credits.md'), 'utf8');
 const chargesPage = readFileSync(join(docsRoot, 'organizations', 'charges.md'), 'utf8');
 const outcomesPage = readFileSync(join(docsRoot, 'organizations', 'network-costs-and-outcomes.md'), 'utf8');
+const costsCustodyPage = readFileSync(join(docsRoot, 'concepts', 'costs-custody.md'), 'utf8');
+const deploymentsPage = readFileSync(join(docsRoot, 'operate', 'deployments-jobs.md'), 'utf8');
+const billingRetirementPage = readFileSync(join(docsRoot, 'troubleshooting', 'billing-retirement.md'), 'utf8');
 const accountFundingPage = readFileSync(join(docsRoot, 'troubleshooting', 'account-funding.md'), 'utf8');
 check(
   !/retirement contract[\s\S]{0,120}(?:still gated|release gate)/i.test(retirementPage),
@@ -290,6 +293,25 @@ check(
 check(
   /recovered through your plan/i.test(outcomesPage),
   'outcome page does not state that native chain fees are recovered through the plan',
+);
+for (const [surface, content] of [
+  ['capabilities', capabilitiesPage],
+  ['charges', chargesPage],
+  ['outcomes', outcomesPage],
+  ['costs/custody', costsCustodyPage],
+  ['deployment interpretation', deploymentsPage],
+  ['billing troubleshooting', billingRetirementPage],
+]) {
+  check(/not\s+billed/i.test(content), `${surface} omits the managed no-report zero-charge rule`);
+}
+check(chargesPage.includes('report_absent_not_billed'), 'charge lifecycle omits the stable no-report settlement reason');
+check(
+  /self-custody[\s\S]{0,400}ACU movement remains immutable/i.test(costsCustodyPage),
+  'costs/custody does not preserve immutable self-custody ACU accounting',
+);
+check(
+  /no report filed[\s\S]{0,400}no\s+customer\s+action/i.test(billingRetirementPage),
+  'billing troubleshooting does not close ordinary managed no-report rows without customer action',
 );
 
 

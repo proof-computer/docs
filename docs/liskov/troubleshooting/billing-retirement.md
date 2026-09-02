@@ -23,6 +23,12 @@ evidence. It can remain while a job is in progress, terminal chain evidence is
 pending, or financial reconciliation is under review. Do not treat it as a
 final charge or release it by starting duplicate work.
 
+An ordinary managed **Not billed — no report filed** row is already closed:
+zero was charged and the full linked reserve was released. It needs no customer
+action and must not show an amount in review. If a no-report reserve is still
+open, the strict deadline or required scanner evidence has not qualified for
+that closeout; preserve the evidence and wait or escalate the typed blocker.
+
 ## Final amount is under review
 
 Preserve quote, reserve, policy cap, job schedule, chain evidence, and
