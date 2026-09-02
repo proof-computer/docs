@@ -233,6 +233,7 @@ const processorsPage = readFileSync(join(docsRoot, 'operate', 'processors.md'), 
 const artifactPinHelper = readFileSync(join(root, 'scripts', 'post-slipway-artifact-pin.mjs'), 'utf8');
 const marketplaceStartPage = readFileSync(join(docsRoot, 'get-started', 'marketplace.md'), 'utf8');
 const serviceCreditsPage = readFileSync(join(docsRoot, 'organizations', 'service-credits.md'), 'utf8');
+const chargesPage = readFileSync(join(docsRoot, 'organizations', 'charges.md'), 'utf8');
 const accountFundingPage = readFileSync(join(docsRoot, 'troubleshooting', 'account-funding.md'), 'utf8');
 check(
   !/retirement contract[\s\S]{0,120}(?:still gated|release gate)/i.test(retirementPage),
@@ -259,6 +260,18 @@ check(
 );
 check(!/^## \d+\./m.test(marketplaceStartPage), 'Marketplace release-boundary page contains a step-by-step launch recipe');
 check(!/continue to Stripe|complete the Stripe checkout/i.test(serviceCreditsPage), 'Service Credit read page contains a release-gated checkout recipe');
+check(
+  chargesPage.includes('Execution evidence determines whether Liskov may settle a managed final charge.'),
+  'charge task does not say what authorizes managed settlement',
+);
+check(
+  /gross refund[\s\S]{0,180}settlement's locked rate/i.test(chargesPage),
+  'charge task does not bind reclaim to finalized gross refund at the locked rate',
+);
+check(
+  /included deregistration[\s\S]{0,320}no\s+deregistration was submitted/i.test(chargesPage),
+  'charge task does not distinguish included zero from no submitted deregistration',
+);
 check(!/^## Stripe checkout succeeded/m.test(accountFundingPage), 'troubleshooting contains a customer Stripe checkout procedure');
 
 const sidebar = readFileSync(sidebarPath, 'utf8');
