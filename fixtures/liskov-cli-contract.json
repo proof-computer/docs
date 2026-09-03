@@ -1,6 +1,6 @@
 {
   "package": "@proof-computer/proof-cli-liskov",
-  "version": "0.7.0",
+  "version": "0.8.1",
   "command": "liskov:application:logs",
   "arguments": ["APP_REF"],
   "flags": {
@@ -28,6 +28,18 @@
     "accept-host-key": "boolean",
     "print-command": "boolean",
     "json": "boolean"
+  },
+  "operatorKeyCommands": [
+    "liskov:runtime-ssh:operator-key:add",
+    "liskov:runtime-ssh:operator-key:list",
+    "liskov:runtime-ssh:operator-key:remove"
+  ],
+  "operatorKeyAddFlags": {
+    "name": "string",
+    "identity": "string",
+    "public-key-file": "string",
+    "json": "boolean",
+    "organization": "string"
   },
   "retiredCommands": [
     "liskov:application:blackbox",

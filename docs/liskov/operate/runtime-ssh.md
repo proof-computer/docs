@@ -76,6 +76,23 @@ beyond the key. To use your own Tailscale network instead, see
 Publish as usual. The next job launched from this manifest accepts that key;
 jobs already running were launched under the previous manifest and do not.
 
+### Name the key in your organization (optional)
+
+Registering the public half in your organization's operator-key registry
+gives it a name and a fingerprint you can see in the console under
+**Settings → Runtime SSH** and with `proof liskov runtime-ssh operator-key list --json`:
+
+```bash
+proof liskov runtime-ssh operator-key add --name work-laptop --identity ~/.ssh/liskov-runtime
+```
+
+The registry is inventory, not access control. Registering a key does not
+grant access — the manifest above is still exactly who may connect — and
+removing one with `operator-key remove` does not revoke access from a published
+manifest or end a live session. To take someone's access away, remove their
+key from `authorizedKeys` and publish. See the
+[CLI reference](../reference/cli.md#runtime-ssh).
+
 ## 2. Check the connection before you use it
 
 `--print-command` resolves and verifies everything without opening a session or

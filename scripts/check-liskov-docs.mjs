@@ -506,7 +506,7 @@ check(
 
 const cliPage = readFileSync(join(docsRoot, 'reference', 'cli.md'), 'utf8');
 check(cliContract.package === '@proof-computer/proof-cli-liskov', 'CLI fixture: wrong package');
-check(cliContract.version === '0.7.0', 'CLI fixture: wrong released version');
+check(cliContract.version === '0.8.1', 'CLI fixture: wrong released version');
 check(cliContract.command === 'liskov:application:logs', 'CLI fixture: missing logs command');
 check(cliContract.flags?.limit?.minimum === 1 && cliContract.flags?.limit?.maximum === 500, 'CLI fixture: wrong log limit bounds');
 check(
@@ -532,6 +532,40 @@ for (const flag of ['identity', 'print-command', 'accept-host-key']) {
   check(cliContract.sshFlags?.[flag] !== undefined, `CLI fixture: missing Runtime SSH flag ${flag}`);
   check(cliPage.includes(`--${flag}`), `CLI page omits Runtime SSH flag: --${flag}`);
 }
+
+// Availability transition (published in v0.7.0 on 2026-08-15, documented
+// 2026-09-03, BKLG-20260813-wh4o): the operator-key registry commands. The
+// registry is inventory, never a grant and never a revocation; the page must
+// keep saying so, because a reader scripting offboarding against
+// `operator-key remove` and believing access is withdrawn is the failure the
+// wording exists to prevent.
+check(
+  JSON.stringify(cliContract.operatorKeyCommands) ===
+    JSON.stringify([
+      'liskov:runtime-ssh:operator-key:add',
+      'liskov:runtime-ssh:operator-key:list',
+      'liskov:runtime-ssh:operator-key:remove',
+    ]),
+  'CLI fixture: wrong operator-key command ids',
+);
+for (const flag of ['name', 'identity', 'public-key-file']) {
+  check(cliContract.operatorKeyAddFlags?.[flag] !== undefined, `CLI fixture: missing operator-key add flag ${flag}`);
+  check(cliPage.includes(`--${flag}`), `CLI page omits operator-key add flag: --${flag}`);
+}
+for (const token of [
+  'operator-key add',
+  'operator-key list',
+  'operator-key remove',
+  'does not grant access',
+  'does not revoke access',
+  'ingress.ssh.provider.authorizedKeys',
+]) {
+  check(cliPage.includes(token), `CLI page omits operator-key contract token: ${token}`);
+}
+const operatePage = readFileSync(join(docsRoot, 'operate', 'runtime-ssh.md'), 'utf8');
+check(operatePage.includes('operator-key add'), 'operate/runtime-ssh omits the operator-key add command');
+check(/does not\s+grant access/.test(operatePage), 'operate/runtime-ssh omits the non-grant statement');
+check(/does not revoke access/.test(operatePage), 'operate/runtime-ssh omits the non-revocation statement');
 
 // Availability transition (2026-08-05): Runtime SSH moved from an internal
 // allowlist to plan entitlement. The capability page owns that claim, and it
@@ -615,7 +649,7 @@ for (const [fileId, required] of Object.entries({
   'operate/update': ['successor', 'without mutating'],
   'operate/retire': ['does not stop existing jobs', 'receipt'],
   'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Private deployed customer code'],
-  'reference/cli': ['0.7.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP'],
+  'reference/cli': ['0.8.1', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key'],
   'reference/manifest-v4': ['deprecated_manifest_field', 'profileId', 'sinkName', 'future schema'],
   'configure/logging-diagnostics': ['only logging field needed', 'provisions', 'application logs'],
   'operate/logs-activity': ['application logs', '--deployment', '--job', '--follow', '--from-start'],

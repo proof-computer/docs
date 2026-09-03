@@ -5,12 +5,12 @@ description: Public proof liskov v1 command tree, confirmations, machine-readabl
 
 # CLI
 
-The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.7.0` and
+The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.8.1` and
 requires Node.js 22 or later. All commands begin with `proof liskov`.
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov@0.7.0
+proof plugins install @proof-computer/proof-cli-liskov@0.8.1
 proof liskov --help
 ```
 
@@ -162,6 +162,9 @@ Pause and retirement do not force-stop existing Acurast jobs.
 | --- | --- |
 | `ssh APP` | Open a shell in one of your running jobs. |
 | `ssh APP --print-command --json` | Resolve and verify the connection without opening a session or consuming an access ticket. |
+| `runtime-ssh operator-key add --name NAME --identity FILE` | Register the public half of an `ssh-ed25519` key in your organization's operator-key registry under a name. Only the public key is sent. `--public-key-file FILE` (or `-` for stdin) registers a public-key file instead. |
+| `runtime-ssh operator-key list --json` | List the organization's registered operator keys with their fingerprints. |
+| `runtime-ssh operator-key remove KEY_ID` | Remove a key from the registry. |
 
 `--identity` names the private key file; it is read locally and never sent.
 `--deployment` and `--job` select an exact target when an Application has more
@@ -176,6 +179,18 @@ reconnecting issues a new one.
 Every grant, session open, and session close is recorded in the Application
 activity feed with the duration and bytes transferred. See
 [Open a shell in a running job](../operate/runtime-ssh.md).
+
+The operator-key registry is an inventory of named keys, not an access list.
+Registering a key **does not grant access**: on a Manifest V4 Application, who
+may connect is exactly the `ingress.ssh.provider.authorizedKeys` list in the
+published manifest. Removing a key **does not revoke access**: published
+manifests keep the keys they list and a live session is unaffected. To
+withdraw someone's access, remove their key from the manifest and publish.
+Both commands say so in their output, and `--json` carries the same note. Keys
+are `ssh-ed25519` only, names are unique within an organization, and the
+registry holds at most 50 keys. The three commands take an optional
+`ORGANIZATION_ID` argument and honour `--organization` and
+`LISKOV_ORGANIZATION` like every organization-scoped command.
 
 ## Common flags and automation
 
