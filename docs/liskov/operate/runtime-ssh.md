@@ -12,10 +12,20 @@ contains, whether the thing you expected to be listening is listening.
 Runtime SSH gives you a shell inside one of your own running jobs.
 
 :::info Preview
-Runtime SSH is available on Starter, Team, and Enterprise. It is a Preview
-capability: the behaviour below is supported, but the relay that carries managed
-sessions runs as a single instance, so access can be briefly unavailable during
-maintenance. Your job keeps running and is unaffected when that happens.
+Runtime SSH through the Liskov relay is available on Developer and above. It is
+a Preview capability: the behaviour below is supported, but the relay that
+carries managed sessions runs on a single machine. If that machine is lost or
+restarted, every open session drops until it returns; reconnect when it does.
+Your jobs keep running and are unaffected when that happens.
+
+Interactive administration is included. Traffic through the relay counts
+against your plan's included log volume, and bytes above it are charged to
+your Service Credits at the plan's log overage rate. Your usage and remaining
+allowance appear in Billing before any charge is made.
+
+Connecting over your own Tailscale network instead of the relay is a separate
+capability, available on Enterprise only — see
+[Bring your own Tailscale network](#bring-your-own-tailscale-network).
 :::
 
 ## Before you start
@@ -140,9 +150,14 @@ you need a tool permanently, add it to your image and publish.
 
 ## Bring your own Tailscale network
 
+Enterprise plan only, as a Preview. On any other plan, publishing a manifest
+that names the Tailscale provider is refused with
+`runtime_ssh_provider_plan_required`; the relay path above stays available.
+
 If you already run Tailscale, you can have the job join your own tailnet
 instead of using the Liskov relay. Traffic then goes directly between your
-machine and the job over your network, and Liskov is not in the path.
+machine and the job over your network, and Liskov is not in the path, so
+none of it counts against your log volume.
 
 This needs a Tailscale integration on your organization first, then a manifest
 that names it:
@@ -174,6 +189,11 @@ match the job answering. Do not override it. Re-run with `--print-command
 
 **`runtime_ssh_plan_required`** — the Application's organization is on a plan
 that does not include Runtime SSH.
+
+**`runtime_ssh_provider_plan_required`** — the organization's plan includes
+the Liskov relay but not the provider the manifest names. Today that means a
+manifest with `"kind": "tailscale"` on a plan below Enterprise: switch the
+provider to `"liskov"` and publish, or move to Enterprise.
 
 **Your session ends by itself** — sessions have a maximum duration and an idle
 heartbeat. Reconnecting is normal and safe; it issues a fresh one-time ticket.

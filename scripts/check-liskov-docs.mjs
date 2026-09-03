@@ -536,13 +536,46 @@ for (const flag of ['identity', 'print-command', 'accept-host-key']) {
 // Availability transition (2026-08-05): Runtime SSH moved from an internal
 // allowlist to plan entitlement. The capability page owns that claim, and it
 // must stay distinct from hosted inbound ingress, which remains outside v1.
+//
+// Availability transition (2026-08-06, published 2026-09-03): the entitlement
+// split by provider. The Liskov-operated relay is sold from the Developer plan
+// upward; the customer-owned Tailscale provider is Enterprise only. The two
+// rows must never share a tier again, because a reader generalizing one
+// provider's tier to the other is the failure this split exists to prevent.
+// The same release states the relay's single-machine blast radius and that
+// relay traffic draws on the plan's included log volume (owner decisions of
+// 2026-09-03, ADR-0112 in the orchestrator).
 check(
-  /\| Runtime SSH into your own running job, Liskov-operated relay \| Preview on Starter and above/.test(capabilitiesPage),
-  'capabilities: managed Runtime SSH must be classified Preview on Starter and above',
+  /\| Runtime SSH into your own running job, Liskov-operated relay \| Preview on Developer and above/.test(capabilitiesPage),
+  'capabilities: managed Runtime SSH must be classified Preview on Developer and above',
 );
 check(
-  /\| Runtime SSH into your own running job, your own Tailscale network \| Preview on Starter and above/.test(capabilitiesPage),
-  'capabilities: customer-owned Tailscale Runtime SSH must be classified Preview on Starter and above',
+  /\| Runtime SSH into your own running job, your own Tailscale network \| Preview on Enterprise only/.test(capabilitiesPage),
+  'capabilities: customer-owned Tailscale Runtime SSH must be classified Preview on Enterprise only',
+);
+check(
+  !/Tailscale network \| Preview on Starter and above/.test(capabilitiesPage),
+  'capabilities: the retired "Starter and above" Tailscale claim must not return',
+);
+check(
+  /single machine/.test(capabilitiesPage) && /included log volume/.test(capabilitiesPage),
+  'capabilities: managed Runtime SSH must state the single-machine relay and the shared log allowance',
+);
+for (const token of [
+  'Developer and above',
+  'single machine',
+  'included log volume',
+  'Enterprise plan only',
+  'runtime_ssh_provider_plan_required',
+]) {
+  check(
+    readFileSync(join(docsRoot, 'operate', 'runtime-ssh.md'), 'utf8').includes(token),
+    `operate/runtime-ssh omits ${token}`,
+  );
+}
+check(
+  !/Starter, Team, and Enterprise/.test(readFileSync(join(docsRoot, 'operate', 'runtime-ssh.md'), 'utf8')),
+  'operate/runtime-ssh: the retired four-plan availability sentence must not return',
 );
 check(
   /\| Liskov-hosted HTTP\/SSH ingress \| Not v1 \|/.test(capabilitiesPage),
