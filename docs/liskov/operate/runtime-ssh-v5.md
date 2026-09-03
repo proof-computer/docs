@@ -150,12 +150,16 @@ For planned rotation:
 4. remove the old registry key; and
 5. let old exact-job attachments reach teardown.
 
-For urgent revocation of a current attachment, stop opening sessions and
-contact support with the `attachmentId`, Application UID, deployment ID, job ID,
-and host fingerprint from `--print-command --json`. There is no customer CLI
-command that revokes a live managed attachment. Support must revoke that exact
-attachment; revocation blocks new tickets, invalidates unused tickets, survives
-a control-plane restart, and leaves workload health unchanged.
+There is no way to cut access to a current attachment on purpose today.
+There is no customer CLI command, no console control and no support-reachable
+route that revokes a live managed attachment. A registry removal affects
+future attachment snapshots only, so an attachment that already holds a key
+keeps it for its lifetime. An open session ends when the operator
+disconnects, when the job ends, or at the relay's maximum session duration of
+two hours, whichever comes first; a session that has ended cannot be resumed
+without a new ticket from a still-ready attachment. If you need access gone
+sooner, end the job. Attachment teardown, whenever it happens,
+leaves workload health unchanged.
 
 When the job ends or the attachment expires, automatic teardown revokes the
 attachment and leaves no live unconsumed ticket. Access teardown never extends,
