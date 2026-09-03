@@ -11,10 +11,12 @@ later.
 
 ## Read records
 
-In **Billing & funding**, use the credit ledger and invoice/receipt sections to
-match purchases, reserves, final charges, releases, refunds, plan charges, and
-fees to their stable references. Keep your organization's exported receipts
-with its financial records.
+In **Ledger**, match purchases, reserves, final charges, releases, refunds, plan
+fees, and usage charges to their stable references. Invoice and receipt
+previews, when a Stripe customer exists, live on **Account** and link out to
+Stripe; Liskov does not store card numbers or invoice PDFs. Export CSV from
+Ledger for your own records. Keep your organization's exported receipts with
+its financial records.
 
 The CLI transaction read is safe for automation:
 

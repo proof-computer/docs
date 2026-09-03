@@ -65,8 +65,10 @@ accounting and is not reclassified as an ACU refund or reversal.
 
 ## Verify
 
-Open **Billing & funding** and match the reserve/final/release records to the
-Application UID and deployment. Or page through read-only transactions:
+Open **Ledger** (from **Billing & funding**) and match the reserve, settlement,
+and release rows to the Application UID and deployment. A reserve is a ceiling,
+not a cost; open the lineage on a settled `deploy_spend` row to see the
+attempts behind it. Or page through read-only transactions:
 
 ```bash
 proof liskov organization billing transactions ORGANIZATION_ID \

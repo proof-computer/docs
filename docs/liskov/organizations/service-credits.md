@@ -18,12 +18,17 @@ not submit payment details or call an internal funding endpoint.
 
 ## Read the balance
 
-The supported read-only surface separates:
+The Console **Billing & funding** page shows the balance as an equation:
 
-- **Available** — usable for a new reserve;
-- **Reserved** — held for bounded in-progress work;
-- **Used** — settled consumption for the period; and
-- promotional credit, when the organization has it.
+- **Settled** — counted ledger rows only;
+- **Held** — open reserves and review holds, which are a ceiling, not a cost;
+- **Available** — settled minus held; what a new deploy may draw on;
+- **Promo** — promotional credit inside available, spent first and never refundable;
+- **Refundable** — purchased value only.
+
+The **Ledger** page is the line-by-line audit trail, including the running
+balance after each counted row. A reserve, review hold, or released reserve
+does not move that running balance.
 
 CLI reads are also available:
 
