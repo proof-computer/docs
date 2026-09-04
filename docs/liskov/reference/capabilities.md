@@ -20,7 +20,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Capability | Availability |
 | --- | --- |
 | GitHub sign-in; browser-confirmed CLI login | v1 |
-| Organizations, persistent and request-scoped CLI selection, team invitations, assignable roles | v1 |
+| Organizations, persistent and request-scoped CLI selection, team invitations, assignable roles | v1; the plan seat allowance is enforced at invite time with no overage, and while paid plan activation is release-gated every organization resolves to the Free allowance of one seat |
 | Service Credit balance, reservation, and ledger reads | v1; read-only surfaces are supported for an existing organization (Console Account, Billing & funding, and Ledger; CLI billing/transaction reads) |
 | Plan catalog and plans page | v1 read of the catalog on `/organizations/new/plan`; paid attach, trial start, and production collection remain release-gated |
 | Plan selection and terms acceptance | Release-gated v1; the commercial go-live decision is not complete. Writing a plan id does not activate a paid plan |
@@ -49,7 +49,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Liskov-hosted HTTP/SSH ingress | Not v1 |
 | Runtime SSH into your own running job, Liskov-operated relay | Preview on Developer and above; Liskov operates the relay and cannot read the session. The relay is a single machine: if it is lost, open sessions drop until it returns and you reconnect; your jobs are unaffected. A helper or sidecar death ends managed SSH for that job until the next run; the job itself is unaffected. Relay traffic counts against your plan's included log volume and is charged at the log overage rate above it. A key's access can be withdrawn at once without republishing; a session already open drains rather than being cut |
 | Retained V5 managed Runtime SSH policy path | Release-gated v1; native-image-only `access.ssh.provider.kind: liskov_managed`, distinct from the current V4 Preview path |
-| Runtime SSH into your own running job, your own Tailscale network | Preview on Enterprise only; requires a Tailscale account you own |
+| Runtime SSH into your own running job, your own Tailscale network | Preview on Pro and above; requires a Tailscale account you own |
 | Simultaneous jobs | Manifest V4 is v1 at exactly `1`; retained V5 is release-gated at one or two jobs; higher schema ceilings are not availability |
 | Open-market processor selection | v1 |
 | Manager/static selection, placement groups, topology constraints | Internal |

@@ -329,6 +329,54 @@ const costsCustodyPage = readFileSync(join(docsRoot, 'concepts', 'costs-custody.
 const deploymentsPage = readFileSync(join(docsRoot, 'operate', 'deployments-jobs.md'), 'utf8');
 const billingRetirementPage = readFileSync(join(docsRoot, 'troubleshooting', 'billing-retirement.md'), 'utf8');
 const accountFundingPage = readFileSync(join(docsRoot, 'troubleshooting', 'account-funding.md'), 'utf8');
+const teamsPage = readFileSync(join(docsRoot, 'organizations', 'teams.md'), 'utf8');
+const rolesPage = readFileSync(join(docsRoot, 'organizations', 'roles.md'), 'utf8');
+// BKLG-20260903-ytrn — the Team page and the seat allowance.
+//
+// The seat rule is the launch decision of 2026-09-03: refuse beyond the
+// allowance, no overage. These pin the parts a customer acts on, and the two
+// claims the authorization model will not back.
+check(
+  /An invitation that would take the organization past\s+its allowance is refused/.test(teamsPage),
+  'teams page does not state that an invitation past the seat allowance is refused',
+);
+check(
+  /There is no seat overage/.test(teamsPage),
+  'teams page omits the no-overage rule',
+);
+check(
+  /the previous link stops\s+working/i.test(teamsPage),
+  'teams page does not warn that resending retires the previous invitation link',
+);
+check(
+  /every organization\s+currently resolves to the Free allowance of \*\*one seat\*\*/.test(teamsPage),
+  'teams page omits the release-gated single-seat reality',
+);
+check(
+  /\| Organizations, persistent and request-scoped CLI selection, team invitations, assignable roles \| v1; the plan seat allowance is enforced at invite time with no overage/.test(capabilitiesPage),
+  'capability matrix does not record the enforced seat allowance',
+);
+check(
+  /These roles are \*\*not a ladder\*\*/.test(rolesPage),
+  'roles page omits the not-a-ladder statement',
+);
+check(
+  !/and above/i.test(rolesPage),
+  'roles page describes a role hierarchy the authorization code does not have',
+);
+check(
+  !/\bauditor\b/i.test(rolesPage) && !/\bauditor\b/i.test(teamsPage),
+  'organization docs name a role (auditor) that has never existed',
+);
+check(
+  /Grant or revoke Admin \| The \*\*Owner\*\* only/.test(rolesPage),
+  'roles page does not record that granting Admin is the Owner\'s alone',
+);
+check(
+  /changing or\s+removing someone's role does not revoke their key/.test(rolesPage),
+  'roles page omits that a role does not govern Runtime SSH keys',
+);
+
 check(
   !/retirement contract[\s\S]{0,120}(?:still gated|release gate)/i.test(retirementPage),
   'retirement page retains the removed production release gate',
@@ -772,10 +820,12 @@ for (const page of [operatePage, v5SshPage]) {
 // must stay distinct from hosted inbound ingress, which remains outside v1.
 //
 // Availability transition (2026-08-06, published 2026-09-03): the entitlement
-// split by provider. The Liskov-operated relay is sold from the Developer plan
-// upward; the customer-owned Tailscale provider is Enterprise only. The two
-// rows must never share a tier again, because a reader generalizing one
-// provider's tier to the other is the failure this split exists to prevent.
+// split by provider. Availability restated (2026-09-04, BKLG-20260903-k0ay):
+// the accepted six-plan ladder ratified the catalog's boolean inheritance, so
+// the Liskov-operated relay is sold from Developer upward and the
+// customer-owned Tailscale provider from Pro upward. The two rows must never
+// share a tier again, because a reader generalizing one provider's tier to the
+// other is the failure this split exists to prevent.
 // The same release states the relay's single-machine blast radius and that
 // relay traffic draws on the plan's included log volume (owner decisions of
 // 2026-09-03, ADR-0112 in the orchestrator).
@@ -784,12 +834,12 @@ check(
   'capabilities: managed Runtime SSH must be classified Preview on Developer and above',
 );
 check(
-  /\| Runtime SSH into your own running job, your own Tailscale network \| Preview on Enterprise only/.test(capabilitiesPage),
-  'capabilities: customer-owned Tailscale Runtime SSH must be classified Preview on Enterprise only',
+  /\| Runtime SSH into your own running job, your own Tailscale network \| Preview on Pro and above/.test(capabilitiesPage),
+  'capabilities: customer-owned Tailscale Runtime SSH must be classified Preview on Pro and above',
 );
 check(
-  !/Tailscale network \| Preview on Starter and above/.test(capabilitiesPage),
-  'capabilities: the retired "Starter and above" Tailscale claim must not return',
+  !/Tailscale network \| Preview on (Starter|Enterprise|Developer) /.test(capabilitiesPage),
+  'capabilities: the retired Tailscale availability claims must not return',
 );
 check(
   /single machine/.test(capabilitiesPage) && /included log volume/.test(capabilitiesPage),
@@ -804,7 +854,7 @@ for (const token of [
   'Developer and above',
   'single machine',
   'included log volume',
-  'Enterprise plan only',
+  'Pro and above',
   'runtime_ssh_provider_plan_required',
   'helper or sidecar death',
 ]) {
@@ -813,10 +863,14 @@ for (const token of [
     `operate/runtime-ssh omits ${token}`,
   );
 }
-check(
-  !/Starter, Team, and Enterprise/.test(readFileSync(join(docsRoot, 'operate', 'runtime-ssh.md'), 'utf8')),
-  'operate/runtime-ssh: the retired four-plan availability sentence must not return',
-);
+// BKLG-20260903-k0ay deleted the four-plan catalog. `starter` and `team` are
+// not plan ids any more, so no page may name them.
+for (const page of ['operate/runtime-ssh.md', 'operate/runtime-ssh-v5.md', 'reference/capabilities.md', 'reference/manifest-v5.md']) {
+  check(
+    !/\b(Starter|Team)\b/.test(readFileSync(join(docsRoot, ...page.split('/')), 'utf8')),
+    `${page}: the retired Starter/Team plan names must not return`,
+  );
+}
 check(
   /\| Liskov-hosted HTTP\/SSH ingress \| Not v1 \|/.test(capabilitiesPage),
   'capabilities: hosted inbound ingress must stay Not v1 and distinct from Runtime SSH',
