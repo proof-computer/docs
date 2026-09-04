@@ -29,6 +29,8 @@ Before promoting a capability:
 4. Check the complete customer path, not only the API or UI control. A feature
    is not live if a required package, workflow tag, account path, funding path,
    or production gate is still unavailable.
+5. An availability claim about the Liskov-operated Runtime SSH relay changes
+   only with a live-session readback in the same logical release.
 
 Do not infer availability from source code alone. If authorities disagree,
 leave the public claim gated, record the conflict in the orchestrator
