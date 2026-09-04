@@ -208,8 +208,10 @@ const approvedLegalIdentityText = approvedLegalIdentityDrafts.join('\n');
 for (const token of [
   'MOOSE LABS LTD',
   '11435949',
+  'GB311456142',
   'The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP',
   'trading as **PROOF**',
+  'hello@proof.computer',
 ]) {
   check(approvedLegalIdentityText.includes(token), `approved legal identity omits: ${token}`);
 }
@@ -220,6 +222,10 @@ check(
 check(
   readFileSync(join(docsRoot, 'legal', 'launch-sign-off-matrix.md'), 'utf8').includes('Complete — owner approved 4 September 2026'),
   'contracting-entity sign-off is not recorded as complete',
+);
+check(
+  readFileSync(join(docsRoot, 'legal', 'launch-sign-off-matrix.md'), 'utf8').includes('live Stripe Checkout/invoice evidence pending'),
+  'website/e-commerce disclosure sign-off does not retain its live Stripe evidence gate',
 );
 
 const marketplaceTermsDraft = readFileSync(

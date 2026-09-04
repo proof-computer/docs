@@ -248,7 +248,7 @@ Customer must not initiate a chargeback for an undisputed valid charge. If a pay
 
 ### 9.1 Tax
 
-Prices exclude VAT and similar taxes unless stated. PROOF will issue invoices, receipts or credit notes as required based on the billing information Customer provides. Customer is responsible for its own cryptoasset and service tax treatment.
+Prices exclude VAT and similar taxes unless stated. PROOF's VAT registration number is **GB311456142**. UK VAT is added where applicable. PROOF will issue invoices, receipts or credit notes as required based on the billing information Customer provides. Customer is responsible for its own cryptoasset and service tax treatment.
 
 ### 9.2 Ledger
 

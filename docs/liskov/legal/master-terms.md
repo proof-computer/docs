@@ -17,7 +17,7 @@ build. Their publication blockers remain open.
 
 These Master Business Terms (the **Terms**) are a legal agreement between:
 
-- **MOOSE LABS LTD**, company number **11435949**, a private limited company registered in England and Wales with its registered office at **The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP**, trading as **PROOF** (**PROOF**, **we**, **us** or **our**); and
+- **MOOSE LABS LTD**, company number **11435949**, a private limited company registered in England and Wales with its registered office at **The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP**, VAT registration **GB311456142**, trading as **PROOF** (**PROOF**, **we**, **us** or **our**) and contactable at **hello@proof.computer**; and
 - the person identified as the customer in an Order (**Customer**, **you** or **your**).
 
 The individual accepting these Terms for Customer confirms that they have authority to bind Customer.
@@ -848,4 +848,4 @@ The Contract and any non-contractual obligation arising from it are governed by 
 
 ---
 
-**Publication fields to verify:** legal entity name; company number; registered office; geographic contact address; legal email; support email; VAT status/number; Website URLs; Order precedence; liability caps; export/deletion timing; approved countries; supported payment assets and networks.
+**Publication fields still to verify:** privacy/support/security/Marketplace contacts; Website URLs; Order precedence; liability caps; export/deletion timing; approved countries; supported payment assets and networks; and live Checkout/invoice rendering of the approved supplier and VAT details.
