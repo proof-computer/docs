@@ -1,7 +1,7 @@
 ---
 unlisted: true
 title: Use retained V5 Managed Runtime SSH
-description: Register operator keys, enable exact-job blind access, pin host trust, connect with one-time tickets, and revoke safely.
+description: Register operator keys, enable exact-job blind access, pin host trust, connect with one-time tickets, and withdraw a key without republishing.
 ---
 
 # Use retained V5 Managed Runtime SSH
@@ -130,36 +130,64 @@ authorization fence, and key fingerprint; it is consumed once. Replay or use
 after revocation opens no session. The CLI stores it in a temporary mode-0600
 file and removes that directory when SSH exits.
 
-## Revoke safely
+## Withdraw a key, and what a snapshot means
 
-Registry removal and live revocation are different operations.
+An attachment's authorized-key set is a snapshot of the registry taken when
+the attachment is created, and it is committed into the attachment's
+authorization digest, which the runtime re-derives on every bootstrap. It is
+therefore never narrowed in place. Withdrawal is a separate deny layer over
+that snapshot: a withdrawn key still appears in an existing attachment's
+snapshot, and the withdrawal is what refuses it.
 
 ```bash
 proof liskov runtime-ssh operator-key remove KEY_ID --json
 ```
 
-Removing a registry key affects **future attachment snapshots only**. It does
-not rewrite an existing policy or attachment and does not terminate a live
-session. The command's response repeats this non-revocation boundary.
+Removing a registry key withdraws its access in the same step. New connection
+requests and tickets for the fingerprint are refused immediately with
+`runtime_ssh_operator_key_withdrawn`, its unused tickets are revoked, and
+nothing is republished. The response carries the `withdrawal`, the
+`revokedTicketCount`, and a `note` stating the drain rule below. Registering a
+key, by contrast, affects future attachment snapshots only.
+
+A session that is already open is **not** cut. It drains: it ends when the
+operator disconnects, when the job ends, or at the relay's two-hour maximum
+session duration, whichever comes first. A connection that stops answering the
+relay's heartbeat is closed after 60 seconds. If access must end sooner than
+that, end the job.
+
+`--print-command --json` reports three fingerprint lists on the connection, so
+the difference between intended and effective access is never silent:
+`authorizedKeyFingerprints` is the effective set, `snapshotKeyFingerprints` is
+what the attachment was created with, and `withdrawnKeyFingerprints` is the
+overlap that a withdrawal now denies.
+
+To withdraw a key that has no registry row, or to see and lift withdrawals:
+
+```bash
+proof liskov runtime-ssh withdrawn-key add --fingerprint SHA256:... --reason "left the team"
+proof liskov runtime-ssh withdrawn-key list --json
+proof liskov runtime-ssh withdrawn-key remove WITHDRAWAL_ID
+```
+
+Lifting a withdrawal does not re-register the key: it must still be in the
+registry when the next attachment is created.
 
 For planned rotation:
 
 1. add the replacement key and verify its fingerprint;
 2. allow new attachments to snapshot the intended registry;
 3. verify the replacement key with `--print-command`;
-4. remove the old registry key; and
+4. remove the old registry key, which withdraws it; a session it has open
+   drains; and
 5. let old exact-job attachments reach teardown.
 
-There is no way to cut access to a current attachment on purpose today.
-There is no customer CLI command, no console control and no support-reachable
-route that revokes a live managed attachment. A registry removal affects
-future attachment snapshots only, so an attachment that already holds a key
-keeps it for its lifetime. An open session ends when the operator
-disconnects, when the job ends, or at the relay's maximum session duration of
-two hours, whichever comes first; a session that has ended cannot be resumed
-without a new ticket from a still-ready attachment. If you need access gone
-sooner, end the job. Attachment teardown, whenever it happens,
-leaves workload health unchanged.
+There is no way to cut access to a current attachment as a whole on purpose
+today. There is no customer CLI command, no console control and no
+support-reachable route that revokes a live managed attachment. Withdrawing a
+key, above, is the supported way to remove one operator, and ending the job is
+the only way to end an open session sooner than its drain. Attachment teardown,
+whenever it happens, leaves workload health unchanged.
 
 When the job ends or the attachment expires, automatic teardown revokes the
 attachment and leaves no live unconsumed ticket. Access teardown never extends,
@@ -171,13 +199,18 @@ restarts, replaces, or marks the customer process unhealthy.
 | --- | --- |
 | `runtime_ssh_operator_key_registry_empty` | Register at least one organization key, then wait for a new exact-job attachment. |
 | `runtime_ssh_operator_key_registry_too_large` | Reduce the registry to at most eight intentional keys before creating a new attachment. |
-| `RUNTIME_SSH_IDENTITY_NOT_AUTHORIZED` | Compare the selected fingerprint with the attachment snapshot; registry edits affect only new attachments. |
+| `RUNTIME_SSH_IDENTITY_NOT_AUTHORIZED` | The selected key is not in this attachment's effective set. Compare it with `snapshotKeyFingerprints` and `withdrawnKeyFingerprints` from `--print-command --json`; a key registered after the attachment was created reaches only new attachments. |
+| `runtime_ssh_operator_key_withdrawn` | This key's access was withdrawn for the organization. An administrator can lift it with `withdrawn-key remove`; otherwise use another authorized key. |
+| `access_proxy_rejected_session_already_open` | A session is already open on this job; managed Runtime SSH allows one at a time. Retry when it closes. |
+| `access_proxy_rejected_connector_not_registered` | The runtime has not connected to the relay for this job. If its access sidecar failed, that is terminal for this run; launch a new job. |
+| `access_proxy_rejected_connector_unavailable` | The runtime's relay connection is not ready yet. Retry in a few seconds. |
+| `access_proxy_rejected_credential_rejected` | The relay refused the one-time ticket. This is not your key: the ticket is minted seconds before use. Retry once, then report the `attachmentId` and the time. |
 | `runtime_ssh_attachment_not_ready` | Confirm the selected job is running and use `--print-command`; an ended job cannot be reattached. |
 | `runtime_ssh_attachment_ambiguous` | Select the exact deployment or job. |
 | `runtime_ssh_plan_required` | Use an entitled organization; do not retry the same request. |
 | `RUNTIME_SSH_HOST_KEY_MISMATCH` | Stop and compare signed evidence. Never override or delete the pin. |
 | Session ends | Reconnect to obtain a fresh ticket if the attachment remains ready. |
-| Access must stop now | Request exact attachment revocation through support; registry deletion alone is insufficient. |
+| Access must stop now | Withdraw the key with `operator-key remove` or `withdrawn-key add`: new sessions stop at once and an open one drains within two hours. To end it sooner, end the job. |
 
 Verify access and teardown in the Application activity feed. Share identifiers
 and timestamps with support, never private keys, bearer tickets, session files,

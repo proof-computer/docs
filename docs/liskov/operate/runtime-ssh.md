@@ -86,12 +86,11 @@ gives it a name and a fingerprint you can see in the console under
 proof liskov runtime-ssh operator-key add --name work-laptop --identity ~/.ssh/liskov-runtime
 ```
 
-The registry is inventory, not access control. Registering a key does not
-grant access — the manifest above is still exactly who may connect — and
-removing one with `operator-key remove` does not revoke access from a published
-manifest or end a live session. To take someone's access away, remove their
-key from `authorizedKeys` and publish. See the
-[CLI reference](../reference/cli.md#runtime-ssh).
+Registering a key does not grant access: the manifest above is still exactly
+who may connect. Removing one with `operator-key remove` does withdraw its
+access, everywhere in your organization, whether or not a manifest still lists
+it; see [Take someone's access away](#take-someones-access-away). Full command
+reference: [CLI reference](../reference/cli.md#runtime-ssh).
 
 ## 2. Check the connection before you use it
 
@@ -165,6 +164,52 @@ Do not install packages. The runtime's contents are digest-verified, and
 installing at runtime breaks that guarantee for the rest of the job's life. If
 you need a tool permanently, add it to your image and publish.
 
+## Take someone's access away
+
+Withdrawing a key takes effect immediately and needs no publish. It works on
+the key's fingerprint, so it covers a key that is only in a manifest and was
+never registered.
+
+```bash
+ssh-keygen -lf ./departed.pub     # prints the SHA256:... fingerprint
+proof liskov runtime-ssh withdrawn-key add \
+  --fingerprint SHA256:... \
+  --reason "left the team"
+```
+
+If the key is registered in your organization,
+`proof liskov runtime-ssh operator-key remove KEY_ID` does the same thing as
+part of removing it. If you hold the private key yourself, `--identity FILE`
+names it instead of `--fingerprint`.
+
+From that moment, on every Application in the organization:
+
+- new connection requests and new tickets for that key are refused with
+  `runtime_ssh_operator_key_withdrawn`;
+- its unused tickets are revoked, and the response says how many; and
+- a session that is already open is **not** cut. It drains: it ends when that
+  person disconnects, when the job ends, or at the relay's two-hour maximum
+  session duration, whichever comes first. If it must end sooner, end the job.
+
+Withdrawal covers sessions through the Liskov relay. A job on your own
+Tailscale network is reached through your tailnet, and access there is
+controlled by Tailscale, not by Liskov.
+
+Verify it:
+
+```bash
+proof liskov runtime-ssh withdrawn-key list --json
+```
+
+The withdrawal is listed with its ID, and the activity feed records it with
+the number of tickets revoked. Remove the key from `authorizedKeys` at your
+next publish so the manifest says what you intend; the withdrawal keeps
+working either way, and stays in force for jobs launched later.
+
+To let the key back in, lift the withdrawal with
+`proof liskov runtime-ssh withdrawn-key remove WITHDRAWAL_ID`. That only lifts
+the block: the key must still be in the published manifest to connect.
+
 ## Bring your own Tailscale network
 
 Enterprise plan only, as a Preview. On any other plan, publishing a manifest
@@ -212,8 +257,31 @@ the Liskov relay but not the provider the manifest names. Today that means a
 manifest with `"kind": "tailscale"` on a plan below Enterprise: switch the
 provider to `"liskov"` and publish, or move to Enterprise.
 
-**Your session ends by itself** — sessions have a maximum duration and an idle
-heartbeat. Reconnecting is normal and safe; it issues a fresh one-time ticket.
+**`runtime_ssh_operator_key_withdrawn`** — this key's access was withdrawn
+for your organization. Ask an administrator of the organization to lift the
+withdrawal with `withdrawn-key remove`, or connect with another authorized
+key.
+
+**`access_proxy_rejected_session_already_open`** — a session is already open
+on this job. Managed Runtime SSH allows one session per job at a time; retry
+when it closes.
+
+**`access_proxy_rejected_connector_not_registered`** — the runtime has not
+connected to the relay for this job. Check that the job is still running. If
+its access sidecar failed, that is terminal for this run: launch a new job.
+
+**`access_proxy_rejected_connector_unavailable`** — the runtime's connection
+to the relay is not ready yet. Retry in a few seconds.
+
+**`access_proxy_rejected_credential_rejected`** — the relay refused the
+one-time ticket. This is not your key: the ticket is minted seconds before
+use, so a refusal here is a relay or control-plane fault. Retry once, then
+[contact support](../troubleshooting/support.md) with the `attachmentId` and
+the time.
+
+**Your session ends by itself** — sessions last at most two hours, and a
+connection that stops answering the relay's heartbeat is closed after 60
+seconds. Reconnecting is normal and safe; it issues a fresh one-time ticket.
 
 ## What this does not do
 

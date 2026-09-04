@@ -471,9 +471,18 @@ for (const token of [
   'RUNTIME_SSH_HOST_KEY_MISMATCH',
   'one-time ticket',
   'leaves workload health unchanged',
+  // BKLG-20260805-awz6: the snapshot is immutable and the withdrawal is a
+  // separate deny layer; the connection reports both so drift is inspectable.
+  'never narrowed in place',
+  'authorizedKeyFingerprints',
+  'snapshotKeyFingerprints',
+  'withdrawnKeyFingerprints',
+  'runtime_ssh_operator_key_withdrawn',
+  'withdrawn-key list',
 ]) {
   check(v5SshPage.includes(token), `V5 Managed SSH guide omits ${token}`);
 }
+check(!v5SshPage.includes('through support'), 'V5 Managed SSH guide must not send revocation to support (BKLG-20260903-suie: no such route)');
 
 if (v5Mode === 'release_gated') {
   check(v5ReleaseContract.availability === 'Release-gated v1', 'V5 gated source map has wrong availability');
@@ -506,7 +515,7 @@ check(
 
 const cliPage = readFileSync(join(docsRoot, 'reference', 'cli.md'), 'utf8');
 check(cliContract.package === '@proof-computer/proof-cli-liskov', 'CLI fixture: wrong package');
-check(cliContract.version === '0.8.1', 'CLI fixture: wrong released version');
+check(cliContract.version === '0.9.0', 'CLI fixture: wrong released version');
 check(cliContract.command === 'liskov:application:logs', 'CLI fixture: missing logs command');
 check(cliContract.flags?.limit?.minimum === 1 && cliContract.flags?.limit?.maximum === 500, 'CLI fixture: wrong log limit bounds');
 check(
@@ -534,11 +543,16 @@ for (const flag of ['identity', 'print-command', 'accept-host-key']) {
 }
 
 // Availability transition (published in v0.7.0 on 2026-08-15, documented
-// 2026-09-03, BKLG-20260813-wh4o): the operator-key registry commands. The
-// registry is inventory, never a grant and never a revocation; the page must
-// keep saying so, because a reader scripting offboarding against
-// `operator-key remove` and believing access is withdrawn is the failure the
-// wording exists to prevent.
+// 2026-09-03, BKLG-20260813-wh4o): the operator-key registry commands.
+// Registering is never a grant; the page must keep saying so.
+//
+// Availability transition (v0.9.0 on 2026-09-03, BKLG-20260805-awz6):
+// `operator-key remove` now withdraws the key's access as well, and the
+// `withdrawn-key` family reaches a key with no registry row. The earlier
+// "does not revoke access" sentence was true and is now false, so it must not
+// return; the drain rule for a session already open is the sentence that
+// replaces it, because a reader who believes an open session is cut is the
+// new failure the wording exists to prevent.
 check(
   JSON.stringify(cliContract.operatorKeyCommands) ===
     JSON.stringify([
@@ -557,15 +571,71 @@ for (const token of [
   'operator-key list',
   'operator-key remove',
   'does not grant access',
-  'does not revoke access',
+  'withdraws its access',
   'ingress.ssh.provider.authorizedKeys',
 ]) {
   check(cliPage.includes(token), `CLI page omits operator-key contract token: ${token}`);
 }
+check(!cliPage.includes('does not revoke access'), 'CLI page repeats the retracted non-revocation claim');
+check(
+  JSON.stringify(cliContract.withdrawnKeyCommands) ===
+    JSON.stringify([
+      'liskov:runtime-ssh:withdrawn-key:add',
+      'liskov:runtime-ssh:withdrawn-key:list',
+      'liskov:runtime-ssh:withdrawn-key:remove',
+    ]),
+  'CLI fixture: wrong withdrawn-key command ids',
+);
+check(cliContract.operatorKeyRemoveWithdrawsAccess === true, 'CLI fixture: operator-key remove must withdraw access');
+check(
+  cliContract.withdrawalDrain?.establishedSessions === 'drain' &&
+    cliContract.withdrawalDrain?.maximumSessionDurationSeconds === 7200 &&
+    cliContract.withdrawalDrain?.heartbeatTimeoutSeconds === 60,
+  'CLI fixture: wrong withdrawal drain bounds',
+);
+for (const flag of ['fingerprint', 'identity', 'reason']) {
+  check(cliContract.withdrawnKeyAddFlags?.[flag] !== undefined, `CLI fixture: missing withdrawn-key add flag ${flag}`);
+  check(cliPage.includes(`--${flag}`), `CLI page omits withdrawn-key add flag: --${flag}`);
+}
+for (const token of [
+  'withdrawn-key add',
+  'withdrawn-key list',
+  'withdrawn-key remove',
+  'drains',
+  'two-hour maximum session duration',
+  'revokedTicketCount',
+]) {
+  check(cliPage.includes(token), `CLI page omits withdrawal contract token: ${token}`);
+}
 const operatePage = readFileSync(join(docsRoot, 'operate', 'runtime-ssh.md'), 'utf8');
 check(operatePage.includes('operator-key add'), 'operate/runtime-ssh omits the operator-key add command');
 check(/does not\s+grant access/.test(operatePage), 'operate/runtime-ssh omits the non-grant statement');
-check(/does not revoke access/.test(operatePage), 'operate/runtime-ssh omits the non-revocation statement');
+check(!/does not revoke access/.test(operatePage), 'operate/runtime-ssh repeats the retracted non-revocation claim');
+for (const token of [
+  'withdrawn-key add',
+  'withdrawn-key remove',
+  'runtime_ssh_operator_key_withdrawn',
+  'is **not** cut',
+  'two-hour maximum',
+  'end the job',
+]) {
+  check(operatePage.includes(token), `operate/runtime-ssh omits withdrawal token: ${token}`);
+}
+// BKLG-20260805-rykk (gateway, deployed 2026-09-03): the relay names which of
+// four situations refused an operator, and each calls for a different customer
+// action. `credential_rejected` in particular must be described as a platform
+// fault, not a key problem: it was the sole symptom of the 2026-08-18 to
+// 2026-09-03 outage in which no session could open.
+for (const code of [
+  'access_proxy_rejected_session_already_open',
+  'access_proxy_rejected_connector_not_registered',
+  'access_proxy_rejected_connector_unavailable',
+  'access_proxy_rejected_credential_rejected',
+]) {
+  check(operatePage.includes(code), `operate/runtime-ssh omits refusal code ${code}`);
+  check(v5SshPage.includes(code), `operate/runtime-ssh-v5 omits refusal code ${code}`);
+}
+check(operatePage.includes('This is not your key'), 'operate/runtime-ssh must say credential_rejected is not the key');
 
 // Availability transition (2026-08-05): Runtime SSH moved from an internal
 // allowlist to plan entitlement. The capability page owns that claim, and it
@@ -649,7 +719,7 @@ for (const [fileId, required] of Object.entries({
   'operate/update': ['successor', 'without mutating'],
   'operate/retire': ['does not stop existing jobs', 'receipt'],
   'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Private deployed customer code'],
-  'reference/cli': ['0.8.1', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key'],
+  'reference/cli': ['0.9.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key', 'withdrawn-key'],
   'reference/manifest-v4': ['deprecated_manifest_field', 'profileId', 'sinkName', 'future schema'],
   'configure/logging-diagnostics': ['only logging field needed', 'provisions', 'application logs'],
   'operate/logs-activity': ['application logs', '--deployment', '--job', '--follow', '--from-start'],

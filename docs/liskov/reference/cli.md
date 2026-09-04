@@ -5,12 +5,12 @@ description: Public proof liskov v1 command tree, confirmations, machine-readabl
 
 # CLI
 
-The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.8.1` and
+The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.9.0` and
 requires Node.js 22 or later. All commands begin with `proof liskov`.
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov@0.8.1
+proof plugins install @proof-computer/proof-cli-liskov@0.9.0
 proof liskov --help
 ```
 
@@ -164,7 +164,10 @@ Pause and retirement do not force-stop existing Acurast jobs.
 | `ssh APP --print-command --json` | Resolve and verify the connection without opening a session or consuming an access ticket. |
 | `runtime-ssh operator-key add --name NAME --identity FILE` | Register the public half of an `ssh-ed25519` key in your organization's operator-key registry under a name. Only the public key is sent. `--public-key-file FILE` (or `-` for stdin) registers a public-key file instead. |
 | `runtime-ssh operator-key list --json` | List the organization's registered operator keys with their fingerprints. |
-| `runtime-ssh operator-key remove KEY_ID` | Remove a key from the registry. |
+| `runtime-ssh operator-key remove KEY_ID` | Remove a key from the registry **and withdraw its access** in one step. New connection requests and tickets for the key are refused at once and its unused tickets are revoked; a session already open drains. The response carries the `withdrawal`, the `revokedTicketCount`, and a `note` saying so. |
+| `runtime-ssh withdrawn-key add --fingerprint SHA256:... --reason TEXT` | Withdraw one key's access by fingerprint, with nothing republished. Use it for a key that has no registry row, such as a key listed only in a Manifest V4 policy. `--identity FILE` names the key by its private-key path instead; only the derived public half is used. `--reason` is recorded on the withdrawal and in the activity feed. Repeating a withdrawal is safe: it reports `newlyWithdrawn: false` and changes nothing. |
+| `runtime-ssh withdrawn-key list --json` | List the fingerprints whose access is withdrawn, each with its withdrawal ID, source key, reason, and time. |
+| `runtime-ssh withdrawn-key remove WITHDRAWAL_ID` | Lift a withdrawal so the key can be authorized again. It does not re-register the key or add it to any manifest. |
 
 `--identity` names the private key file; it is read locally and never sent.
 `--deployment` and `--job` select an exact target when an Application has more
@@ -180,17 +183,29 @@ Every grant, session open, and session close is recorded in the Application
 activity feed with the duration and bytes transferred. See
 [Open a shell in a running job](../operate/runtime-ssh.md).
 
-The operator-key registry is an inventory of named keys, not an access list.
-Registering a key **does not grant access**: on a Manifest V4 Application, who
-may connect is exactly the `ingress.ssh.provider.authorizedKeys` list in the
-published manifest. Removing a key **does not revoke access**: published
-manifests keep the keys they list and a live session is unaffected. To
-withdraw someone's access, remove their key from the manifest and publish.
-Both commands say so in their output, and `--json` carries the same note. Keys
-are `ssh-ed25519` only, names are unique within an organization, and the
-registry holds at most 50 keys. The three commands take an optional
-`ORGANIZATION_ID` argument and honour `--organization` and
-`LISKOV_ORGANIZATION` like every organization-scoped command.
+Registering a key **does not grant access** on its own. On a Manifest V4
+Application, who may connect is exactly the
+`ingress.ssh.provider.authorizedKeys` list in the published manifest, and the
+registry is a named inventory beside it. On a retained V5 Application the
+registry is snapshotted into each attachment when the attachment is created,
+so a registered key reaches the next job, never a job already running.
+
+Removing a key **withdraws its access**. The moment `operator-key remove` or
+`withdrawn-key add` returns, no new connection request or ticket is granted
+for that fingerprint and its unused tickets are revoked, on every Application
+in the organization, with nothing republished. A session that is already open
+is not cut: it **drains**, ending when the operator disconnects, when the job
+ends, or at the relay's two-hour maximum session duration, whichever comes
+first, and a connection that stops answering the relay's heartbeat is closed
+after 60 seconds. Every withdrawal and reinstatement is recorded in the
+activity feed with the number of tickets it revoked. Use `withdrawn-key add`
+for a key that has no registry row; for a registered key, `operator-key remove`
+withdraws it as part of removing it. `withdrawn-key remove` lifts a withdrawal
+but does not re-register the key. Keys are `ssh-ed25519` only, names are
+unique within an organization, and the registry holds at most 50 keys. All six
+commands take an optional `ORGANIZATION_ID` argument and honour
+`--organization` and `LISKOV_ORGANIZATION` like every organization-scoped
+command.
 
 ## Common flags and automation
 
