@@ -5,7 +5,7 @@ description: Distinguish expected registration, processor, bootstrap, and runtim
 
 # Deployment waiting or needs action
 
-Start with posture and the current Action Plan:
+Start with posture and the organization Action Plan:
 
 ```bash
 proof liskov application status APPLICATION_ID

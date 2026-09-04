@@ -5,7 +5,7 @@ description: Collect a useful non-secret Liskov support bundle and know what nev
 
 # Get support
 
-Start from the Application's Action Plan. If its supported action does not
+Start from the organization Action Plan. If its supported action does not
 resolve the issue or no customer action exists, collect one precise,
 non-secret bundle.
 

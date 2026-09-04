@@ -38,7 +38,7 @@ running over time.
 - Managed variables and secrets, with job-bound delivery.
 - Read-only visibility into available, reserved, and used USD Service Credits.
   Customer checkout is not yet a supported way to add credit.
-- Clear Application status and an Action Plan when your input is required.
+- Clear Application status and an organization Action Plan when your input is required.
 - Time-boxed jobs, deliberate updates, pause/resume, bounded retry, and safe
   retirement.
 

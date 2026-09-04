@@ -13,7 +13,7 @@ Use the narrowest signal that answers your question:
 | What changed in Liskov? | Application or organization **Activity** |
 | Where is this deployment? | Deployment timeline |
 | Did the bound process bootstrap and become ready? | Signed runtime diagnostics |
-| What should I do next? | Action Plan |
+| What should I do next? | Organization Action Plan |
 
 ## Read logs safely
 

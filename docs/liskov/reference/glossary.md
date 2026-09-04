@@ -11,9 +11,10 @@ description: Plain-language definitions for the Liskov, Acurast, deployment, pro
 jobs. Acurast owns processor assignment, job schedules, and network
 settlement.
 
-**Action Plan** — The customer-facing list of blockers and supported next
-actions for an Application. A missing action usually means you should wait or
-contact support rather than use an internal recovery command.
+**Action Plan** — The organization queue of work Liskov has stopped on and
+will not resolve without you. Per-Application “what is wrong right now” lives
+on that Application’s Deployments index. A missing action usually means you
+should wait or contact support rather than use an internal recovery command.
 
 **Application** — The long-lived Liskov resource that owns desired
 configuration, artifact and policy history, deployments, logs, billing

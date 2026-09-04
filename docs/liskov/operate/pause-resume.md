@@ -43,7 +43,7 @@ proof liskov application resume APPLICATION_ID \
 
 Resume allows Liskov to evaluate desired state again. It can create a new
 successor and reserve new Service Credits; it does not revive an ended job.
-Resolve Action Plan blockers before repeating resume.
+Resolve organization Action Plan blockers before repeating resume.
 
 ## Verify
 
