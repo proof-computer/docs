@@ -1,16 +1,18 @@
 ---
+unlisted: true
 title: Author a retained Application Manifest V5
 description: Prepare the retained V5 source, runtime, schedule, spend, configuration, logging, and managed Runtime SSH contract without using deferred fields.
 ---
 
 # Author a retained Application Manifest V5
 
-:::note[Exact retained release]
+:::danger[Not released]
 
-This guide covers RC
-`sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10`.
-[Capabilities and limits](../reference/capabilities.md) owns the supported
-surface; [Application Manifest V4](./manifest-v4.md) remains supported.
+Manifest V5 is implemented but **not available in production**. Production
+registration remains V4-only and activation is not authorized. Keep this page
+out of customer workflows until [Capabilities and limits](../reference/capabilities.md)
+classifies the exact pair as available. Use
+[Application Manifest V4](./manifest-v4.md) for production today.
 
 :::
 
@@ -81,113 +83,69 @@ proof liskov application manifest validate \
   --json
 ```
 
-Use `@proof-computer/proof-cli-liskov` `0.9.0` or later. It contains source
-commit `e135604ed2f6c59ffc737fce5fe08eaa19d77d0c`; the earlier `v0.7.0` tag does
-not. The `application source-binding` verbs in step 2 ship in the release
-recorded by the V5 promotion packet.
+The retained CLI validator is present in
+`@proof-computer/proof-cli-liskov` source commit
+`e135604ed2f6c59ffc737fce5fe08eaa19d77d0c`. It is newer than the `v0.7.0`
+release tag; that source commit is review evidence, not a released package
+claim.
 
-## 2. Create the Application and bind its exact GitHub source
+## 2. Bind the exact GitHub source
 
-For `release.mode: source`, the repository, ref, workflow identity, manifest
-path, and artifact digest come from verified GitHub evidence. They do not
-belong in the manifest: they are bound to the Application once, and every
-build attests them.
+For `release.mode: source`, repository, ref, workflow, manifest path, and any
+artifact digest come from verified GitHub evidence. They do not belong in the
+manifest.
 
-Create the Application from identity alone, naming the repository that holds
-the document. Creation writes no draft and spends nothing:
+The prepared source-import action is at exact source commit
+`aa1b83f0fd4b08ac33a6c9970d2077885922d79c`:
 
-```bash
-proof liskov application create fetch \
-  --repository OWNER/REPO \
-  --json
-```
-
-Bind the exact source the Application may publish from. This requires an
-organization `admin`; a maintainer cannot retarget source. The first binding
-is revision `1`; a later change must name the revision it expects, and is
-refused if another change landed first:
-
-```bash
-proof liskov application source-binding set fetch \
-  --repository OWNER/REPO \
-  --allowed-ref refs/heads/main \
-  --workflow-identity OWNER/REPO/.github/workflows/liskov.yml@refs/heads/main \
-  --manifest-path .liskov/application-manifest.json \
-  --reason "first binding" \
-  --yes --json
-```
-
-`application source-binding show fetch --json` reads the binding, its
-revision, and its revocation epoch; `application source-binding revoke`
-withdraws it. A publication whose ref is outside `allowedRefs`, whose workflow
-identity differs, or whose manifest path differs is refused.
-
-Then let the reusable workflow build, pin, and attest the document on every
-push to the bound ref. Its `app-id`, repository, workflow path, and
-`authored-manifest-path` must be the bound values. The moving `v1` tag is
-verified at `v1.2.4`, which contains the retained V5 source binding
-(`aa1b83f0fd4b08ac33a6c9970d2077885922d79c`):
-
-```yaml title=".github/workflows/liskov.yml"
-name: Build Liskov Application
+```yaml title=".github/workflows/liskov-manifest.yml"
+name: Import Liskov manifest
 
 on:
   push:
     branches: [main]
-  workflow_dispatch:
 
 permissions:
   contents: read
   id-token: write
 
 jobs:
-  artifact:
-    uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v1
-    with:
-      app-id: fetch
-      working-directory: .
-      entrypoint: bundle.js
-      authored-manifest-path: .liskov/application-manifest.json
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: proof-computer/liskov-github-actions/actions/policy-import@aa1b83f0fd4b08ac33a6c9970d2077885922d79c
+        with:
+          application-id: fetch
+          manifest-path: .liskov/application-manifest.json
+          repository: ${{ github.repository }}
+          ref: ${{ github.ref }}
+          workflow-ref: ${{ github.workflow_ref }}
+          expected-manifest-path: .liskov/application-manifest.json
 ```
 
-The workflow uploads the bundle to the Acurast IPFS proxy without spending and
-attests the artifact digest, the source commit and ref, and the workflow
-identity to Liskov. It publishes nothing. Its run log prints the artifact
-digest as `Artifact sha256:`, and the called workflow exposes it as the
-`digest` output.
+This commit is two revisions after `v1.2.3`; there is no released workflow tag
+for the retained V5 binding yet. Do not replace the full commit with `@v1` until
+a release containing it is verified. The action imports a draft and spends
+nothing. It refuses a V4 document, a non-source V5 release, a deferred root, or
+any repository/ref/workflow/path mismatch.
 
-## 3. Publish from the attested build
+## 3. Preflight, publish, and explain
 
-Publish the exact document the run attested. Every value must match what was
-bound and attested, or the publication is refused before anything is spent:
+After activation and after the workflow has imported the intended draft:
 
 ```bash
-proof liskov application policy publish fetch \
-  --file .liskov/application-manifest.json \
-  --artifact-digest sha256:ARTIFACT_DIGEST_FROM_THE_RUN \
-  --source-commit COMMIT_THE_RUN_ATTESTED \
-  --source-ref refs/heads/main \
-  --workflow-identity OWNER/REPO/.github/workflows/liskov.yml@refs/heads/main \
-  --binding-revision 1 \
-  --revocation-epoch 0 \
-  --expected-pointer-version 0 \
-  --yes --json
+proof liskov application publish fetch --dry-run --json
+proof liskov application publish fetch --yes --json
 proof liskov application policy explain fetch --json
 proof liskov application status fetch --json
 ```
 
-Publishing is the mutation: it commits an immutable effective policy and
-begins a spend-bearing deployment under the document's `spend`. Nothing is
-sent without `--yes`, and the local document is validated first.
-`--expected-pointer-version` is the active policy pointer you observed, `0`
-for a first publication; a stale value is refused rather than overwriting a
-concurrent publication. `--binding-revision` and `--revocation-epoch` are the
-values `source-binding show` reports.
-
-Read the canonical explanation rather than recomputing policy client-side. Its
-publication, execution, spend-closeout, and managed-SSH sections report
-`absent`, `notApplicable`, `refused`, or `satisfied` with server-owned next
-actions.
+The dry run is read-only. Publishing is the mutation: it commits an immutable
+effective policy and may begin a spend-bearing deployment. Read the canonical
+explanation rather than recomputing policy client-side. Its publication,
+execution, spend-closeout, and managed-SSH sections report `absent`,
+`notApplicable`, `refused`, or `satisfied` with server-owned next actions.
 
 ## Execution and spend
 
@@ -196,10 +154,6 @@ Choose one execution arm:
 ```json
 {"mode": "once"}
 ```
-
-A `once` Application runs one job and settles. It does not run again on its own.
-To run the same document again today, create a new Application, which counts
-against your organization's job slots. A manual re-run verb is planned.
 
 ```json
 {"mode": "continuous", "until": "2027-01-01T00:00:00Z"}

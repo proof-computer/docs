@@ -14,8 +14,6 @@ Plan tells you when Liskov needs a decision or new input.
 - [Inspect a processor your organization used](./processors.md)
 - [Inspect the proof chain](./proof-chain.md)
 - [Monitor logs and activity](./logs-activity.md)
-- [Open a shell from a Manifest V4 Application](./runtime-ssh.md)
-- [Use retained V5 Managed Runtime SSH](./runtime-ssh-v5.md)
 - [Update an Application](./update.md)
 - [Pause and resume](./pause-resume.md)
 - [Diagnose and retry](./diagnose-retry.md)
