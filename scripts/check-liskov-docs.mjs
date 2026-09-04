@@ -855,6 +855,14 @@ for (const code of [
   check(v5SshPage.includes(code), `operate/runtime-ssh-v5 omits refusal code ${code}`);
 }
 check(operatePage.includes('This is not your key'), 'operate/runtime-ssh must say credential_rejected is not the key');
+for (const token of [
+  'runtime_ssh_service_credit_required',
+  'currentPeriod.byteAllowance.runtimeSshServiceCreditRequired',
+  'Billing & funding',
+  'already open continues',
+]) {
+  check(operatePage.includes(token), `operate/runtime-ssh omits Service Credit refusal token: ${token}`);
+}
 for (const page of [operatePage, v5SshPage]) {
   check(!/no support-reachable route/.test(page), 'an SSH page repeats the retracted no-revocation-route claim');
   check(!/no way to cut access to a current attachment/.test(page), 'an SSH page repeats the retracted no-revocation claim');

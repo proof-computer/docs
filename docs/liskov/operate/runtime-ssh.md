@@ -295,6 +295,14 @@ for your organization. Ask an administrator of the organization to lift the
 withdrawal with `withdrawn-key remove`, or connect with another authorized
 key.
 
+**`runtime_ssh_service_credit_required`** — the organization's shared log and
+Runtime SSH byte usage is above its included allowance, and its available
+Service Credit is zero or negative. Open **Billing & funding** and check
+`currentPeriod.byteAllowance.runtimeSshServiceCreditRequired` together with
+the available balance. Restore a positive Service Credit balance before
+retrying. The refusal stops only a new session; a managed SSH session that is
+already open continues until its normal end.
+
 **`access_proxy_rejected_session_already_open`** — a session is already open
 on this job. Managed Runtime SSH allows one session per job at a time; retry
 when it closes.
