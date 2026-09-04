@@ -199,6 +199,29 @@ check(
   'legal review source manifest omits the supplied final-bundle digest',
 );
 
+const approvedLegalIdentityDrafts = [
+  readFileSync(join(docsRoot, 'legal', 'index.md'), 'utf8'),
+  readFileSync(join(docsRoot, 'legal', 'master-terms.md'), 'utf8'),
+  readFileSync(join(docsRoot, 'legal', 'privacy-notice.md'), 'utf8'),
+];
+const approvedLegalIdentityText = approvedLegalIdentityDrafts.join('\n');
+for (const token of [
+  'MOOSE LABS LTD',
+  '11435949',
+  'The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP',
+  'trading as **PROOF**',
+]) {
+  check(approvedLegalIdentityText.includes(token), `approved legal identity omits: ${token}`);
+}
+check(
+  !legalReviewDraftIds.some((id) => readFileSync(join(docsRoot, `${id}.md`), 'utf8').includes('trading as PROOF.COMPUTER')),
+  'legal review drafts retain the rejected PROOF.COMPUTER trading name',
+);
+check(
+  readFileSync(join(docsRoot, 'legal', 'launch-sign-off-matrix.md'), 'utf8').includes('Complete — owner approved 4 September 2026'),
+  'contracting-entity sign-off is not recorded as complete',
+);
+
 const marketplaceTermsDraft = readFileSync(
   join(docsRoot, 'legal', 'marketplace-terms.md'),
   'utf8',

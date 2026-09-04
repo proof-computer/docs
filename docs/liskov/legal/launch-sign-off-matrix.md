@@ -19,7 +19,7 @@ Every blocker remains open until its owner records evidence and approval.
 
 | Priority | Requirement | Required evidence / decision | Owner | Status |
 |---|---|---|---|---|
-| **BLOCKER** | Contracting entity | Companies House extract; verified legal name, company number, registered office, trading name | Legal/Company Secretary | ☐ |
+| **BLOCKER** | Contracting entity | Companies House extract; verified legal name, company number, registered office, trading name | Legal/Company Secretary | **Complete — owner approved 4 September 2026; Companies House company 11435949; proof.computer PRs #33–#34** |
 | **BLOCKER** | Website/e-commerce disclosures | Footer, contact page, checkout and invoices show required identity/address/email/VAT/price information | Legal/Product | ☐ |
 | **BLOCKER** | B2B-only journey | Business-purpose checkbox, organisation/country field, under-18 exclusion, business-oriented marketing; consumer use response | Product/Legal | ☐ |
 | **BLOCKER** | Clickwrap | Screenshot/test of affirmative acceptance; direct document links; no pre-ticked acceptance | Product/Legal | ☐ |

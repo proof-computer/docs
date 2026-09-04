@@ -15,7 +15,7 @@ documentation build. Its publication blockers remain open.
 **Version:** 1.0 — 3 September 2026  
 **Status:** must be completed from the production data-flow/vendor register before publication
 
-This Schedule identifies third parties engaged by Moose Labs Ltd trading as PROOF.COMPUTER (**PROOF**) to process Customer Personal Data on behalf of a customer under the Liskov Data Processing Addendum.
+This Schedule identifies third parties engaged by MOOSE LABS LTD trading as PROOF (**PROOF**) to process Customer Personal Data on behalf of a customer under the Liskov Data Processing Addendum.
 
 It does **not** list every independent Network Participant. Personal Data is prohibited in Standard Service Distributed Workloads. Any approved enterprise node pool must be listed in the applicable Enterprise Order/data schedule with its own role and transfer analysis.
 

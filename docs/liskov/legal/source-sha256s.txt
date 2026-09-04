@@ -3,6 +3,8 @@
 # Verified against the supplied SHA256SUMS.txt on 2026-09-04.
 # Repository Markdown adds Docusaurus frontmatter and a not-in-force callout;
 # the DPA's three Annex headings are demoted from H1 to H2 for site structure.
+# Post-review factual fields are tracked in Git; LGL-01 was completed on
+# 2026-09-04 with the confirmed MOOSE LABS LTD / PROOF identity and address.
 a447478d948f8dc74f3b37e94f9c05f53d3ac22b5921a1b29bc2b222f85d2c0e  clean-markdown/00-READ-ME-FIRST.md
 6836db7a28196a2303dc4796842aef7985e2c92091548153f11bca21d4f2deeb  clean-markdown/01-LEGAL-REVIEW-MEMORANDUM.md
 35a768ac6bdb723c84e0a2230e9fd87d0608f8d170a6708a78c790349d7c02f7  clean-markdown/02-MASTER-BUSINESS-TERMS.md

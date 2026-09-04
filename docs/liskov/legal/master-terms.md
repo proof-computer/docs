@@ -17,7 +17,7 @@ build. Their publication blockers remain open.
 
 These Master Business Terms (the **Terms**) are a legal agreement between:
 
-- **Moose Labs Ltd trading as PROOF.COMPUTER** (**PROOF**, **we**, **us** or **our**), a company registered in England and Wales whose company number and registered office are stated in the applicable Order and on our Website; and
+- **MOOSE LABS LTD**, company number **11435949**, a private limited company registered in England and Wales with its registered office at **The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP**, trading as **PROOF** (**PROOF**, **we**, **us** or **our**); and
 - the person identified as the customer in an Order (**Customer**, **you** or **your**).
 
 The individual accepting these Terms for Customer confirms that they have authority to bind Customer.

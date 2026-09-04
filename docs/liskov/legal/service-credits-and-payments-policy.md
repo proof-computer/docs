@@ -15,7 +15,7 @@ Its publication blockers remain open.
 **Version:** 1.0 — 3 September 2026  
 **Business customers only**
 
-This Policy forms part of the Liskov Contract between Customer and Moose Labs Ltd trading as PROOF.COMPUTER (**PROOF**). Capitalised words have the meanings in the Master Business Terms.
+This Policy forms part of the Liskov Contract between Customer and MOOSE LABS LTD trading as PROOF (**PROOF**). Capitalised words have the meanings in the Master Business Terms.
 
 ## 1. Purpose and legal character
 

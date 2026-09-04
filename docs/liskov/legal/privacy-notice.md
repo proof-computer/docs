@@ -14,15 +14,15 @@ documentation build. Its publication blockers remain open.
 
 **Version:** 1.0 — 3 September 2026
 
-This Privacy Notice explains how Moose Labs Ltd trading as PROOF.COMPUTER (**PROOF**, **we**, **us**) uses Personal Data in connection with Liskov, our websites, accounts, support, billing, security, Marketplace and business communications.
+This Privacy Notice explains how MOOSE LABS LTD trading as PROOF (**PROOF**, **we**, **us**) uses Personal Data in connection with Liskov, our websites, accounts, support, billing, security, Marketplace and business communications.
 
 It applies where we determine why and how Personal Data is used and therefore act as Controller. Where we process Personal Data solely on a business customer’s instructions within a hosted Service, the customer is normally Controller and our Data Processing Addendum applies. Personal Data is not permitted in Distributed Workloads under the Standard Service.
 
 ## 1. Who we are
 
-**Controller:** Moose Labs Ltd trading as PROOF.COMPUTER  
-**Company number:** [verify and insert]  
-**Registered office / geographic address:** [verify and insert]  
+**Controller:** MOOSE LABS LTD trading as PROOF<br />
+**Company number:** 11435949<br />
+**Registered office / geographic address:** The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP<br />
 **Privacy contact:** privacy@proof.computer [verify]  
 **Legal contact:** legal@proof.computer [verify]
 
@@ -252,7 +252,7 @@ We may update this Notice to reflect law, guidance, products or processing. We w
 
 Privacy questions and rights requests: **privacy@proof.computer** [verify]  
 Security reports: **security@proof.computer** [verify]  
-Postal address: **[verify and insert]**
+Postal address: **The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP**
 
 ---
 
