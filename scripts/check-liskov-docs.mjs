@@ -329,6 +329,54 @@ const costsCustodyPage = readFileSync(join(docsRoot, 'concepts', 'costs-custody.
 const deploymentsPage = readFileSync(join(docsRoot, 'operate', 'deployments-jobs.md'), 'utf8');
 const billingRetirementPage = readFileSync(join(docsRoot, 'troubleshooting', 'billing-retirement.md'), 'utf8');
 const accountFundingPage = readFileSync(join(docsRoot, 'troubleshooting', 'account-funding.md'), 'utf8');
+const teamsPage = readFileSync(join(docsRoot, 'organizations', 'teams.md'), 'utf8');
+const rolesPage = readFileSync(join(docsRoot, 'organizations', 'roles.md'), 'utf8');
+// BKLG-20260903-ytrn — the Team page and the seat allowance.
+//
+// The seat rule is the launch decision of 2026-09-03: refuse beyond the
+// allowance, no overage. These pin the parts a customer acts on, and the two
+// claims the authorization model will not back.
+check(
+  /An invitation that would take the organization past\s+its allowance is refused/.test(teamsPage),
+  'teams page does not state that an invitation past the seat allowance is refused',
+);
+check(
+  /There is no seat overage/.test(teamsPage),
+  'teams page omits the no-overage rule',
+);
+check(
+  /the previous link stops\s+working/i.test(teamsPage),
+  'teams page does not warn that resending retires the previous invitation link',
+);
+check(
+  /every organization\s+currently resolves to the Free allowance of \*\*one seat\*\*/.test(teamsPage),
+  'teams page omits the release-gated single-seat reality',
+);
+check(
+  /\| Organizations, persistent and request-scoped CLI selection, team invitations, assignable roles \| v1; the plan seat allowance is enforced at invite time with no overage/.test(capabilitiesPage),
+  'capability matrix does not record the enforced seat allowance',
+);
+check(
+  /These roles are \*\*not a ladder\*\*/.test(rolesPage),
+  'roles page omits the not-a-ladder statement',
+);
+check(
+  !/and above/i.test(rolesPage),
+  'roles page describes a role hierarchy the authorization code does not have',
+);
+check(
+  !/\bauditor\b/i.test(rolesPage) && !/\bauditor\b/i.test(teamsPage),
+  'organization docs name a role (auditor) that has never existed',
+);
+check(
+  /Grant or revoke Admin \| The \*\*Owner\*\* only/.test(rolesPage),
+  'roles page does not record that granting Admin is the Owner\'s alone',
+);
+check(
+  /changing or\s+removing someone's role does not revoke their key/.test(rolesPage),
+  'roles page omits that a role does not govern Runtime SSH keys',
+);
+
 check(
   !/retirement contract[\s\S]{0,120}(?:still gated|release gate)/i.test(retirementPage),
   'retirement page retains the removed production release gate',

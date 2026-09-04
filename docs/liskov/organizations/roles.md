@@ -20,8 +20,29 @@ current Liskov permission model.
 | **Spender** | Confirm permitted actions that create a customer financial commitment. |
 | **Admin** | Manage organization settings and members; plan and funding controls remain release-gated. |
 
-The Console is authoritative about the exact action enabled for the current
-role. A label describes responsibility; it is not a guarantee that every future
+These roles are **not a ladder**. Reading the table top to bottom looks like
+increasing power and it is not: an operator cannot preview policy source or
+import an Application, a maintainer cannot run a custody execution, and neither
+of them can submit one — only a spender or an admin can. Choose the role whose
+description matches the work, not the one that sounds senior enough.
+
+## What each role can actually do
+
+The Console's **Team** page carries the full permission matrix: every
+permission Liskov checks, grouped for reading, against every role. It is
+generated from the same authorization model the server evaluates, so it cannot
+describe a permission the server would refuse. Read it there rather than
+inferring a role's reach from its name.
+
+Two organization-wide actions sit outside that matrix because they are not
+per-Application permissions:
+
+| Action | Who |
+| --- | --- |
+| Manage the organization — members, invitations, roles, billing, settings | Any **Admin** |
+| Grant or revoke Admin | The **Owner** only |
+
+A label describes responsibility; it is not a guarantee that every future
 feature or every Application is available. Disabled controls and a server
 authorization failure are boundaries, not instructions to find an internal
 command.
@@ -32,6 +53,10 @@ Each organization has one **Owner**. Ownership is not another everyday role:
 the owner is an admin with safeguards around removal, demotion, admin
 invitations, and ownership transfer. Transfer ownership before the current
 owner leaves.
+
+Runtime SSH is not decided by a role. Who may open a shell in a running job is
+decided by the operator keys configured for the organization, so changing or
+removing someone's role does not revoke their key.
 
 ## Practical separation
 
