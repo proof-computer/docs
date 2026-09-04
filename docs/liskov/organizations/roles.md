@@ -56,7 +56,7 @@ owner leaves.
 
 Runtime SSH is not decided by a role. Who may open a shell in a running job is
 decided by the operator keys configured for the organization, so changing or
-removing someone's role does not revoke their key.
+removing someone's role, or suspending them, does not revoke their key.
 
 ## Practical separation
 
