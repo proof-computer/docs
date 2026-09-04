@@ -239,6 +239,10 @@ check(!masterTermsPage.includes('Consumer use requires separate written terms si
 const implementationCopyPage = readFileSync(join(docsRoot, 'legal', 'implementation-copy.md'), 'utf8');
 check(implementationCopyPage.includes('liskov.business-eligibility.v1'), 'implementation copy omits the approved eligibility statement version');
 check(implementationCopyPage.includes('There is no self-service or manual consumer exception.'), 'implementation copy omits the approved strict consumer response');
+check(implementationCopyPage.includes('I am authorised to create this Workspace for **[Customer legal name]**.'), 'implementation copy omits the approved split clickwrap wording');
+check(implementationCopyPage.includes('Create Workspace and accept'), 'implementation copy omits the approved clickwrap button');
+check(!implementationCopyPage.includes('agree on behalf of **[Customer legal name]** to the **Order**'), 'implementation copy still accepts an Order before one exists');
+check(launchSignOffMatrix.includes('Product/Legal approved the exact split Workspace/Order formation copy'), 'launch sign-off matrix lost the active LGL-04 approval');
 
 const marketplaceTermsDraft = readFileSync(
   join(docsRoot, 'legal', 'marketplace-terms.md'),

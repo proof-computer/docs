@@ -40,7 +40,7 @@ In these Terms:
 
 **Confidential Information** means information disclosed by or on behalf of a party that is marked confidential or that a reasonable business person would understand to be confidential given its nature and the circumstances of disclosure. It includes non-public product, security, financial, commercial and technical information, Customer Data, and the terms of a non-public Order. It does not include information that the receiving party can demonstrate: (a) is or becomes public other than through breach; (b) was lawfully known without restriction before disclosure; (c) is received lawfully from a third party without confidentiality duty; or (d) is independently developed without use of the disclosing party’s Confidential Information.
 
-**Contract** means the agreement comprising the Order, these Terms and each document expressly incorporated under clause 2.3.
+**Contract** means the agreement comprising these Terms, each applicable Order and each document expressly incorporated under clause 2.3.
 
 **Customer Content** means Applications, Customer Data, Marketplace submissions, instructions, configurations, domains, marks and other content supplied, controlled or made available by or for Customer, but excludes Account Data for which PROOF acts as an independent controller and excludes PROOF Technology.
 
@@ -118,7 +118,7 @@ Customer must notify PROOF promptly if any representation becomes inaccurate. PR
 
 ### 2.2 Formation
 
-The Contract is formed when the first of the following occurs: (a) both parties sign an Order; (b) Customer affirmatively accepts the Order and linked Terms through the Website or console; or (c) PROOF begins supplying Services at Customer’s written request after giving Customer the Order and Terms. An Order placed by Customer is subject to PROOF’s acceptance.
+These Terms bind Customer when its authorised representative affirmatively accepts them through the Website or console to create a Workspace. An Order becomes part of the Contract when the first of the following occurs: (a) both parties sign it; (b) Customer affirmatively accepts the Order through the Website or console after being shown its commercial terms; or (c) PROOF begins supplying the ordered Services at Customer’s written request after giving Customer the Order. An Order placed by Customer is subject to PROOF’s acceptance.
 
 ### 2.3 Incorporated documents and precedence
 
