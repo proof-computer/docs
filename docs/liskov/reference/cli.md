@@ -5,12 +5,12 @@ description: Public proof liskov v1 command tree, confirmations, machine-readabl
 
 # CLI
 
-The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.10.0` and
+The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.12.0` and
 requires Node.js 22 or later. All commands begin with `proof liskov`.
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov@0.10.0
+proof plugins install @proof-computer/proof-cli-liskov@0.12.0
 proof liskov --help
 ```
 
@@ -75,7 +75,7 @@ environment.
 
 | Command | Effect |
 | --- | --- |
-| `application list` | List readable Applications. |
+| `application list` | List readable Applications. Each row leads with its lifecycle — `Current`, `Retiring`, or `Retired` — and keeps the stored status beside it. Add `--retired` for retired Applications only. |
 | `application status APPLICATION_ID` | Read customer-facing Application state. |
 | `application activity APP_REF` | Read activity; accepts `--limit` and `--before`. |
 | `application logs APP_REF` | Read managed Application logs: recent by default, streamed live with `--follow`, or the full retained history with `--from-start`. |
@@ -152,7 +152,7 @@ workflow is needed.
 | `application pause APP_REF --reason TEXT` | Read preview; add `--yes` to stop future planning. |
 | `application resume APP_REF --reason TEXT` | Read preview; add `--yes` to resume future planning. |
 | `application retire APP_REF` | Read retirement preview/state; add `--reason` and `--yes` to start. |
-| `application retire cancel APP_REF` | Read cancellation preview; add `--yes` to cancel while allowed. |
+| `application retire cancel APP_REF` | Read cancellation preview; add `--yes` to cancel while allowed. If the retirement finalized first, this **exits zero** and prints the immutable receipt: the outcome was reached, so there is nothing left to cancel. |
 
 Pause and retirement do not force-stop existing Acurast jobs.
 
