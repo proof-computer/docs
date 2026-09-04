@@ -9,7 +9,9 @@ draft: true
 :::caution[Not in force]
 Review version 1.0, dated 3 September 2026. This copy is implementation guidance,
 has no contractual effect, and is excluded from the production documentation
-build. Legal must confirm linked URLs and factual statements before use.
+build. Product/Legal approved only the business-status wording and consumer
+response in section 1 on 4 September 2026; all other linked URLs and factual
+statements still require approval before use.
 :::
 
 **Version:** 1.0 — 3 September 2026
@@ -22,6 +24,22 @@ Use the wording below in the product journey, adapted only after Legal confirms 
 > I confirm that I am acting wholly or mainly for purposes relating to a trade, business, craft or profession, that I am at least 18, and that I have authority to create this Workspace and bind the organisation named above.
 
 Required checkbox; not pre-ticked.
+
+Field label:
+
+> **Country where your business is established**
+
+Store an assigned ISO 3166-1 alpha-2 country code. Record the statement as
+`liskov.business-eligibility.v1`; do not collect date of birth or identity
+documents for this declaration.
+
+If a person cannot make the statement, refuse organisation creation and show:
+
+> Liskov is currently available only for business use. Do not create an
+> organisation for personal, family or household use. If you believe your use
+> is business use and need help, contact hello@proof.computer.
+
+There is no self-service or manual consumer exception.
 
 ## 2. Contract acceptance
 

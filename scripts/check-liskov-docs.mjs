@@ -228,10 +228,17 @@ check(
   readFileSync(join(docsRoot, 'legal', 'launch-sign-off-matrix.md'), 'utf8').includes('provide a non-production Liskov runtime configured with Stripe test API/webhook credentials'),
   'launch sign-off matrix lost the named Stripe canary owner action',
 );
+const launchSignOffMatrix = readFileSync(join(docsRoot, 'legal', 'launch-sign-off-matrix.md'), 'utf8');
 check(
-  readFileSync(join(docsRoot, 'legal', 'launch-sign-off-matrix.md'), 'utf8').includes('B2B packet 7cy8 waits on Product/Legal question szc3'),
-  'launch sign-off matrix lost the active B2B-only journey packet and owner question',
+  launchSignOffMatrix.includes('Existing external/customer organisations still require re-attestation or documented Product/Legal verification before closure'),
+  'launch sign-off matrix lost the active B2B-only existing-organisation action',
 );
+const masterTermsPage = readFileSync(join(docsRoot, 'legal', 'master-terms.md'), 'utf8');
+check(masterTermsPage.includes('The Services are not available for consumer use.'), 'Master Terms lost the approved strict consumer boundary');
+check(!masterTermsPage.includes('Consumer use requires separate written terms signed by PROOF.'), 'Master Terms still offers the rejected signed consumer exception');
+const implementationCopyPage = readFileSync(join(docsRoot, 'legal', 'implementation-copy.md'), 'utf8');
+check(implementationCopyPage.includes('liskov.business-eligibility.v1'), 'implementation copy omits the approved eligibility statement version');
+check(implementationCopyPage.includes('There is no self-service or manual consumer exception.'), 'implementation copy omits the approved strict consumer response');
 
 const marketplaceTermsDraft = readFileSync(
   join(docsRoot, 'legal', 'marketplace-terms.md'),
