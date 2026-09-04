@@ -36,6 +36,10 @@ This log records the material changes from the uploaded draft pack to the clean 
   Product/Legal approved the versioned account-creation statement, business-
   establishment country declaration and strict no-consumer-exception response.
 - Added clickwrap formation, document incorporation and purchase-order exclusion.
+- Product/Legal approved split formation on 4 September 2026: the framework
+  Terms and policies are accepted at Workspace creation through exact linked
+  copy; a concrete Order is accepted later beside its plan, price, tax, renewal
+  and usage terms.
 - Added service-change and discontinuation remedies rather than an unrestricted unilateral variation right.
 - Clarified support targets versus binding SLAs and beta status.
 - Added detailed decentralised-network risk allocation without excluding PROOF’s own negligence/breach.
