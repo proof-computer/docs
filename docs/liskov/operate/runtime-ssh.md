@@ -24,7 +24,7 @@ your Service Credits at the plan's log overage rate. Your usage and remaining
 allowance appear in Billing before any charge is made.
 
 Connecting over your own Tailscale network instead of the relay is a separate
-capability, available on Enterprise only — see
+capability, available on Pro and above — see
 [Bring your own Tailscale network](#bring-your-own-tailscale-network).
 :::
 
@@ -212,7 +212,7 @@ the block: the key must still be in the published manifest to connect.
 
 ## Bring your own Tailscale network
 
-Enterprise plan only, as a Preview. On any other plan, publishing a manifest
+Pro and above, as a Preview. On Free or Developer, publishing a manifest
 that names the Tailscale provider is refused with
 `runtime_ssh_provider_plan_required`; the relay path above stays available.
 
@@ -254,8 +254,8 @@ that does not include Runtime SSH.
 
 **`runtime_ssh_provider_plan_required`** — the organization's plan includes
 the Liskov relay but not the provider the manifest names. Today that means a
-manifest with `"kind": "tailscale"` on a plan below Enterprise: switch the
-provider to `"liskov"` and publish, or move to Enterprise.
+manifest with `"kind": "tailscale"` on Developer: switch the provider to
+`"liskov"` and publish, or move to Pro or above.
 
 **`runtime_ssh_operator_key_withdrawn`** — this key's access was withdrawn
 for your organization. Ask an administrator of the organization to lift the
