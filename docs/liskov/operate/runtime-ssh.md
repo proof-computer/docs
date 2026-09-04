@@ -216,7 +216,11 @@ the block: the key must still be in the published manifest to connect.
 ### End one job's access instead of one person's
 
 Withdrawal is per key, across every Application. To end access to a single job
-for everyone who has it, revoke that job's attachment:
+for everyone who has it, open Console **Integrations → Liskov-Managed Runtime
+SSH**, find the exact job under **Attachments**, and select **Revoke**. The
+confirmation names the whole-attachment blast radius and the drain below.
+
+The same operation is available from the CLI:
 
 ```bash
 proof liskov runtime-ssh attachment list --json
