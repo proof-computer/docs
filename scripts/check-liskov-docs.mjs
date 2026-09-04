@@ -225,8 +225,12 @@ check(
   'contracting-entity sign-off is not recorded as complete',
 );
 check(
-  readFileSync(join(docsRoot, 'legal', 'launch-sign-off-matrix.md'), 'utf8').includes('live Stripe Checkout/invoice evidence pending'),
-  'website/e-commerce disclosure sign-off does not retain its live Stripe evidence gate',
+  readFileSync(join(docsRoot, 'legal', 'launch-sign-off-matrix.md'), 'utf8').includes('provide a non-production Liskov runtime configured with Stripe test API/webhook credentials'),
+  'launch sign-off matrix lost the named Stripe canary owner action',
+);
+check(
+  readFileSync(join(docsRoot, 'legal', 'launch-sign-off-matrix.md'), 'utf8').includes('B2B packet 7cy8 waits on Product/Legal question szc3'),
+  'launch sign-off matrix lost the active B2B-only journey packet and owner question',
 );
 
 const marketplaceTermsDraft = readFileSync(
