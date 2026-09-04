@@ -114,7 +114,7 @@ The Services are offered only to persons acting wholly or mainly for purposes re
 
 (d) it will not permit a person under 18 to use the Services.
 
-Customer must notify PROOF promptly if any representation becomes inaccurate. PROOF may refuse or suspend an account that appears to be used mainly for personal, family or household purposes. Consumer use requires separate written terms signed by PROOF.
+Customer must notify PROOF promptly if any representation becomes inaccurate. PROOF may refuse or suspend an account that appears to be used mainly for personal, family or household purposes. The Services are not available for consumer use.
 
 ### 2.2 Formation
 

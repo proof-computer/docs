@@ -21,7 +21,7 @@ This log records the material changes from the uploaded draft pack to the clean 
 | Area | Draft risk | Replacement approach |
 |---|---|---|
 | Service model | Hosted SaaS, decentralised infrastructure and customer crypto activity were insufficiently separated. | Defined PROOF-controlled Services, independent Network Infrastructure/Participants and customer-controlled wallets/transactions as distinct layers. |
-| Customer type | Consumer exposure was not consistently excluded. | Business-only eligibility, authority representation and separate consumer-product gate. |
+| Customer type | Consumer exposure was not consistently excluded. | Business-only eligibility and authority representation, with no self-service or manual consumer exception. Product/Legal approved the exact account-creation wording and strict response on 4 September 2026. |
 | Contract hierarchy | Orders, policies, privacy/DPA and product statements could conflict. | Express precedence: Order; DPA for data matters; SLA/Security Schedule; Master Terms; Credits Policy; Policies. |
 | Marketplace | Draft language anticipated a marketplace without resolving seller, payments, tax and consumer roles. | Free-only curated catalogue; no buyer payment, publisher payout, commission, transferable Credits or agency. Paid Marketplace reserved for separate project. |
 | Data protection | A conventional DPA risked implying compliant processing through anonymous/dynamic nodes. | Standard Service prohibits Personal Data in Distributed Workloads; DPA limited to PROOF-controlled hosted processing; enterprise exception requires named/approved chain. |
@@ -32,7 +32,9 @@ This log records the material changes from the uploaded draft pack to the clean 
 ## 2. Master Business Terms
 
 - Added complete definitions for Applications, Distributed Workloads/Data, Network Infrastructure/Participants, Launch/Launch Fee, Service Credits, Customer Data and Marketplace.
-- Added B2B-only eligibility and authority language.
+- Added B2B-only eligibility and authority language; on 4 September 2026,
+  Product/Legal approved the versioned account-creation statement, business-
+  establishment country declaration and strict no-consumer-exception response.
 - Added clickwrap formation, document incorporation and purchase-order exclusion.
 - Added service-change and discontinuation remedies rather than an unrestricted unilateral variation right.
 - Clarified support targets versus binding SLAs and beta status.
