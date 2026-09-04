@@ -45,6 +45,7 @@ const baseExpectedIds = [
   'operate/pause-resume',
   'operate/diagnose-retry',
   'operate/retire',
+  'operate/integrations',
   'operate/runtime-ssh',
   'marketplace/index',
   'marketplace/options',
@@ -841,6 +842,23 @@ check(
 check(
   /\| Runtime SSH into your own running job, your own Tailscale network \| Preview on Pro and above/.test(capabilitiesPage),
   'capabilities: customer-owned Tailscale Runtime SSH must be classified Preview on Pro and above',
+);
+const integrationsPage = readFileSync(join(docsRoot, 'operate', 'integrations.md'), 'utf8');
+check(
+  integrationsPage.includes('**Live**') && integrationsPage.includes('**Roadmap**'),
+  'integrations: must state the two catalogue statuses',
+);
+check(
+  /Liskov-Managed SSH/.test(integrationsPage) && /GitHub App/.test(integrationsPage) && /Telegram/.test(integrationsPage),
+  'integrations: live rows must name Managed SSH, GitHub App, and Telegram',
+);
+check(
+  /listed as Roadmap in Integrations until a live policy version can name it/.test(capabilitiesPage),
+  'capabilities: Tailscale must be listed as Roadmap until a live policy can name it',
+);
+check(
+  /\/settings\/integrations/.test(integrationsPage) && /\/settings\/runtime-ssh/.test(integrationsPage),
+  'integrations: must name the Console catalogue and the one-release Runtime SSH URL',
 );
 check(
   !/Tailscale network \| Preview on (Starter|Enterprise|Developer) /.test(capabilitiesPage),
