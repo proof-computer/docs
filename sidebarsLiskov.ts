@@ -52,7 +52,14 @@ const sidebars: SidebarsConfig = {
         'operate/processors',
         'operate/proof-chain',
         'operate/logs-activity',
-        'operate/runtime-ssh',
+        {
+          type: 'category',
+          label: 'Integrations',
+          items: [
+            'operate/integrations',
+            'operate/runtime-ssh',
+          ],
+        },
         'operate/update',
         'operate/pause-resume',
         'operate/diagnose-retry',

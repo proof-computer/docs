@@ -9,7 +9,9 @@ Logs tell you what a job chose to print. Sometimes you need to look at the
 running process itself — what is on disk, what the environment actually
 contains, whether the thing you expected to be listening is listening.
 
-Runtime SSH gives you a shell inside one of your own running jobs.
+Runtime SSH gives you a shell inside one of your own running jobs. In the
+Console it lives under [Integrations](./integrations.md)
+(`/settings/integrations`), not as its own rail item.
 
 :::info Preview
 Runtime SSH through the Liskov relay is available on Developer and above. It is
@@ -24,7 +26,8 @@ your Service Credits at the plan's log overage rate. Your usage and remaining
 allowance appear in Billing before any charge is made.
 
 Connecting over your own Tailscale network instead of the relay is a separate
-capability, available on Pro and above — see
+capability, available on Pro and above when a live policy version can name it.
+It is listed as Roadmap in [Integrations](./integrations.md) today — see
 [Bring your own Tailscale network](#bring-your-own-tailscale-network).
 :::
 
