@@ -1,61 +1,86 @@
 ---
-title: Liskov legal documents — review draft
-description: Draft B2B terms, policies, data terms, and product schedules for legal and operational review before Liskov commercial launch.
+title: Liskov legal review — 3 September 2026
+description: Counsel-ready working drafts, launch blockers, and the recommended legal model for Liskov.
 draft: true
 ---
 
-# Liskov legal documents — review draft
+# Liskov legal review — read me first
 
-:::caution Not in force
-Review collection updated 2 September 2026. Individual documents carry their
-own draft versions. These documents are working drafts for
-legal, privacy, security, finance, and product review. They are excluded from
-the production documentation build and do not bind MOOSE LABS LTD or any
-customer.
+:::caution[Not in force]
+Review version 1.0, dated 3 September 2026. This suite is review material, has
+no contractual effect, and is excluded from the production documentation build.
+Its publication blockers remain open.
 :::
 
-Liskov is a business service operated by **MOOSE LABS LTD**, company number
-**11435949**, a private limited company registered in England and Wales. MOOSE
-LABS LTD trades as **PROOF**.
+**Review date:** 3 September 2026  
+**Product:** Liskov  
+**Proposed contracting entity:** Moose Labs Ltd trading as PROOF.COMPUTER ("PROOF")  
+**Status:** counsel-ready working draft; not approved for publication until the launch gates below are signed off.
 
-## Draft suite
+## What this bundle does
 
-- [Master Terms](./master-terms.md)
-- [Acceptable Use Policy](./acceptable-use-policy.md)
-- [Privacy Notice](./privacy-notice.md)
-- [Data Processing Addendum](./data-processing-addendum.md)
-- [Subprocessor and external-service list](./subprocessors.md)
-- [Billing, Service Credit, and Refund Policy](./billing-refund-policy.md)
-- [Service Description and Availability Policy](./service-availability.md)
-- [Self-Custody Signer Schedule](./self-custody-schedule.md)
-- [Marketplace User Terms](./marketplace-user-terms.md)
-- [Marketplace Publisher Agreement](./marketplace-publisher-agreement.md)
+This bundle replaces the uploaded legal drafts with a coherent UK business-to-business launch suite. It deliberately separates:
+
+1. the hosted Liskov control-plane and support services supplied by PROOF;
+2. compute and other infrastructure supplied through independently operated decentralised networks and node operators; and
+3. blockchain, wallet and cryptoasset transactions authorised or controlled by the customer.
+
+That separation is substantive. Calling a balance “credits”, the service “non-custodial”, or a catalogue a “marketplace” does not determine its legal treatment. The operating model must match the contract.
+
+## Recommended launch model
+
+Launch on the following basis unless UK counsel approves a broader model:
+
+- customers act wholly or mainly for business purposes;
+- the public Marketplace contains only free listings and does not collect buyer money, pay publishers, or facilitate side payments;
+- standard decentralised workloads must not contain Personal Data, special-category data, criminal-offence data, payment-card data, regulated health data, authentication secrets, or other data requiring a known processing location or conventional processor chain;
+- paid Service Credits are non-transferable contractual prepayments usable only for services supplied by PROOF;
+- PROOF purchases any network tokens or network capacity as principal and does not hold tokens or fiat money on trust for customers;
+- customer wallets remain customer-controlled and PROOF does not take possession of private keys;
+- no service level, data-residency promise, confidential-compute promise, certification, recovery objective or security control is advertised unless it has been operationally verified;
+- no paid Marketplace, seller payout, staking, yield, exchange, brokerage, token transfer, or custody feature is enabled under this suite.
 
 ## Publication blockers
 
-The suite must not be made effective or added to customer acceptance flows
-until all of the following are complete:
+Do not publish or enable click-acceptance until all items marked **BLOCKER** in `01-LEGAL-REVIEW-MEMORANDUM.md` and `12-LAUNCH-SIGN-OFF-MATRIX.md` are resolved. At minimum:
 
-1. UK technology and financial-regulatory counsel approves the complete suite,
-   including the Service Credit and refund model.
-2. MOOSE LABS LTD's ICO registration reference is confirmed and inserted.
-3. The infrastructure, subprocessor, data-location, retention, deletion, and
-   security-control inventories are verified against production.
-4. Counsel confirms the data-protection role and international-transfer
-   treatment of independent Acurast processors.
-5. The proposed liability cap, indemnities, confidentiality treatment, and
-   insurance alignment are approved.
-6. The 99.95% availability target has an implemented measurement owner and the
-   Service boundary matches production.
-7. Funding, plan selection, Terms acceptance, and any Preview schedule have
-   complete released customer paths.
-8. The Console records the accepted document versions and makes a durable copy
-   available to the Customer.
-9. Before any confidential-source Marketplace tier is offered, PROOF has the
-   approved review licence, isolated least-privilege environment, reviewer
-   controls, audit trail, source retention/deletion, incident response,
-   IP-contamination, no-model-training, and review-capacity processes required
-   by the Publisher Agreement. Public source remains mandatory until then.
+- insert and verify PROOF’s company number, registered office, legal/privacy/support email addresses and VAT treatment;
+- confirm every data flow, subprocessor, hosting country, retention period and international-transfer mechanism;
+- technically enforce the Standard Service restriction on Personal Data in decentralised workloads, rather than relying only on contract wording;
+- confirm the actual money, USDC, token and network-cost flow with regulatory and tax advisers;
+- adopt sanctions screening and rejected/refunded wallet procedures;
+- complete an Online Safety Act service-scope assessment before enabling publisher listings, reviews, comments, messaging or search over user-submitted content;
+- complete a cookie/storage inventory and deploy a consent mechanism before non-essential storage or analytics runs;
+- verify the security measures in the DPA and remove anything that is aspirational;
+- agree liability caps against current insurance cover and enterprise sales expectations;
+- preserve affirmative clickwrap evidence: displayed documents, version, timestamp, user, workspace, IP/device evidence where lawful, and the exact accepted Order.
 
-Questions or review comments should be sent to
-[support@proof.computer](mailto:support@proof.computer).
+## Documents in the clean suite
+
+- Master Business Terms
+- Service Credits and Payments Policy
+- Acceptable Use Policy
+- Privacy Notice
+- Data Processing Addendum
+- Cookie and Similar Technologies Notice
+- Free Marketplace Publisher and User Terms
+- Marketplace Notice-and-Action Policy
+- Subprocessor and International Transfer Schedule template
+- Legal Review Memorandum
+- Change Log
+- Launch Sign-off Matrix
+
+## Precedence
+
+For a customer contract, use this order of precedence unless an Order says otherwise:
+
+1. signed or click-accepted Order;
+2. Data Processing Addendum, but only for data-protection matters;
+3. any expressly incorporated Service Level Agreement or Security Schedule;
+4. Master Business Terms;
+5. Service Credits and Payments Policy;
+6. product policies, including the Acceptable Use Policy and Marketplace terms.
+
+## Important limitation
+
+The wording reduces avoidable risk but cannot cure an operating model that contradicts it. In particular, a clause cannot make unknown node operators a compliant processor chain, convert a transferable balance into an unregulated product, or remove statutory platform-safety duties. Independent UK regulatory, data-protection and tax review remains necessary before launch and whenever the product model changes.

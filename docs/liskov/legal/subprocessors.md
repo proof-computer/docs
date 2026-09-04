@@ -1,61 +1,94 @@
 ---
-title: Liskov Subprocessors and External Services — review draft
-description: Draft inventory separating processors used by MOOSE LABS LTD from customer-directed and independently controlled external services.
+title: Liskov Subprocessor and International Transfer Schedule — incomplete review draft
+description: Pre-publication template for verified Liskov subprocessors, transfers, retention, and processing records.
 draft: true
 ---
 
-# Liskov Subprocessors and External Services — review draft
+# Liskov Subprocessor and International Transfer Schedule
 
-:::caution Not in force or complete
-Version 0.1, dated 2 September 2026. This is a candidate inventory for owner,
-privacy, and legal verification. It must not be represented as the current
-production subprocessor list.
+:::caution[Not in force]
+Review version 1.0, dated 3 September 2026. This incomplete schedule is review
+material, has no contractual effect, and is excluded from the production
+documentation build. Its publication blockers remain open.
 :::
 
-The effective list will distinguish three relationships:
+**Version:** 1.0 — 3 September 2026  
+**Status:** must be completed from the production data-flow/vendor register before publication
 
-1. **PROOF subprocessors** that process Customer Personal Data for MOOSE LABS
-   LTD in providing Liskov;
-2. **independent controllers**, such as payment providers processing data for
-   their own legal and fraud obligations; and
-3. **Customer-directed external services**, which the Customer chooses or which
-   form part of the external decentralized execution network.
+This Schedule identifies third parties engaged by Moose Labs Ltd trading as PROOF.COMPUTER (**PROOF**) to process Customer Personal Data on behalf of a customer under the Liskov Data Processing Addendum.
 
-## Candidate production inventory
+It does **not** list every independent Network Participant. Personal Data is prohibited in Standard Service Distributed Workloads. Any approved enterprise node pool must be listed in the applicable Enterprise Order/data schedule with its own role and transfer analysis.
 
-| Service | Candidate role | Purpose | Data | Location / transfer position | Release state |
-| --- | --- | --- | --- | --- | --- |
-| Fly.io | PROOF subprocessor — confirm contracting entity | Liskov API and service hosting | Account, Organization, Application, operational, security, secrets/log metadata, and Customer Content handled by hosted services | Regions and transfer mechanism to verify | In production |
-| Vercel | PROOF subprocessor and/or independent website provider — confirm | Liskov Console and documentation delivery, request/security logs | IP, device/request data, and data transmitted through hosted frontend functions if any | Regions and transfer mechanism to verify | Console/docs in production |
-| Amazon Web Services | PROOF subprocessor — confirm exact services and contracting entity | Artifact upload, object storage, or related infrastructure | Artifact and operational metadata; Customer Content depending on path | Regions and transfer mechanism to verify | Owner verification required |
-| Autumn | PROOF billing subprocessor — confirm hosted entity and DPA | Plan, subscription, entitlement, and billing orchestration | Customer and Organization identifiers, plan/subscription state, and shadow billing metadata | Location and transfer mechanism to verify | Selected architecture; production enablement gated |
-| Stripe | Independent controller and/or processor depending on activity | Checkout, payment, invoice, tax, refund, dispute, and fraud processing | Billing identity, payment, invoice, tax, fraud, and transaction data | Stripe contracting entity, locations, and terms to verify | Customer funding release-gated |
-| GitHub | Customer-directed provider; may also support authentication/integration | Login, source access, workflow identity, build, and release integration | GitHub identity, repository and workflow metadata, source/artifact data selected by Customer | Governed by Customer/GitHub terms and integration configuration | In production for supported paths |
-| Acurast and Polkadot participants | External decentralized network; legal role to be determined | Job registration, processor selection, execution, public-chain evidence, and settlement | Public chain identifiers and any Application data the Customer makes available to a processor | Processor location varies; role and transfer mechanism require counsel | Core external execution dependency |
-| IPFS providers and gateways | Customer-directed/external content network; exact PROOF providers to verify | Content-addressed artifact distribution | Public artifact bytes and metadata; current supported JavaScript bundles are unencrypted | Replication location is not controlled or reliably retractable | Used by supported artifact paths |
+## 1. Current Subprocessors
 
-## Not yet verified
+| Legal entity | Service / purpose | Personal Data | Hosting / processing countries | Transfer mechanism | Security/assurance link | Change date |
+|---|---|---|---|---|---|---|
+| [insert exact contracting entity] | Cloud hosting / compute / database / storage | [insert] | [insert] | UK adequacy / UK IDTA / UK Addendum / not restricted | [insert] | [insert] |
+| [insert] | Authentication / identity | [insert] | [insert] | [insert] | [insert] | [insert] |
+| [insert] | Email / transactional communications | [insert] | [insert] | [insert] | [insert] | [insert] |
+| [insert] | Customer support | [insert] | [insert] | [insert] | [insert] | [insert] |
+| [insert] | Monitoring / error logging | [insert] | [insert] | [insert] | [insert] | [insert] |
+| [insert] | Analytics / product telemetry | [insert] | [insert] | [insert] | [insert] | [insert] |
+| [insert] | Card / bank payments and invoicing | [insert] | [insert] | [insert] | [insert] | [insert] |
+| [insert] | Cryptoasset payment / blockchain monitoring | [insert] | [insert] | [insert] | [insert] | [insert] |
+| [insert] | Sanctions / fraud / identity verification | [insert] | [insert] | [insert] | [insert] | [insert] |
+| [insert] | Backup / disaster recovery | [insert] | [insert] | [insert] | [insert] | [insert] |
 
-Before publication, the owner inventory must confirm:
+Delete unused rows and add every processor that can access Customer Personal Data, including support personnel and providers receiving server-side events.
 
-- every database, object store, secrets/logging service, email provider,
-  monitoring or analytics provider, support tool, identity provider, backup
-  service, and billing provider that processes personal data;
-- the exact legal entity and contracting terms for each provider;
-- purpose, data categories, countries/regions, onward subprocessors, and
-  transfer safeguard;
-- which entries are subprocessors versus independent controllers or
-  Customer-directed recipients; and
-- whether a Customer can object or select a region or alternative.
+## 2. Independent Controllers / recipients
 
-## Changes and objections
+Some providers may determine their own purposes for limited Personal Data and act as independent Controllers rather than Subprocessors—for example, a bank, card scheme, cryptoasset issuer, public blockchain, tax authority, fraud consortium or professional adviser. Record them separately and describe them in the Privacy Notice.
 
-When this list becomes effective, PROOF will give the notice stated in the Data
-Processing Addendum before adding a new subprocessor. A Customer may object on
-reasonable data-protection grounds by contacting
-[support@proof.computer](mailto:support@proof.computer) during the notice
-period.
+| Recipient / category | Purpose | Controller rationale | Data shared | Countries | Privacy information |
+|---|---|---|---|---|---|
+| [insert] | [insert] | [insert] | [insert] | [insert] | [insert] |
 
-External networks and Customer-directed providers may change participants
-without being conventional PROOF subprocessors. Their treatment will be stated
-separately and will not be hidden inside the subprocessor change process.
+## 3. Transfer assessment register
+
+For each Restricted Transfer, retain:
+
+| Exporter | Importer | Roles | Countries | Data / frequency | Transfer tool | TRA date / owner | Supplementary measures | Review trigger |
+|---|---|---|---|---|---|---|---|---|
+| [insert] | [insert] | Controller→Processor / Processor→Processor | [insert] | [insert] | UK IDTA / EU SCCs + UK Addendum | [insert] | [insert] | law/provider/scope change; incident; annual review |
+
+Supplementary measures may include encryption, key control, minimisation, pseudonymisation, government-request policy, transparency reporting, access controls and technical inability to access content. Do not list a measure unless it applies to the actual transfer.
+
+## 4. Change notification
+
+Customers may subscribe at **[insert URL/email]**. PROOF will normally give at least 15 days’ prior notice before a new Subprocessor materially processes Customer Personal Data, subject to the urgent-change provision in the DPA.
+
+A notice should state:
+
+- legal entity and service;
+- purpose/data;
+- countries;
+- planned effective date;
+- transfer mechanism; and
+- objection route/deadline.
+
+## 5. Vendor onboarding checklist
+
+Before adding a provider:
+
+- determine Controller/Processor/joint-controller status by facts;
+- complete security/privacy due diligence proportionate to risk;
+- execute Article 28 terms where it is a Processor;
+- identify all processing countries and remote-access locations;
+- select and execute a transfer mechanism;
+- complete a transfer risk assessment where required;
+- confirm deletion/return, incident notice, audit and subprocessor flow-down;
+- restrict provider use/training/advertising;
+- update privacy/cookie notices and data map;
+- test configuration to minimise data and payloads;
+- obtain internal approval and set review/exit owner.
+
+## 6. Enterprise node pool schedule
+
+Use a separate table in an Enterprise Order if Personal Data is ever approved for decentralised execution:
+
+| Node operator legal entity | Node identifiers | Country/region | Processor role / contract | Data categories | Security/attestation | Transfer mechanism | Retention/deletion | Incident route | Audit evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| [insert] | [insert] | [insert] | [insert] | [insert] | [insert] | [insert] | [insert] | [insert] | [insert] |
+
+An open, anonymous or dynamically changing node population is not approved merely by completing a generic DPA.

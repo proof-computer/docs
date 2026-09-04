@@ -113,16 +113,19 @@ const releaseGatedIds = [
 // so adding or accidentally publishing a legal document changes this check.
 const legalReviewDraftIds = [
   'legal/index',
+  'legal/legal-review-memorandum',
   'legal/master-terms',
+  'legal/service-credits-and-payments-policy',
   'legal/acceptable-use-policy',
-  'legal/billing-refund-policy',
-  'legal/service-availability',
   'legal/privacy-notice',
   'legal/data-processing-addendum',
+  'legal/cookie-notice',
+  'legal/marketplace-terms',
+  'legal/marketplace-notice-and-action-policy',
   'legal/subprocessors',
-  'legal/self-custody-schedule',
-  'legal/marketplace-user-terms',
-  'legal/marketplace-publisher-agreement',
+  'legal/change-log',
+  'legal/launch-sign-off-matrix',
+  'legal/implementation-copy',
 ];
 
 function walk(directory) {
@@ -184,44 +187,29 @@ for (const id of legalReviewDraftIds) {
   const frontmatter = frontmatterEnd > 4 ? content.slice(4, frontmatterEnd) : '';
   check(/^draft: true$/mu.test(frontmatter), `${id}: legal review page is not a Docusaurus draft`);
   check(/not in force/i.test(content), `${id}: legal review page omits the not-in-force notice`);
+  check(/3 September 2026/i.test(content), `${id}: legal review page omits the reviewed source date`);
 }
 
-const publisherAgreementDraft = readFileSync(
-  join(docsRoot, 'legal', 'marketplace-publisher-agreement.md'),
+const legalReviewSourceManifest = readFileSync(
+  join(docsRoot, 'legal', 'source-sha256s.txt'),
   'utf8',
 );
-const marketplaceUserTermsDraft = readFileSync(
-  join(docsRoot, 'legal', 'marketplace-user-terms.md'),
+check(
+  legalReviewSourceManifest.includes('733512277ff9385d9c8a4339e47ec150245c73bfd775b6248f71be172421d915'),
+  'legal review source manifest omits the supplied final-bundle digest',
+);
+
+const marketplaceTermsDraft = readFileSync(
+  join(docsRoot, 'legal', 'marketplace-terms.md'),
   'utf8',
 );
-for (const [surface, content, required] of [
-  [
-    'Marketplace Publisher Agreement',
-    publisherAgreementDraft,
-    [
-      'publicly inspectable source',
-      'source snapshot → controlled build → signed provenance',
-      'Future confidential-source review',
-      'model training',
-      'Binary-only offerings are not eligible for public Marketplace listing',
-      'Neither party may combine those facts into a broad',
-    ],
-  ],
-  [
-    'Marketplace User Terms',
-    marketplaceUserTermsDraft,
-    [
-      'publicly inspectable source',
-      'confidential-source tier',
-      'Binary-only offerings are not eligible for public Marketplace listing',
-      'No combination of those facts means that PROOF certifies an offering as safe',
-    ],
-  ],
+for (const token of [
+  'Business users only — free listings only',
+  'PROOF does not collect money or cryptoassets for a Publisher',
+  'paid listings require separate terms and written activation by PROOF',
+  'Reviews/ratings must not be enabled until PROOF has completed its Online Safety Act scope/risk work',
 ]) {
-  const normalizedContent = content.replace(/\s+/gu, ' ');
-  for (const token of required) {
-    check(normalizedContent.includes(token), `${surface} omits source-assurance contract: ${token}`);
-  }
+  check(marketplaceTermsDraft.includes(token), `Free Marketplace Terms omit reviewed launch boundary: ${token}`);
 }
 
 const allContent = [readFileSync(join(root, 'src', 'pages', 'index.tsx'), 'utf8')];
