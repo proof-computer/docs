@@ -106,6 +106,28 @@ const releaseGatedIds = [
   'marketplace/verify',
 ];
 
+// Legal-review artifacts are versioned in the public source repository so
+// counsel and owners can review exact text, but they are not customer terms or
+// capability documentation until their publication gates close. Docusaurus'
+// `draft: true` excludes them from the production build. Keep the list explicit
+// so adding or accidentally publishing a legal document changes this check.
+const legalReviewDraftIds = [
+  'legal/index',
+  'legal/legal-review-memorandum',
+  'legal/master-terms',
+  'legal/service-credits-and-payments-policy',
+  'legal/acceptable-use-policy',
+  'legal/privacy-notice',
+  'legal/data-processing-addendum',
+  'legal/cookie-notice',
+  'legal/marketplace-terms',
+  'legal/marketplace-notice-and-action-policy',
+  'legal/subprocessors',
+  'legal/change-log',
+  'legal/launch-sign-off-matrix',
+  'legal/implementation-copy',
+];
+
 function walk(directory) {
   return readdirSync(directory, {withFileTypes: true}).flatMap((entry) => {
     const path = join(directory, entry.name);
@@ -135,7 +157,9 @@ const unlistedIds = new Set([
   'configure/clustering',
 ]);
 
-const ids = files.map(idFor).filter((id) => !unlistedIds.has(id));
+const ids = files
+  .map(idFor)
+  .filter((id) => !unlistedIds.has(id) && !legalReviewDraftIds.includes(id));
 check(
   JSON.stringify(ids) === JSON.stringify([...expectedIds].sort()),
   `page inventory differs\nexpected: ${[...expectedIds].sort().join(', ')}\nactual: ${ids.join(', ')}`,
@@ -152,11 +176,47 @@ for (const id of unlistedIds) {
   check(content.includes(':::danger[Not released]'), `${id}: unreleased page omits the not-released notice`);
 }
 
+for (const id of legalReviewDraftIds) {
+  const file = join(docsRoot, `${id}.md`);
+  if (!existsSync(file)) {
+    check(false, `legal review draft ${id} is declared but missing`);
+    continue;
+  }
+  const content = readFileSync(file, 'utf8');
+  const frontmatterEnd = content.indexOf('\n---\n', 4);
+  const frontmatter = frontmatterEnd > 4 ? content.slice(4, frontmatterEnd) : '';
+  check(/^draft: true$/mu.test(frontmatter), `${id}: legal review page is not a Docusaurus draft`);
+  check(/not in force/i.test(content), `${id}: legal review page omits the not-in-force notice`);
+  check(/3 September 2026/i.test(content), `${id}: legal review page omits the reviewed source date`);
+}
+
+const legalReviewSourceManifest = readFileSync(
+  join(docsRoot, 'legal', 'source-sha256s.txt'),
+  'utf8',
+);
+check(
+  legalReviewSourceManifest.includes('733512277ff9385d9c8a4339e47ec150245c73bfd775b6248f71be172421d915'),
+  'legal review source manifest omits the supplied final-bundle digest',
+);
+
+const marketplaceTermsDraft = readFileSync(
+  join(docsRoot, 'legal', 'marketplace-terms.md'),
+  'utf8',
+);
+for (const token of [
+  'Business users only — free listings only',
+  'PROOF does not collect money or cryptoassets for a Publisher',
+  'paid listings require separate terms and written activation by PROOF',
+  'Reviews/ratings must not be enabled until PROOF has completed its Online Safety Act scope/risk work',
+]) {
+  check(marketplaceTermsDraft.includes(token), `Free Marketplace Terms omit reviewed launch boundary: ${token}`);
+}
+
 const allContent = [readFileSync(join(root, 'src', 'pages', 'index.tsx'), 'utf8')];
 for (const file of files) {
   const id = idFor(file);
   const content = readFileSync(file, 'utf8');
-  allContent.push(content);
+  if (!legalReviewDraftIds.includes(id)) allContent.push(content);
 
   check(content.startsWith('---\n'), `${id}: missing frontmatter`);
   const frontmatterEnd = content.indexOf('\n---\n', 4);
@@ -336,6 +396,9 @@ for (const id of releaseGatedIds) {
 }
 for (const id of unlistedIds) {
   check(!sidebar.includes(`'${id}'`), `sidebar exposes unreleased page ${id}`);
+}
+for (const id of legalReviewDraftIds) {
+  check(!sidebar.includes(`'${id}'`), `sidebar exposes legal review draft ${id}`);
 }
 check(!/Preview|openclaw|cargo|marketplace/i.test(sidebar), 'sidebar exposes an unavailable Preview/OpenClaw/Cargo/Marketplace path');
 
