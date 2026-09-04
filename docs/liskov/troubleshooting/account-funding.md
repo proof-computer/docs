@@ -69,6 +69,10 @@ plan, checkout, or Stripe portal control does not override this boundary. Do
 not submit payment details, retry a disabled control, or call an internal
 funding endpoint.
 
+A configured Stripe supplier/VAT profile and a deployed Checkout implementation
+also do not change this release boundary. Customer payment starts only after the
+commercial enablement gate and the documented production journey pass.
+
 ## Service Credit reads disagree
 
 1. Confirm the active organization ID in the Console and CLI.
