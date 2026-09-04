@@ -230,8 +230,8 @@ check(
 );
 const launchSignOffMatrix = readFileSync(join(docsRoot, 'legal', 'launch-sign-off-matrix.md'), 'utf8');
 check(
-  launchSignOffMatrix.includes('Existing external/customer organisations still require re-attestation or documented Product/Legal verification before closure'),
-  'launch sign-off matrix lost the active B2B-only existing-organisation action',
+  launchSignOffMatrix.includes('Product/Legal verified all seven pre-existing non-personal organisations as internal'),
+  'launch sign-off matrix lost the completed B2B-only existing-organisation verification',
 );
 const masterTermsPage = readFileSync(join(docsRoot, 'legal', 'master-terms.md'), 'utf8');
 check(masterTermsPage.includes('The Services are not available for consumer use.'), 'Master Terms lost the approved strict consumer boundary');
