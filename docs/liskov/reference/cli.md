@@ -5,12 +5,12 @@ description: Public proof liskov v1 command tree, confirmations, machine-readabl
 
 # CLI
 
-The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.12.0` and
+The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.12.1` and
 requires Node.js 22 or later. All commands begin with `proof liskov`.
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov@0.12.0
+proof plugins install @proof-computer/proof-cli-liskov@0.12.1
 proof liskov --help
 ```
 
