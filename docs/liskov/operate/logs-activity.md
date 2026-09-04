@@ -52,6 +52,25 @@ combined. `--follow` attaches at the newest record and then polls forward
 without losing records. `--from-start` uses cursor pagination, so a busy
 channel cannot push older records out of reach.
 
+## Retained log history
+
+Liskov deletes application-log batches after the window included with the
+organization's plan. The window applies to application logs and Runtime SSH
+session logs alike:
+
+| Plan | Retained history |
+| --- | --- |
+| Free | 24 hours |
+| Developer | 3 days |
+| Pro | 14 days |
+| Business | 30 days |
+| Scale | 90 days |
+| Enterprise | 90 days |
+
+Export records you need before their window ends. The plan catalog is available
+to read, but paid-plan activation remains release-gated; a visible plan does
+not by itself change an organization's current allowance.
+
 Application logs are selected by customer code. They can explain business
 behavior but are not an authoritative lifecycle ledger. Treat any accidental
 credential as compromised: revoke it at the provider, rotate the managed

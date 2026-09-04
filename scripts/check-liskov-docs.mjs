@@ -951,7 +951,7 @@ for (const [fileId, required] of Object.entries({
   'reference/cli': ['0.10.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key', 'withdrawn-key'],
   'reference/manifest-v4': ['deprecated_manifest_field', 'profileId', 'sinkName', 'future schema'],
   'configure/logging-diagnostics': ['only logging field needed', 'provisions', 'application logs'],
-  'operate/logs-activity': ['application logs', '--deployment', '--job', '--follow', '--from-start'],
+  'operate/logs-activity': ['application logs', '--deployment', '--job', '--follow', '--from-start', 'Retained log history', 'Free | 24 hours', 'Enterprise | 90 days'],
   'troubleshooting/logs': ['exits zero', 'malformed-response failures'],
   'concepts/trust-boundaries': ['briefly PROOF over TLS', 'Plaintext is not persisted', 'Private source is not private deployed code', 'cache reuse'],
   'build/artifacts-provenance': ['reusable GitHub pin action requires `none`', 'complete path is not supported today'],
