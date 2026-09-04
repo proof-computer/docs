@@ -34,7 +34,7 @@ is not attested by that verification.
 
 You need:
 
-- a Starter, Team, or Enterprise organization;
+- an organization on Developer or above;
 - the retained V5 capability activated for that organization;
 - an `ssh-ed25519` key pair you control;
 - a `native_image` manifest with managed access; and

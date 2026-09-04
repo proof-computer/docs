@@ -199,7 +199,7 @@ The only retained access arm is:
 ```
 
 It is valid only with `runtime.kind: native_image` and requires both the Runtime
-SSH capability and a Starter, Team, or Enterprise entitlement. No authorized
+SSH capability and a Developer-or-above entitlement. No authorized
 keys, port, mode, or alternate provider is authored. Organization operator keys
 are snapshotted into an exact job attachment by the server.
 
