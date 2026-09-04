@@ -24,7 +24,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Service Credit balance, reservation, and ledger reads | v1; read-only surfaces are supported for an existing organization (Console Account, Billing & funding, and Ledger; CLI billing/transaction reads) |
 | Plan catalog and plans page | v1 read of the catalog on `/organizations/new/plan`; paid attach, trial start, and production collection remain release-gated |
 | Plan selection and terms acceptance | Release-gated v1; the commercial go-live decision is not complete. Writing a plan id does not activate a paid plan |
-| Stripe USD checkout and Service Credit issuance | Release-gated v1; checkout is disabled for customer use and internal acceptance must not be treated as availability |
+| Stripe USD checkout and Service Credit issuance | Release-gated v1; checkout is disabled for customer use and internal acceptance must not be treated as availability. The prepared contract uses automatic tax and billing/tax-ID collection, creates a Stripe invoice/receipt, and mints only the pre-tax Service Credit face value |
 | Paid subscription activation | Release-gated; a written plan id does not activate a paid plan. Usable only after reconciled Autumn/Stripe payment. Production paid billing is not enabled |
 | Curated first-party Marketplace launch | Release-gated v1; limited to internal first-party engineering acceptance |
 | Uptime Prober | Release-gated v1; an internal first-party acceptance fixture, not a supported customer offering |

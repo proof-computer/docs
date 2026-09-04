@@ -18,6 +18,11 @@ Stripe; Liskov does not store card numbers or invoice PDFs. Export CSV from
 Ledger for your own records. Keep your organization's exported receipts with
 its financial records.
 
+When Stripe supplies a verified tax decomposition, an invoice preview shows
+the subtotal before tax, VAT/tax, and total. A historical invoice without that
+provider fact omits the breakdown rather than displaying zero tax. The Stripe
+hosted/PDF invoice remains the document of record.
+
 The CLI transaction read is safe for automation:
 
 ```bash

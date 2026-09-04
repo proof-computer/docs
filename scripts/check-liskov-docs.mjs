@@ -323,6 +323,7 @@ const processorsPage = readFileSync(join(docsRoot, 'operate', 'processors.md'), 
 const artifactPinHelper = readFileSync(join(root, 'scripts', 'post-slipway-artifact-pin.mjs'), 'utf8');
 const marketplaceStartPage = readFileSync(join(docsRoot, 'get-started', 'marketplace.md'), 'utf8');
 const serviceCreditsPage = readFileSync(join(docsRoot, 'organizations', 'service-credits.md'), 'utf8');
+const recordsNotificationsPage = readFileSync(join(docsRoot, 'organizations', 'records-notifications.md'), 'utf8');
 const chargesPage = readFileSync(join(docsRoot, 'organizations', 'charges.md'), 'utf8');
 const outcomesPage = readFileSync(join(docsRoot, 'organizations', 'network-costs-and-outcomes.md'), 'utf8');
 const costsCustodyPage = readFileSync(join(docsRoot, 'concepts', 'costs-custody.md'), 'utf8');
@@ -402,6 +403,9 @@ check(
 );
 check(!/^## \d+\./m.test(marketplaceStartPage), 'Marketplace release-boundary page contains a step-by-step launch recipe');
 check(!/continue to Stripe|complete the Stripe checkout/i.test(serviceCreditsPage), 'Service Credit read page contains a release-gated checkout recipe');
+check(/VAT is\s+collected separately: it never becomes Service Credit/.test(serviceCreditsPage), 'Service Credit read page omits the VAT/credit boundary');
+check(recordsNotificationsPage.includes('subtotal before tax, VAT/tax, and total'), 'billing records page omits the typed invoice tax breakdown');
+check(capabilitiesPage.includes('mints only the pre-tax Service Credit face value'), 'capability matrix omits the release-gated Checkout tax boundary');
 check(
   chargesPage.includes('Execution evidence determines whether Liskov may settle a managed final charge.'),
   'charge task does not say what authorizes managed settlement',
@@ -415,6 +419,7 @@ check(
   'charge task does not distinguish included zero from no submitted deregistration',
 );
 check(!/^## Stripe checkout succeeded/m.test(accountFundingPage), 'troubleshooting contains a customer Stripe checkout procedure');
+check(accountFundingPage.includes('do not change this release boundary'), 'troubleshooting lets configured Stripe state imply customer availability');
 check(
   /accepted execution report/i.test(outcomesPage),
   'outcome page does not name accepted execution reports as the consumption driver',

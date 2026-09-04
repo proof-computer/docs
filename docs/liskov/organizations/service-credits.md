@@ -44,6 +44,12 @@ selected organization. A visible plan or checkout control does not change the
 release classification. If a control is disabled or unavailable, do not seek
 an internal workaround.
 
+The release-gated Checkout contract treats the amount entered as the pre-tax
+Service Credit face value. Stripe calculates applicable VAT from the customer's
+billing details and shows subtotal, tax, and total before payment. VAT is
+collected separately: it never becomes Service Credit and never increases what
+an organization can spend.
+
 Liskov uses its treasury to settle Acurast reward and network fees. You do not
 deposit ACU or USDC, manage an Acurast wallet, perform a swap, or withdraw the
 underlying settlement assets.
