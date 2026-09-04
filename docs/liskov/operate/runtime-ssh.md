@@ -16,7 +16,7 @@ Runtime SSH through the Liskov relay is available on Developer and above. It is
 a Preview capability: the behaviour below is supported, but the relay that
 carries managed sessions runs on a single machine. If that machine is lost or
 restarted, every open session drops until it returns; reconnect when it does.
-Your jobs keep running and are unaffected when that happens.
+Your jobs keep running and are unaffected when that happens. A helper or sidecar death ends managed SSH for that job until the job's next run; the job itself is unaffected.
 
 Interactive administration is included. Traffic through the relay counts
 against your plan's included log volume, and bytes above it are charged to

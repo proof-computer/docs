@@ -728,12 +728,18 @@ check(
   /single machine/.test(capabilitiesPage) && /included log volume/.test(capabilitiesPage),
   'capabilities: managed Runtime SSH must state the single-machine relay and the shared log allowance',
 );
+check(
+  /helper or sidecar death ends managed SSH for that job until the next run/.test(capabilitiesPage)
+    && /job itself is unaffected/.test(capabilitiesPage),
+  'capabilities: managed Runtime SSH must state the helper/sidecar-death blast radius beside the single-gateway acceptance',
+);
 for (const token of [
   'Developer and above',
   'single machine',
   'included log volume',
   'Enterprise plan only',
   'runtime_ssh_provider_plan_required',
+  'helper or sidecar death',
 ]) {
   check(
     readFileSync(join(docsRoot, 'operate', 'runtime-ssh.md'), 'utf8').includes(token),
