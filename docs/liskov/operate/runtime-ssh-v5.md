@@ -182,12 +182,33 @@ For planned rotation:
    drains; and
 5. let old exact-job attachments reach teardown.
 
-There is no way to cut access to a current attachment as a whole on purpose
-today. There is no customer CLI command, no console control and no
-support-reachable route that revokes a live managed attachment. Withdrawing a
-key, above, is the supported way to remove one operator, and ending the job is
-the only way to end an open session sooner than its drain. Attachment teardown,
-whenever it happens, leaves workload health unchanged.
+### Cut access to one attachment
+
+To end one job's access for everyone on it, without ending the job:
+
+```bash
+proof liskov runtime-ssh attachment list --json
+proof liskov runtime-ssh attachment revoke ATTACHMENT_ID
+```
+
+Revocation is immediate for everything that has not started: no new connection
+request, no new ticket, and no connector re-registration is granted, and the
+attachment's unused tickets are revoked. The response reports the
+`revokedTicketCount` and `newlyRevoked`; revoking an attachment that is already
+revoked answers `newlyRevoked: false` rather than an error, so a retried script
+is safe. The customer's process, signed health reporting and schedule are
+unaffected — the job keeps running.
+
+A session that is already open is **not** cut. It drains on the same bounds as
+a key withdrawal: it ends when the operator disconnects, when the job ends, or
+at the relay's two-hour maximum, and a connection that stops answering the
+heartbeat is closed after 60 seconds. There is no channel that terminates an
+established relay. If a session must end sooner than that, end the job.
+
+Choose between the two by blast radius: `withdrawn-key add` denies one person
+across every attachment in the organization, and `attachment revoke` ends one
+job's access for everyone. Attachment teardown, however it is reached,
+leaves workload health unchanged.
 
 When the job ends or the attachment expires, automatic teardown revokes the
 attachment and leaves no live unconsumed ticket. Access teardown never extends,
@@ -205,7 +226,9 @@ restarts, replaces, or marks the customer process unhealthy.
 | `access_proxy_rejected_connector_not_registered` | The runtime has not connected to the relay for this job. If its access sidecar failed, that is terminal for this run; launch a new job. |
 | `access_proxy_rejected_connector_unavailable` | The runtime's relay connection is not ready yet. Retry in a few seconds. |
 | `access_proxy_rejected_credential_rejected` | The relay refused the one-time ticket. This is not your key: the ticket is minted seconds before use. Retry once, then report the `attachmentId` and the time. |
-| `runtime_ssh_attachment_not_ready` | Confirm the selected job is running and use `--print-command`; an ended job cannot be reattached. |
+| `runtime_ssh_attachment_not_ready` with `failureCode: operator_revoked` | Access to this attachment was revoked deliberately by an administrator in your organization. Retrying will not help; a new attachment is created when a new job launches. |
+| `runtime_ssh_attachment_not_ready` | Confirm the selected job is running and use `--print-command`; an ended job cannot be reattached. The `failureCode` beside the error names the specific cause when there is one. |
+| `runtime_ssh_attachment_not_found` | The attachment id is not one of this organization's managed attachments. Take it from `attachment list`. |
 | `runtime_ssh_attachment_ambiguous` | Select the exact deployment or job. |
 | `runtime_ssh_plan_required` | Use an entitled organization; do not retry the same request. |
 | `RUNTIME_SSH_HOST_KEY_MISMATCH` | Stop and compare signed evidence. Never override or delete the pin. |

@@ -559,7 +559,11 @@ for (const token of [
   'runtime-ssh operator-key add',
   'runtime-ssh operator-key remove',
   'future attachment snapshots only',
-  'no customer CLI',
+  // Was `no customer CLI`, the honest statement while nothing could revoke a
+  // live attachment. BKLG-20260903-suie shipped the command, so the token that
+  // has to be present is the command itself; the retracted sentence is
+  // asserted absent below.
+  'runtime-ssh attachment revoke',
   'RUNTIME_SSH_HOST_KEY_MISMATCH',
   'one-time ticket',
   'leaves workload health unchanged',
@@ -607,7 +611,7 @@ check(
 
 const cliPage = readFileSync(join(docsRoot, 'reference', 'cli.md'), 'utf8');
 check(cliContract.package === '@proof-computer/proof-cli-liskov', 'CLI fixture: wrong package');
-check(cliContract.version === '0.9.0', 'CLI fixture: wrong released version');
+check(cliContract.version === '0.10.0', 'CLI fixture: wrong released version');
 check(cliContract.command === 'liskov:application:logs', 'CLI fixture: missing logs command');
 check(cliContract.flags?.limit?.minimum === 1 && cliContract.flags?.limit?.maximum === 500, 'CLI fixture: wrong log limit bounds');
 check(
@@ -699,6 +703,34 @@ for (const token of [
 ]) {
   check(cliPage.includes(token), `CLI page omits withdrawal contract token: ${token}`);
 }
+// Availability transition (v0.10.0, BKLG-20260903-suie): an attachment can be
+// revoked deliberately. Until this shipped, both SSH pages said in as many
+// words that there was no customer command, no console control and no
+// support-reachable route that cut a live attachment. That was true and is now
+// false, so — as with awz6's retraction — the old sentence must not return, and
+// the two facts that replace it are the blast radius (the whole attachment,
+// everyone on it) and the one thing revocation still does not do (cut a session
+// already open).
+check(
+  JSON.stringify(cliContract.attachmentCommands) ===
+    JSON.stringify([
+      'liskov:runtime-ssh:attachment:list',
+      'liskov:runtime-ssh:attachment:revoke',
+    ]),
+  'CLI fixture: wrong attachment command ids',
+);
+check(cliContract.attachmentRevokeFailureCode === 'operator_revoked', 'CLI fixture: wrong revoke failure code');
+check(cliContract.attachmentRevokeEndsTheJob === false, 'CLI fixture: revoking must not end the job');
+check(cliContract.attachmentListFlags?.['include-terminal'] !== undefined, 'CLI fixture: missing attachment list flag');
+for (const token of [
+  'attachment list',
+  'attachment revoke',
+  'newlyRevoked',
+  '--include-terminal',
+]) {
+  check(cliPage.includes(token), `CLI page omits attachment contract token: ${token}`);
+}
+
 const operatePage = readFileSync(join(docsRoot, 'operate', 'runtime-ssh.md'), 'utf8');
 check(operatePage.includes('operator-key add'), 'operate/runtime-ssh omits the operator-key add command');
 check(/does not\s+grant access/.test(operatePage), 'operate/runtime-ssh omits the non-grant statement');
@@ -728,6 +760,12 @@ for (const code of [
   check(v5SshPage.includes(code), `operate/runtime-ssh-v5 omits refusal code ${code}`);
 }
 check(operatePage.includes('This is not your key'), 'operate/runtime-ssh must say credential_rejected is not the key');
+for (const page of [operatePage, v5SshPage]) {
+  check(!/no support-reachable route/.test(page), 'an SSH page repeats the retracted no-revocation-route claim');
+  check(!/no way to cut access to a current attachment/.test(page), 'an SSH page repeats the retracted no-revocation claim');
+  check(page.includes('attachment revoke'), 'an SSH page omits the attachment revoke command');
+  check(page.includes('operator_revoked'), 'an SSH page omits the operator_revoked failure code');
+}
 
 // Availability transition (2026-08-05): Runtime SSH moved from an internal
 // allowlist to plan entitlement. The capability page owns that claim, and it
@@ -817,7 +855,7 @@ for (const [fileId, required] of Object.entries({
   'operate/update': ['successor', 'without mutating'],
   'operate/retire': ['does not stop existing jobs', 'receipt'],
   'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Private deployed customer code'],
-  'reference/cli': ['0.9.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key', 'withdrawn-key'],
+  'reference/cli': ['0.10.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key', 'withdrawn-key'],
   'reference/manifest-v4': ['deprecated_manifest_field', 'profileId', 'sinkName', 'future schema'],
   'configure/logging-diagnostics': ['only logging field needed', 'provisions', 'application logs'],
   'operate/logs-activity': ['application logs', '--deployment', '--job', '--follow', '--from-start'],

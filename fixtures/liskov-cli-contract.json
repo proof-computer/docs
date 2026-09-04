@@ -1,6 +1,6 @@
 {
   "package": "@proof-computer/proof-cli-liskov",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "command": "liskov:application:logs",
   "arguments": ["APP_REF"],
   "flags": {
@@ -59,6 +59,17 @@
     "maximumSessionDurationSeconds": 7200,
     "heartbeatTimeoutSeconds": 60
   },
+  "attachmentCommands": [
+    "liskov:runtime-ssh:attachment:list",
+    "liskov:runtime-ssh:attachment:revoke"
+  ],
+  "attachmentListFlags": {
+    "include-terminal": "boolean",
+    "json": "boolean",
+    "organization": "string"
+  },
+  "attachmentRevokeFailureCode": "operator_revoked",
+  "attachmentRevokeEndsTheJob": false,
   "retiredCommands": [
     "liskov:application:blackbox",
     "liskov:application:blackbox:configure"

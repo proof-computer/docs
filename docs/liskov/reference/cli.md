@@ -5,12 +5,12 @@ description: Public proof liskov v1 command tree, confirmations, machine-readabl
 
 # CLI
 
-The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.9.0` and
+The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.10.0` and
 requires Node.js 22 or later. All commands begin with `proof liskov`.
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov@0.9.0
+proof plugins install @proof-computer/proof-cli-liskov@0.10.0
 proof liskov --help
 ```
 
@@ -168,6 +168,8 @@ Pause and retirement do not force-stop existing Acurast jobs.
 | `runtime-ssh withdrawn-key add --fingerprint SHA256:... --reason TEXT` | Withdraw one key's access by fingerprint, with nothing republished. Use it for a key that has no registry row, such as a key listed only in a Manifest V4 policy. `--identity FILE` names the key by its private-key path instead; only the derived public half is used. `--reason` is recorded on the withdrawal and in the activity feed. Repeating a withdrawal is safe: it reports `newlyWithdrawn: false` and changes nothing. |
 | `runtime-ssh withdrawn-key list --json` | List the fingerprints whose access is withdrawn, each with its withdrawal ID, source key, reason, and time. |
 | `runtime-ssh withdrawn-key remove WITHDRAWAL_ID` | Lift a withdrawal so the key can be authorized again. It does not re-register the key or add it to any manifest. |
+| `runtime-ssh attachment list [--include-terminal] [--json]` | List the organization's Runtime SSH attachments, newest first: id, readiness, provider, application, job, and the reason when one is not usable. `--include-terminal` includes attachments that have already stopped. |
+| `runtime-ssh attachment revoke ATTACHMENT_ID` | Cut access to one attachment on purpose, without ending the job. No new connection request, ticket or relay registration is granted for it and its unused tickets are revoked; the response carries `revokedTicketCount`, `newlyRevoked`, and a `note`. A session already open drains. Repeating a revocation is safe: it reports `newlyRevoked: false` and changes nothing. Compare with `withdrawn-key add`, which denies one person across every attachment rather than ending one job's access for everyone. |
 
 `--identity` names the private key file; it is read locally and never sent.
 `--deployment` and `--job` select an exact target when an Application has more

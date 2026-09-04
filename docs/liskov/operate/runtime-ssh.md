@@ -210,6 +210,26 @@ To let the key back in, lift the withdrawal with
 `proof liskov runtime-ssh withdrawn-key remove WITHDRAWAL_ID`. That only lifts
 the block: the key must still be in the published manifest to connect.
 
+### End one job's access instead of one person's
+
+Withdrawal is per key, across every Application. To end access to a single job
+for everyone who has it, revoke that job's attachment:
+
+```bash
+proof liskov runtime-ssh attachment list --json
+proof liskov runtime-ssh attachment revoke ATTACHMENT_ID
+```
+
+No new connection request, ticket or relay registration is granted for it, and
+its unused tickets are revoked; the response reports how many. Revoking an
+attachment that is already revoked is reported as such rather than failing, so
+a retried script is safe. The job itself is untouched — its process, health
+reporting and schedule carry on.
+
+A session already open drains here too, on exactly the same bounds as a
+withdrawal. Nothing terminates an established relay; if a session must end
+sooner, end the job.
+
 ## Bring your own Tailscale network
 
 Enterprise plan only, as a Preview. On any other plan, publishing a manifest
@@ -243,7 +263,13 @@ another.
 **`runtime_ssh_attachment_not_ready`** — the job has not finished preparing SSH,
 or it has already ended. Check it is still running with
 `proof liskov application status APP_REF`. A job that reached its scheduled end
-is gone; launch a new one.
+is gone; launch a new one. When the error carries a `failureCode`, that names
+the specific cause.
+
+**`runtime_ssh_attachment_not_ready` with `failureCode: operator_revoked`** —
+an administrator of your organization revoked this attachment deliberately.
+Retrying will not help, and neither will another key: the revocation covers
+the whole attachment. A new attachment is created when a new job launches.
 
 **A host-key mismatch warning** — stop. The key pinned on your machine does not
 match the job answering. Do not override it. Re-run with `--print-command
