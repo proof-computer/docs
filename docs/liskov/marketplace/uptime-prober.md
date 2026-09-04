@@ -49,6 +49,20 @@ Public release must preserve or deliberately version these values. A different
 Console value represents a different offering version and must carry its own
 displayed evidence.
 
+## Source
+
+The Uptime Prober's source is public, under **Apache-2.0**, in
+[`proof-computer/liskov-marketplace-offerings`](https://github.com/proof-computer/liskov-marketplace-offerings)
+under `uptime-prober/`. Public release pins an immutable tag rather than a
+branch, and the listing shows the exact commit, the licence, and the digest of
+that source tree alongside the SBOM committed beside it.
+
+What the offering declares: it reads the host URL the launching user configures,
+sends the resulting PNG and status line only to that user's own Telegram bot via
+`api.telegram.org`, and fetches no code at runtime. The probed host is variable
+by design — the offering exists to probe a URL the customer chooses, so that
+destination cannot be enumerated in advance.
+
 ## Required acceptance evidence
 
 A successful internal acceptance message contains a screenshot plus HTTP
