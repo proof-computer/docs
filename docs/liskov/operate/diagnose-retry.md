@@ -5,9 +5,10 @@ description: Resolve a typed blocker, use one supported retry when offered, and 
 
 # Diagnose and retry
 
-Start with the Action Plan, not a generic “retry” instinct. Retrying can create
-new work or spend and cannot correct a missing secret, invalid policy, or
-insufficient balance.
+Start with the organization Action Plan, not a generic “retry” instinct.
+Retrying can create new work or spend and cannot correct a missing secret,
+invalid policy, or insufficient balance. The Application-scoped Action Plan
+page is withdrawn; per-Application attention lives on Deployments.
 
 ## 1. Identify the blocked decision
 

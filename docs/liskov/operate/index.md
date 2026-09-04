@@ -6,8 +6,8 @@ description: Understand Application status, deployments, proof, logs, updates, r
 # Deploy & operate
 
 The Application workspace is your starting point for day-to-day operation.
-Its overview describes the current customer posture; the Action Plan tells you
-when Liskov needs a decision or new input.
+Its overview describes the current customer posture; the organization Action
+Plan tells you when Liskov needs a decision or new input.
 
 - [Application status and Action Plan](./status-action-plan.md)
 - [Deployments, jobs, and timelines](./deployments-jobs.md)

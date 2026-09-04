@@ -5,9 +5,9 @@ description: Start from an observable symptom, take the supported safe action, a
 
 # Troubleshooting Liskov
 
-Begin with the Application's **Overview** and **Action Plan**. Record the
-Application UID and the displayed error or blocker code before changing
-anything. A waiting deployment often needs time rather than a retry.
+Begin with the Application's **Overview** and the organization **Action Plan**.
+Record the Application UID and the displayed error or blocker code before
+changing anything. A waiting deployment often needs time rather than a retry.
 
 Choose the symptom you can observe:
 

@@ -43,6 +43,19 @@ Unknown active detail maps to `in_progress`/`unknown_active_state`, not `ready`.
 
 ## Action Plan vocabulary
 
+The Console **organization Action Plan** lists only Holds: work Liskov has
+stopped on and will not resolve without you. Causes are `intent` (you stopped
+it), `funds` (authorised cap), and `app_fault` (workload, artifact, or policy
+version). `platform` never appears as a customer decision. A job Liskov is
+still retrying is withheld; the page says so.
+
+Each Hold names one cause and one action pair: **Resume trying** / **Stop**.
+Per-code next-action prose stays on the execution detail.
+
+The CLI `proof liskov application action-plan` still returns one Application's
+plan items. Use those tokens for a bounded retry; do not treat `wait` or
+`recover` as a Console Action Plan row.
+
 | Field | Meaning |
 | --- | --- |
 | `decisionId` | Stable identity for the current decision cohort; required for a supported retry. |

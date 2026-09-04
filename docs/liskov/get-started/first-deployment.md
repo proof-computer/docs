@@ -13,10 +13,10 @@ deployment timeline contains the exact evidence.
 
 | Stage | Meaning | What to do |
 | --- | --- | --- |
-| **Preparing** | Liskov is validating policy, configuration, funds, and launch authority. | Wait unless the Action Plan asks for input. |
+| **Preparing** | Liskov is validating policy, configuration, funds, and launch authority. | Wait unless the organization Action Plan asks for input. |
 | **Submitted** | The Acurast registration was accepted. | Wait. Resubmitting can create ambiguity or duplicate spend. |
 | **Processor assigned** | An Acurast phone accepted the job. This is chain assignment, not proof that your process is ready. | Wait for bootstrap/runtime contact. |
-| **Bootstrapping** | Liskov is delivering job-bound configuration and the runtime is starting. | Check the Action Plan only if this becomes blocked. |
+| **Bootstrapping** | Liskov is delivering job-bound configuration and the runtime is starting. | Check the organization Action Plan only if this becomes blocked. |
 | **Runtime ready** | Signed runtime evidence says required capabilities are ready. | Verify the application's own output. |
 
 Names in the detailed timeline may be more precise than these reader-facing
@@ -57,7 +57,7 @@ They do not prove every property of application behavior; see
 
 ## When to act
 
-Use only the action offered by the Application's Action Plan. Updating a value,
+Use only the action offered by the organization Action Plan. Updating a value,
 adding funds, or correcting a manifest does not necessarily retry by itself.
 The Action Plan tells you when a bounded retry is available.
 
