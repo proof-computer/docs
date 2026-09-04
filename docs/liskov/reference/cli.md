@@ -6,7 +6,11 @@ description: Public proof liskov v1 command tree, confirmations, machine-readabl
 # CLI
 
 The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.10.0` and
-requires Node.js 22 or later. All commands begin with `proof liskov`.
+requires Node.js 22 or later. All commands begin with `proof liskov`. The
+retained V5 verbs (`application create`, `application manifest validate`,
+`application policy publish`, `application policy explain`) are in `0.9.0`
+and later; the `application source-binding` verbs ship in the release
+recorded by the V5 promotion packet and are marked below.
 
 ```bash
 npm install --global @proof-computer/proof-cli
@@ -132,7 +136,12 @@ nonzero.
 
 | Command | Important flags and behavior |
 | --- | --- |
-| `application manifest validate --file PATH` | Strict local V4 validation; read-only. |
+| `application manifest validate --file PATH` | Strict local V4 or retained V5 validation; read-only. |
+| `application create APPLICATION_ID --repository OWNER/REPO` | Create an Application from identity alone: no draft, no spend. The retained V5 first step. |
+| `application source-binding set APP_REF --repository OWNER/REPO --allowed-ref REF --workflow-identity IDENTITY --manifest-path PATH --yes` | Bind the exact GitHub source a retained V5 Application may publish from; organization `admin` only; the first binding is revision `1`. Ships in the release recorded by the V5 promotion packet. |
+| `application source-binding show APP_REF --json`, `application source-binding revoke APP_REF --expected-revision N --reason TEXT --yes` | Read the current binding, revision, and revocation epoch; withdraw it. Same release as `set`. |
+| `application policy publish APP_REF --file PATH --artifact-digest DIGEST --source-commit SHA --source-ref REF --workflow-identity IDENTITY --binding-revision N --revocation-epoch N --expected-pointer-version N --yes` | Publish one retained V5 document through the registered policy-version writer, checked against the binding and the attested build; nothing is sent without `--yes`. |
+| `application policy explain APP_REF` | Read the canonical retained V5 publication, execution, spend-closeout, and managed-SSH explanation. |
 | `application import --file PATH` | Import/update a local draft; never publishes. |
 | `application import --github OWNER/REPO:PATH@REF --server-fetch` | Ask Liskov to fetch and import the GitHub draft. |
 | `application publish APP_REF --artifact-version ID --dry-run` | Read-only publication preflight for a build release. |
@@ -184,6 +193,8 @@ reconnecting issues a new one.
 Every grant, session open, and session close is recorded in the Application
 activity feed with the duration and bytes transferred. See
 [Open a shell in a running job](../operate/runtime-ssh.md).
+For the V5 operator-key snapshot and revocation boundary, see
+[Use retained V5 Managed Runtime SSH](../operate/runtime-ssh-v5.md).
 
 Registering a key **does not grant access** on its own. On a Manifest V4
 Application, who may connect is exactly the

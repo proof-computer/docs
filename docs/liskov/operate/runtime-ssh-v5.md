@@ -1,23 +1,21 @@
 ---
-unlisted: true
 title: Use retained V5 Managed Runtime SSH
 description: Register operator keys, enable exact-job blind access, pin host trust, connect with one-time tickets, and withdraw a key without republishing.
 ---
 
 # Use retained V5 Managed Runtime SSH
 
-:::danger[Not released]
+:::info Preview
 
-The platform seam behind this page is implemented end to end — a V5
-Application with `access.ssh` is served its managed SSH access block, checks
-in to ready, admits a connection ticket, and is reaped at schedule end
-(BKLG-20260830-sxl6 and its packet chain, merged 2026-08-31). Promotion of
-this page into normal navigation is gated by the V5 release contract on the
-accepted Managed Runtime SSH **live** rehearsal; until then, follow the
-current [Runtime SSH Preview](./runtime-ssh.md) for a production V4
-Application. The support boundary at promotion: managed provider only
-(`access.ssh.provider.kind: liskov_managed`), `native_image` (Cargo/PRoot)
-runtime; Tailscale is not yet available for V5 manifests.
+The retained V5 managed path is a Preview on Developer and above. It is
+managed-provider only (`access.ssh.provider.kind: liskov_managed`) on a
+`native_image` runtime; a customer-owned Tailscale provider is not part of
+the retained V5 arm. The relay is a single machine: if it is lost, open
+sessions drop until it returns and you reconnect; your jobs are unaffected.
+A helper or sidecar death ends managed SSH for that job until the next run;
+the job itself is unaffected. Relay traffic counts against your plan's
+included log volume and is charged at the log overage rate above it. For
+V4 policy syntax, use the [Manifest V4 Runtime SSH procedure](./runtime-ssh.md).
 
 :::
 
@@ -35,7 +33,9 @@ is not attested by that verification.
 You need:
 
 - an organization on Developer or above;
-- the retained V5 capability activated for that organization;
+- a retained V5 Application;
+- at least one operator key registered in the organization **before the
+  Application's first launch** (step 1);
 - an `ssh-ed25519` key pair you control;
 - a `native_image` manifest with managed access; and
 - a running job whose attachment is ready.
@@ -70,6 +70,12 @@ authority. Every registered organization key is therefore authorized on every
 new V5 managed attachment. Keep the registry small and intentional. An
 attachment accepts 1–8 keys; an empty registry or more than eight registered
 keys makes attachment preparation fail closed.
+
+Register the key before the Application's first launch. A job that starts
+against an empty registry is served a degraded access block
+(`runtime_ssh_operator_key_registry_empty`) for the whole of that run; keys
+registered afterwards reach only the next job, so register first, then
+publish or launch.
 
 ## 2. Enable the retained policy arm
 
@@ -218,7 +224,7 @@ restarts, replaces, or marks the customer process unhealthy.
 
 | Symptom or code | Safe action |
 | --- | --- |
-| `runtime_ssh_operator_key_registry_empty` | Register at least one organization key, then wait for a new exact-job attachment. |
+| `runtime_ssh_operator_key_registry_empty` | The job started before any organization key was registered, and stays that way for this run. Register at least one key, then launch a new job; the next exact-job attachment snapshots it. |
 | `runtime_ssh_operator_key_registry_too_large` | Reduce the registry to at most eight intentional keys before creating a new attachment. |
 | `RUNTIME_SSH_IDENTITY_NOT_AUTHORIZED` | The selected key is not in this attachment's effective set. Compare it with `snapshotKeyFingerprints` and `withdrawnKeyFingerprints` from `--print-command --json`; a key registered after the attachment was created reaches only new attachments. |
 | `runtime_ssh_operator_key_withdrawn` | This key's access was withdrawn for the organization. An administrator can lift it with `withdrawn-key remove`; otherwise use another authorized key. |
