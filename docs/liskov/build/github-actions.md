@@ -81,3 +81,14 @@ proof liskov application artifact-pin list status-worker --json
 This advanced read is safe. The workflow does not import or publish your
 manifest, select a deployment schedule, reserve Service Credits, or register an
 Acurast job. Continue with [Validate, import, and publish](./validate-import-publish.md).
+
+## Encrypted JavaScript release boundary
+
+Encrypted JavaScript payload delivery is release-gated v1. The runtime loader
+is available in SDK `0.3.29`; its presence alone does not establish a supported
+customer workflow. Continue using the unencrypted example above until the
+[capability matrix](../reference/capabilities.md) records production acceptance.
+The prepared encrypted path uses the existing managed Lockbox key-release
+boundary and does not grant a build workflow publication or spending authority.
+See [Trust and data boundaries](../concepts/trust-boundaries.md) before making a
+private-code claim; Cargo image and cache confidentiality remains separate.

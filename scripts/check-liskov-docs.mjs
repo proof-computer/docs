@@ -329,6 +329,11 @@ check(!existsSync(join(root, 'static', 'examples', 'liskov')), 'superseded downl
 const retirementPage = readFileSync(join(docsRoot, 'operate', 'retire.md'), 'utf8');
 const capabilitiesPage = readFileSync(join(docsRoot, 'reference', 'capabilities.md'), 'utf8');
 const githubActionsPage = readFileSync(join(docsRoot, 'build', 'github-actions.md'), 'utf8');
+check(capabilitiesPage.includes('| Encrypted JavaScript payload delivery | Release-gated v1;'),
+  'encrypted JavaScript must remain gated until the released workflow and production canary are accepted');
+check(capabilitiesPage.includes('| Private customer code inside Cargo images | Not v1;'),
+  'JavaScript acceptance must not silently promote Cargo cache confidentiality');
+
 const liskovIndexPage = readFileSync(join(docsRoot, 'index.md'), 'utf8');
 const setupPage = readFileSync(join(docsRoot, 'get-started', 'set-up-liskov.md'), 'utf8');
 const processorsPage = readFileSync(join(docsRoot, 'operate', 'processors.md'), 'utf8');
@@ -691,7 +696,7 @@ if (v5Mode === 'release_gated') {
 
 check(manifest.schema === 'proof.liskov.application-manifest', 'fixture: wrong manifest schema');
 check(manifest.schemaVersion === 4, 'fixture: wrong schemaVersion');
-check(manifest.release?.artifact?.encryption?.mode === 'none', 'fixture: reusable action supports only unencrypted IPFS bundles');
+check(manifest.release?.artifact?.encryption?.mode === 'none', 'fixture: the supported baseline example must use unencrypted IPFS bundles');
 check(manifest.deployment?.parallelism === 1, 'fixture: public parallelism must be 1');
 check(manifest.deployment?.placement?.processorSelection?.mode === 'open_market', 'fixture: public placement must be open_market');
 check(manifest.deployment?.lifecycle?.renewal?.mode === 'after_scheduled_end', 'fixture: unsupported renewal recipe');
@@ -980,7 +985,7 @@ for (const [fileId, required] of Object.entries({
   'operate/pause-resume': ['does not force-stop', 'scheduled end'],
   'operate/update': ['successor', 'without mutating'],
   'operate/retire': ['does not stop existing jobs', 'receipt'],
-  'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Private deployed customer code'],
+  'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Encrypted JavaScript payload delivery', 'Private customer code inside Cargo images'],
   'reference/cli': ['0.12.1', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key', 'withdrawn-key'],
   'reference/manifest-v4': ['deprecated_manifest_field', 'profileId', 'sinkName', 'future schema'],
   'configure/logging-diagnostics': ['only logging field needed', 'provisions', 'application logs'],

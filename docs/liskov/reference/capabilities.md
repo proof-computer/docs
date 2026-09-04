@@ -35,7 +35,8 @@ This page is the availability owner. Guides contain only supported recipes.
 | Retained V5 GitHub source import | Release-gated v1; exact binding exists at `liskov-github-actions@aa1b83f0fd4b08ac33a6c9970d2077885922d79c`, which is not contained in a released tag |
 | Reusable GitHub build/pin/OIDC workflow | v1; moving `v1` tag verified at `v1.2.2` |
 | Pinned first-party IPFS bundle | v1 |
-| Private deployed customer code | Not v1; private source access and TEE execution do not make current artifact delivery confidential |
+| Encrypted JavaScript payload delivery | Release-gated v1; the runtime loader is released as `0.3.29`, but the complete workflow and production key-release path still require acceptance |
+| Private customer code inside Cargo images | Not v1; private source access, TEE execution and encrypted JavaScript do not establish job-authorized Cargo cache reuse |
 | General customer-authored Cargo/runtime image | Internal |
 
 ## Runtime, placement, and lifecycle

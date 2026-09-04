@@ -11,7 +11,7 @@ Review each data type at the boundary where it is visible.
 | Data or authority | Where it exists | Important boundary |
 | --- | --- | --- |
 | GitHub source | Your repository and GitHub runner | OIDC proves runner identity facts, not source safety. |
-| JavaScript artifact bytes | GitHub runner, IPFS providers/gateways, and processor | The current reusable action publishes unencrypted bundles. CID/digest identify bytes but do not make them private. |
+| JavaScript artifact bytes | GitHub runner, IPFS providers/gateways, and processor | The default reusable workflow publishes unencrypted bundles. Encrypted JavaScript payload delivery is release-gated; CID/digest identify bytes but do not make them private. |
 | Cargo rootfs bytes | Liskov object storage and Android-private processor/executor storage | The current image URL is public-by-capability. Bytes are app-private and extracted into distinct execution directories, but a future signed fetch must also authorize cache-backed image release to the requesting job. |
 | Authored manifest | Repository, CLI, and Liskov draft | Contains authority and names, never secret plaintext. |
 | Effective policy | Liskov immutable record and proof surfaces | Server-resolved, digest-bound execution contract. |
@@ -34,14 +34,20 @@ secret.
 ## Private source is not private deployed code
 
 A private GitHub repository controls who can read the source repository. It
-does not make an unencrypted IPFS deployment bundle private. The reviewed
-reusable pin action requires `encryption.mode: none`, and the current runtime
-does not fetch, verify, decrypt, and load a separate private code payload.
+does not make an unencrypted IPFS deployment bundle private. The default
+workflow and supported examples use `encryption.mode: none`.
 
-A future JavaScript path needs a small public loader followed by job-authorized
-delivery or decryption of exact digest-bound Application bytes. A future Cargo
-path can keep the public IPFS bootstrap free of customer code and authorize the
-later rootfs fetch. Because processors may satisfy that fetch from a local
+Encrypted JavaScript delivery is **release-gated v1**. Its public bootstrap and
+ciphertext remain readable on IPFS. The runtime loader uses the existing
+job-bound Lockbox grant to obtain the key, verifies the ciphertext and plaintext
+digests plus authenticated encryption, and then loads the local module. The
+complete released workflow and production run must pass acceptance before this
+is a supported customer path. Managed Lockbox keeps its existing trust boundary:
+PROOF can access the code key during release; this is not operator-blind or
+zero-knowledge code delivery.
+
+A future Cargo path can keep the public IPFS bootstrap free of customer code
+and authorize the later rootfs fetch. Because processors may satisfy that fetch from a local
 digest cache, private code inside the image also requires Acurast to authorize
 cache reuse and release of that cached digest to the exact job or tenant. The
 concern is not that one job can directly read another job's private directory:
@@ -49,8 +55,8 @@ Android keeps processor storage app-private, and the rootfs is extracted per
 execution. The unresolved boundary is whether the trusted processor may
 re-materialize the
 same cached digest into a different requesting job's sandbox without repeating
-the artifact-entitlement decision. Neither path is a supported v1 private-code
-capability today.
+the artifact-entitlement decision. Encrypted JavaScript acceptance does not
+prove this Cargo cache boundary. Neither path is a supported private-code capability today.
 
 ## Managed secret detail
 
