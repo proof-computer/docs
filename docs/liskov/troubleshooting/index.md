@@ -16,6 +16,7 @@ Choose the symptom you can observe:
 - [Deployment waiting or needs action](./deployment.md)
 - [Variables, secrets, and runtime bootstrap](./config-bootstrap.md)
 - [Logs and diagnostics](./logs.md)
+- [Runtime SSH refused or not connecting](../operate/runtime-ssh.md#when-something-is-wrong)
 - [Billing, settlement, and retirement](./billing-retirement.md)
 - [Get support](./support.md)
 

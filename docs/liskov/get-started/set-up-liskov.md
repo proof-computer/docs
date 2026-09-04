@@ -10,9 +10,11 @@ Application.
 
 :::caution Release boundary
 Plan selection, terms acceptance, Stripe checkout, and issuance of new USD
-Service Credits are release-gated. Marketplace and Uptime Prober are also
-limited to internal first-party engineering acceptance. This page does not
-provide a customer funding or Marketplace launch path.
+Service Credits are release-gated. A paid plan is not usable merely because a
+plan id was written; it becomes usable only after reconciled Stripe/Autumn
+payment state. Production paid billing is not enabled. Marketplace and Uptime
+Prober are also limited to internal first-party engineering acceptance. This
+page does not provide a customer funding or Marketplace launch path.
 :::
 
 ## Before you begin

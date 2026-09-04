@@ -18,7 +18,9 @@ before preparing a release.
 
 :::caution Release boundary
 Marketplace launch, Uptime Prober, plan and terms acceptance, and Stripe USD
-checkout are still release-gated. Their current production use is limited to
+checkout are still release-gated. A paid plan is not activated by writing a
+plan id; it becomes usable only after reconciled payment state, and production
+paid billing is not enabled. Their current production use is limited to
 internal first-party engineering acceptance. Do not enter payment details or
 offering secrets until the [capability matrix](./reference/capabilities.md)
 classifies the path as supported customer behavior.

@@ -1,6 +1,6 @@
 {
   "package": "@proof-computer/proof-cli-liskov",
-  "version": "0.7.0",
+  "version": "0.9.0",
   "command": "liskov:application:logs",
   "arguments": ["APP_REF"],
   "flags": {
@@ -28,6 +28,36 @@
     "accept-host-key": "boolean",
     "print-command": "boolean",
     "json": "boolean"
+  },
+  "operatorKeyCommands": [
+    "liskov:runtime-ssh:operator-key:add",
+    "liskov:runtime-ssh:operator-key:list",
+    "liskov:runtime-ssh:operator-key:remove"
+  ],
+  "operatorKeyAddFlags": {
+    "name": "string",
+    "identity": "string",
+    "public-key-file": "string",
+    "json": "boolean",
+    "organization": "string"
+  },
+  "operatorKeyRemoveWithdrawsAccess": true,
+  "withdrawnKeyCommands": [
+    "liskov:runtime-ssh:withdrawn-key:add",
+    "liskov:runtime-ssh:withdrawn-key:list",
+    "liskov:runtime-ssh:withdrawn-key:remove"
+  ],
+  "withdrawnKeyAddFlags": {
+    "fingerprint": "string",
+    "identity": "string",
+    "reason": "string",
+    "json": "boolean",
+    "organization": "string"
+  },
+  "withdrawalDrain": {
+    "establishedSessions": "drain",
+    "maximumSessionDurationSeconds": 7200,
+    "heartbeatTimeoutSeconds": 60
   },
   "retiredCommands": [
     "liskov:application:blackbox",

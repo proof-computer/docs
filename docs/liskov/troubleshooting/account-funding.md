@@ -7,7 +7,8 @@ description: Resolve GitHub session, organization selection, invitation, and rea
 
 :::caution Release boundary
 Plan selection, terms acceptance, Stripe checkout, and issuance of new Service
-Credits are release-gated. There is no supported customer checkout
+Credits are release-gated. Writing a plan id does not activate a paid plan.
+Production paid billing is not enabled. There is no supported customer checkout
 troubleshooting procedure yet. Do not submit payment details, retry a disabled
 control, or call an internal funding endpoint.
 :::
@@ -62,9 +63,11 @@ The command override must not change the latter.
 ## A commercial or funding control is unavailable
 
 This is the expected customer posture while the commercial gate remains. You
-can read the selected organization's billing projection, Service Credit
-balance, and transactions, but you cannot use the public path to accept terms,
-choose a plan, or add funds. A visible control does not override this boundary.
+can read **Account**, **Billing & funding**, and **Ledger**, and you can open
+the **Plans** surface, but production paid billing is not enabled. A visible
+plan, checkout, or Stripe portal control does not override this boundary. Do
+not submit payment details, retry a disabled control, or call an internal
+funding endpoint.
 
 ## Service Credit reads disagree
 
