@@ -17,6 +17,18 @@ acceptance, Stripe checkout, and new Service Credit issuance remain
 release-gated. An eligible deployment therefore requires an organization that
 already has enough available Service Credits.
 
+New organizations are business-only. Enter **Country where your business is
+established** as a two-letter country code and affirm the separate,
+non-pre-ticked **Business use only** statement. You are confirming that the use
+is wholly or mainly for a trade, business, craft, or profession, that you are at
+least 18, and that you have authority to bind the named organization. Liskov
+does not ask for your date of birth for this declaration.
+
+If you cannot make that statement, do not create an organization for personal,
+family, or household use. If you believe your use is business use and need
+help, contact [hello@proof.computer](mailto:hello@proof.computer). There is no
+self-service or manual consumer exception.
+
 The CLI can list and select an existing organization:
 
 ```bash

@@ -68,6 +68,24 @@ plan items. Use those tokens for a bounded retry; do not treat `wait` or
 `recover` can consume a bounded retry budget. `park` stops automatic forward
 progress. `wait` must not be converted into repeated manual submissions.
 
+## Organization business-eligibility errors
+
+New non-personal organizations must carry the approved
+`liskov.business-eligibility.v1` statement and an assigned ISO 3166-1 alpha-2
+business-country code. These are declaration facts; Liskov does not infer them
+from an IP address, billing address, or processor location.
+
+| Code | Meaning / response |
+| --- | --- |
+| `business_eligibility_required` | The required statement version is missing. Return to the new-organization form and review the separate Business use only statement. |
+| `business_eligibility_version_mismatch` | The client submitted a statement version other than the server's `requiredVersion`. Refresh the Console before retrying. |
+| `business_country_required` | No business-establishment country was supplied. Enter its two-letter code. |
+| `invalid_business_country_code` | The value is not an assigned uppercase ISO 3166-1 alpha-2 code. Correct the declared business country; do not substitute a billing or processor country. |
+
+A refusal creates no organization, membership, Terms acceptance, trial, or
+Service Credit grant. If you cannot make the statement because your use is
+personal, family, or household use, do not retry: that use is unsupported.
+
 ## Manifest and publication diagnostics
 
 | Code | Meaning / response |

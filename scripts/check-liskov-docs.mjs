@@ -414,6 +414,20 @@ check(
 );
 check(!liskovIndexPage.includes('./get-started/marketplace.md'), 'Liskov landing page recommends release-gated Marketplace launch');
 check(!/Choose \*\*Add funds\*\*/i.test(setupPage), 'setup page contains a release-gated add-funds recipe');
+check(setupPage.includes('Business use only'), 'setup page omits the business-only creation gate');
+check(setupPage.includes('not pre-selected'), 'setup page does not state the eligibility checkbox default');
+check(/Country where your business is\s+established/.test(teamsPage), 'organizations page omits the business-country field');
+check(/There is no\s+self-service or manual consumer exception/.test(teamsPage), 'organizations page omits the strict consumer response');
+check(capabilitiesPage.includes('business-purpose/18+/authority statement'), 'capability matrix omits the B2B-only organization boundary');
+const statusesActionsErrorsPage = readFileSync(join(docsRoot, 'reference', 'statuses-actions-errors.md'), 'utf8');
+for (const code of [
+  'business_eligibility_required',
+  'business_eligibility_version_mismatch',
+  'business_country_required',
+  'invalid_business_country_code',
+]) {
+  check(statusesActionsErrorsPage.includes(`\`${code}\``), `error reference omits ${code}`);
+}
 for (const [surface, content] of [['setup', setupPage], ['processor task', processorsPage]]) {
   check(content.includes('https://console.liskov.proof.computer'), `${surface} omits the permanent console link`);
   check(!content.includes('https://liskov.proof.computer'), `${surface} still recommends the retired apex`);

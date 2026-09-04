@@ -20,7 +20,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Capability | Availability |
 | --- | --- |
 | GitHub sign-in; browser-confirmed CLI login | v1 |
-| Organizations, persistent and request-scoped CLI selection, team invitations, assignable roles | v1; the plan seat allowance is enforced at invite time with no overage, and while paid plan activation is release-gated every organization resolves to the Free allowance of one seat |
+| Organizations, persistent and request-scoped CLI selection, team invitations, assignable roles | v1; the plan seat allowance is enforced at invite time with no overage, and while paid plan activation is release-gated every organization resolves to the Free allowance of one seat. New non-personal organizations require a two-letter business-establishment country and the versioned, non-pre-ticked business-purpose/18+/authority statement. Personal, family, and household use is not supported |
 | Service Credit balance, reservation, and ledger reads | v1; read-only surfaces are supported for an existing organization (Console Account, Billing & funding, and Ledger; CLI billing/transaction reads) |
 | Plan catalog and plans page | v1 read of the catalog on `/organizations/new/plan`; paid attach, trial start, and production collection remain release-gated |
 | Plan selection and terms acceptance | Release-gated v1; the commercial go-live decision is not complete. Writing a plan id does not activate a paid plan |
