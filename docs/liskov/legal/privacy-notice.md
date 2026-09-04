@@ -22,9 +22,10 @@ It applies where we determine why and how Personal Data is used and therefore ac
 
 **Controller:** MOOSE LABS LTD trading as PROOF<br />
 **Company number:** 11435949<br />
+**VAT registration:** GB311456142<br />
 **Registered office / geographic address:** The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP<br />
 **Privacy contact:** privacy@proof.computer [verify]  
-**Legal contact:** legal@proof.computer [verify]
+**Legal/e-commerce contact:** hello@proof.computer
 
 Our current corporate details and contact channels must also be displayed on the Website and applicable Order.
 

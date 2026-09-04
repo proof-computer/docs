@@ -14,7 +14,8 @@ Its publication blockers remain open.
 
 **Review date:** 3 September 2026  
 **Product:** Liskov  
-**Contracting entity:** MOOSE LABS LTD, company number 11435949, trading as PROOF ("PROOF")<br />
+**Contracting entity:** MOOSE LABS LTD, company number 11435949, VAT registration GB311456142, trading as PROOF ("PROOF")<br />
+**Legal/e-commerce contact:** hello@proof.computer<br />
 **Status:** counsel-ready working draft; not approved for publication until the launch gates below are signed off.
 
 ## What this bundle does
@@ -44,7 +45,7 @@ Launch on the following basis unless UK counsel approves a broader model:
 
 Do not publish or enable click-acceptance until all items marked **BLOCKER** in `01-LEGAL-REVIEW-MEMORANDUM.md` and `12-LAUNCH-SIGN-OFF-MATRIX.md` are resolved. At minimum:
 
-- carry PROOF’s confirmed company number, registered office and trading name consistently, and verify legal/privacy/support email addresses and VAT treatment;
+- carry PROOF’s confirmed company number, registered office, trading name, VAT registration and `hello@proof.computer` contact consistently, and verify the live Stripe Checkout/invoice output plus the separate privacy/support/security contacts;
 - confirm every data flow, subprocessor, hosting country, retention period and international-transfer mechanism;
 - technically enforce the Standard Service restriction on Personal Data in decentralised workloads, rather than relying only on contract wording;
 - confirm the actual money, USDC, token and network-cost flow with regulatory and tax advisers;

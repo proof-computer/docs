@@ -69,7 +69,7 @@ Subject to the launch gates below, this is a credible UK launch position. The la
 
 ### 3.1 Contracting entity and disclosures
 
-The same legal entity must appear throughout the customer journey. On 4 September 2026 the owner confirmed the supplier as **MOOSE LABS LTD**, company number **11435949**, a private limited company registered in England and Wales with its registered office at **The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP**, trading as **PROOF**. Carry those details consistently through the website, checkout, invoices, Orders, privacy notice and support channels.
+The same legal entity must appear throughout the customer journey. On 4 September 2026 the owner confirmed the supplier as **MOOSE LABS LTD**, company number **11435949**, a private limited company registered in England and Wales with its registered office at **The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP**, VAT registration **GB311456142**, trading as **PROOF**, with **hello@proof.computer** as the legal/e-commerce contact. Carry those details consistently through the website, checkout, invoices, Orders, privacy notice and support channels.
 
 The website and commercial communications should show, as applicable:
 
