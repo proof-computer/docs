@@ -1,8 +1,8 @@
 {
   "schema": "proof.liskov.docs-v5-release-contract.v1",
-  "verifiedAt": "2026-08-21",
-  "documentationMode": "release_gated",
-  "availability": "Release-gated v1",
+  "verifiedAt": "2026-09-04",
+  "documentationMode": "promotion_prepared",
+  "availability": "v1",
   "contract": {
     "repository": "proof-computer/slipway-rs",
     "contractCommit": "baa482792bfa2bf8abbe0ed3db2da04137e1835a",
@@ -10,8 +10,8 @@
     "rcDigest": "sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10",
     "manifestSchemaDigest": "sha256:38ca88eefe599d9a13b0906fb7ae86be002fb7aa15767925a2fe11908fec95da",
     "effectivePolicySchemaDigest": "sha256:5907054022521f9926164d1e899fa89ecf931ea916da5d7989a6c58015053c30",
-    "productionRegistration": "v4_only",
-    "activationAuthorized": false,
+    "productionRegistration": "v4_and_v5",
+    "activationAuthorized": true,
     "retainedCorpusCount": 25,
     "implementationCloseoutRows": 31,
     "firstPublicMaxJobs": 2,
@@ -26,20 +26,30 @@
       "placement_diversity",
       "non_managed_ssh",
       "self_custody_spend"
-    ]
+    ],
+    "handlerGeneration": 96
   },
   "consumers": {
     "cli": {
       "package": "@proof-computer/proof-cli-liskov",
-      "packageVersion": "0.7.0",
+      "packageVersion": "0.9.0",
       "sourceCommit": "e135604ed2f6c59ffc737fce5fe08eaa19d77d0c",
-      "releasedRefContainingCommit": null
+      "releasedRefContainingCommit": "v0.9.0",
+      "pendingVerbs": {
+        "commands": [
+          "application source-binding set",
+          "application source-binding show",
+          "application source-binding revoke"
+        ],
+        "releasedRefContainingCommit": null,
+        "backlogItem": "BKLG-20260904-33l3"
+      }
     },
     "console": {
       "package": "slipway-ui",
       "packageVersion": "0.0.0",
       "sourceCommit": "f07323a13e7890614e1a5aec754b08523f485f94",
-      "releasedRefContainingCommit": null
+      "releasedRefContainingCommit": "main@12cdad96ac8414984c34401d2caa857149979a22"
     },
     "examples": {
       "repository": "proof-computer/liskov-examples",
@@ -49,15 +59,15 @@
     },
     "workflow": {
       "package": "liskov-github-actions",
-      "packageVersion": "1.2.3",
+      "packageVersion": "1.2.4",
       "sourceCommit": "aa1b83f0fd4b08ac33a6c9970d2077885922d79c",
-      "releasedRefContainingCommit": null
+      "releasedRefContainingCommit": "v1.2.4"
     },
     "cargoRuntime": {
       "repository": "proof-computer/liskov-runtime-cargo",
       "sourceCommit": "20444a833bd9eb627362171737cbc26f9f70901d",
       "nearestPriorRelease": "v0.10.36",
-      "releasedRefContainingCommit": null
+      "releasedRefContainingCommit": "v0.10.37"
     },
     "managedSshMatrix": {
       "repository": "proof-computer/slipway-rs",
@@ -70,12 +80,27 @@
     "offline and bounded live workload rehearsals are accepted",
     "the Managed Runtime SSH live rehearsal is accepted",
     "the intended audience and rollout evidence are recorded",
-    "the promoted docs build and production routes are verified"
+    "the promoted docs build and production routes are verified",
+    "the application source-binding CLI verbs are published and the docs CLI fixture pins that release"
   ],
   "demotionRestores": [
     "Release-gated v1 capability classification",
     "V5 pages removed from normal navigation",
     "V4-only production guidance",
     "exact affected production routes reverified"
-  ]
+  ],
+  "activation": {
+    "activatedOn": "2026-08-23",
+    "reconciledOn": "2026-09-04",
+    "handlerGeneration": 96,
+    "readinessMode": "activation",
+    "readinessEvaluatedAtMs": 1788524178328,
+    "evidence": [
+      "liskov-agent-orchestrator:docs/raw/2026-08-23-v5-production-activation.md",
+      "liskov-agent-orchestrator:docs/raw/2026-09-04-dydb-fleet-census.md",
+      "liskov-agent-orchestrator:docs/raw/2026-08-29-sznx-clean-run.md",
+      "liskov-agent-orchestrator:docs/raw/2026-09-03-v5-managed-ssh-live-rehearsal.md",
+      "liskov-agent-orchestrator:docs/raw/2026-09-04-776u-promotion-preparation.md"
+    ]
+  }
 }

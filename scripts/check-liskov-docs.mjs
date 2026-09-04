@@ -135,7 +135,7 @@ const unlistedIds = new Set([
   'configure/clustering',
 ]);
 
-const ids = files.map(idFor).filter((id) => !unlistedIds.has(id));
+const ids = files.map(idFor).filter((id) => !unlistedIds.has(id)).sort();
 check(
   JSON.stringify(ids) === JSON.stringify([...expectedIds].sort()),
   `page inventory differs\nexpected: ${[...expectedIds].sort().join(', ')}\nactual: ${ids.join(', ')}`,
@@ -377,7 +377,10 @@ check(
   v5ReleaseContract.schema === 'proof.liskov.docs-v5-release-contract.v1',
   'V5 release contract: wrong schema',
 );
-check(v5ReleaseContract.verifiedAt === '2026-08-21', 'V5 release contract: wrong verification date');
+// 2026-09-04 (BKLG-20260817-776u): availability transition release_gated → promoted.
+// Production registration is v4_and_v5 (handler generation 96, activation-mode
+// readiness green); every pinned consumer commit is contained in a released ref.
+check(v5ReleaseContract.verifiedAt === '2026-09-04', 'V5 release contract: wrong verification date');
 check(
   v5ReleaseContract.contract?.rcDigest === 'sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10',
   'V5 release contract: wrong RC digest',
@@ -390,8 +393,18 @@ check(
   v5ReleaseContract.contract?.effectivePolicySchemaDigest === 'sha256:5907054022521f9926164d1e899fa89ecf931ea916da5d7989a6c58015053c30',
   'V5 release contract: wrong effective-policy schema digest',
 );
-check(v5ReleaseContract.contract?.productionRegistration === 'v4_only', 'V5 release contract: RC must remain V4-only');
-check(v5ReleaseContract.contract?.activationAuthorized === false, 'V5 release contract: RC must not claim activation authority');
+check(
+  v5ReleaseContract.contract?.productionRegistration === (v5PagesPromoted ? 'v4_and_v5' : 'v4_only'),
+  'V5 release contract: production registration disagrees with the documentation mode',
+);
+check(
+  v5ReleaseContract.contract?.activationAuthorized === v5PagesPromoted,
+  'V5 release contract: activation authority disagrees with the documentation mode',
+);
+if (v5PagesPromoted) {
+  check(v5ReleaseContract.contract?.handlerGeneration === 96, 'V5 release contract: wrong activated handler generation');
+  check(Array.isArray(v5ReleaseContract.activation?.evidence) && v5ReleaseContract.activation.evidence.length >= 4, 'V5 release contract: promotion lacks activation evidence');
+}
 check(v5ReleaseContract.contract?.retainedCorpusCount === 25, 'V5 release contract: wrong retained corpus count');
 check(v5ReleaseContract.contract?.implementationCloseoutRows === 31, 'V5 release contract: wrong closeout row count');
 check(v5ReleaseContract.contract?.firstPublicMaxJobs === 2, 'V5 release contract: wrong first-public job bound');
@@ -409,11 +422,18 @@ check(
   v5ReleaseContract.consumers?.examples?.retainedSetCommit === 'f9b6330ac76f9c77a3a74567d1f44e47eade7f48',
   'V5 release contract: wrong retained examples commit',
 );
-for (const consumer of ['cli', 'console', 'workflow', 'cargoRuntime']) {
+const v5ReleasedRefs = v5PagesPromoted
+  ? { cli: 'v0.9.0', console: 'main@12cdad96ac8414984c34401d2caa857149979a22', workflow: 'v1.2.4', cargoRuntime: 'v0.10.37' }
+  : { cli: null, console: null, workflow: null, cargoRuntime: null };
+for (const [consumer, ref] of Object.entries(v5ReleasedRefs)) {
   check(
-    v5ReleaseContract.consumers?.[consumer]?.releasedRefContainingCommit === null,
-    `V5 release contract: ${consumer} must not claim an unreleased source commit is tagged`,
+    v5ReleaseContract.consumers?.[consumer]?.releasedRefContainingCommit === ref,
+    `V5 release contract: ${consumer} released ref must be ${String(ref)}`,
   );
+}
+if (v5PagesPromoted) {
+  check(v5ReleaseContract.consumers?.cli?.packageVersion === cliContract.version, 'V5 release contract: CLI version disagrees with the CLI contract fixture');
+  check(v5ReleaseContract.consumers?.workflow?.packageVersion === '1.2.4', 'V5 release contract: workflow release must be 1.2.4');
 }
 
 check(v5Manifest.schema === 'proof.liskov.application-manifest', 'V5 fixture: wrong manifest schema');
@@ -450,8 +470,17 @@ for (const token of [
   'first public capability and entitlement limit is **exactly 2**',
   'proof liskov application manifest validate',
   'proof liskov application policy explain',
-  'aa1b83f0fd4b08ac33a6c9970d2077885922d79c',
-  'not a released package',
+  ...(v5PagesPromoted
+    ? [
+        'proof liskov application create',
+        'proof liskov application source-binding set',
+        'proof liskov application policy publish',
+        '--expected-pointer-version',
+        'acurast-app.yml@v1',
+        'v1.2.4',
+        'does not run again on its own',
+      ]
+    : ['aa1b83f0fd4b08ac33a6c9970d2077885922d79c']),
 ]) {
   check(v5GuidePage.includes(token), `V5 guide omits ${token}`);
 }
@@ -479,6 +508,13 @@ for (const token of [
   'withdrawnKeyFingerprints',
   'runtime_ssh_operator_key_withdrawn',
   'withdrawn-key list',
+  // BKLG-20260817-776u: register before the first launch, or the run stays degraded.
+  'first launch',
+  'runtime_ssh_operator_key_registry_empty',
+  // BKLG-20260813-gebd / BKLG-20260903-futx: both blast radii, and ADR-0112 metering.
+  'The relay is a single machine',
+  'helper or sidecar death',
+  'log overage rate',
 ]) {
   check(v5SshPage.includes(token), `V5 Managed SSH guide omits ${token}`);
 }
@@ -487,10 +523,20 @@ check(!v5SshPage.includes('through support'), 'V5 Managed SSH guide must not sen
 if (v5Mode === 'release_gated') {
   check(v5ReleaseContract.availability === 'Release-gated v1', 'V5 gated source map has wrong availability');
   check(/Retained Manifest V5 \/ Policy V5 exact pair \| Release-gated v1/.test(capabilitiesPage), 'capabilities prematurely promote V5');
+  check(v5GuidePage.includes('not a released package'), 'V5 gated guide must not imply the CLI source commit is released');
   for (const id of v5PromotedIds) check(!sidebar.includes(`'${id}'`), `sidebar prematurely exposes ${id}`);
 } else {
   check(v5ReleaseContract.availability === 'v1', 'V5 promotion source map has wrong availability');
   check(/Retained Manifest V5 \/ Policy V5 exact pair \| v1/.test(capabilitiesPage), 'capabilities omit promoted V5');
+  check(v5SshPage.includes('Preview on Developer and above'), 'V5 Managed SSH guide must state the promoted plan boundary');
+  check(/Retained V5 managed Runtime SSH policy path \| Preview on Developer and above/.test(capabilitiesPage), 'capabilities omit the promoted V5 managed SSH boundary');
+  check(v5ReferencePage.includes('| Production registration | `v4_and_v5`'), 'V5 reference still claims V4-only registration');
+  check(v5ReferencePage.includes('| Activation authorized | `true` |'), 'V5 reference still claims activation is unauthorized');
+  check(v5ReferencePage.includes('does not run again on its own'), 'V5 reference must state the once re-run boundary (BKLG-20260903-6ni6)');
+  check(!v5GuidePage.includes('not a released package'), 'V5 promoted guide still calls the CLI commit unreleased');
+  for (const stale of ['V4-only', 'not authorized', 'not available in production']) {
+    for (const page of [v5GuidePage, v5ReferencePage, v5SshPage]) check(!page.includes(stale), `promoted V5 page retains stale gate text: ${stale}`);
+  }
   for (const id of v5PromotedIds) check(sidebar.includes(`'${id}'`), `sidebar omits promoted ${id}`);
   for (const page of [v5GuidePage, v5ReferencePage, v5SshPage]) {
     check(!page.startsWith('---\nunlisted: true\n'), 'promoted V5 page remains unlisted');
