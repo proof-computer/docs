@@ -34,7 +34,9 @@ is our responsibility.
 
 Managed SSH is Preview on Developer and above. Liskov operates a single-machine
 relay it cannot read. Relay traffic counts against the plan's included log
-volume and is charged at the log overage rate above it.
+volume and is charged at the log overage rate above it. Its detail page lists
+each exact-job attachment and lets an administrator revoke one attachment for
+everyone on it without ending the job.
 
 ## Roadmap
 

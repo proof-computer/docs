@@ -860,6 +860,10 @@ for (const page of [operatePage, v5SshPage]) {
   check(!/no way to cut access to a current attachment/.test(page), 'an SSH page repeats the retracted no-revocation claim');
   check(page.includes('attachment revoke'), 'an SSH page omits the attachment revoke command');
   check(page.includes('operator_revoked'), 'an SSH page omits the operator_revoked failure code');
+  check(
+    /Integrations → Liskov-Managed Runtime\s+SSH/.test(page) && /select \*\*Revoke\*\*/.test(page),
+    'an SSH page omits the Console attachment-revoke path',
+  );
 }
 
 // Availability transition (2026-08-05): Runtime SSH moved from an internal
@@ -885,6 +889,10 @@ check(
   'capabilities: customer-owned Tailscale Runtime SSH must be classified Preview on Pro and above',
 );
 const integrationsPage = readFileSync(join(docsRoot, 'operate', 'integrations.md'), 'utf8');
+check(
+  /revoke one attachment for\s+everyone on it without ending the job/.test(integrationsPage),
+  'integrations: managed SSH omits the Console attachment-revoke boundary',
+);
 check(
   integrationsPage.includes('**Live**') && integrationsPage.includes('**Roadmap**'),
   'integrations: must state the two catalogue statuses',
