@@ -59,7 +59,7 @@ If no hard cap is technically enforceable, do not call it a hard limit; use “a
 
 ## 5. Service Credit purchase
 
-> You are buying non-transferable Liskov Service Credits for Services supplied by Moose Labs Ltd trading as PROOF.COMPUTER. Credits are not money, an investment or a transferable token; they do not earn interest and cannot be used to pay another user or Marketplace publisher. Amounts are not safeguarded or held on trust. Refunds are available only as stated in the Service Credits and Payments Policy.
+> You are buying non-transferable Liskov Service Credits for Services supplied by MOOSE LABS LTD trading as PROOF. Credits are not money, an investment or a transferable token; they do not earn interest and cannot be used to pay another user or Marketplace publisher. Amounts are not safeguarded or held on trust. Refunds are available only as stated in the Service Credits and Payments Policy.
 
 Show exact Credits, price, tax, payment fee and any expiry before payment.
 

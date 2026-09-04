@@ -14,7 +14,7 @@ Its publication blockers remain open.
 
 **Version:** 1.0 — 3 September 2026
 
-This Policy explains how to report potentially illegal, infringing, unsafe or policy-breaching Marketplace content and how Moose Labs Ltd trading as PROOF.COMPUTER (**PROOF**) normally responds. It applies to Items, Listing Content, publisher profiles, reviews/ratings if enabled, and other public user submissions.
+This Policy explains how to report potentially illegal, infringing, unsafe or policy-breaching Marketplace content and how MOOSE LABS LTD trading as PROOF (**PROOF**) normally responds. It applies to Items, Listing Content, publisher profiles, reviews/ratings if enabled, and other public user submissions.
 
 It does not replace emergency services, law-enforcement reporting, a court process or a statutory reporting route.
 

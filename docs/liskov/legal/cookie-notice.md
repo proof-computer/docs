@@ -14,7 +14,7 @@ documentation build. Its publication blockers remain open.
 
 **Version:** 1.0 — 3 September 2026
 
-This Notice explains how Moose Labs Ltd trading as PROOF.COMPUTER (**PROOF**) uses cookies, local storage, pixels, SDK identifiers and similar technologies on the Liskov website, console and related online services.
+This Notice explains how MOOSE LABS LTD trading as PROOF (**PROOF**) uses cookies, local storage, pixels, SDK identifiers and similar technologies on the Liskov website, console and related online services.
 
 > **Publication condition:** this Notice is a legally structured template. It must not be published as complete until a technical scan has identified every technology, provider, purpose, duration and country, and consent behaviour has been tested.
 

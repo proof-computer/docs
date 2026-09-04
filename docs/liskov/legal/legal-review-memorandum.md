@@ -13,7 +13,7 @@ build. Its publication blockers remain open.
 :::
 
 **Date:** 3 September 2026  
-**Prepared for:** Moose Labs Ltd trading as PROOF.COMPUTER  
+**Prepared for:** MOOSE LABS LTD trading as PROOF<br />
 **Product:** Liskov  
 **Jurisdictional focus:** England and Wales / United Kingdom  
 **Purpose:** issue assessment and instructions for final launch documents
@@ -69,7 +69,7 @@ Subject to the launch gates below, this is a credible UK launch position. The la
 
 ### 3.1 Contracting entity and disclosures
 
-The same legal entity must appear throughout the customer journey. The clean suite uses “Moose Labs Ltd trading as PROOF.COMPUTER” but does not invent a company number or registered office. Insert verified details before publication.
+The same legal entity must appear throughout the customer journey. On 4 September 2026 the owner confirmed the supplier as **MOOSE LABS LTD**, company number **11435949**, a private limited company registered in England and Wales with its registered office at **The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP**, trading as **PROOF**. Carry those details consistently through the website, checkout, invoices, Orders, privacy notice and support channels.
 
 The website and commercial communications should show, as applicable:
 

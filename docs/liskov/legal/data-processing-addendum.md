@@ -14,7 +14,7 @@ build. Its publication blockers remain open.
 
 **Version:** 1.0 — 3 September 2026
 
-This Data Processing Addendum (**DPA**) forms part of the Contract between Moose Labs Ltd trading as PROOF.COMPUTER (**PROOF**) and Customer. It applies only where PROOF processes Personal Data on Customer’s behalf in providing the Services.
+This Data Processing Addendum (**DPA**) forms part of the Contract between MOOSE LABS LTD trading as PROOF (**PROOF**) and Customer. It applies only where PROOF processes Personal Data on Customer’s behalf in providing the Services.
 
 ## 1. Scope and precedence
 
