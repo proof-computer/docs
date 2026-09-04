@@ -88,10 +88,15 @@ Removing a member ends their organization access; it does not change deployed
 artifacts, rotate external credentials, stop jobs, or transfer repository
 ownership.
 
-A member row also carries a status. `active` is the ordinary state; `suspended`
-keeps the membership and the role but denies every permission, and a suspended
-member still holds their seat so they can be reinstated into it. The Team page
-shows the status; suspending and reinstating a member is not yet available.
+A member row also carries a status. `active` is the ordinary state. An admin can
+**suspend** a member and **reinstate** them from the Team page. Suspended
+members keep their membership, their role, and their seat, but they cannot act
+in that organization until they are reinstated. The Owner cannot be suspended,
+and you cannot suspend yourself.
+
+Suspending a member does not revoke Runtime SSH operator keys. Those keys are
+organization-scoped; revoke them separately from
+[Managed SSH](../operate/runtime-ssh.md).
 
 ## Transfer ownership
 
@@ -102,8 +107,8 @@ remains an admin until their role or membership is changed separately.
 ## Verify
 
 Confirm active and pending member lists, roles, owner badge, the seat count, and
-the intended organization ID. Review organization activity for invitation and acceptance
-events. Rotate shared external credentials separately if a departing member
-could access them outside Liskov.
+the intended organization ID. Review organization activity for invitation,
+acceptance, suspend, and reinstate events. Rotate shared external credentials
+separately if a departing member could access them outside Liskov.
 
 See [Roles and access](./roles.md) before assigning a role.

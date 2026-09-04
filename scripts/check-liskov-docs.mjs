@@ -375,8 +375,24 @@ check(
   'roles page does not record that granting Admin is the Owner\'s alone',
 );
 check(
-  /changing or\s+removing someone's role does not revoke their key/.test(rolesPage),
-  'roles page omits that a role does not govern Runtime SSH keys',
+  /changing or\s+removing someone's role, or suspending them, does not revoke their key/.test(rolesPage),
+  'roles page omits that a role or suspension does not govern Runtime SSH keys',
+);
+check(
+  !/suspending and reinstating a member is not yet available/.test(teamsPage),
+  'teams page still says suspend/reinstate is unavailable',
+);
+check(
+  /An admin can\s+\*\*suspend\*\* a member and \*\*reinstate\*\* them/.test(teamsPage),
+  'teams page does not describe the suspend and reinstate control',
+);
+check(
+  /keep their membership, their role, and their seat/.test(teamsPage),
+  'teams page omits that a suspended member keeps role and seat',
+);
+check(
+  /Suspending a member does not revoke Runtime SSH operator keys/.test(teamsPage),
+  'teams page omits that suspension does not revoke Runtime SSH keys',
 );
 
 check(
