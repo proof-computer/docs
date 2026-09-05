@@ -73,6 +73,19 @@ A configured Stripe supplier/VAT profile and a deployed Checkout implementation
 also do not change this release boundary. Customer payment starts only after the
 commercial enablement gate and the documented production journey pass.
 
+## A subscription request reports a conflict
+
+`subscription_intent_conflict` means the request key already identifies a
+subscription action with different plan, interval, cancellation, or trial
+inputs. The conflicting request is refused before a provider mutation.
+Do not change the inputs under that key or create another request to work
+around an uncertain payment. Contact support with the organization ID, UTC
+time, and error code; do not include payment links or credentials.
+
+An unknown action reports `subscription_action_invalid`; an unsupported
+interval reports `subscription_interval_invalid`. These errors do not enable
+paid billing or provide a supported route around the release gate above.
+
 ## Service Credit reads disagree
 
 1. Confirm the active organization ID in the Console and CLI.

@@ -1009,6 +1009,10 @@ for (const [fileId, required] of Object.entries({
   'troubleshooting/account-funding': [
     'There is no supported customer checkout',
     'Service Credit reads disagree',
+    'subscription_intent_conflict',
+    'subscription_action_invalid',
+    'subscription_interval_invalid',
+    'Do not change the inputs under that key',
     'not_a_member',
     'organizationContext.effective',
     'organizationContext.sessionDefault',
