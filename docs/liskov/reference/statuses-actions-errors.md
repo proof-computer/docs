@@ -59,7 +59,7 @@ plan items. Use those tokens for a bounded retry; do not treat `wait` or
 | Field | Meaning |
 | --- | --- |
 | `decisionId` | Stable identity for the current decision cohort; required for a supported retry. |
-| `conditionClass` | Typed cause family, such as `missingProcessorClaim`, `scheduleOverlap`, `insufficientReward`, `noAffordableProcessor`, `staleEnvironmentHandoff`, `ambiguousRecovery`, `runtimeFirstContactTimeout`, `runtimeCrashLoop`, `missedCheckin`, or `unknown`. |
+| `conditionClass` | Typed cause family, such as `missingProcessorClaim`, `scheduleOverlap`, `processorAtMatchCap`, `insufficientReward`, `noAffordableProcessor`, `authoringFault`, `staleEnvironmentHandoff`, `ambiguousRecovery`, `runtimeFirstContactTimeout`, `runtimeCrashLoop`, `missedCheckin`, or `unknown`. |
 | `disposition` | Machine response: `wait`, `recover`, or `park`. A platform kill state is not a customer retry recipe. |
 | `nextAction` | Supported customer or support step. Absence normally means wait or escalate. |
 | `reason` | Stable explanatory token; use it before the human message in automation. |
@@ -67,6 +67,13 @@ plan items. Use those tokens for a bounded retry; do not treat `wait` or
 
 `recover` can consume a bounded retry budget. `park` stops automatic forward
 progress. `wait` must not be converted into repeated manual submissions.
+
+`processorAtMatchCap` rotates away from the saturated processor within the
+bounded launch-recovery budget. `authoringFault` does not retry: correct the
+reported manifest pointer and publish again. The schedule-bound reason tokens
+are `acurast_job_registration_duration_below_minimum`,
+`acurast_job_registration_start_too_far_in_future`, and
+`acurast_job_registration_max_start_delay_exceeded`.
 
 ## Organization business-eligibility errors
 

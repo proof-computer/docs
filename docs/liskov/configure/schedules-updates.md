@@ -37,6 +37,12 @@ work after the predecessor's scheduled boundary. A fixed
 guarantee readiness before the old job ends: market assignment and startup are
 external facts.
 
+For Manifest V4, choose `durationMs` of at least 60 seconds and
+`maxStartDelayMs` of at most one hour. A caller-supplied start must be no more
+than 24 hours ahead when the job is submitted. The CLI and Console authoring
+paths refuse these errors before Acurast registration and identify the
+offending schedule field.
+
 The first public capability supports parallelism `1`, fixed lead time or
 after-end renewal, and an open market. Automatic lead calculation is not
 enabled.
