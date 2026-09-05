@@ -724,7 +724,7 @@ check(encryptedContract.mode === 'aes-256-gcm-payload-v1', 'encrypted code fixtu
 check(encryptedContract.runtimeVersion === '0.3.29' && encryptedContract.cliVersion === '0.13.0', 'encrypted code fixture: wrong released owners');
 check(encryptedContract.productionAccepted === false, 'encrypted code: promotion needs production acceptance');
 for (const token of [encryptedContract.mode, encryptedContract.keySecretId, encryptedContract.keyEnvironment,
-  encryptedContract.buildKeySecret, '--paused', '--dry-run', 'encrypted_code_verified', 'encrypted_code_start_failed',
+  encryptedContract.buildKeySecret, '--paused', '--dry-run', 'encrypted_code_verified', 'encrypted_code_start_failed', 'lockbox_response_key_missing',
   'PROOF can access', 'Cargo', 'plaintext digest', 'ciphertext digest']) {
   check(encryptedRecipe.includes(token), `encrypted code recipe omits contract token: ${token}`);
 }
