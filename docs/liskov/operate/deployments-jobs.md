@@ -83,8 +83,9 @@ order; use **Load more** for another bounded page.
 
 A **Scheduled** row is a plan. It has no execution link, Acurast number,
 processor, or charge until there is recorded execution evidence. A planned
-start may be absent before an anchor is known. **Submitted** records a
-registration; **Ready** means runtime contact was recorded before the window,
+start may be absent before an anchor is known. **Submitted** means execution is authorized or in flight; check the Acurast
+number and registration evidence to see whether it reached the chain.
+**Ready** means runtime contact was recorded before the window,
 and **Serving** means the contacted deployment is within its window.
 
 **Held** means the expected runtime evidence has not arrived. Attention groups
