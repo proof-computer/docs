@@ -5,12 +5,12 @@ description: Public proof liskov v1 command tree, confirmations, machine-readabl
 
 # CLI
 
-The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.12.1` and
+The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.13.0` and
 requires Node.js 22 or later. All commands begin with `proof liskov`.
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov@0.12.1
+proof plugins install @proof-computer/proof-cli-liskov@0.13.0
 proof liskov --help
 ```
 
@@ -143,6 +143,13 @@ nonzero.
 Pinned releases do not require `--artifact-version`. `--paused --reason TEXT`
 can atomically leave a newly published policy paused when that deliberate
 workflow is needed.
+
+For the retained registered source path, `application policy publish` accepts
+`--dry-run` without `--yes`, or `--paused --reason TEXT --yes` to publish with an
+atomic setup hold (CLI `0.13.0` and a supporting server). Preview and confirmation
+are mutually exclusive. The existing source-evidence and expected-pointer flags
+remain required. See the release-gated
+[encrypted JavaScript recipe](../build/encrypted-javascript.md).
 
 ## Operations
 

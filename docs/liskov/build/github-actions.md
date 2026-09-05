@@ -92,3 +92,7 @@ The prepared encrypted path uses the existing managed Lockbox key-release
 boundary and does not grant a build workflow publication or spending authority.
 See [Trust and data boundaries](../concepts/trust-boundaries.md) before making a
 private-code claim; Cargo image and cache confidentiality remains separate.
+
+The prepared [encrypted JavaScript recipe](./encrypted-javascript.md) records
+the exact action inputs, module contract, paused publication and verification
+steps. Its release gate remains in force until the complete path is accepted.

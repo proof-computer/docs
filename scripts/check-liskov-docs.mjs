@@ -156,6 +156,7 @@ const baranFiles = walk(baranRoot).filter((file) => extname(file) === '.md').sor
 const unlistedIds = new Set([
   ...(!v5PagesPromoted ? v5PromotedIds : []),
   'configure/clustering',
+  'build/encrypted-javascript',
 ]);
 
 const ids = files
@@ -713,9 +714,22 @@ check(
   'fixture: public logging recipe must use only observability.logs.enabled',
 );
 
+const encryptedContract = JSON.parse(readFileSync(join(root, 'fixtures/liskov-encrypted-code-contract.json'), 'utf8'));
+const encryptedRecipe = readFileSync(join(docsRoot, 'build/encrypted-javascript.md'), 'utf8');
+check(encryptedContract.mode === 'aes-256-gcm-payload-v1', 'encrypted code fixture: wrong delivery mode');
+check(encryptedContract.runtimeVersion === '0.3.29' && encryptedContract.cliVersion === '0.13.0', 'encrypted code fixture: wrong released owners');
+check(encryptedContract.productionAccepted === false, 'encrypted code: promotion needs production acceptance');
+for (const token of [encryptedContract.mode, encryptedContract.keySecretId, encryptedContract.keyEnvironment,
+  encryptedContract.buildKeySecret, '--paused', '--dry-run', 'encrypted_code_verified', 'encrypted_code_start_failed',
+  'PROOF can access', 'Cargo', 'plaintext digest', 'ciphertext digest']) {
+  check(encryptedRecipe.includes(token), `encrypted code recipe omits contract token: ${token}`);
+}
+const encryptedExample = readFileSync(join(root, 'examples/liskov-v1/encrypted-module.mts'), 'utf8').trim();
+check(encryptedRecipe.includes(encryptedExample), 'encrypted code module differs from typechecked fixture');
+
 const cliPage = readFileSync(join(docsRoot, 'reference', 'cli.md'), 'utf8');
 check(cliContract.package === '@proof-computer/proof-cli-liskov', 'CLI fixture: wrong package');
-check(cliContract.version === '0.12.1', 'CLI fixture: wrong released version');
+check(cliContract.version === '0.13.0', 'CLI fixture: wrong released version');
 check(cliContract.command === 'liskov:application:logs', 'CLI fixture: missing logs command');
 check(cliContract.flags?.limit?.minimum === 1 && cliContract.flags?.limit?.maximum === 500, 'CLI fixture: wrong log limit bounds');
 check(
@@ -998,7 +1012,7 @@ for (const [fileId, required] of Object.entries({
   'operate/update': ['successor', 'without mutating'],
   'operate/retire': ['does not stop existing jobs', 'receipt'],
   'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Encrypted JavaScript payload delivery', 'Private customer code inside Cargo images'],
-  'reference/cli': ['0.12.1', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key', 'withdrawn-key'],
+  'reference/cli': ['0.13.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key', 'withdrawn-key'],
   'reference/manifest-v4': ['deprecated_manifest_field', 'profileId', 'sinkName', 'future schema', 'durationMs', '60000', 'maxStartDelayMs', '3600000'],
   'reference/statuses-actions-errors': ['processorAtMatchCap', 'authoringFault', 'acurast_job_registration_duration_below_minimum'],
   'configure/logging-diagnostics': ['only logging field needed', 'provisions', 'application logs'],

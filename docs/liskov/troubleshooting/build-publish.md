@@ -80,3 +80,18 @@ Do not copy a typed internal field into a recipe to “test” availability.
 
 Preflight is read-only. Run it after the last draft/artifact change and publish
 once with the exact reviewed artifact-version ID.
+
+## Encrypted payload cannot start
+
+For the release-gated [encrypted JavaScript path](../build/encrypted-javascript.md),
+`encrypted_code_start_failed` means the loader refused startup. Pause future
+planning, then compare the attested ZIP, plaintext and ciphertext digests,
+`encryption-secret-id`, required `LISKOV_CODE_KEY` declaration and configured
+managed key version. The key must arrive through the authenticated Lockbox
+grant; an environment value alone does not prove that delivery.
+
+A wrong key, modified ciphertext, mismatched descriptor or missing `start(runtime)`
+export must be corrected before another paid attempt. Rebuild and attest when
+artifact bytes change. Never log a key or decrypted module. Loader success
+(`encrypted_code_verified`) needs a separate application outcome and final
+job/spend readback before treating a one-shot run as successful.
