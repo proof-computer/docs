@@ -45,6 +45,12 @@ proof liskov application action-plan retry APPLICATION_ID \
 Submit once, then verify a new activity event. Repeated retries can consume the
 bounded launch budget or create more review work.
 
+If `conditionClass` is `processorAtMatchCap`, Liskov excludes that processor
+and tries the next eligible candidate within the retry budget. If it is
+`authoringFault`, do not retry the same policy. Correct the reported schedule
+pointer: use at least 60 seconds for `durationMs`, at most one hour for
+`maxStartDelayMs`, and no start more than 24 hours ahead.
+
 ## Runtime failure after contact
 
 The first public policy waits to scheduled end rather than automatically

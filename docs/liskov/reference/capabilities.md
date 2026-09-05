@@ -54,7 +54,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Simultaneous jobs | Manifest V4 is v1 at exactly `1`; retained V5 is release-gated at one or two jobs; higher schema ceilings are not availability |
 | Open-market processor selection | v1 |
 | Manager/static selection, placement groups, topology constraints | Internal |
-| Job schedule | v1; `durationMs > 0`, account/platform limits also apply |
+| Job schedule | v1; `durationMs >= 60000`, `maxStartDelayMs <= 3600000`, and a supplied start cannot be more than 24 hours ahead |
 | Renewal after scheduled end | v1 |
 | Renewal before end with fixed lead | v1; 60,000–1,800,000 ms and no more than half the job duration |
 | Automatic renewal lead | Internal |
