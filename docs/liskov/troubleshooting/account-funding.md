@@ -86,6 +86,18 @@ An unknown action reports `subscription_action_invalid`; an unsupported
 interval reports `subscription_interval_invalid`. These errors do not enable
 paid billing or provide a supported route around the release gate above.
 
+## Subscription change has an uncertain outcome
+
+`subscription_outcome_uncertain` means Liskov could not confirm the result of
+that subscription request. The provider may have applied it; this is not a
+confirmation that a payment was declined or canceled.
+
+Refresh the subscription status. If it remains uncertain, contact support with
+the organization ID, request key and UTC time. Do not start another payment or
+trial, or use a new request key, to work around the uncertainty. A trial remains
+spent even when its provider result is uncertain. Never share payment links or
+credentials with the report.
+
 ## Service Credit reads disagree
 
 1. Confirm the active organization ID in the Console and CLI.

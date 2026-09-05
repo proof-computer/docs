@@ -1010,6 +1010,8 @@ for (const [fileId, required] of Object.entries({
     'There is no supported customer checkout',
     'Service Credit reads disagree',
     'subscription_intent_conflict',
+    'subscription_outcome_uncertain',
+    'A trial remains',
     'subscription_action_invalid',
     'subscription_interval_invalid',
     'Do not change the inputs under that key',
