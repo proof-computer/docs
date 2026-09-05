@@ -21,14 +21,21 @@ not submit payment details or call an internal funding endpoint.
 The Console **Billing & funding** page shows the balance as an equation:
 
 - **Settled** — counted ledger rows only;
-- **Held** — open reserves and review holds, which are a ceiling, not a cost;
+- **Held** — open reserves, review holds, and purchased-credit refund holds; this value is set aside, not charged;
 - **Available** — settled minus held; what a new deploy may draw on;
 - **Promo** — promotional credit inside available, spent first and never refundable;
-- **Refundable** — purchased value only.
+- **Refundable** — unused purchased value after existing holds.
 
 The **Ledger** page is the line-by-line audit trail, including the running
 balance after each counted row. A reserve, review hold, or released reserve
 does not move that running balance.
+
+The release-gated refund flow sets aside purchased credit when a refund is
+accepted. That value cannot also pay for a deployment or platform usage, or fund
+another refund. The Ledger shows a **Refund hold** until the payment outcome is
+confirmed. Success replaces the hold with one refund debit; a confirmed failed
+or canceled refund releases it. An uncertain outcome keeps the value held while
+it is reconciled. Promotional credit is never refundable.
 
 CLI reads are also available:
 
