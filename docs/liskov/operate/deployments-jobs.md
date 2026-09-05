@@ -62,6 +62,35 @@ together your organization's deployment history on the processor, the chain's
 published hardware facts, and any Enterprise register intelligence. It is not
 a processor directory, and opening it does not change the deployment.
 
+## Order the Deployments page
+
+Open **Deployments** in the Application workspace. **Order → Stable job** groups
+recorded executions by their stable job, newest generation first. **Time** orders
+the same rows by their recorded window start, newest first. Changing the order
+does not request a deployment, change a schedule, or change the recorded costs.
+
+The selected order is shareable in the URL: `?order=stable` or `?order=time`.
+An older `?order=job` link still selects Stable job, as does an absent or invalid
+order. Switching preserves other query values and a row fragment such as
+`#slot-1:g3`. Back, Forward, and reload restore the selected presentation.
+
+Use Tab to reach the selected choice, arrow keys to switch, or select a choice
+directly. The control remains available while the page is empty or cannot read
+execution evidence. Existing loaded history remains available when changing
+order; use **Load more** for another bounded page.
+
+## When a job identity is not reported
+
+Some retained execution records do not identify their stable job. Coverage
+keeps their recorded status, Acurast number, window, and processor evidence in
+**Job identity not reported** instead of placing them under another job.
+Unknown identity does not mean that no deployment exists or that it failed.
+
+A processor named by a deployment is different from a processor that made
+verified runtime contact. Read the evidence label beside the identifier. Use
+an execution link only when a recorded job coordinate is available; otherwise
+use the recorded Acurast number and [diagnostic evidence](./diagnose-retry.md).
+
 ## Successors and overlaps
 
 For the first public capability, one logical slot has monotonic generations.

@@ -26,6 +26,18 @@ proof liskov application deployment status APPLICATION_ID --json
 Use the displayed stage timestamps and expected boundaries. Do not resubmit a
 normal wait.
 
+## Job identity or execution evidence is unavailable
+
+**Job identity not reported** means Liskov cannot assign the retained execution
+to a stable job. Inspect its recorded status, Acurast number, and window in
+Coverage. Do not assume it belongs to the first job or retry solely to make the
+identity appear.
+
+**Evidence unavailable** and **Not reported** are different from a confirmed
+absence. A missing processor identity does not prove that no processor took
+the job, and an unreadable charge does not mean a zero charge. Check the latest
+successful observation and use the support bundle if the read remains unavailable.
+
 ## Needs action
 
 Read `conditionClass`, `disposition`, `nextAction`, decision ID, and scoped
