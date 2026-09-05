@@ -1068,7 +1068,6 @@ for (const command of [
   check(combined.includes(command), `public command audit: missing ${command}`);
 }
 
-const deploymentsPage = readFileSync(join(docsRoot, 'operate', 'deployments-jobs.md'), 'utf8');
 for (const token of ['?order=stable', '?order=time', '?order=job', '#slot-1:g3', 'Job identity not reported', 'Load more']) {
   check(deploymentsPage.includes(token), `Deployments operating guide omits released contract: ${token}`);
 }
