@@ -234,6 +234,10 @@ check(
   launchSignOffMatrix.includes('Product/Legal verified all seven pre-existing non-personal organisations as internal'),
   'launch sign-off matrix lost the completed B2B-only existing-organisation verification',
 );
+check(
+  launchSignOffMatrix.includes('exact legal copy belongs on sign-up, login and the Terms, not in the hero'),
+  'launch sign-off matrix lost the approved Liskov homepage copy placement',
+);
 const masterTermsPage = readFileSync(join(docsRoot, 'legal', 'master-terms.md'), 'utf8');
 check(masterTermsPage.includes('The Services are not available for consumer use.'), 'Master Terms lost the approved strict consumer boundary');
 check(!masterTermsPage.includes('Consumer use requires separate written terms signed by PROOF.'), 'Master Terms still offers the rejected signed consumer exception');
