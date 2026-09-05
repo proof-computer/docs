@@ -153,6 +153,11 @@ Lockbox grant. Setting an environment variable alone is insufficient. It
 loads a private local module and removes the temporary plaintext file after
 `start(runtime)` completes; it does not use a shared plaintext cache.
 
+A `lockbox_response_key_missing` bootstrap failure means the processor did not
+provide its P-256 grant-response key. The managed application code key is a
+separate key. Hold further attempts and report the stable failure code and
+job identity to support.
+
 If startup reports `encrypted_code_start_failed`, keep the Application paused
 while comparing the attested digests, secret ID and configured key version.
 Do not print the key or decrypted module to diagnose it. See

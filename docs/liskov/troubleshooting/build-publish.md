@@ -95,3 +95,11 @@ export must be corrected before another paid attempt. Rebuild and attest when
 artifact bytes change. Never log a key or decrypted module. Loader success
 (`encrypted_code_verified`) needs a separate application outcome and final
 job/spend readback before treating a one-shot run as successful.
+
+`lockbox_response_key_missing` occurs earlier, during runtime bootstrap. It
+identifies the processor's P-256 public key for receiving encrypted grants.
+The managed AES application code key has a separate role: successfully saving
+it does not establish that the processor can receive the grant. Keep the
+Application paused and provide the job ID, runtime failure code and policy
+digest to support. Do not substitute an arbitrary public key or rotate the
+application code key to hide this failure.
