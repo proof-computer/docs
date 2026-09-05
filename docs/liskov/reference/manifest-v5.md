@@ -1,16 +1,16 @@
 ---
-unlisted: true
 title: Retained Application Manifest V5 reference
 description: Exact retained V5 fields, defaults, bounds, cross-field rules, release identity, and deferred roots.
 ---
 
 # Retained Application Manifest V5 reference
 
-:::danger[Not released]
+:::note[Exact retained release]
 
-Production registration is V4-only and V5 activation is not authorized. This
-reference is prepared for the exact retained release candidate; it is not an
-availability claim. Use [Application Manifest V4](./manifest-v4.md) today.
+This reference covers RC
+`sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10`.
+[Capabilities and limits](./capabilities.md) owns current availability, and
+[Application Manifest V4](./manifest-v4.md) remains supported.
 
 :::
 
@@ -27,8 +27,8 @@ For a guided path, see
 | Effective-policy schema | `sha256:5907054022521f9926164d1e899fa89ecf931ea916da5d7989a6c58015053c30` |
 | Retained corpus | 25 manifests from `liskov-examples@880ea6d8b6fb3bb9d0ff7b70cb6cd2c0cc6a0451` |
 | Implementation closeout | 31 retained rows, implemented dark |
-| Production registration | `v4_only` |
-| Activation authorized | `false` |
+| Production registration | `v4_and_v5` (handler generation 96, verified 2026-09-04) |
+| Activation authorized | `true` |
 
 The generated authored schema is served read-only at:
 
@@ -36,9 +36,9 @@ The generated authored schema is served read-only at:
 GET /api/application-manifest/v5/schema
 ```
 
-The route is available to authoring tools before publication activation. A
-schema response describes the exact document shape; it does not authorize an
-Application to publish or run.
+The route is available to authoring tools. A schema response describes the
+exact document shape; publication and execution still apply capability,
+entitlement, evidence, and spend gates.
 
 ## Conventions
 
@@ -131,8 +131,10 @@ arguments have at most 64 items. No shell string or inline program is parsed.
 | `continuous` | optional `until` | Successive paid windows until the bound or indefinitely |
 | `interval` | required `every`, optional `until` | New occurrence on a cadence |
 
-Running a completed `once` application again is an explicit re-arm, not a
-recovery retry.
+A settled `once` application does not run again on its own, and Liskov never
+re-runs it as a recovery retry. The supported way to run the same document
+again today is a new Application, which counts against your organization's
+job slots; a manual re-run verb is planned.
 
 ## `deployment`
 
