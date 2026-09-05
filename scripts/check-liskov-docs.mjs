@@ -1068,6 +1068,10 @@ for (const command of [
   check(combined.includes(command), `public command audit: missing ${command}`);
 }
 
+for (const token of ['?order=stable', '?order=time', '?order=job', '#slot-1:g3', 'Job identity not reported', 'Load more']) {
+  check(deploymentsPage.includes(token), `Deployments operating guide omits released contract: ${token}`);
+}
+
 check(combined.includes('v0.3.26'), 'runtime reference omits the supported SDK version');
 check(combined.includes('QmQCpRJ593xRyKko9smvtFixzfAGwDuG6gXBemRtUeSe4U'), 'Uptime Prober CID differs from descriptor');
 check(combined.includes('7545ffe44288c548ff4dea09ef0c0dc318a8dd490c5dc822becec3ff0d307d57'), 'Uptime Prober digest differs from descriptor');
