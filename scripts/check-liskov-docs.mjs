@@ -1068,7 +1068,7 @@ for (const command of [
   check(combined.includes(command), `public command audit: missing ${command}`);
 }
 
-for (const token of ['?order=stable', '?order=time', '?order=job', '#slot-1:g3', 'Job identity not reported', 'Load more']) {
+for (const token of ['?order=stable', '?order=time', '?order=job', '#slot-1:g3', 'Job identity not reported', 'Load more', 'Show loaded history', 'Evidence unavailable', '$0.0008', 'stale']) {
   check(deploymentsPage.includes(token), `Deployments operating guide omits released contract: ${token}`);
 }
 

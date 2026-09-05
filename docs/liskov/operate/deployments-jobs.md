@@ -79,6 +79,39 @@ directly. The control remains available while the page is empty or cannot read
 execution evidence. Existing loaded history remains available when changing
 order; use **Load more** for another bounded page.
 
+## Read states and Service Credits
+
+A **Scheduled** row is a plan. It has no execution link, Acurast number,
+processor, or charge until there is recorded execution evidence. A planned
+start may be absent before an anchor is known. **Submitted** records a
+registration; **Ready** means runtime contact was recorded before the window,
+and **Serving** means the contacted deployment is within its window.
+
+**Held** means the expected runtime evidence has not arrived. Attention groups
+show the recorded blocker and affected jobs. Refused offers are counted from
+loaded history. An **Action Plan** link appears when Liskov has recorded that
+it stopped retrying; a shared blocker code does not prove a shared cause.
+**Evidence unavailable** means the read cannot establish the state.
+
+An **Ended** window can still have settlement pending. **Released** requires
+recorded deregistration evidence. Read the amounts separately: **reserved**
+credits remain committed, **charged** credits have settled, **in review**
+credits await resolution, and **released** credits are available again.
+A recorded zero charge is shown as zero; missing settlement is not a zero
+charge. Small charges retain their precision, such as `$0.0008`.
+
+## Expand history
+
+**Show loaded history** expands rows already read. **Load more** requests the
+next bounded page. Counts distinguish rows shown, generations loaded, and the
+job's reported total. A planned successor does not add a physical generation.
+In Time order, records with no known window follow the known windows.
+
+Refreshing preserves expanded history. If older records could not be refreshed,
+the page marks that history as stale and retains it for inspection. Use
+**Load more** to refresh the older records. Missing or unreadable history is
+never proof that a deployment did not exist.
+
 ## When a job identity is not reported
 
 Some retained execution records do not identify their stable job. Coverage
@@ -93,7 +126,7 @@ use the recorded Acurast number and [diagnostic evidence](./diagnose-retry.md).
 
 ## Successors and overlaps
 
-For the first public capability, one logical slot has monotonic generations.
+Each logical slot has its own sequence of generations.
 An update or renewal can create a successor while a predecessor remains
 chain-owned until scheduled end. The timeline is authoritative about actual
 overlap or gaps. “Desired replacement” is not proof that a successor was
