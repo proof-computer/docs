@@ -244,3 +244,25 @@ The following are not gated V5 features; they are absent from the exact schema:
 - `acu_planck` or other self-custody spend.
 
 Their old draft spellings are rejected as unknown fields or closed-union arms.
+
+## Registered publication setup hold
+
+The registered `POST /api/applications/{id}/policy-versions` request accepts
+`dryRun: true` to compile and resolve the submitted `document` and `release`
+evidence, then roll back without committing policy, pointer or wakeup. Its
+response adds `dryRun: true`; an ordinary committed response remains unchanged.
+This does not authorize a schema pair that the server's current generation
+has not enabled.
+
+`postPublishStatus: "paused"` plus a trimmed 1–500-character `reason` commits
+a paused Application in the same transaction as publication. The reason and
+actor are retained, and the setup hold appears in Application activity. The
+fields must be provided together; `active` is not an accepted post-publication
+option. Omitting them preserves normal publication, including activation of a
+previously disabled Application and preservation of an existing pause.
+
+`expectedActivePointerVersion` remains the optimistic concurrency fence.
+Use it for both preview and confirmation. `invalid_publication_pause` is a
+400 response for an invalid reason/pair; `active_pointer_version_conflict`
+requires fresh review. CLI `application policy publish --dry-run` and
+`--paused --reason TEXT` expose these fields from version `0.13.0`.
