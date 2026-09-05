@@ -20,11 +20,11 @@ This page is the availability owner. Guides contain only supported recipes.
 | Capability | Availability |
 | --- | --- |
 | GitHub sign-in; browser-confirmed CLI login | v1 |
-| Organizations, persistent and request-scoped CLI selection, team invitations, assignable roles | v1; the plan seat allowance is enforced at invite time with no overage, and while paid plan activation is release-gated every organization resolves to the Free allowance of one seat |
+| Organizations, persistent and request-scoped CLI selection, team invitations, assignable roles | v1; the plan seat allowance is enforced at invite time with no overage, and while paid plan activation is release-gated every organization resolves to the Free allowance of one seat. New non-personal organizations require a two-letter business-establishment country and the versioned, non-pre-ticked business-purpose/18+/authority statement. Personal, family, and household use is not supported |
 | Service Credit balance, reservation, and ledger reads | v1; read-only surfaces are supported for an existing organization (Console Account, Billing & funding, and Ledger; CLI billing/transaction reads) |
 | Plan catalog and plans page | v1 read of the catalog on `/organizations/new/plan`; paid attach, trial start, and production collection remain release-gated |
 | Plan selection and terms acceptance | Release-gated v1; the commercial go-live decision is not complete. Writing a plan id does not activate a paid plan |
-| Stripe USD checkout and Service Credit issuance | Release-gated v1; checkout is disabled for customer use and internal acceptance must not be treated as availability |
+| Stripe USD checkout and Service Credit issuance | Release-gated v1; checkout is disabled for customer use and internal acceptance must not be treated as availability. The prepared contract uses automatic tax and billing/tax-ID collection, creates a Stripe invoice/receipt, and mints only the pre-tax Service Credit face value |
 | Paid subscription activation | Release-gated; a written plan id does not activate a paid plan. Usable only after reconciled Autumn/Stripe payment. Production paid billing is not enabled |
 | Curated first-party Marketplace launch | Release-gated v1; limited to internal first-party engineering acceptance |
 | Uptime Prober | Release-gated v1; an internal first-party acceptance fixture, not a supported customer offering |
@@ -35,7 +35,8 @@ This page is the availability owner. Guides contain only supported recipes.
 | Retained V5 GitHub source import | v1; repository, allowed refs, workflow identity, and manifest path are bound to the Application by an organization admin before publication, and every build attests them; `liskov-github-actions` `v1.2.4` contains the exact-bound import (`aa1b83f`) |
 | Reusable GitHub build/pin/OIDC workflow | v1; moving `v1` tag verified at `v1.2.2` |
 | Pinned first-party IPFS bundle | v1 |
-| Private deployed customer code | Not v1; private source access and TEE execution do not make current artifact delivery confidential |
+| Encrypted JavaScript payload delivery | Release-gated v1; the runtime loader is released as `0.3.29`, but the complete workflow and production key-release path still require acceptance |
+| Private customer code inside Cargo images | Not v1; private source access, TEE execution and encrypted JavaScript do not establish job-authorized Cargo cache reuse |
 | General customer-authored Cargo/runtime image | Internal |
 
 ## Runtime, placement, and lifecycle
@@ -49,11 +50,11 @@ This page is the availability owner. Guides contain only supported recipes.
 | Liskov-hosted HTTP/SSH ingress | Not v1 |
 | Runtime SSH into your own running job, Liskov-operated relay | Preview on Developer and above; Liskov operates the relay and cannot read the session. The relay is a single machine: if it is lost, open sessions drop until it returns and you reconnect; your jobs are unaffected. A helper or sidecar death ends managed SSH for that job until the next run; the job itself is unaffected. Relay traffic counts against your plan's included log volume and is charged at the log overage rate above it. A key's access can be withdrawn at once without republishing; a session already open drains rather than being cut |
 | Retained V5 managed Runtime SSH policy path | Preview on Developer and above; native-image-only `access.ssh.provider.kind: liskov_managed`, with organization operator keys snapshotted into each exact-job attachment (register at least one key before the Application's first launch); the relay's single-machine and helper/sidecar blast radii and metered relay traffic apply as on the row above |
-| Runtime SSH into your own running job, your own Tailscale network | Preview on Pro and above; requires a Tailscale account you own |
+| Runtime SSH into your own running job, your own Tailscale network | Preview on Pro and above; listed as Roadmap in Integrations until a live policy version can name it; requires a Tailscale account you own |
 | Simultaneous jobs | Manifest V4 is v1 at exactly `1`; retained V5 is v1 at one or two jobs; higher schema ceilings are not availability |
 | Open-market processor selection | v1 |
 | Manager/static selection, placement groups, topology constraints | Internal |
-| Job schedule | v1; `durationMs > 0`, account/platform limits also apply |
+| Job schedule | v1; `durationMs >= 60000`, `maxStartDelayMs <= 3600000`, and a supplied start cannot be more than 24 hours ahead |
 | Renewal after scheduled end | v1 |
 | Renewal before end with fixed lead | v1; 60,000–1,800,000 ms and no more than half the job duration |
 | Automatic renewal lead | Internal |

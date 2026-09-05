@@ -190,7 +190,12 @@ For planned rotation:
 
 ### Cut access to one attachment
 
-To end one job's access for everyone on it, without ending the job:
+To end one job's access for everyone on it without ending the job, open Console
+**Integrations → Liskov-Managed Runtime SSH**, find the exact job under
+**Attachments**, and select **Revoke**. The confirmation names the
+whole-attachment blast radius and the drain below.
+
+The same operation is available from the CLI:
 
 ```bash
 proof liskov runtime-ssh attachment list --json

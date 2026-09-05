@@ -26,6 +26,18 @@ proof liskov application deployment status APPLICATION_ID --json
 Use the displayed stage timestamps and expected boundaries. Do not resubmit a
 normal wait.
 
+## Job identity or execution evidence is unavailable
+
+**Job identity not reported** means Liskov cannot assign the retained execution
+to a stable job. Inspect its recorded status, Acurast number, and window in
+Coverage. Do not assume it belongs to the first job or retry solely to make the
+identity appear.
+
+**Evidence unavailable** and **Not reported** are different from a confirmed
+absence. A missing processor identity does not prove that no processor took
+the job, and an unreadable charge does not mean a zero charge. Check the latest
+successful observation and use the support bundle if the read remains unavailable.
+
 ## Needs action
 
 Read `conditionClass`, `disposition`, `nextAction`, decision ID, and scoped
@@ -44,6 +56,12 @@ proof liskov application action-plan retry APPLICATION_ID \
 
 Submit once, then verify a new activity event. Repeated retries can consume the
 bounded launch budget or create more review work.
+
+If `conditionClass` is `processorAtMatchCap`, Liskov excludes that processor
+and tries the next eligible candidate within the retry budget. If it is
+`authoringFault`, do not retry the same policy. Correct the reported schedule
+pointer: use at least 60 seconds for `durationMs`, at most one hour for
+`maxStartDelayMs`, and no start more than 24 hours ahead.
 
 ## Runtime failure after contact
 

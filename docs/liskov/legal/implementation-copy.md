@@ -9,7 +9,9 @@ draft: true
 :::caution[Not in force]
 Review version 1.0, dated 3 September 2026. This copy is implementation guidance,
 has no contractual effect, and is excluded from the production documentation
-build. Legal must confirm linked URLs and factual statements before use.
+build. Product/Legal approved only the business-status wording and consumer
+response in section 1 on 4 September 2026; all other linked URLs and factual
+statements still require approval before use.
 :::
 
 **Version:** 1.0 — 3 September 2026
@@ -23,17 +25,54 @@ Use the wording below in the product journey, adapted only after Legal confirms 
 
 Required checkbox; not pre-ticked.
 
+Field label:
+
+> **Country where your business is established**
+
+Store an assigned ISO 3166-1 alpha-2 country code. Record the statement as
+`liskov.business-eligibility.v1`; do not collect date of birth or identity
+documents for this declaration.
+
+If a person cannot make the statement, refuse organisation creation and show:
+
+> Liskov is currently available only for business use. Do not create an
+> organisation for personal, family or household use. If you believe your use
+> is business use and need help, contact hello@proof.computer.
+
+There is no self-service or manual consumer exception.
+
 ## 2. Contract acceptance
 
-> By creating the Workspace, I agree on behalf of **[Customer legal name]** to the **Order**, **Liskov Master Business Terms**, **Service Credits and Payments Policy**, **Acceptable Use Policy**, and, where applicable, the **Data Processing Addendum** and **Marketplace Terms**. I have had the opportunity to download or print them.
+At workspace creation:
 
-Required checkbox; direct links; show version/effective date and contracting entity adjacent to the button.
+> I am authorised to create this Workspace for **[Customer legal name]**. On
+> its behalf, I agree to the **Liskov Master Business Terms**, **Service Credits
+> and Payments Policy**, **Acceptable Use Policy** and, where applicable, the
+> **Data Processing Addendum** and **Marketplace Terms**. I have had the
+> opportunity to download or print them.
+
+Required checkbox; not pre-ticked. Each named document is a direct versioned
+link. Show version/effective date and **MOOSE LABS LTD trading as PROOF** beside
+the control. Link the Privacy Notice for information without framing it as a
+contract the Customer agrees to.
 
 Button:
 
 > **Create Workspace and accept**
 
 Do not use “By continuing you agree” without an affirmative control.
+
+The later Plan & payment step separately presents and accepts the Order only
+after the user has selected a plan and can see the price, tax, renewal and usage
+terms. Do not include an absent Order in the workspace-creation acceptance.
+
+Sign-in notice after the versioned suite is public:
+
+> By signing in, you continue to use Liskov under the **Liskov Master Business
+> Terms**. See the **Privacy Notice**.
+
+Both names are direct links. Before publication, do not make an agreement claim
+or show placeholder/dead legal links.
 
 ## 3. Standard Service workload warning
 

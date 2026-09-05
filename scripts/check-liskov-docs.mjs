@@ -45,6 +45,7 @@ const baseExpectedIds = [
   'operate/pause-resume',
   'operate/diagnose-retry',
   'operate/retire',
+  'operate/integrations',
   'operate/runtime-ssh',
   'marketplace/index',
   'marketplace/options',
@@ -155,6 +156,7 @@ const baranFiles = walk(baranRoot).filter((file) => extname(file) === '.md').sor
 const unlistedIds = new Set([
   ...(!v5PagesPromoted ? v5PromotedIds : []),
   'configure/clustering',
+  'build/encrypted-javascript',
 ]);
 
 const ids = files
@@ -225,9 +227,28 @@ check(
   'contracting-entity sign-off is not recorded as complete',
 );
 check(
-  readFileSync(join(docsRoot, 'legal', 'launch-sign-off-matrix.md'), 'utf8').includes('live Stripe Checkout/invoice evidence pending'),
-  'website/e-commerce disclosure sign-off does not retain its live Stripe evidence gate',
+  readFileSync(join(docsRoot, 'legal', 'launch-sign-off-matrix.md'), 'utf8').includes('provide a non-production Liskov runtime configured with Stripe test API/webhook credentials'),
+  'launch sign-off matrix lost the named Stripe canary owner action',
 );
+const launchSignOffMatrix = readFileSync(join(docsRoot, 'legal', 'launch-sign-off-matrix.md'), 'utf8');
+check(
+  launchSignOffMatrix.includes('Product/Legal verified all seven pre-existing non-personal organisations as internal'),
+  'launch sign-off matrix lost the completed B2B-only existing-organisation verification',
+);
+check(
+  launchSignOffMatrix.includes('exact legal copy belongs on sign-up, login and the Terms, not in the hero'),
+  'launch sign-off matrix lost the approved Liskov homepage copy placement',
+);
+const masterTermsPage = readFileSync(join(docsRoot, 'legal', 'master-terms.md'), 'utf8');
+check(masterTermsPage.includes('The Services are not available for consumer use.'), 'Master Terms lost the approved strict consumer boundary');
+check(!masterTermsPage.includes('Consumer use requires separate written terms signed by PROOF.'), 'Master Terms still offers the rejected signed consumer exception');
+const implementationCopyPage = readFileSync(join(docsRoot, 'legal', 'implementation-copy.md'), 'utf8');
+check(implementationCopyPage.includes('liskov.business-eligibility.v1'), 'implementation copy omits the approved eligibility statement version');
+check(implementationCopyPage.includes('There is no self-service or manual consumer exception.'), 'implementation copy omits the approved strict consumer response');
+check(implementationCopyPage.includes('I am authorised to create this Workspace for **[Customer legal name]**.'), 'implementation copy omits the approved split clickwrap wording');
+check(implementationCopyPage.includes('Create Workspace and accept'), 'implementation copy omits the approved clickwrap button');
+check(!implementationCopyPage.includes('agree on behalf of **[Customer legal name]** to the **Order**'), 'implementation copy still accepts an Order before one exists');
+check(launchSignOffMatrix.includes('Product/Legal approved the exact split Workspace/Order formation copy'), 'launch sign-off matrix lost the active LGL-04 approval');
 
 const marketplaceTermsDraft = readFileSync(
   join(docsRoot, 'legal', 'marketplace-terms.md'),
@@ -318,12 +339,18 @@ check(!existsSync(join(root, 'static', 'examples', 'liskov')), 'superseded downl
 const retirementPage = readFileSync(join(docsRoot, 'operate', 'retire.md'), 'utf8');
 const capabilitiesPage = readFileSync(join(docsRoot, 'reference', 'capabilities.md'), 'utf8');
 const githubActionsPage = readFileSync(join(docsRoot, 'build', 'github-actions.md'), 'utf8');
+check(capabilitiesPage.includes('| Encrypted JavaScript payload delivery | Release-gated v1;'),
+  'encrypted JavaScript must remain gated until the released workflow and production canary are accepted');
+check(capabilitiesPage.includes('| Private customer code inside Cargo images | Not v1;'),
+  'JavaScript acceptance must not silently promote Cargo cache confidentiality');
+
 const liskovIndexPage = readFileSync(join(docsRoot, 'index.md'), 'utf8');
 const setupPage = readFileSync(join(docsRoot, 'get-started', 'set-up-liskov.md'), 'utf8');
 const processorsPage = readFileSync(join(docsRoot, 'operate', 'processors.md'), 'utf8');
 const artifactPinHelper = readFileSync(join(root, 'scripts', 'post-slipway-artifact-pin.mjs'), 'utf8');
 const marketplaceStartPage = readFileSync(join(docsRoot, 'get-started', 'marketplace.md'), 'utf8');
 const serviceCreditsPage = readFileSync(join(docsRoot, 'organizations', 'service-credits.md'), 'utf8');
+const recordsNotificationsPage = readFileSync(join(docsRoot, 'organizations', 'records-notifications.md'), 'utf8');
 const chargesPage = readFileSync(join(docsRoot, 'organizations', 'charges.md'), 'utf8');
 const outcomesPage = readFileSync(join(docsRoot, 'organizations', 'network-costs-and-outcomes.md'), 'utf8');
 const costsCustodyPage = readFileSync(join(docsRoot, 'concepts', 'costs-custody.md'), 'utf8');
@@ -374,8 +401,24 @@ check(
   'roles page does not record that granting Admin is the Owner\'s alone',
 );
 check(
-  /changing or\s+removing someone's role does not revoke their key/.test(rolesPage),
-  'roles page omits that a role does not govern Runtime SSH keys',
+  /changing or\s+removing someone's role, or suspending them, does not revoke their key/.test(rolesPage),
+  'roles page omits that a role or suspension does not govern Runtime SSH keys',
+);
+check(
+  !/suspending and reinstating a member is not yet available/.test(teamsPage),
+  'teams page still says suspend/reinstate is unavailable',
+);
+check(
+  /An admin can\s+\*\*suspend\*\* a member and \*\*reinstate\*\* them/.test(teamsPage),
+  'teams page does not describe the suspend and reinstate control',
+);
+check(
+  /keep their membership, their role, and their seat/.test(teamsPage),
+  'teams page omits that a suspended member keeps role and seat',
+);
+check(
+  /Suspending a member does not revoke Runtime SSH operator keys/.test(teamsPage),
+  'teams page omits that suspension does not revoke Runtime SSH keys',
 );
 
 check(
@@ -393,6 +436,20 @@ check(
 );
 check(!liskovIndexPage.includes('./get-started/marketplace.md'), 'Liskov landing page recommends release-gated Marketplace launch');
 check(!/Choose \*\*Add funds\*\*/i.test(setupPage), 'setup page contains a release-gated add-funds recipe');
+check(setupPage.includes('Business use only'), 'setup page omits the business-only creation gate');
+check(setupPage.includes('not pre-selected'), 'setup page does not state the eligibility checkbox default');
+check(/Country where your business is\s+established/.test(teamsPage), 'organizations page omits the business-country field');
+check(/There is no\s+self-service or manual consumer exception/.test(teamsPage), 'organizations page omits the strict consumer response');
+check(capabilitiesPage.includes('business-purpose/18+/authority statement'), 'capability matrix omits the B2B-only organization boundary');
+const statusesActionsErrorsPage = readFileSync(join(docsRoot, 'reference', 'statuses-actions-errors.md'), 'utf8');
+for (const code of [
+  'business_eligibility_required',
+  'business_eligibility_version_mismatch',
+  'business_country_required',
+  'invalid_business_country_code',
+]) {
+  check(statusesActionsErrorsPage.includes(`\`${code}\``), `error reference omits ${code}`);
+}
 for (const [surface, content] of [['setup', setupPage], ['processor task', processorsPage]]) {
   check(content.includes('https://console.liskov.proof.computer'), `${surface} omits the permanent console link`);
   check(!content.includes('https://liskov.proof.computer'), `${surface} still recommends the retired apex`);
@@ -403,6 +460,9 @@ check(
 );
 check(!/^## \d+\./m.test(marketplaceStartPage), 'Marketplace release-boundary page contains a step-by-step launch recipe');
 check(!/continue to Stripe|complete the Stripe checkout/i.test(serviceCreditsPage), 'Service Credit read page contains a release-gated checkout recipe');
+check(/VAT is\s+collected separately: it never becomes Service Credit/.test(serviceCreditsPage), 'Service Credit read page omits the VAT/credit boundary');
+check(recordsNotificationsPage.includes('subtotal before tax, VAT/tax, and total'), 'billing records page omits the typed invoice tax breakdown');
+check(capabilitiesPage.includes('mints only the pre-tax Service Credit face value'), 'capability matrix omits the release-gated Checkout tax boundary');
 check(
   chargesPage.includes('Execution evidence determines whether Liskov may settle a managed final charge.'),
   'charge task does not say what authorizes managed settlement',
@@ -416,6 +476,7 @@ check(
   'charge task does not distinguish included zero from no submitted deregistration',
 );
 check(!/^## Stripe checkout succeeded/m.test(accountFundingPage), 'troubleshooting contains a customer Stripe checkout procedure');
+check(accountFundingPage.includes('do not change this release boundary'), 'troubleshooting lets configured Stripe state imply customer availability');
 check(
   /accepted execution report/i.test(outcomesPage),
   'outcome page does not name accepted execution reports as the consumption driver',
@@ -521,7 +582,7 @@ check(
 // 2026-09-04 (BKLG-20260817-776u): availability transition release_gated → promoted.
 // Production registration is v4_and_v5 (handler generation 96, activation-mode
 // readiness green); every pinned consumer commit is contained in a released ref.
-check(v5ReleaseContract.verifiedAt === '2026-09-04', 'V5 release contract: wrong verification date');
+check(v5ReleaseContract.verifiedAt === '2026-09-05', 'V5 release contract: wrong verification date');
 check(
   v5ReleaseContract.contract?.rcDigest === 'sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10',
   'V5 release contract: wrong RC digest',
@@ -564,7 +625,7 @@ check(
   'V5 release contract: wrong retained examples commit',
 );
 const v5ReleasedRefs = v5PagesPromoted
-  ? { cli: 'v0.10.0', console: 'main@12cdad96ac8414984c34401d2caa857149979a22', workflow: 'v1.2.4', cargoRuntime: 'v0.10.37' }
+  ? { cli: 'v0.13.0', console: 'main@12cdad96ac8414984c34401d2caa857149979a22', workflow: 'v1.2.4', cargoRuntime: 'v0.10.37' }
   : { cli: null, console: null, workflow: null, cargoRuntime: null };
 for (const [consumer, ref] of Object.entries(v5ReleasedRefs)) {
   check(
@@ -691,7 +752,7 @@ if (v5Mode === 'release_gated') {
 
 check(manifest.schema === 'proof.liskov.application-manifest', 'fixture: wrong manifest schema');
 check(manifest.schemaVersion === 4, 'fixture: wrong schemaVersion');
-check(manifest.release?.artifact?.encryption?.mode === 'none', 'fixture: reusable action supports only unencrypted IPFS bundles');
+check(manifest.release?.artifact?.encryption?.mode === 'none', 'fixture: the supported baseline example must use unencrypted IPFS bundles');
 check(manifest.deployment?.parallelism === 1, 'fixture: public parallelism must be 1');
 check(manifest.deployment?.placement?.processorSelection?.mode === 'open_market', 'fixture: public placement must be open_market');
 check(manifest.deployment?.lifecycle?.renewal?.mode === 'after_scheduled_end', 'fixture: unsupported renewal recipe');
@@ -704,9 +765,22 @@ check(
   'fixture: public logging recipe must use only observability.logs.enabled',
 );
 
+const encryptedContract = JSON.parse(readFileSync(join(root, 'fixtures/liskov-encrypted-code-contract.json'), 'utf8'));
+const encryptedRecipe = readFileSync(join(docsRoot, 'build/encrypted-javascript.md'), 'utf8');
+check(encryptedContract.mode === 'aes-256-gcm-payload-v1', 'encrypted code fixture: wrong delivery mode');
+check(encryptedContract.runtimeVersion === '0.3.29' && encryptedContract.cliVersion === '0.13.0', 'encrypted code fixture: wrong released owners');
+check(encryptedContract.productionAccepted === false, 'encrypted code: promotion needs production acceptance');
+for (const token of [encryptedContract.mode, encryptedContract.keySecretId, encryptedContract.keyEnvironment,
+  encryptedContract.buildKeySecret, '--paused', '--dry-run', 'encrypted_code_verified', 'encrypted_code_start_failed',
+  'PROOF can access', 'Cargo', 'plaintext digest', 'ciphertext digest']) {
+  check(encryptedRecipe.includes(token), `encrypted code recipe omits contract token: ${token}`);
+}
+const encryptedExample = readFileSync(join(root, 'examples/liskov-v1/encrypted-module.mts'), 'utf8').trim();
+check(encryptedRecipe.includes(encryptedExample), 'encrypted code module differs from typechecked fixture');
+
 const cliPage = readFileSync(join(docsRoot, 'reference', 'cli.md'), 'utf8');
 check(cliContract.package === '@proof-computer/proof-cli-liskov', 'CLI fixture: wrong package');
-check(cliContract.version === '0.10.0', 'CLI fixture: wrong released version');
+check(cliContract.version === '0.13.0', 'CLI fixture: wrong released version');
 check(cliContract.command === 'liskov:application:logs', 'CLI fixture: missing logs command');
 check(cliContract.flags?.limit?.minimum === 1 && cliContract.flags?.limit?.maximum === 500, 'CLI fixture: wrong log limit bounds');
 check(
@@ -855,11 +929,23 @@ for (const code of [
   check(v5SshPage.includes(code), `operate/runtime-ssh-v5 omits refusal code ${code}`);
 }
 check(operatePage.includes('This is not your key'), 'operate/runtime-ssh must say credential_rejected is not the key');
+for (const token of [
+  'runtime_ssh_service_credit_required',
+  'currentPeriod.byteAllowance.runtimeSshServiceCreditRequired',
+  'Billing & funding',
+  'already open continues',
+]) {
+  check(operatePage.includes(token), `operate/runtime-ssh omits Service Credit refusal token: ${token}`);
+}
 for (const page of [operatePage, v5SshPage]) {
   check(!/no support-reachable route/.test(page), 'an SSH page repeats the retracted no-revocation-route claim');
   check(!/no way to cut access to a current attachment/.test(page), 'an SSH page repeats the retracted no-revocation claim');
   check(page.includes('attachment revoke'), 'an SSH page omits the attachment revoke command');
   check(page.includes('operator_revoked'), 'an SSH page omits the operator_revoked failure code');
+  check(
+    /Integrations → Liskov-Managed Runtime\s+SSH/.test(page) && /select \*\*Revoke\*\*/.test(page),
+    'an SSH page omits the Console attachment-revoke path',
+  );
 }
 
 // Availability transition (2026-08-05): Runtime SSH moved from an internal
@@ -883,6 +969,27 @@ check(
 check(
   /\| Runtime SSH into your own running job, your own Tailscale network \| Preview on Pro and above/.test(capabilitiesPage),
   'capabilities: customer-owned Tailscale Runtime SSH must be classified Preview on Pro and above',
+);
+const integrationsPage = readFileSync(join(docsRoot, 'operate', 'integrations.md'), 'utf8');
+check(
+  /revoke one attachment for\s+everyone on it without ending the job/.test(integrationsPage),
+  'integrations: managed SSH omits the Console attachment-revoke boundary',
+);
+check(
+  integrationsPage.includes('**Live**') && integrationsPage.includes('**Roadmap**'),
+  'integrations: must state the two catalogue statuses',
+);
+check(
+  /Liskov-Managed SSH/.test(integrationsPage) && /GitHub App/.test(integrationsPage) && /Telegram/.test(integrationsPage),
+  'integrations: live rows must name Managed SSH, GitHub App, and Telegram',
+);
+check(
+  /listed as Roadmap in Integrations until a live policy version can name it/.test(capabilitiesPage),
+  'capabilities: Tailscale must be listed as Roadmap until a live policy can name it',
+);
+check(
+  /\/settings\/integrations/.test(integrationsPage) && /\/settings\/runtime-ssh/.test(integrationsPage),
+  'integrations: must name the Console catalogue and the one-release Runtime SSH URL',
 );
 check(
   !/Tailscale network \| Preview on (Starter|Enterprise|Developer) /.test(capabilitiesPage),
@@ -950,22 +1057,29 @@ for (const [fileId, required] of Object.entries({
   'get-started/github': ['Publication availability', 'v1.2.2', 'artifact-version-id', 'Proof'],
   'operate/proof-chain': ['GitHub OIDC', 'policy digest', 'runtime instance'],
   'operate/processors': ['your org', 'whole fleet', 'Enterprise', 'storageBytes', 'read-only', 'not-found', 'Redaction and missing data are not the same state'],
-  'troubleshooting/deployment': ['Normal waiting', 'Needs action', 'decision-id'],
+  'troubleshooting/deployment': ['Normal waiting', 'Needs action', 'decision-id', 'processorAtMatchCap', 'authoringFault'],
   'reference/configuration-precedence': ['Application-managed value', 'process.env', 'Signed runtime bootstrap', 'LISKOV_ORGANIZATION', 'persistent organization'],
   'operate/pause-resume': ['does not force-stop', 'scheduled end'],
   'operate/update': ['successor', 'without mutating'],
   'operate/retire': ['does not stop existing jobs', 'receipt'],
-  'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Private deployed customer code'],
-  'reference/cli': ['0.10.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key', 'withdrawn-key'],
-  'reference/manifest-v4': ['deprecated_manifest_field', 'profileId', 'sinkName', 'future schema'],
+  'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Encrypted JavaScript payload delivery', 'Private customer code inside Cargo images'],
+  'reference/cli': ['0.13.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key', 'withdrawn-key'],
+  'reference/manifest-v4': ['deprecated_manifest_field', 'profileId', 'sinkName', 'future schema', 'durationMs', '60000', 'maxStartDelayMs', '3600000'],
+  'reference/statuses-actions-errors': ['processorAtMatchCap', 'authoringFault', 'acurast_job_registration_duration_below_minimum'],
   'configure/logging-diagnostics': ['only logging field needed', 'provisions', 'application logs'],
-  'operate/logs-activity': ['application logs', '--deployment', '--job', '--follow', '--from-start'],
+  'operate/logs-activity': ['application logs', '--deployment', '--job', '--follow', '--from-start', 'Retained log history', 'Free | 24 hours', 'Enterprise | 90 days'],
   'troubleshooting/logs': ['exits zero', 'malformed-response failures'],
   'concepts/trust-boundaries': ['briefly PROOF over TLS', 'Plaintext is not persisted', 'Private source is not private deployed code', 'cache reuse'],
   'build/artifacts-provenance': ['reusable GitHub pin action requires `none`', 'complete path is not supported today'],
   'troubleshooting/account-funding': [
     'There is no supported customer checkout',
     'Service Credit reads disagree',
+    'subscription_intent_conflict',
+    'subscription_outcome_uncertain',
+    'A trial remains',
+    'subscription_action_invalid',
+    'subscription_interval_invalid',
+    'Do not change the inputs under that key',
     'not_a_member',
     'organizationContext.effective',
     'organizationContext.sessionDefault',
@@ -1003,6 +1117,10 @@ for (const command of [
   'proof liskov application retire',
 ]) {
   check(combined.includes(command), `public command audit: missing ${command}`);
+}
+
+for (const token of ['?order=stable', '?order=time', '?order=job', '#slot-1:g3', 'Job identity not reported', 'Load more']) {
+  check(deploymentsPage.includes(token), `Deployments operating guide omits released contract: ${token}`);
 }
 
 check(combined.includes('v0.3.26'), 'runtime reference omits the supported SDK version');

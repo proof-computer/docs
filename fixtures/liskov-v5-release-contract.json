@@ -1,7 +1,7 @@
 {
   "schema": "proof.liskov.docs-v5-release-contract.v1",
-  "verifiedAt": "2026-09-04",
-  "documentationMode": "promotion_prepared",
+  "verifiedAt": "2026-09-05",
+  "documentationMode": "public",
   "availability": "v1",
   "contract": {
     "repository": "proof-computer/slipway-rs",
@@ -32,16 +32,16 @@
   "consumers": {
     "cli": {
       "package": "@proof-computer/proof-cli-liskov",
-      "packageVersion": "0.10.0",
+      "packageVersion": "0.13.0",
       "sourceCommit": "e135604ed2f6c59ffc737fce5fe08eaa19d77d0c",
-      "releasedRefContainingCommit": "v0.10.0",
-      "pendingVerbs": {
+      "releasedRefContainingCommit": "v0.13.0",
+      "releasedVerbs": {
         "commands": [
           "application source-binding set",
           "application source-binding show",
           "application source-binding revoke"
         ],
-        "releasedRefContainingCommit": null,
+        "releasedRefContainingCommit": "v0.13.0",
         "backlogItem": "BKLG-20260904-33l3"
       }
     },

@@ -162,9 +162,13 @@ provider-native replicas.
 
 | Field | Presence | Rule |
 | --- | --- | --- |
-| `durationMs` | Required | Unsigned integer greater than zero. |
-| `startDelayMs` | Optional | If `maxStartDelayMs` exists, cannot exceed it. |
-| `maxStartDelayMs` | Optional | Unsigned maximum accepted start delay. |
+| `durationMs` | Required | Unsigned integer, at least `60000` (60 seconds). |
+| `startDelayMs` | Optional | Cannot place the job start more than `86400000` ms (24 hours) in the future; if `maxStartDelayMs` exists, cannot exceed it. |
+| `maxStartDelayMs` | Optional | Unsigned integer, at most `3600000` (one hour). |
+
+These bounds come from the current compiled Acurast runtime. `proof liskov`
+reports the exact field pointer and refuses an invalid local manifest before
+sending an import request.
 
 ### `deployment.spend`
 

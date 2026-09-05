@@ -19,6 +19,11 @@ page does not provide a customer funding or Marketplace launch path.
 
 ## Before you begin
 
+Liskov is available only for business use by people aged 18 or over. Do not
+create an organization for personal, family, or household use. If you believe
+your use is business use and need help, contact
+[hello@proof.computer](mailto:hello@proof.computer).
+
 You need a GitHub account and access to an existing Liskov organization. To
 continue to a deployment, that organization must already be eligible for the
 requested capability and have enough available Service Credits for its
@@ -36,7 +41,13 @@ other members of an organization.
 ## 2. Create or join an organization
 
 Choose an existing organization if you have been invited. Otherwise, create
-one with a clear team or project name. The organization owns:
+one with a clear business name. Enter the two-letter code for the country where
+the business is established, then affirm the separate **Business use only**
+statement. That statement confirms business purpose, that you are at least 18,
+and that you have authority to create the Workspace for the named organization.
+It is not the Terms checkbox and is not pre-selected.
+
+The organization owns:
 
 - Applications and their evidence;
 - members and roles;
