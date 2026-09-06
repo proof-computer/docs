@@ -110,7 +110,10 @@ claimed** for a registered job nothing has claimed, **processor not reported**
 when contact was recorded but the read carried no identifier, **the register
 did not answer** when evidence is unreadable, and **nowhere yet** for a plan.
 A plan whose paid window is not yet registered shows **due HH:MM:SS** instead
-of a window, and that due boundary places it in Time order.
+of a window, and that due boundary places it in Time order. Between interval
+runs, each stable job has a **next run** plan. Phased jobs include their served
+phase offset in that due time; this is still a planning boundary, not an
+Acurast registration or a paid window.
 
 ## Read states and Service Credits
 
@@ -128,7 +131,11 @@ recorded blocker code, its family and decision, the affected jobs, and which
 jobs Liskov is still retrying. Refused offers are counted from loaded history.
 An **Action Plan** link appears when Liskov has recorded that it stopped
 retrying; a shared blocker code does not prove a shared cause.
-**Evidence unavailable** means the read cannot establish the state.
+**Evidence unavailable** means the read cannot establish the state. When this
+affects one or more jobs, a grey read-health notice groups the affected stable
+jobs and explains that the registry evidence was unreadable. It is not a
+policy refusal or a claim that evidence is absent. Refresh the view; if the
+same jobs remain unavailable, report the affected Application.
 
 An **Ended** window can still have settlement pending. **Released** requires
 recorded deregistration evidence. Read the amounts separately: **reserved**
