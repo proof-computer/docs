@@ -78,8 +78,10 @@ reports runtime readiness, then revoke it at the provider.
 
 ## Required and optional behavior
 
-File contents retain their exact whitespace and newlines. Absolute file paths
-are installed with private `0600` permissions before the customer process starts.
+File contents retain their exact whitespace and newlines. The native helper
+installs absolute file paths with private `0600` permissions before starting
+the customer process. The SDK
+installs files during secret bootstrap; required mode waits for installation.
 The default installers reject symlinks and traversal, stage the complete file
 group, and apply environment values only after file installation succeeds.
 Legacy relative destinations remain below the configured secret base directory.
