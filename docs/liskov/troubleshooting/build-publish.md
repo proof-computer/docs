@@ -84,11 +84,20 @@ once with the exact reviewed artifact-version ID.
 ## Encrypted payload cannot start
 
 For the release-gated [encrypted JavaScript path](../build/encrypted-javascript.md),
-`encrypted_code_start_failed` means the loader refused startup. Pause future
-planning, then compare the attested ZIP, plaintext and ciphertext digests,
+`encrypted_code_start_failed` means the loader refused startup. SDK `0.3.30`
+also reports `encrypted_code_failure_detail` with a bounded `phase`, including
+`directory`, `module_load` or `application_start`. Exception text, keys,
+plaintext and local paths are omitted. Let an existing one-shot occurrence
+settle, then retire it or pause future launches before retrying.
+Compare the attested ZIP, plaintext and ciphertext digests,
 `encryption-secret-id`, required `LISKOV_CODE_KEY` declaration and configured
 managed key version. The key must arrive through the authenticated Lockbox
 grant; an environment value alone does not prove that delivery.
+
+For `directory`, use Actions `v1.3.2` or later: its bootstrap keeps runtime
+files inside the processor job directory. For `module_load` or `entrypoint`,
+check the self-contained CommonJS bundle and exported `start(runtime)`.
+`application_start` means the verified application itself failed during startup.
 
 A wrong key, modified ciphertext, mismatched descriptor or missing `start(runtime)`
 export must be corrected before another paid attempt. Rebuild and attest when

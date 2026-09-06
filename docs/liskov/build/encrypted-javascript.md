@@ -6,10 +6,12 @@ description: Build an encrypted JavaScript payload, publish paused, configure it
 
 # Encrypted JavaScript delivery
 
-:::danger[Not released]
-This recipe requires the enabled registered V5 publication path and production
-acceptance of encrypted execution. It is prepared for that release; the
-[capability matrix](../reference/capabilities.md) remains the availability authority.
+:::caution[Registered V5 release required]
+The encrypted build, job-bound key release, payload loading and application
+completion were verified in production on 6 September 2026 with Actions
+`v1.3.2` and runtime SDK `0.3.30`. This recipe requires registered V5 source
+publication. Its general customer release remains gated separately; the
+[capability matrix](../reference/capabilities.md) is the availability authority.
 :::
 
 The build encrypts your application module before upload. IPFS carries a public
@@ -22,8 +24,8 @@ does not establish [Cargo image or cache confidentiality](../concepts/trust-boun
 
 ## Prepare the module and key
 
-Use Actions `v1.3.0` or a compatible later `@v1`; its public loader includes
-runtime SDK `0.3.29`. Use CLI `0.13.0` or later for the paused publication
+Use Actions `v1.3.2` or a compatible later `@v1`; its public loader includes
+runtime SDK `0.3.30`. Use CLI `0.13.0` or later for the paused publication
 flags below. The server must support registered publication previews and
 atomic setup holds.
 
@@ -150,16 +152,18 @@ proof liskov application resume encrypted-worker \
 ## Verify the processor result
 
 Require the signed runtime diagnostic `application.encrypted_code.loaded`,
-status `succeeded`, code `encrypted_code_verified`, with the expected plaintext
-and ciphertext digests. Also verify an application-specific completion or
-health event. Loader success proves authenticated loading; it does not prove
+status `succeeded`, code `encrypted_code_verified`. Compare the plaintext
+and ciphertext digests in the attested descriptor; loader success means both
+were verified. Also verify an application-specific completion or health event.
+Loader success proves authenticated loading; it does not prove
 your application's business result. For a one-shot run, record terminal job
 state and the settled Service Credit amount.
 
 The loader accepts only a key installed from the matching authenticated
 Lockbox grant. Setting an environment variable alone is insufficient. It
-loads a private local module and removes the temporary plaintext file after
-`start(runtime)` completes; it does not use a shared plaintext cache.
+uses a runtime home inside the processor job directory, creates it when
+needed, loads a private CommonJS module, and removes the temporary plaintext file and module-cache entry after
+`start(runtime)` completes. It does not use a shared plaintext cache.
 
 A `lockbox_response_key_missing` bootstrap failure means the processor did not
 provide its P-256 grant-response key. The managed application code key is a
@@ -167,7 +171,12 @@ separate key. Hold further attempts and report the stable failure code and
 job identity to support, together with the processor's Android version when
 available.
 
-If startup reports `encrypted_code_start_failed`, keep the Application paused
-while comparing the attested digests, secret ID and configured key version.
+If startup reports `encrypted_code_start_failed`, inspect the accompanying
+`encrypted_code_failure_detail` diagnostic. Its bounded `phase` identifies
+descriptor validation, key release, ciphertext verification, directory or
+module creation, module loading, or application startup without exposing the
+key, plaintext, local path, or exception text. Compare the attested digests,
+secret ID and configured key version. Let an existing one-shot occurrence
+settle, then retire it or pause future launches before retrying.
 Do not print the key or decrypted module to diagnose it. See
 [build and publication troubleshooting](../troubleshooting/build-publish.md).

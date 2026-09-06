@@ -84,15 +84,16 @@ Acurast job. Continue with [Validate, import, and publish](./validate-import-pub
 
 ## Encrypted JavaScript release boundary
 
-Encrypted JavaScript payload delivery is release-gated v1. The runtime loader
-is available in SDK `0.3.29`; its presence alone does not establish a supported
-customer workflow. Continue using the unencrypted example above until the
-[capability matrix](../reference/capabilities.md) records production acceptance.
-The prepared encrypted path uses the existing managed Lockbox key-release
-boundary and does not grant a build workflow publication or spending authority.
-See [Trust and data boundaries](../concepts/trust-boundaries.md) before making a
-private-code claim; Cargo image and cache confidentiality remains separate.
+Encrypted JavaScript payload execution is production-verified with Actions
+`v1.3.2` and runtime SDK `0.3.30`: the released workflow encrypted, pinned and
+attested the module, and a processor obtained its managed key, loaded it and
+reported application completion. General customer availability still requires
+the registered V5 source-publication release in the
+[capability matrix](../reference/capabilities.md).
 
-The prepared [encrypted JavaScript recipe](./encrypted-javascript.md) records
-the exact action inputs, module contract, paused publication and verification
-steps. Its release gate remains in force until the complete path is accepted.
+The [encrypted JavaScript recipe](./encrypted-javascript.md) records the exact
+inputs, module contract, paused key setup and verification steps. It uses the
+existing managed Lockbox boundary and does not grant a build workflow publication
+or spending authority. See [Trust and data boundaries](../concepts/trust-boundaries.md)
+before making a private-code claim; Cargo image and cache confidentiality remains
+separate.
