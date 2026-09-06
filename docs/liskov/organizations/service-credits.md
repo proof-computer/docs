@@ -58,8 +58,10 @@ redirect alone does not prove credit issuance; verify the ledger.
 
 The billing read retains `addFunds.checkoutAvailable` and adds
 `addFunds.checkoutAdmission` with `enabled`, `configured`, `available`, and
-`reason`. The CLI billing summary reports unknown availability when an older
-server omits these fields. These readbacks do not remove the release gate.
+`reason`. Use `proof liskov organization billing ORGANIZATION_ID --json` to inspect these server
+fields. If an older server omits them, that response does not report Checkout
+availability. A displayed balance alone does not prove that purchases are enabled.
+These readbacks do not remove the release gate.
 
 The release-gated Checkout contract treats the amount entered as the pre-tax
 Service Credit face value. Stripe calculates applicable VAT from the customer's
