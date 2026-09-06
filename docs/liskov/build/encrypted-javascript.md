@@ -68,6 +68,13 @@ manifest and workflow. Set the intended execution mode, paid duration and
 Service Credit cap deliberately: publishing a `once` policy normally starts
 one paid occurrence.
 
+The processor must provide a working P-256 key for encrypted grant responses.
+Acurast's Android implementation requires Android 12 or later for this key
+agreement; a `DataEncryption` advertisement alone does not establish P-256
+support. Use a processor with verified P-256 support. To select it explicitly,
+set `deployment.placement.processorSelection.mode: exact` and supply its
+address in `processorIds`; see the [V5 manifest reference](../reference/manifest-v5.md).
+
 ## Build, encrypt, pin and attest
 
 The Application identity and its source binding must already authorize the
@@ -89,7 +96,7 @@ jobs:
       entrypoint: encrypted.cjs
       encryption-mode: aes-256-gcm-payload-v1
       encryption-secret-id: application-code-key
-      ipfs-gateway-url: "https://ipfs.io/ipfs/{cid}"
+      ipfs-gateway-url: "https://ipfs-upload.liskov.proof.computer/ipfs/{cid}"
     secrets:
       LISKOV_CODE_ENCRYPTION_KEY: ${{ secrets.APPLICATION_CODE_KEY }}
 ```
@@ -128,8 +135,9 @@ policy version, digest and artifact. A stale pointer refuses publication;
 read and review the new state before confirming again.
 
 Open the Application's **Secrets** settings and set `application-code-key`
-to the same base64 value used by the build. Verify that the required secret is
-configured for this policy. Pause must cover this setup: a required missing key
+to the same base64 value used by the build. Confirm that the save succeeds
+before resuming. The declarations list describes required inputs; it does not
+report whether the stored value is present. Pause must cover this setup: a required missing key
 blocks runtime readiness after deployment, and is not a pre-launch spend hold.
 
 When the key and spend authority are ready, resume deliberately:
@@ -156,7 +164,8 @@ loads a private local module and removes the temporary plaintext file after
 A `lockbox_response_key_missing` bootstrap failure means the processor did not
 provide its P-256 grant-response key. The managed application code key is a
 separate key. Hold further attempts and report the stable failure code and
-job identity to support.
+job identity to support, together with the processor's Android version when
+available.
 
 If startup reports `encrypted_code_start_failed`, keep the Application paused
 while comparing the attested digests, secret ID and configured key version.
