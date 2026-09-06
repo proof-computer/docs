@@ -175,7 +175,9 @@ for (const id of unlistedIds) {
   }
   const content = readFileSync(file, 'utf8');
   check(content.startsWith('---\nunlisted: true\n'), `${id}: unreleased page is not unlisted`);
-  check(content.includes(':::danger[Not released]'), `${id}: unreleased page omits the not-released notice`);
+  const requiredNotice = id === 'build/encrypted-javascript'
+    ? ':::caution[Registered V5 release required]' : ':::danger[Not released]';
+  check(content.includes(requiredNotice), `${id}: gated page omits its remaining release notice`);
 }
 
 for (const id of legalReviewDraftIds) {
@@ -339,7 +341,7 @@ const retirementPage = readFileSync(join(docsRoot, 'operate', 'retire.md'), 'utf
 const capabilitiesPage = readFileSync(join(docsRoot, 'reference', 'capabilities.md'), 'utf8');
 const githubActionsPage = readFileSync(join(docsRoot, 'build', 'github-actions.md'), 'utf8');
 check(capabilitiesPage.includes('| Encrypted JavaScript payload delivery | Release-gated v1;'),
-  'encrypted JavaScript must remain gated until the released workflow and production canary are accepted');
+  'encrypted JavaScript must preserve the separate registered V5 public-release gate');
 check(capabilitiesPage.includes('| Private customer code inside Cargo images | Not v1;'),
   'JavaScript acceptance must not silently promote Cargo cache confidentiality');
 
@@ -721,10 +723,21 @@ check(
 const encryptedContract = JSON.parse(readFileSync(join(root, 'fixtures/liskov-encrypted-code-contract.json'), 'utf8'));
 const encryptedRecipe = readFileSync(join(docsRoot, 'build/encrypted-javascript.md'), 'utf8');
 check(encryptedContract.mode === 'aes-256-gcm-payload-v1', 'encrypted code fixture: wrong delivery mode');
-check(encryptedContract.runtimeVersion === '0.3.29' && encryptedContract.cliVersion === '0.13.0', 'encrypted code fixture: wrong released owners');
-check(encryptedContract.productionAccepted === false, 'encrypted code: promotion needs production acceptance');
+check(encryptedContract.runtimeVersion === '0.3.30' && encryptedContract.cliVersion === '0.13.0', 'encrypted code fixture: wrong released owners');
+check(encryptedContract.productionAccepted === true, 'encrypted code: preserve accepted production execution');
+check(encryptedContract.actionVersion === '1.3.2' && encryptedContract.actionCommit === 'c15b4b52d53bb7b7d631c2446151d994b93d2693',
+  'encrypted code: the released action must include the job-directory bootstrap');
+check(encryptedContract.registeredV5PublicReleaseRequired === true && encryptedRecipe.includes('Registered V5 release required'),
+  'encrypted code: production proof must not silently promote the wider V5 release');
+check(encryptedContract.productionEvidence?.jobId === '160393' &&
+  encryptedContract.productionEvidence?.loaderStage === 'application.encrypted_code.loaded' &&
+  encryptedContract.productionEvidence?.applicationStage === 'application.encrypted_canary' &&
+  encryptedContract.productionEvidence?.verification === 'runtime-signature-v2',
+  'encrypted code: acceptance needs both signed loader and application outcomes');
+check(capabilitiesPage.includes('production execution is verified') && !encryptedRecipe.includes(':::danger[Not released]'),
+  'encrypted code: remove the superseded encryption-specific acceptance notice');
 for (const token of [encryptedContract.mode, encryptedContract.keySecretId, encryptedContract.keyEnvironment,
-  encryptedContract.buildKeySecret, '--paused', '--dry-run', 'encrypted_code_verified', 'encrypted_code_start_failed', 'lockbox_response_key_missing',
+  encryptedContract.buildKeySecret, '--paused', '--dry-run', 'encrypted_code_verified', 'encrypted_code_start_failed', 'encrypted_code_failure_detail', 'lockbox_response_key_missing',
   'PROOF can access', 'Cargo', 'plaintext digest', 'ciphertext digest']) {
   check(encryptedRecipe.includes(token), `encrypted code recipe omits contract token: ${token}`);
 }

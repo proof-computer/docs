@@ -33,9 +33,9 @@ This page is the availability owner. Guides contain only supported recipes.
 | Manifest V4 repository import/publication | Release-gated v1 |
 | Retained Manifest V5 / Policy V5 exact pair | Release-gated v1; RC `sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10` is implemented dark, but production registration remains V4-only and activation is not authorized |
 | Retained V5 GitHub source import | Release-gated v1; exact binding exists at `liskov-github-actions@aa1b83f0fd4b08ac33a6c9970d2077885922d79c`, which is not contained in a released tag |
-| Reusable GitHub build/pin/OIDC workflow | v1; moving `v1` tag verified at `v1.2.2` |
+| Reusable GitHub build/pin/OIDC workflow | v1; moving `v1` tag verified at `v1.3.2` |
 | Pinned first-party IPFS bundle | v1 |
-| Encrypted JavaScript payload delivery | Release-gated v1; the runtime loader is released as `0.3.29`, but the complete workflow and production key-release path still require acceptance |
+| Encrypted JavaScript payload delivery | Release-gated v1; production execution is verified with Actions `v1.3.2` and SDK `0.3.30`. General availability still requires the registered V5 source-publication release |
 | Private customer code inside Cargo images | Not v1; private source access, TEE execution and encrypted JavaScript do not establish job-authorized Cargo cache reuse |
 | General customer-authored Cargo/runtime image | Internal |
 
