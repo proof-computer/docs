@@ -25,7 +25,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Plan catalog and plans page | v1 read of the catalog on `/organizations/new/plan`; paid attach, trial start, and production collection remain release-gated |
 | Plan selection and terms acceptance | Release-gated v1; the commercial go-live decision is not complete. Writing a plan id does not activate a paid plan |
 | Stripe USD checkout and Service Credit issuance | Release-gated v1; checkout is disabled for customer use and internal acceptance must not be treated as availability. The prepared admission control can pause new purchases while preserving signed completion of earlier paid purchases. The prepared contract uses automatic tax and billing/tax-ID collection, creates a Stripe invoice/receipt, and mints only the pre-tax Service Credit face value |
-| Paid subscription activation | Release-gated; a written plan id does not activate a paid plan. Usable only after reconciled Autumn/Stripe payment. Production paid billing is not enabled |
+| Paid subscription activation | Release-gated; a written plan id does not activate a paid plan. Usable only after reconciled Autumn/Stripe payment. Production paid billing is not enabled; recovery of an existing payment action is available only in an enabled billing environment |
 | Curated first-party Marketplace launch | Release-gated v1; limited to internal first-party engineering acceptance |
 | Uptime Prober | Release-gated v1; an internal first-party acceptance fixture, not a supported customer offering |
 | OpenClaw offering | Release-gated v1; no versioned descriptor was present at the reviewed release |
