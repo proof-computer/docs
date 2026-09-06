@@ -112,6 +112,27 @@ trial, or use a new request key, to work around the uncertainty. A trial remains
 spent even when its provider result is uncertain. Never share payment links or
 credentials with the report.
 
+## Subscription change is waiting or paused
+
+`subscription_command_in_progress` means the same request is already being
+processed. Refresh its status instead of starting another request.
+
+`subscription_command_blocked` means an earlier subscription request for the
+organization still has an unresolved outcome. A different request key does not
+bypass that wait. `subscription_payment_action_pending` means an earlier request
+still needs payment or payment authentication. If its payment link was lost,
+contact support; a fresh subscription request is not a way to recover the link.
+
+`subscription_mutations_paused` or `subscription_writer_fenced` means subscription
+changes are temporarily unavailable. Status reads remain available. A paused
+request does not start a new trial; an already admitted trial stays spent.
+
+`subscription_command_rejected` is a recorded refusal. Repeating its key does
+not issue another provider request. Contact support with the organization ID,
+request key, UTC time, and error code before attempting another change.
+
+These statuses do not change the production paid-billing release gate above.
+
 ## Service Credit reads disagree
 
 1. Confirm the active organization ID in the Console and CLI.
