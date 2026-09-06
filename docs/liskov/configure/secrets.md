@@ -32,7 +32,7 @@ execution environment (TEE), then installs the declared destination.
         "secretId": "api-token",
         "required": true,
         "destination": {
-          "kind": "env",
+          "kind": "environment",
           "name": "API_TOKEN"
         }
       },
@@ -48,6 +48,12 @@ execution environment (TEE), then installs the declared destination.
   }
 }
 ```
+
+These are Manifest V5 destinations. Customer secrets work independently of
+managed logging; disabling logs does not disable secret grants. Native images
+need an artifact built with runtime-contact **0.10.40 or newer**. JavaScript
+file installation needs runtime SDK **0.3.32 or newer**. Rebuild and publish a
+successor artifact to upgrade an existing job's immutable helper or SDK.
 
 The manifest contains identifiers and destinations only. Never add plaintext,
 a ciphertext copied from another system, or a secret in a variable `default`.
@@ -72,10 +78,21 @@ reports runtime readiness, then revoke it at the provider.
 
 ## Required and optional behavior
 
+File contents retain their exact whitespace and newlines. Absolute file paths
+are installed with private `0600` permissions before the customer process starts.
+The default installers reject symlinks and traversal, stage the complete file
+group, and apply environment values only after file installation succeeds.
+Legacy relative destinations remain below the configured secret base directory.
+Custom JavaScript file writers must implement the atomic `installGroup` method
+for absolute destinations.
+
 A required secret blocks readiness if no usable version or grant exists. The
 runtime SDK's `secrets: { mode: "required" }` makes the process fail closed.
-Background mode is only for software designed to remain safe in a locked or
-degraded state.
+An absent optional secret may be omitted. SDK 0.3.32 discovers optional-only
+groups in background mode by default; select required mode explicitly if your
+application needs to wait for their installation. A native helper refuses startup on a
+required secret or file-installation failure. Background SDK mode is only for
+software designed to remain safe in a locked or degraded state.
 
 ## Verify without exposing the value
 
@@ -83,7 +100,8 @@ Verify:
 
 - the requirement shows **configured** for the intended Application;
 - the new deployment references the expected secret version/digest;
-- runtime capability state reports secrets ready; and
+- the process reports successful installation (an encrypted release receipt alone
+  does not prove a file was installed); and
 - the application performs a harmless authenticated operation.
 
 Do not paste a token into logs, activity, diagnostics, screenshots, support
