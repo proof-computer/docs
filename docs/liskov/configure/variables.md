@@ -6,7 +6,7 @@ description: Declare non-secret configuration, set managed values, understand pr
 # Variables
 
 Variables are named, non-secret strings delivered to your process. Put their
-contract in Manifest V4; manage environment-specific values in the Console.
+contract in Manifest V5; manage environment-specific values in the Console.
 Do not use a variable for a password, token, private key, or connection string
 that contains credentials.
 
@@ -20,23 +20,22 @@ that contains credentials.
         "name": "API_ENDPOINT",
         "required": true,
         "default": "https://example.com/api",
-        "managed": true
+        "source": "managed"
       },
       {
         "name": "FEATURE_MODE",
-        "required": false,
-        "default": "safe",
-        "managed": false
+        "source": "literal",
+        "value": "safe"
       }
     ]
   }
 }
 ```
 
-`name` is the runtime environment name. `required` makes a missing final value
-a blocker. `default` is public authored text. `managed: true` says that Liskov
-owns the deployment value rather than treating the manifest default as the only
-source.
+`source: "literal"` delivers the exact authored `value`. Use
+`source: "managed"` for a value saved in the Application's settings. A managed
+variable may declare `required` and a public `default`; a missing required value
+blocks configuration delivery. Empty strings and the string `"0"` are values.
 
 ## Set a managed value
 
@@ -50,7 +49,7 @@ into the repository merely to work around that boundary.
 
 ## Precedence
 
-For an authored variable, the effective runtime value is:
+For a managed variable, the effective runtime value is:
 
 1. the current Application-managed value, when one is set;
 2. otherwise the manifest `default`, when present; or
@@ -60,9 +59,11 @@ If `required` is true, the missing case blocks the affected deployment.
 Liskov-supplied identity and bootstrap variables are separate built-ins; do not
 declare or override them.
 
-A saved change affects a successor deployment according to the Application's
-update policy. It does not rewrite the environment of a process that is already
-running.
+A literal uses the value in the job's pinned policy. A managed value is resolved
+at the authenticated delivery boundary. Signed runtime-env refreshes see the
+current managed value and a changed configuration revision. Acurast encrypted
+environment delivery freezes the selected values for that job. Saving a value
+does not rewrite an already running process or publish a new policy.
 
 ## Read and verify
 
@@ -74,8 +75,8 @@ const mode = runtime.env.get("FEATURE_MODE") ?? "safe";
 ```
 
 Publish only a non-secret confirmation, such as the endpoint hostname or a
-configuration revision. Then verify that the successor deployment uses the new
-policy/configuration generation. Never log a full value until you have
+configuration revision. Then verify that the successor deployment uses the expected
+configuration revision. Never log a full value until you have
 classified it as safe.
 
 See [Configuration and environment precedence](../reference/configuration-precedence.md)

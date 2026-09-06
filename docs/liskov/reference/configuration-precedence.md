@@ -29,7 +29,8 @@ SSH integration routes require a positional, flag, or environment selector.
 
 ## Authored variables
 
-For each manifest variable:
+A Manifest V5 literal (`source: "literal"`) uses its exact authored `value`.
+For a managed variable (`source: "managed"`):
 
 1. current Application-managed value, if set;
 2. otherwise authored `default`, if present;
@@ -43,8 +44,11 @@ value and must not be collapsed into missing.
 The manifest names `secretId`, requiredness, and destination. It never holds
 plaintext. The deployment selects a stored encrypted secret version and issues
 a job-bound grant. Signed current-job installation is authoritative over stale
-ambient values. File secrets are confined below the configured secret base
-directory and written with restricted permissions.
+ambient values. V5 file destinations use absolute paths. Native runtime-contact
+0.10.40+ and runtime SDK 0.3.32+ install the authenticated file group with `0600`
+permissions, reject symlinks/traversal, and preserve bytes including newlines.
+Legacy relative paths remain confined below the configured secret base directory.
+Customer secrets do not depend on managed logging being enabled.
 
 ## Runtime lookup
 
@@ -72,7 +76,10 @@ New Liskov-owned environment contracts use `LISKOV_*`.
 ## Change timing
 
 A stored variable or secret version does not mutate a running process.
-Publication/configuration update creates a successor according to lifecycle.
+A literal follows the pinned policy. A signed runtime-env read resolves current
+managed values and returns a revision bound to those values and their stored
+revisions. An Acurast encrypted environment handoff is fixed for its job once
+submitted; a later managed value is selected for the next handoff.
 Runtime `refreshNow()` refreshes server-authorized runtime env and eligible
 background capabilities; it is not a bypass for successor policy or secret
 version selection.

@@ -44,7 +44,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Capability | Availability / limit |
 | --- | --- |
 | Node.js background bundle and runtime SDK `0.3.26` | v1 |
-| Managed variables and managed secrets | v1 |
+| Managed variables and managed secrets | v1. V5 customer-secret installation uses runtime-contact `0.10.40` or SDK `0.3.32`; existing artifacts must be rebuilt. |
 | Managed Application logging through Console and `proof liskov application logs`, including live follow and full-history pagination through the CLI; signed diagnostics | v1 |
 | Outbound networking and declared quota | v1 |
 | Liskov-hosted HTTP/SSH ingress | Not v1 |
