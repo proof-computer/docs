@@ -73,6 +73,20 @@ A configured Stripe supplier/VAT profile and a deployed Checkout implementation
 also do not change this release boundary. Customer payment starts only after the
 commercial enablement gate and the documented production journey pass.
 
+## Checkout reports a temporary pause
+
+`checkout_admission_disabled` means new card Checkout is paused. The request
+did not create a new payment Session. Previously paid purchases continue to be
+verified; check the selected organization's ledger before attempting another
+purchase. Existing Service Credits remain usable within normal spending limits.
+If a paid purchase is missing, contact support with the organization ID, UTC
+time and receipt reference. Never send card details, credentials or payment links.
+
+`stripe_not_configured`, `public_base_url_not_configured`, or
+`stripe_webhook_not_configured` mean payment configuration is unavailable.
+Use existing Service Credits or contact support. Customers cannot change these
+controls, and the release gate above remains in force.
+
 ## A subscription request reports a conflict
 
 `subscription_intent_conflict` means the request key already identifies a

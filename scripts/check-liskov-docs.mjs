@@ -1101,3 +1101,9 @@ if (errors.length > 0) {
 }
 
 console.log(`Liskov docs checks passed: ${files.length} pages, ${redirectSources.size} redirects, fixtures and retrieval map verified.`);
+
+// BKLG-20260904-1s9e: pause copy must preserve the customer release gate.
+const checkoutPausePage = readFileSync(new URL("../docs/liskov/troubleshooting/account-funding.md", import.meta.url), "utf8");
+for (const literal of ["checkout_admission_disabled", "stripe_webhook_not_configured", "Previously paid purchases", "release gate"]) {
+  if (!checkoutPausePage.includes(literal)) throw new Error(`Checkout pause contract missing: ${literal}`);
+}
