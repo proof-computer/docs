@@ -120,8 +120,17 @@ processed. Refresh its status instead of starting another request.
 `subscription_command_blocked` means an earlier subscription request for the
 organization still has an unresolved outcome. A different request key does not
 bypass that wait. `subscription_payment_action_pending` means an earlier request
-still needs payment or payment authentication. If its payment link was lost,
-contact support; a fresh subscription request is not a way to recover the link.
+still needs payment or payment authentication. In an enabled billing environment,
+an organization billing admin can use **Continue payment** when it appears in
+the account's subscription section. This retrieves the existing request's payment
+link; opening it does not start another subscription request. A trial's payment
+action remains accessible only to the person who started that trial.
+
+If the link is pending, refresh the subscription status. If it has expired or is
+unavailable, contact support with the organization and request reference. Do not
+create a new subscription request to recover a link. Recovery links are available
+for at most 24 hours from capture, and may expire sooner at the provider. Never
+share the link. Production paid billing remains release-gated.
 
 `subscription_mutations_paused` or `subscription_writer_fenced` means subscription
 changes are temporarily unavailable. Status reads remain available. A paused
