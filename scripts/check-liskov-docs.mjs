@@ -83,6 +83,16 @@ const baseExpectedIds = [
   'troubleshooting/logs',
   'troubleshooting/billing-retirement',
   'troubleshooting/support',
+  'legal/index',
+  'legal/master-terms',
+  'legal/service-credits-and-payments-policy',
+  'legal/acceptable-use-policy',
+  'legal/data-processing-addendum',
+  'legal/subprocessors',
+  'legal/privacy-notice',
+  'legal/cookie-notice',
+  'legal/marketplace-terms',
+  'legal/marketplace-notice-and-action-policy',
 ];
 
 const v5ReleaseContract = JSON.parse(readFileSync(v5ReleaseContractPath, 'utf8'));
@@ -107,14 +117,13 @@ const releaseGatedIds = [
   'marketplace/verify',
 ];
 
-// Legal-review artifacts are versioned in the public source repository so
-// counsel and owners can review exact text, but they are not customer terms or
-// capability documentation until their publication gates close. Docusaurus'
-// `draft: true` excludes them from the production build. Keep the list explicit
-// so adding or accidentally publishing a legal document changes this check.
-const legalReviewDraftIds = [
+// The customer-facing legal suite is published as Version 1.0, effective
+// 1 September 2026 (orchestrator Q-20260904-mm3v). The review artefacts that
+// are not customer documents stay `draft: true`, which excludes them from the
+// production build. Keep both lists explicit so adding, publishing or
+// accidentally exposing a legal document changes this check.
+const legalPublishedIds = [
   'legal/index',
-  'legal/legal-review-memorandum',
   'legal/master-terms',
   'legal/service-credits-and-payments-policy',
   'legal/acceptable-use-policy',
@@ -124,10 +133,15 @@ const legalReviewDraftIds = [
   'legal/marketplace-terms',
   'legal/marketplace-notice-and-action-policy',
   'legal/subprocessors',
+];
+const legalReviewDraftIds = [
+  'legal/legal-review-memorandum',
   'legal/change-log',
   'legal/launch-sign-off-matrix',
   'legal/implementation-copy',
+  'legal/marketplace-publisher-terms',
 ];
+const legalPublishedVersionLine = 'Version 1.0 — effective 1 September 2026';
 
 function walk(directory) {
   return readdirSync(directory, {withFileTypes: true}).flatMap((entry) => {
@@ -195,6 +209,27 @@ for (const id of legalReviewDraftIds) {
   check(/3 September 2026/i.test(content), `${id}: legal review page omits the reviewed source date`);
 }
 
+// Published legal pages: no draft flag, the 1.0 version line, no review
+// residue, no factual placeholders, and no customer crypto-payment rail
+// (ADR-0011: Stripe fiat only for v1).
+for (const id of legalPublishedIds) {
+  const file = join(docsRoot, `${id}.md`);
+  if (!existsSync(file)) {
+    check(false, `published legal page ${id} is declared but missing`);
+    continue;
+  }
+  const content = readFileSync(file, 'utf8');
+  const frontmatterEnd = content.indexOf('\n---\n', 4);
+  const frontmatter = frontmatterEnd > 4 ? content.slice(4, frontmatterEnd) : '';
+  check(!/^draft: true$/mu.test(frontmatter), `${id}: published legal page is still a draft`);
+  check(content.includes(legalPublishedVersionLine), `${id}: published legal page omits the 1.0 version line`);
+  check(!/\[verify\]|\[insert\]|review draft|not in force/i.test(content), `${id}: published legal page retains review residue`);
+  check(!/USDC|cryptoasset quote|### [0-9.]+ Cryptoasset payment|accept specified cryptoassets as payment/i.test(content), `${id}: published legal page offers a customer crypto rail`);
+  check(!/marketplace-legal@/.test(content), `${id}: published legal page names the retired marketplace-legal mailbox`);
+}
+check(readFileSync(join(docsRoot, 'legal', 'master-terms.md'), 'utf8').includes('PROOF does not accept cryptoassets as payment.'), 'Master Terms lost the no-crypto-payment statement');
+check(readFileSync(join(docsRoot, 'legal', 'master-terms.md'), 'utf8').includes('Customer is the sole Controller of any Personal Data in Distributed Workload Data'), 'Master Terms lost the customer-responsibility model for workload data');
+
 const legalReviewSourceManifest = readFileSync(
   join(docsRoot, 'legal', 'source-sha256s.txt'),
   'utf8',
@@ -221,8 +256,8 @@ for (const token of [
   check(approvedLegalIdentityText.includes(token), `approved legal identity omits: ${token}`);
 }
 check(
-  !legalReviewDraftIds.some((id) => readFileSync(join(docsRoot, `${id}.md`), 'utf8').includes('trading as PROOF.COMPUTER')),
-  'legal review drafts retain the rejected PROOF.COMPUTER trading name',
+  ![...legalReviewDraftIds, ...legalPublishedIds].some((id) => readFileSync(join(docsRoot, `${id}.md`), 'utf8').includes('trading as PROOF.COMPUTER')),
+  'legal pages retain the rejected PROOF.COMPUTER trading name',
 );
 check(
   readFileSync(join(docsRoot, 'legal', 'launch-sign-off-matrix.md'), 'utf8').includes('Complete — owner approved 4 September 2026'),
@@ -324,7 +359,7 @@ for (const [pattern, explanation] of [
   [/proof liskov (?:admin|custody)\b/i, 'internal command prefix'],
   [/override-replacement-hold/i, 'internal replacement override'],
   [/\bzero[- ]trust\b/i, 'unsupported zero-trust claim'],
-  [/\b(?:just|simply|obviously)\b/i, 'unfriendly shortcut word'],
+  [/\b(?:just(?! Tickets Ltd)|simply|obviously)\b/i, 'unfriendly shortcut word'], // "Not Just Tickets Ltd" is Plain's legal name in the Subprocessor Schedule
   [/\bblackbox\b|BLACKBOX_/i, 'internal logging implementation name'],
   [/\bTBD\b|\bTODO\b|coming soon/i, 'placeholder copy'],
 ]) {
@@ -541,7 +576,8 @@ for (const id of unlistedIds) {
 for (const id of legalReviewDraftIds) {
   check(!sidebar.includes(`'${id}'`), `sidebar exposes legal review draft ${id}`);
 }
-check(!/Preview|openclaw|cargo|marketplace/i.test(sidebar), 'sidebar exposes an unavailable Preview/OpenClaw/Cargo/Marketplace path');
+check(!/Preview|openclaw|cargo|marketplace/i.test(sidebar.replace(/'legal\/[a-z-]+'/g, '')), 'sidebar exposes an unavailable Preview/OpenClaw/Cargo/Marketplace path');
+for (const id of legalPublishedIds) check(sidebar.includes(`'${id}'`), `sidebar omits published legal page ${id}`);
 
 const redirectConfig = JSON.parse(readFileSync(join(root, 'vercel.json'), 'utf8'));
 const redirectSources = new Set(redirectConfig.redirects.map((item) => item.source));

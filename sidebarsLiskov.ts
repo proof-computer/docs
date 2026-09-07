@@ -125,6 +125,22 @@ const sidebars: SidebarsConfig = {
         'troubleshooting/support',
       ],
     },
+    {
+      type: 'category',
+      label: 'Legal',
+      link: {type: 'doc', id: 'legal/index'},
+      items: [
+        'legal/master-terms',
+        'legal/service-credits-and-payments-policy',
+        'legal/acceptable-use-policy',
+        'legal/data-processing-addendum',
+        'legal/subprocessors',
+        'legal/privacy-notice',
+        'legal/cookie-notice',
+        'legal/marketplace-terms',
+        'legal/marketplace-notice-and-action-policy',
+      ],
+    },
   ],
 };
 

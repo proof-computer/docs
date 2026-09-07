@@ -1,28 +1,23 @@
 ---
-title: Liskov Marketplace Notice-and-Action Policy — review draft
-description: Counsel-ready working policy for Marketplace reports, moderation, reasons, appeals, and recordkeeping.
-draft: true
+title: Liskov Marketplace Notice-and-Action Policy
+description: How to report Marketplace content and how PROOF responds, gives reasons, handles appeals and keeps records.
 ---
 
 # Liskov Marketplace Notice-and-Action Policy
 
-:::caution[Not in force]
-Review version 1.0, dated 3 September 2026. This policy is review material, has
-no contractual effect, and is excluded from the production documentation build.
-Its publication blockers remain open.
-:::
+**Version 1.0 — effective 1 September 2026**
 
-**Version:** 1.0 — 3 September 2026
-
-This Policy explains how to report potentially illegal, infringing, unsafe or policy-breaching Marketplace content and how MOOSE LABS LTD trading as PROOF (**PROOF**) normally responds. It applies to Items, Listing Content, publisher profiles, reviews/ratings if enabled, and other public user submissions.
+This Policy explains how to report potentially illegal, infringing, unsafe or policy-breaching Marketplace content and how MOOSE LABS LTD trading as PROOF (**PROOF**) normally responds. It applies to Items and Listing Content published through the Marketplace (at the date of this Policy, all published by PROOF) and to any user submissions PROOF later accepts.
 
 It does not replace emergency services, law-enforcement reporting, a court process or a statutory reporting route.
 
 ## 1. Reporting routes
 
-Use the Marketplace report form at **[insert URL]** or email **marketplace-legal@proof.computer** [verify].
+Email **abuse@proof.computer**.
 
-For a security vulnerability or active malicious package, use **security@proof.computer** [verify] and mark the report **URGENT SECURITY**.
+For a security vulnerability or active malicious package, use **security@proof.computer** and mark the report **URGENT SECURITY**.
+
+For rights-owner correspondence, counter-notices, and law-enforcement or regulator requests, use **legal@proof.computer**.
 
 For an immediate threat to life or safety, contact the appropriate emergency service first. For child sexual abuse material, do not download, copy or attach the material; provide the URL, identifier or hash and report it through the appropriate official channel as well as to us.
 
@@ -128,7 +123,7 @@ We aim to use the least restrictive effective measure, but may act immediately w
 
 ## 7. Publisher notice and response
 
-Where lawful and safe, we will tell the Publisher:
+In this Policy, **Publisher** means the person that published the affected Item. Where lawful and safe, we will tell the Publisher:
 
 - what content or version is affected;
 - the general nature of the report;
@@ -184,11 +179,11 @@ We may preserve reports and related evidence for security, statutory duties and 
 
 ## 12. Transparency and records
 
-PROOF should keep proportionate records of reports, severity, evidence, decisions, reasons, notices, appeals, restoration and repeat-abuse action. Where law requires, PROOF may publish aggregate transparency information without exposing security-sensitive or identifying details.
+PROOF keeps records of reports, severity, evidence, decisions, reasons, notices, appeals, restoration and repeat-abuse action for six years after the matter is closed, or longer where a legal claim or legal duty requires. Where law requires, PROOF may publish aggregate transparency information without exposing security-sensitive or identifying details.
 
 ## 13. Law-enforcement and regulator requests
 
-Requests should be sent to **legal@proof.computer** [verify] from an official address and identify the legal authority, scope, deadline and contact officer. Emergency requests should be clearly marked and followed by valid process where required. PROOF may verify requests and challenge those that are unlawful, overbroad or unsafe.
+Requests should be sent to **legal@proof.computer** from an official address and identify the legal authority, scope, deadline and contact officer. Emergency requests should be clearly marked and followed by valid process where required. PROOF may verify requests and challenge those that are unlawful, overbroad or unsafe.
 
 ## 14. No admission and preservation of rights
 
@@ -200,4 +195,4 @@ PROOF may update this Policy under the Master Business Terms and will publish th
 
 ---
 
-**Operational implementation required:** monitored intake; severity/on-call matrix; child-safety and terrorism escalation; security quarantine; IP workflow; sanctions escalation; evidence controls; publisher notification templates; appeal reviewer; decision log; transparency metrics; law-enforcement verification; reporter safety protocol.
+MOOSE LABS LTD trading as PROOF · Version 1.0 · effective 1 September 2026 · previous versions are archived by PROOF and available on request from legal@proof.computer.

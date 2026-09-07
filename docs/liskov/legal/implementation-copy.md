@@ -81,9 +81,7 @@ Show before the first Launch, in CLI/API documentation and adjacent to payload/s
 > **Do not deploy Personal Data or secrets**  
 > Standard Liskov workloads may run on independently operated nodes in unknown locations. Do not include Personal Data, confidential regulated data, private keys, seed phrases, passwords or unrestricted credentials. Assume code, inputs, outputs, metadata and traffic may be observable by a node unless your Enterprise Order expressly says otherwise. Encrypt appropriate data, use scoped/short-lived credentials and verify outputs.
 
-Required acknowledgement on first Launch and after a material change:
-
-> I confirm this workload contains no prohibited data and is suitable for decentralised execution.
+No acknowledgement control is required on first Launch; the warning is informational and the Master Business Terms (clause 7) allocate responsibility.
 
 ## 4. Launch cost authorisation
 
@@ -106,19 +104,7 @@ Checkbox:
 
 > I have reviewed the Service Credits and Payments Policy and authorise this purchase for **[Customer]**.
 
-## 6. USDC payment warning
-
-> Send only **[exact token name and contract]** on **[network and chain ID]** to the address shown. Transfers using another token, contract, bridge or network may be permanently lost. Verify the address, network, amount and fee in your wallet. Credits are issued only after **[confirmation rule]** and compliance checks. PROOF does not take custody of your wallet or private keys.
-
-Quote:
-
-> Quote: **[USDC amount]** for **[Credit value]**, expires **[timestamp and timezone]**. Network fees are paid separately by you.
-
-Button:
-
-> **I have verified the payment details**
-
-## 7. Auto top-up
+## 6. Auto top-up
 
 > When your paid Credit balance falls below **[trigger]**, charge **[amount]** to **[payment method]**. Maximum **[number/amount]** per **[billing period]**. We will send a receipt after each top-up. You can disable future top-ups at any time; disabling does not reverse a payment already initiated or a non-cancellable Network cost already committed.
 
@@ -126,9 +112,9 @@ Checkbox or explicit toggle, off by default:
 
 > **Enable auto top-up**
 
-## 8. Marketplace publisher attestation
+## 7. Marketplace publisher attestation
 
-Before each first publication and material version:
+Not in use at launch: independent publishing is not available and the publisher terms remain a draft. Before each first publication and material version, once activated:
 
 > I confirm on behalf of **[Publisher]** that:
 >
@@ -147,7 +133,7 @@ Button:
 
 Do not auto-publish at launch.
 
-## 9. Marketplace user warning
+## 8. Marketplace user warning
 
 > This Item is supplied by **[Publisher]** under **[Item Licence]**, not by PROOF. Review its source, permissions, dependencies, telemetry, external terms and security before use. Marketplace review or scanning is not a guarantee. Deploy first in an isolated environment, use least privilege, do not include Personal Data or secrets, and validate outputs. Liskov Network Costs may apply even though the Item is free.
 
@@ -155,11 +141,11 @@ Button:
 
 > **Review and deploy**
 
-## 10. Marketplace report acknowledgement
+## 9. Marketplace report acknowledgement
 
-> Thank you. We have recorded report **[ID]** concerning **[Item/version]**. Please do not send illegal content, private keys or unnecessary Personal Data. We may contact you for evidence and may share relevant information with the Publisher or authorities where lawful. For an immediate threat to life, contact emergency services.
+> Thank you. We have recorded your report to abuse@proof.computer concerning **[Item/version]**. Please do not send illegal content, private keys or unnecessary Personal Data. We may contact you for evidence and may share relevant information with the Publisher or authorities where lawful. For an immediate threat to life, contact emergency services.
 
-## 11. Suspension notice template
+## 10. Suspension notice template
 
 Subject: **Liskov access restricted — [Workspace/Item]**
 
@@ -172,7 +158,7 @@ Subject: **Liskov access restricted — [Workspace/Item]**
 >
 > We may withhold details where disclosure would undermine security, law enforcement, reporter safety or legal restrictions.
 
-## 12. Material terms change notice
+## 11. Material terms change notice
 
 Subject: **Liskov legal terms update effective [date]**
 
@@ -180,13 +166,13 @@ Subject: **Liskov legal terms update effective [date]**
 >
 > The change affects you because **[impact]**. If it materially disadvantages your paid Service, you may terminate the affected self-service Order before the effective date through **[method]** and receive the refunds due under the Contract. Continued use after the effective date constitutes acceptance where the Contract permits.
 
-## 13. Service discontinuation notice
+## 12. Service discontinuation notice
 
 Subject: **Liskov [Service] will be discontinued on [date]**
 
 > We will discontinue **[Service/feature]** on **[date]** because **[reason]**. The affected functionality and migration options are **[details]**. You can export relevant hosted Customer Data until **[date]**. Where the Contract requires, we will refund prepaid Subscription Fees for the unused period and unused refundable Service Credits.
 
-## 14. Account closure and data copy
+## 13. Account closure and data copy
 
 > Closing the Workspace stops access and new Launches. Hosted Customer Data remains available for export for up to 30 days after termination and is deleted from active PROOF-controlled systems by day 60 and routine backups by day 90, subject to law/security. PROOF cannot delete public blockchain records, copies held by independent Networks or data in your own systems. Unused paid Service Credits are handled under the Credits Policy after verification and deductions.
 
@@ -194,7 +180,7 @@ Confirmation input:
 
 > Type the Workspace name **[name]** to request closure.
 
-## 15. Cookie banner
+## 14. Cookie banner
 
 First layer:
 
@@ -211,7 +197,7 @@ Persistent footer/control:
 
 Do not deploy until “Reject non-essential” has been tested to stop all optional client-side and server-side events.
 
-## 16. Support secret warning
+## 15. Support secret warning
 
 Adjacent to support message/attachment field:
 

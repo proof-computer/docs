@@ -1,18 +1,11 @@
 ---
-title: Liskov Acceptable Use Policy — review draft
-description: Counsel-ready working rules for lawful, safe, and responsible use of Liskov.
-draft: true
+title: Liskov Acceptable Use Policy
+description: The rules for lawful, safe and responsible use of Liskov.
 ---
 
 # Liskov Acceptable Use Policy
 
-:::caution[Not in force]
-Review version 1.0, dated 3 September 2026. This policy is review material, has
-no contractual effect, and is excluded from the production documentation build.
-Its publication blockers remain open.
-:::
-
-**Version:** 1.0 — 3 September 2026
+**Version 1.0 — effective 1 September 2026**
 
 This Acceptable Use Policy (**AUP**) forms part of the Liskov Contract. It applies to Customer, Authorised Users, Applications, Distributed Workloads, Marketplace submissions and anyone to whom Customer makes an Application available.
 
@@ -32,20 +25,16 @@ You must not use, attempt to use, or allow the Services to be used:
 
 (e) contrary to the Contract, Documentation or a reasonable security instruction.
 
-## 2. Prohibited data in Standard Service workloads
+## 2. Prohibited workload data
 
-You must not place in a Distributed Workload under the Standard Service:
+A Distributed Workload runs on independently operated nodes, not on PROOF systems. PROOF cannot see its contents and does not process them for you. You are responsible for any Personal Data you choose to process in an Application, including its lawful basis, notices, minimisation, encryption, transfers and residency. You must not place in a Distributed Workload:
 
-- Personal Data, including pseudonymised Personal Data;
-- Special Category Data, criminal-offence data or children’s data;
 - payment-card data, bank credentials or regulated financial account data;
-- health, genetic or biometric data;
 - private keys, seed phrases, unrestricted API keys, passwords or authentication secrets;
-- data subject to geographic localisation or controlled-access obligations;
-- classified or controlled technical data that may not lawfully be handled in an unknown country; or
-- confidential material where possible access by an untrusted node would create material harm.
+- data that must, by contract or law, be processed only in a named location or only in the United Kingdom; or
+- classified or export-controlled technical data that may not lawfully be handled in an unknown country.
 
-An Enterprise Order must expressly approve any exception. Encryption or pseudonymisation is not by itself an exception.
+Encryption or pseudonymisation does not by itself take data outside these rules.
 
 ## 3. Security abuse
 
@@ -171,7 +160,7 @@ You must not use the Services:
 
 (d) in a way that makes PROOF or a Network Participant breach applicable restrictions.
 
-You must provide accurate compliance information on request. Standard Service does not guarantee execution in a permitted geography; location-restricted workloads require an approved Enterprise Order.
+You must provide accurate compliance information on request. The Standard Service does not guarantee execution in a particular geography; do not use it for location-restricted data.
 
 ## 9. Weapons, surveillance and dangerous activity
 
@@ -208,7 +197,7 @@ Where approved, Customer must implement qualified human oversight, validation, f
 
 ## 11. Marketplace integrity
 
-A Marketplace publisher must not:
+Any person that submits or publishes a Marketplace item must not:
 
 (a) submit malicious, materially insecure or deceptively described code;
 
@@ -282,7 +271,7 @@ PROOF will restore access or content when the ground is resolved and restoration
 
 ## 14. Reporting abuse
 
-Report abuse using the form or email stated on the Website. Include, where available:
+Report abuse to **abuse@proof.computer**, and a security vulnerability or active malicious package to **security@proof.computer**. Include, where available:
 
 - URL, listing ID, Workspace or transaction hash;
 - description and legal/safety basis;
@@ -299,3 +288,7 @@ Marketplace reports are handled under the Notice-and-Action Policy.
 ## 15. Changes
 
 PROOF may update this AUP under the Master Business Terms. Urgent additions addressing new abuse or legal requirements may take effect sooner than 30 days where reasonably necessary.
+
+---
+
+MOOSE LABS LTD trading as PROOF · Version 1.0 · effective 1 September 2026 · previous versions are archived by PROOF and available on request from legal@proof.computer.

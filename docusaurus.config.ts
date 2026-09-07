@@ -116,6 +116,10 @@ const config: Config = {
               label: 'Liskov',
               to: '/liskov',
             },
+            {
+              label: 'Legal',
+              to: '/liskov/legal',
+            },
           ],
         },
         {

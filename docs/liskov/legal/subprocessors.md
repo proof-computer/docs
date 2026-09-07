@@ -1,94 +1,58 @@
 ---
-title: Liskov Subprocessor and International Transfer Schedule — incomplete review draft
-description: Pre-publication template for verified Liskov subprocessors, transfers, retention, and processing records.
-draft: true
+title: Liskov Subprocessor and International Transfer Schedule
+description: The providers PROOF uses to process customer personal data, where they process it, and on what legal basis.
 ---
 
 # Liskov Subprocessor and International Transfer Schedule
 
-:::caution[Not in force]
-Review version 1.0, dated 3 September 2026. This incomplete schedule is review
-material, has no contractual effect, and is excluded from the production
-documentation build. Its publication blockers remain open.
-:::
+**Version 1.0 — effective 1 September 2026**
 
-**Version:** 1.0 — 3 September 2026  
-**Status:** must be completed from the production data-flow/vendor register before publication
+This Schedule identifies the third parties engaged by MOOSE LABS LTD trading as PROOF (**PROOF**) to process Customer Personal Data on a customer’s behalf under the Liskov Data Processing Addendum, and the recipients that process limited personal data for their own purposes.
 
-This Schedule identifies third parties engaged by MOOSE LABS LTD trading as PROOF (**PROOF**) to process Customer Personal Data on behalf of a customer under the Liskov Data Processing Addendum.
+It does **not** list Acurast processors or other Network Participants. They are independent network participants that execute workloads at the customer’s direction; PROOF sends them no customer account data, and the customer is the Controller of anything it chooses to process in a Distributed Workload (Master Business Terms, clause 7).
 
-It does **not** list every independent Network Participant. Personal Data is prohibited in Standard Service Distributed Workloads. Any approved enterprise node pool must be listed in the applicable Enterprise Order/data schedule with its own role and transfer analysis.
+PROOF’s own systems run in the United Kingdom (London). The primary database, secrets service and log service are hosted on Fly.io in London.
 
-## 1. Current Subprocessors
+## 1. Subprocessors
 
-| Legal entity | Service / purpose | Personal Data | Hosting / processing countries | Transfer mechanism | Security/assurance link | Change date |
-|---|---|---|---|---|---|---|
-| [insert exact contracting entity] | Cloud hosting / compute / database / storage | [insert] | [insert] | UK adequacy / UK IDTA / UK Addendum / not restricted | [insert] | [insert] |
-| [insert] | Authentication / identity | [insert] | [insert] | [insert] | [insert] | [insert] |
-| [insert] | Email / transactional communications | [insert] | [insert] | [insert] | [insert] | [insert] |
-| [insert] | Customer support | [insert] | [insert] | [insert] | [insert] | [insert] |
-| [insert] | Monitoring / error logging | [insert] | [insert] | [insert] | [insert] | [insert] |
-| [insert] | Analytics / product telemetry | [insert] | [insert] | [insert] | [insert] | [insert] |
-| [insert] | Card / bank payments and invoicing | [insert] | [insert] | [insert] | [insert] | [insert] |
-| [insert] | Cryptoasset payment / blockchain monitoring | [insert] | [insert] | [insert] | [insert] | [insert] |
-| [insert] | Sanctions / fraud / identity verification | [insert] | [insert] | [insert] | [insert] | [insert] |
-| [insert] | Backup / disaster recovery | [insert] | [insert] | [insert] | [insert] | [insert] |
+| Legal entity | Service and purpose | Personal Data it may process | Processing location | Transfer basis |
+|---|---|---|---|---|
+| Fly.io, Inc. (United States) | Application hosting and managed PostgreSQL for the Liskov control plane, secrets service and log service | All hosted Customer Data and Account Data | United Kingdom (London region) | Data stays in the UK; Fly.io Data Processing Agreement for any support access from outside the UK |
+| Tigris Data, Inc. (United States) | Object storage for runtime images and uploaded artifacts | Customer application artifacts, to the extent they contain personal data | Distributed object storage written from London; may be replicated to other regions on access | Tigris Data Processing Addendum incorporating the EU Standard Contractual Clauses and the UK Addendum |
+| Amazon Web Services EMEA SARL (Luxembourg) | Hosting for the Liskov artifact upload and IPFS pinning service | Customer application artifacts, upload metadata | United Kingdom (London region, eu-west-2) | Data stays in the UK; AWS Data Processing Addendum |
+| Plus Five Five, Inc., trading as Resend (United States) | Transactional email: invitations, sign-in links, billing and service notices | Recipient name and email address, message content | United States | UK Extension to the EU-US Data Privacy Framework; Resend Data Processing Addendum with the EU Standard Contractual Clauses and UK Addendum |
+| Not Just Tickets Ltd, trading as Plain (United Kingdom, company 12736513) | Customer support conversations sent to support@proof.computer and other PROOF mailboxes | Name, email address, organisation, support content | United Kingdom and European Union | No restricted transfer; Plain Data Processing Addendum |
+| Rebase, Inc., trading as Autumn (United States) | Subscription and entitlement orchestration between Liskov and Stripe | Organisation identifier and organisation name, plan and entitlement state | United States | EU Standard Contractual Clauses and UK Addendum under Autumn’s terms |
+| Functional Software, Inc., trading as Sentry (United States) | Error monitoring for the control plane | Technical error events; configured not to send request bodies, headers, cookies or personal identifiers | European Union (Frankfurt data region) | Data stored in the EU; UK Extension to the EU-US Data Privacy Framework and Sentry Data Processing Addendum for support access |
+| Tailscale Inc. (Canada) | Private network connectivity for managed runtime SSH sessions | Device identifiers, network addresses and public keys of runtime instances and connecting clients; user identifiers on the PROOF tailnet | Canada and United States | Canada is covered by UK adequacy regulations; Tailscale Data Processing Agreement with the EU Standard Contractual Clauses and UK Addendum |
+| GitHub, Inc. (United States) | Sign-in (OAuth), repository access the customer authorises, and workflow identity for builds | GitHub account identifier, login and profile fields the customer authorises; repository contents the customer connects | United States | UK Extension to the EU-US Data Privacy Framework; GitHub Data Protection Agreement |
+| Vercel Inc. (United States) | Hosting for proof.computer, docs.proof.computer and the Liskov console’s static assets | Request logs (IP address, user agent, URL) | United States and global edge | UK Extension to the EU-US Data Privacy Framework; Vercel Data Processing Addendum |
 
-Delete unused rows and add every processor that can access Customer Personal Data, including support personnel and providers receiving server-side events.
+## 2. Independent controllers and other recipients
 
-## 2. Independent Controllers / recipients
+These providers determine their own purposes for the limited personal data they receive, or receive data the customer directs to them. They are described in the Privacy Notice.
 
-Some providers may determine their own purposes for limited Personal Data and act as independent Controllers rather than Subprocessors—for example, a bank, card scheme, cryptoasset issuer, public blockchain, tax authority, fraud consortium or professional adviser. Record them separately and describe them in the Privacy Notice.
+| Recipient | Purpose | Data shared | Location | Basis |
+|---|---|---|---|---|
+| Stripe Payments UK Limited and Stripe, Inc. | Payment processing, tax calculation, invoices and receipts; fraud prevention and payment compliance for Stripe’s own purposes | Name, billing address, VAT number, email, payment method (PROOF never receives full card details), transaction details | United Kingdom, Ireland and United States | Stripe’s own privacy notice; UK Extension to the EU-US Data Privacy Framework and Stripe Data Processing Agreement for processor activities |
+| Google Ireland Limited (Google Analytics) | Website analytics on proof.computer, only with consent | Pseudonymous analytics identifiers, page and event data; IP addresses are not stored by Google Analytics 4 | European Union and United States | UK Extension to the EU-US Data Privacy Framework; Google Ads Data Processing Terms |
+| Telegram Messenger Inc. | Optional operational notifications a customer configures to a Telegram chat it controls | The customer’s chat identifier and the notification text | Customer-directed | Customer-directed disclosure under Telegram’s terms |
+| DB-IP (db-ip.com) | Best-effort geolocation of network participants’ addresses for placement and monitoring | Network addresses of Acurast processors (not customer data) | European Union | Provider terms; no customer personal data |
 
-| Recipient / category | Purpose | Controller rationale | Data shared | Countries | Privacy information |
-|---|---|---|---|---|---|
-| [insert] | [insert] | [insert] | [insert] | [insert] | [insert] |
+PROOF may also disclose personal data to professional advisers, insurers, courts, regulators and law-enforcement bodies as described in the Privacy Notice.
 
 ## 3. Transfer assessment register
 
-For each Restricted Transfer, retain:
-
-| Exporter | Importer | Roles | Countries | Data / frequency | Transfer tool | TRA date / owner | Supplementary measures | Review trigger |
-|---|---|---|---|---|---|---|---|---|
-| [insert] | [insert] | Controller→Processor / Processor→Processor | [insert] | [insert] | UK IDTA / EU SCCs + UK Addendum | [insert] | [insert] | law/provider/scope change; incident; annual review |
-
-Supplementary measures may include encryption, key control, minimisation, pseudonymisation, government-request policy, transparency reporting, access controls and technical inability to access content. Do not list a measure unless it applies to the actual transfer.
+PROOF keeps a transfer risk assessment for each restricted transfer in section 1 and reviews it when a provider, location, scope or legal instrument changes, after an incident, and at least annually. Supplementary measures in use: data minimisation at the source (Sentry sends no request content; Autumn receives an organisation identifier and name only), encryption in transit and at rest, and access limited to named PROOF personnel.
 
 ## 4. Change notification
 
-Customers may subscribe at **[insert URL/email]**. PROOF will normally give at least 15 days’ prior notice before a new Subprocessor materially processes Customer Personal Data, subject to the urgent-change provision in the DPA.
+PROOF publishes changes to this Schedule on this page and gives at least 15 days’ notice before a new Subprocessor materially processes Customer Personal Data, subject to the urgent-change provision in the DPA. To receive change notices by email, write to **privacy@proof.computer** with the subject line **Subprocessor notices**. A notice states the legal entity and service, the purpose and data, the processing location, the planned effective date, the transfer basis, and the objection route and deadline.
 
-A notice should state:
+## 5. Vendor onboarding
 
-- legal entity and service;
-- purpose/data;
-- countries;
-- planned effective date;
-- transfer mechanism; and
-- objection route/deadline.
+Before adding a provider that will process Customer Personal Data, PROOF determines its role from the facts, completes due diligence proportionate to the risk, puts Article 28 processing terms in place, identifies the processing locations, selects a transfer basis and completes a transfer risk assessment where required, confirms deletion, incident-notice and audit commitments, restricts the provider’s own use of the data, and updates this Schedule and the Privacy Notice.
 
-## 5. Vendor onboarding checklist
+---
 
-Before adding a provider:
-
-- determine Controller/Processor/joint-controller status by facts;
-- complete security/privacy due diligence proportionate to risk;
-- execute Article 28 terms where it is a Processor;
-- identify all processing countries and remote-access locations;
-- select and execute a transfer mechanism;
-- complete a transfer risk assessment where required;
-- confirm deletion/return, incident notice, audit and subprocessor flow-down;
-- restrict provider use/training/advertising;
-- update privacy/cookie notices and data map;
-- test configuration to minimise data and payloads;
-- obtain internal approval and set review/exit owner.
-
-## 6. Enterprise node pool schedule
-
-Use a separate table in an Enterprise Order if Personal Data is ever approved for decentralised execution:
-
-| Node operator legal entity | Node identifiers | Country/region | Processor role / contract | Data categories | Security/attestation | Transfer mechanism | Retention/deletion | Incident route | Audit evidence |
-|---|---|---|---|---|---|---|---|---|---|
-| [insert] | [insert] | [insert] | [insert] | [insert] | [insert] | [insert] | [insert] | [insert] | [insert] |
-
-An open, anonymous or dynamically changing node population is not approved merely by completing a generic DPA.
+MOOSE LABS LTD trading as PROOF · Version 1.0 · effective 1 September 2026 · previous versions are archived by PROOF and available on request from legal@proof.computer.

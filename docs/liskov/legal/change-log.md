@@ -6,6 +6,38 @@ draft: true
 
 # Liskov legal suite — change log
 
+## Version 1.0 publication — 7 September 2026
+
+The owner answered the 176 publication questions on 7 September 2026 and the
+customer-facing suite was finalised as **Version 1.0, effective 1 September
+2026** (the disposition register is `Q-20260904-mm3v` in the orchestrator).
+Material changes from the 3 September review text:
+
+- every customer cryptoasset-payment, quote, confirmation and crypto-refund
+  clause removed; payment is through Stripe-hosted checkout only;
+- the absolute prohibition on Personal Data in Distributed Workloads replaced
+  by a customer-responsibility model (Master Terms clause 7; Customer is sole
+  Controller; PROOF neither Controller nor Processor); the security
+  prohibitions (payment data, secrets, location-restricted and
+  export-controlled data) stay;
+- self-custody covered by the Master Terms (clause 5.4) as a preview Service;
+- the Order defined as the console plan or Service Credit purchase, formed
+  without a separate acceptance control;
+- a non-binding 99.95% control-plane availability target (clause 3.7),
+  chain-scheduled job and confidential-execution clauses (4.7, 4.8);
+- VAT rule stated: UK billing address → UK VAT; non-UK business → outside the
+  scope of UK VAT; Stripe Tax calculates;
+- refunds case by case; account-closure refund discretionary;
+- Marketplace Terms rewritten for PROOF-published free Items only; the
+  publisher-side content moved to an unpublished draft
+  (`marketplace-publisher-terms.md`);
+- Notice-and-Action routes: abuse@, security@, legal@; six-year records;
+- Privacy Notice, DPA Annex 2, Cookie Notice and Subprocessor Schedule
+  completed from the code and vendor readback (no `[verify]`/`[insert]`
+  markers remain in a published page);
+- the review index replaced by a public landing page; the memorandum, sign-off
+  matrix, implementation copy and this change log stay `draft: true`.
+
 :::caution[Not in force]
 Review version 1.0, dated 3 September 2026. This change log accompanies review
 material that has no contractual effect and is excluded from the production

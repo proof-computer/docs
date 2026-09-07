@@ -1,214 +1,91 @@
 ---
-title: Liskov Free Marketplace Publisher and User Terms — review draft
-description: Counsel-ready working terms for a curated, business-only Marketplace of free Items.
-draft: true
+title: Liskov Marketplace Terms
+description: The terms for using free Items published through the Liskov Marketplace.
 ---
 
-# Liskov Free Marketplace Publisher and User Terms
+# Liskov Marketplace Terms
 
-:::caution[Not in force]
-Review version 1.0, dated 3 September 2026. These terms are review material,
-have no contractual effect, and are excluded from the production documentation
-build. Their publication blockers remain open.
-:::
-
-**Version:** 1.0 — 3 September 2026  
+**Version 1.0 — effective 1 September 2026**  
 **Business users only — free listings only**
 
-These Marketplace Terms form part of the Liskov Contract. They apply when a Customer browses, installs, deploys, submits, publishes or maintains an item through the Liskov Marketplace.
+These Marketplace Terms form part of the Liskov Contract. They apply when a Customer browses, launches, deploys or uses an item through the Liskov Marketplace. Capitalised words have the meanings in the Master Business Terms.
 
 ## 1. Launch scope
 
 ### 1.1 Curated free catalogue
 
-The Marketplace is a curated catalogue of Applications, templates, integrations, packages, documentation and related materials (**Items**). Under these Terms:
+The Marketplace is a curated catalogue of Applications, templates, integrations, packages, documentation and related materials (**Items**). At the date of these Terms every Item is published by PROOF. Under these Terms:
 
-- Items must be available without a purchase price through Liskov;
+- Items are available without a purchase price through Liskov;
 - PROOF does not collect money or cryptoassets for a Publisher;
 - PROOF does not pay revenue, commission, royalties or tips to a Publisher;
 - no transfer of Service Credits occurs between users;
 - PROOF is not agent for a Publisher or User in a sale; and
 - paid listings require separate terms and written activation by PROOF.
 
-### 1.2 External services
+### 1.2 Features that are not available
 
-An Item may interoperate with a separately priced external service, provided the listing clearly identifies the provider, material charges and independent terms before installation, and does not mislead users into believing the external service is included. PROOF may reject a listing whose principal purpose is to evade the free-only model.
+Independent (third-party) publishing, publisher profiles, reviews, ratings, comments, messaging, activity feeds and search over user-submitted content are not available through the Marketplace. Reviews/ratings must not be enabled until PROOF has completed its Online Safety Act scope/risk work, moderation workflow, reporter protection, retention and transparency design. If PROOF later offers any of these features, it will update these Terms before doing so.
 
-### 1.3 Definitions
+### 1.3 External services
 
-**Publisher** means a Customer that submits or makes an Item available.
+An Item may interoperate with a separately priced external service, provided the listing clearly identifies the provider, material charges and independent terms before launch, and does not mislead users into believing the external service is included.
 
-**User** means a Customer that browses, installs, deploys or uses an Item.
+### 1.4 Definitions
 
-**Listing Content** means the title, description, images, publisher information, metadata, documentation, links, reviews and other content relating to an Item.
+**Publisher** means the person that publishes an Item through the Marketplace. At the date of these Terms, PROOF is the only Publisher.
 
-**Item Licence** means the open-source, source-available, proprietary-free or other licence identified in the listing or accompanying Item.
+**User** means a Customer that browses, launches, deploys or uses an Item.
+
+**Listing Content** means the title, description, images, publisher information, metadata, documentation, links, evidence labels and other content relating to an Item.
+
+**Item Licence** means the open-source, source-available or other licence identified in the listing or accompanying the Item.
 
 ## 2. Relationship between PROOF, Publisher and User
 
-### 2.1 Independent publisher
+### 2.1 Items published by PROOF
 
-A Publisher is independent from PROOF. It is not our employee, partner or agent and cannot bind us. Publication does not mean that PROOF owns, sponsors, guarantees, audits or endorses the Item or Publisher.
+An Item published by PROOF is supplied under its stated Item Licence. Publishing an Item does not extend PROOF’s warranties beyond section 10, and PROOF’s responsibility for an Item is limited to what the Master Business Terms and the Item Licence provide.
 
 ### 2.2 Item contract and licence
 
-The Item Licence governs the User’s right to copy, modify, deploy and use an Item. PROOF’s Marketplace Terms do not grant rights that the Publisher does not own and do not override a mandatory open-source licence. Where no valid licence is stated, the User receives only a revocable, non-exclusive right to inspect and test the Item within Liskov for evaluation; the Item must not be publicly listed until the licence is corrected.
+The Item Licence governs the User’s right to copy, modify, deploy and use an Item. These Marketplace Terms do not grant rights that the Publisher does not own and do not override a mandatory open-source licence. Where no valid licence is stated, the User receives only a revocable, non-exclusive right to inspect and test the Item within Liskov for evaluation.
 
 ### 2.3 PROOF Services
 
-Use of Liskov to deploy an Item remains subject to the Master Business Terms, Fees and AUP. A free Item may consume paid Network capacity or other Liskov Services. Those charges are payable to PROOF and are not payment to the Publisher.
+Use of Liskov to launch or deploy an Item remains subject to the Master Business Terms, Fees and AUP. A free Item may consume paid Network capacity or other Liskov Services. Those charges are payable to PROOF for the Services and are not a purchase price for the Item.
 
 ### 2.4 No professional advice
 
-An Item, listing, badge, review or Publisher response is not legal, security, tax, investment or other professional advice from PROOF.
+An Item, listing, evidence label or publisher response is not legal, security, tax, investment or other professional advice from PROOF.
 
-## 3. Publisher eligibility and verification
+### 2.5 Independent publishers, if later admitted
 
-### 3.1 Business status
+Where PROOF later admits an independent Publisher under separate Publisher Terms, that Publisher is independent from PROOF, is not PROOF’s employee, partner or agent, and cannot bind PROOF. Publication does not mean that PROOF owns, sponsors, guarantees, audits or endorses the Item or the Publisher.
 
-A Publisher must act wholly or mainly for business purposes, be at least 18 if an individual, have authority to publish for the named organisation and provide accurate contact information.
+## 3. Source assurance and evidence labels
 
-### 3.2 Verification
+Every listing identifies the Item’s public source repository and immutable version (a tag or commit), the Item Licence, a software bill of materials, and the Item’s declared build inputs, generated code, permissions, data handling, network destinations and runtime-fetched code.
 
-PROOF may verify identity, organisation, domain, repository control, signing keys, source provenance, sanctions status and authority. A verification badge indicates only the checks described with the badge at that time; it is not a quality or security warranty.
+The Marketplace shows evidence labels that state atomic facts about an Item — for example that the publisher identity was verified, that the public source is available, that the build provenance was verified, that automated checks passed, or that a manual review was completed — and whether each fact is verified, failed, stale or missing. A label states only the check it describes. It is not a warranty that an Item is secure, accurate, maintained, lawful or fit for purpose. An Item whose source ceases to be publicly readable, or whose evidence becomes stale, is delisted.
 
-### 3.3 Account security
+## 4. Ranking and discoverability
 
-Publisher must protect its Workspace, repository, signing keys, release pipeline and maintainers. It must notify PROOF promptly of compromise and revoke affected releases/keys.
+At launch PROOF curates the catalogue and orders listings editorially. There is no paid placement, and PROOF does not sell ranking. The console search filters listings by their text. If PROOF introduces ranking factors, recommendations or any commercial influence on placement, it will describe them in these Terms before use.
 
-## 4. Submission requirements
-
-A Publisher must provide complete and accurate information reasonably requested, including:
-
-- Item and Publisher name;
-- version and release date;
-- source/package location and cryptographic identifier where available;
-- Item Licence and required notices;
-- supported architecture, runtime, Network and Liskov version;
-- permissions, ports, domains and external dependencies;
-- resource requirements and expected Network cost drivers;
-- data handled and confirmation that Standard Service workloads contain no Personal Data;
-- external telemetry and where it is sent;
-- material external charges and account requirements;
-- support and security contact;
-- maintenance status and end-of-life information;
-- known material vulnerabilities, limitations and unsafe configurations; and
-- export-control or geographic restrictions.
-
-PROOF may prescribe a manifest or schema and reject incomplete metadata.
-
-## 5. Publisher promises
-
-Publisher represents and warrants throughout publication that:
-
-(a) it has all rights and authority needed to submit, license and distribute the Item and Listing Content;
-
-(b) the Item and Listing Content comply with law, the AUP and applicable licences;
-
-(c) the listing is accurate, not misleading, and discloses material permissions, data use, telemetry, external services and costs;
-
-(d) the Item does not intentionally contain malware, credential theft, hidden mining, backdoors, destructive functions or undisclosed remote control;
-
-(e) it has not embedded private keys, seed phrases, live production credentials or unlawfully obtained data;
-
-(f) it has applied reasonable secure-development and dependency practices appropriate to the Item;
-
-(g) it will not manipulate rankings, ratings, installs, reports or verification;
-
-(h) it will maintain a reachable security contact and respond reasonably to material vulnerability reports;
-
-(i) it will promptly correct or disclose a material security defect, licence breach, rights issue or misleading statement;
-
-(j) it will not use a listing to evade sanctions, export controls or regulated-activity requirements; and
-
-(k) it will not require an undisclosed payment for the listed core functionality.
-
-These promises are made to PROOF for Marketplace operation and enforcement. A User’s direct rights against Publisher arise under the Item Licence or another agreement with Publisher, not merely from this sentence.
-
-## 6. Licence to PROOF
-
-### 6.1 Listing and operation licence
-
-Publisher grants PROOF and its service providers a worldwide, non-exclusive, royalty-free licence while the Item is submitted/listed, and for a reasonable archival/dispute period, to:
-
-(a) host, copy, format, reproduce, display, index and distribute Listing Content;
-
-(b) ingest, cache and make the Item available as necessary for Marketplace operation;
-
-(c) scan, sandbox, test, analyse and review the Item for compatibility, security, malware, secrets, licences and policy compliance;
-
-(d) create thumbnails, previews and technical metadata;
-
-(e) use Publisher’s name and marks only to identify Publisher and the Item in the Marketplace and related service communications; and
-
-(f) preserve evidence and a restricted copy where necessary for security, complaints, legal claims or compliance.
-
-### 6.2 No ownership transfer
-
-Publisher retains ownership, subject to third-party and open-source rights. PROOF may not sell or relicense the Item outside the Item Licence merely because it is submitted.
-
-### 6.3 Moral rights
-
-To the extent legally possible and necessary for the permitted formatting/display, Publisher consents to acts that might otherwise infringe moral rights, but PROOF will not intentionally misattribute authorship.
-
-## 7. Review, scanning and publication
-
-### 7.1 Discretion to publish
-
-Submission does not guarantee publication. PROOF may review, test, require changes, reject, rank, label, restrict or remove an Item for quality, compatibility, security, legal, policy, capacity or strategic reasons. PROOF will exercise this discretion consistently with applicable law and, where required, give a statement of reasons.
-
-### 7.2 Automated checks
-
-PROOF may use automated malware, dependency, secret, licence, signature and reputation checks. Automated checks can produce false positives or miss defects. Publisher remains responsible for the Item; User remains responsible for evaluation.
-
-### 7.3 Material changes
-
-Publisher must submit a new version or notify PROOF before a material change to permissions, telemetry, external charges, licence, ownership, data handling, security behaviour or dependencies. PROOF may require re-review.
-
-### 7.4 Signing and provenance
-
-Where signing or attestations are supported, Publisher must use its own controlled keys and accurate provenance. PROOF may refuse an unsigned or unverifiable release. A signature proves control of a key, not that the code is safe or lawful.
-
-## 8. Ranking and discoverability
-
-### 8.1 Principal parameters
-
-PROOF may rank or recommend Items using factors such as:
-
-- relevance to the query/category;
-- compatibility with Customer configuration;
-- verification and review status;
-- security signals and unresolved reports;
-- accuracy/completeness of listing information;
-- maintenance activity, version recency and support;
-- usage, installs, reliability and user feedback;
-- documentation quality;
-- performance and resource efficiency; and
-- editorial curation.
-
-The weighting may change to improve relevance, safety and integrity.
-
-### 8.2 Commercial influence
-
-At free-only launch, PROOF does not sell Marketplace ranking. Any future paid placement or material commercial influence must be clearly labelled and described in updated terms before use.
-
-### 8.3 Manipulation
-
-Publisher must not generate fake installs, reviews, clicks, reports or engagement; coordinate reciprocal manipulation; conceal ownership; or pay for undisclosed endorsements. PROOF may discount suspicious signals and suspend Items/accounts.
-
-## 9. User obligations
+## 5. User obligations
 
 Before using an Item, User must:
 
-(a) review the listing, Item Licence, source/provenance, permissions, dependencies and external terms;
+(a) review the listing, Item Licence, source, permissions, dependencies and external terms;
 
 (b) test in an isolated non-production environment where appropriate;
 
-(c) scan and evaluate the Item for its own threat model and compliance requirements;
+(c) evaluate the Item against its own threat model and compliance requirements;
 
 (d) configure least privilege and avoid embedding credentials;
 
-(e) confirm the Item will not process Personal Data in a Standard Service Distributed Workload;
+(e) satisfy itself that any Personal Data the Item will process in a Distributed Workload is lawfully processed there, in accordance with clause 7 of the Master Business Terms;
 
 (f) maintain backups and rollback capability;
 
@@ -218,123 +95,69 @@ Before using an Item, User must:
 
 User must not remove licence notices, exceed licence rights, misrepresent authorship, or use an Item contrary to the AUP.
 
-## 10. Updates, maintenance and support
+## 6. Updates, maintenance and removal
 
-### 10.1 Publisher responsibility
+### 6.1 Maintenance
 
-Unless expressly stated, Publisher—not PROOF—is responsible for Item maintenance, vulnerability response, documentation and Item-specific support. Publisher may stop maintaining an Item but must update the listing promptly and give reasonable notice where practicable.
+Unless a listing expressly states otherwise, an Item is maintained on a best-effort basis. The Publisher may stop maintaining an Item and will update the listing when it does.
 
-### 10.2 Updates
+### 6.2 Updates
 
-An Item may update automatically only where the User has enabled that function and the update mechanism is disclosed. Material permission or data-use changes require renewed disclosure and, where appropriate, User action.
+An Item is launched into User’s own Workspace as a draft that User controls. An Item does not update automatically in User’s Workspace; User chooses whether to adopt a new version. Material permission or data-use changes are disclosed in the listing for the new version.
 
-### 10.3 Removal and existing copies
+### 6.3 Removal and existing copies
 
-Delisting stops new Marketplace availability but may not remove copies already downloaded, forks, source repositories, caches, Network deployments or open-source rights already granted. PROOF may disable integration points it controls where necessary for safety or law.
+Delisting stops new Marketplace availability but does not remove copies already launched, forks, source repositories, caches, Network deployments or open-source rights already granted. PROOF may disable integration points it controls where necessary for safety or law.
 
-## 11. Security vulnerabilities
+## 7. Security vulnerabilities
 
-### 11.1 Reporting
+### 7.1 Reporting
 
-Security reports should be made through the Publisher contact and/or PROOF’s Marketplace reporting route. A reporter should provide safe reproduction information and avoid unnecessary access or public disclosure that creates harm.
+Report a security vulnerability in an Item to **security@proof.computer**, marking the report **URGENT SECURITY** where a package is actively malicious or exploited. Provide safe reproduction information and avoid unnecessary access or public disclosure that creates harm.
 
-### 11.2 Publisher response
+### 7.2 Response
 
-Publisher must acknowledge and assess a credible material report promptly, cooperate with PROOF, preserve evidence, provide mitigations and publish an update/advisory appropriate to severity. PROOF may set a remediation deadline, label the Item, disable deployment or delist it.
+PROOF will acknowledge and assess a credible material report about an Item it publishes promptly, and will remediate, label, disable or delist the Item as its severity warrants. Where an Item is published by an independent Publisher, PROOF may set a remediation deadline, label the Item, disable deployment or delist it.
 
-### 11.3 Emergency action
+### 7.3 Emergency action
 
-PROOF may immediately restrict or remove an Item, block a version, notify affected Users, rotate a Marketplace integration or preserve evidence where it reasonably believes there is active exploitation or serious risk. Where lawful and safe, PROOF will notify Publisher and allow response.
+PROOF may immediately restrict or remove an Item, block a version, notify affected Users or preserve evidence where it reasonably believes there is active exploitation or serious risk.
 
-## 12. Rights, illegality and policy reports
+## 8. Reports
 
-Reports are handled under the Marketplace Notice-and-Action Policy. Publisher must maintain accurate contact details and respond within the stated period. PROOF may remove or restrict content where it reasonably believes the Item or listing is illegal, infringes rights, breaches policy or creates material risk.
+Reports that an Item or Listing Content is illegal, infringes rights, breaches policy or is unsafe are handled under the Marketplace Notice-and-Action Policy. Send reports to **abuse@proof.computer**. A report alone does not establish infringement; PROOF may request evidence, restrict an Item temporarily, restore content after review, or keep it restricted where risk remains.
 
-A report alone does not establish infringement. PROOF may request evidence, consult advisers, seek a court order in complex disputes, restore content after counter-notice, or keep it restricted where risk remains.
+## 9. Data protection
 
-## 13. Suspension, restriction and termination
+### 9.1 Marketplace account data
 
-### 13.1 Grounds
+PROOF processes User account, launch, report, security and usage data as Controller under the Privacy Notice. Public Listing Content is visible to Marketplace users and may be indexed or cached.
 
-PROOF may reject, restrict, label, downgrade, suspend or remove an Item or Publisher account where:
+### 9.2 Personal Data in Items
 
-- the Item or listing breaches these Terms, the AUP, law or rights;
-- information is inaccurate or incomplete;
-- a material vulnerability or malicious behaviour is suspected;
-- Publisher fails verification or becomes a sanctions/export risk;
-- Publisher manipulates ranking or evades enforcement;
-- the Item is abandoned, incompatible or creates disproportionate support burden;
-- a Network, repository, licence or third-party dependency makes distribution unsafe/unlawful; or
-- PROOF discontinues the relevant Marketplace category or feature.
+User is responsible for any Personal Data that an Item processes in User’s Workspace or in a Distributed Workload, as set out in clause 7 of the Master Business Terms. Listing Content declares the data an Item handles and the network destinations it contacts.
 
-### 13.2 Notice and reasons
+## 10. Warranties and liability
 
-Where lawful and reasonably practicable, PROOF will give Publisher notice and a statement of principal reasons. It may withhold detail that would prejudice security, investigation, law enforcement, reporter safety or abuse detection.
+### 10.1 Disclaimer
 
-### 13.3 Opportunity to remedy
+To the maximum extent permitted by law, PROOF does not warrant that an Item is secure, accurate, complete, maintained, lawful, non-infringing, compatible or fit for User’s purpose. Review, testing, evidence labels and curation reduce risk but are not guarantees.
 
-For a remediable non-urgent issue, PROOF will normally allow a reasonable cure period. Immediate action may be taken for malware, active exploitation, child safety, terrorism, sanctions, fraud, rights emergencies or serious harm.
+### 10.2 Contract caps
 
-### 13.4 Appeal
+Liability relating to the Marketplace is governed by the Master Business Terms. An Item Licence may allocate liability between a Publisher and a User, but it does not increase PROOF’s liability or reduce rights that cannot lawfully be limited.
 
-Publisher may appeal within 14 days using the route in the notice. It must identify the decision, correction and supporting evidence. A significant appeal should be reviewed by a person not materially involved in the first decision where practicable. The Item remains restricted during appeal unless PROOF decides otherwise.
+## 11. Changes and future features
 
-### 13.5 Termination by Publisher
+PROOF may update these Terms under the Master Business Terms. PROOF will not introduce publisher payments, user purchase prices or transferable Marketplace value under these Terms. A paid Marketplace requires separate terms, a payments architecture and affirmative acceptance. Independent publishing, if offered, will be governed by separate Publisher Terms.
 
-Publisher may request delisting at any time, subject to preservation needed for law, security, existing licence rights and dispute records. Publisher remains responsible for past versions and claims.
+## 12. Contact
 
-## 14. Reviews and ratings (only if enabled)
-
-### 14.1 Genuine experience
-
-A review must reflect a genuine business use or evaluation and disclose a material connection, incentive or conflict. It must not contain illegal content, Personal Data, secrets, irrelevant abuse or manipulation.
-
-### 14.2 Moderation
-
-PROOF may verify, label, rank or remove reviews under the Notice-and-Action Policy. PROOF does not guarantee every review is accurate. Publisher may respond professionally but must not threaten or incentivise a reviewer to alter a genuine review.
-
-### 14.3 Feature gate
-
-Reviews/ratings must not be enabled until PROOF has completed its Online Safety Act scope/risk work, moderation workflow, reporter protection, retention and transparency design.
-
-## 15. Data protection
-
-### 15.1 Publisher and User responsibility
-
-Publisher is responsible for privacy information, lawful bases, data minimisation and processor arrangements for Personal Data handled by its external services or an approved Enterprise workload. A free listing must not cause Personal Data to enter a Standard Service Distributed Workload.
-
-### 15.2 Marketplace account data
-
-PROOF processes Publisher/User account, listing, report, security and usage data as Controller under the Privacy Notice. Public Listing Content is visible to Marketplace users and may be indexed/cached.
-
-### 15.3 No hidden telemetry
-
-Publisher must disclose material telemetry, recipient, purpose and opt-out/configuration. It must not collect secrets or Personal Data covertly.
-
-## 16. Warranties and liability
-
-### 16.1 Publisher responsibility
-
-Publisher is responsible for its Item and Listing Content. Its warranties and indemnity in the Master Business Terms apply to third-party claims caused by them.
-
-### 16.2 PROOF disclaimer
-
-To the maximum extent permitted by law, PROOF does not warrant that an Item is secure, accurate, complete, maintained, lawful, non-infringing, compatible or fit for User’s purpose. Review, testing, scanning, ranking, verification and badges reduce risk but are not guarantees.
-
-### 16.3 Contract caps
-
-Liability relating to the Marketplace is governed by the Master Business Terms. An Item Licence may allocate liability between Publisher and User, but it does not increase PROOF’s liability or reduce rights that cannot lawfully be limited.
-
-## 17. Changes and future paid marketplace
-
-PROOF may update these Terms under the Master Business Terms. PROOF will not introduce publisher payments, user purchase prices or transferable Marketplace value under these Terms. A paid Marketplace requires separate terms, payments architecture and affirmative acceptance.
-
-## 18. Contact
-
-Marketplace operations: marketplace@proof.computer [verify]  
-Security: security@proof.computer [verify]  
-Legal/rights reports: use the Notice-and-Action form or legal@proof.computer [verify]
+Marketplace operations: marketplace@proof.computer  
+Security: security@proof.computer  
+Reports of illegal content, rights infringement or policy breaches: abuse@proof.computer  
+Legal and rights-owner correspondence: legal@proof.computer
 
 ---
 
-**Product gates before enabling Marketplace:** verified publisher flow; manual review; malware/secret/licence scan; item manifest; ranking explanation; report form; emergency escalation; reasoned notices; appeal log; publisher security contacts; no paid field/payout path; no public reviews/comments/DMs until separate safety sign-off.
+MOOSE LABS LTD trading as PROOF · Version 1.0 · effective 1 September 2026 · previous versions are archived by PROOF and available on request from legal@proof.computer.

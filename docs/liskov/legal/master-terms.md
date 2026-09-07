@@ -1,18 +1,11 @@
 ---
-title: Liskov Master Business Terms — review draft
-description: Counsel-ready working terms governing business access to and use of Liskov.
-draft: true
+title: Liskov Master Business Terms
+description: The terms on which MOOSE LABS LTD, trading as PROOF, supplies Liskov to business customers.
 ---
 
 # Liskov Master Business Terms
 
-:::caution[Not in force]
-Review version 1.0, dated 3 September 2026. These terms are review material,
-have no contractual effect, and are excluded from the production documentation
-build. Their publication blockers remain open.
-:::
-
-**Version:** 1.0 — 3 September 2026  
+**Version 1.0 — effective 1 September 2026**  
 **Business customers only**
 
 These Master Business Terms (the **Terms**) are a legal agreement between:
@@ -56,6 +49,8 @@ In these Terms:
 
 **Documentation** means user and technical documentation that PROOF makes available for the Services.
 
+**Enterprise Order** means an Order signed by both parties that expressly varies these Terms.
+
 **Eligible Services** means Services that the Order, pricing page or console states may be purchased using Service Credits.
 
 **Fees** means Subscription Fees, usage charges, Launch Fees, Network Costs and other amounts payable under an Order, excluding taxes unless expressly stated otherwise.
@@ -78,7 +73,7 @@ In these Terms:
 
 **Network Participant** means a node operator, validator, protocol participant, bridge, oracle, RPC operator, token issuer, exchange, liquidity provider or other person participating in or supporting a Network.
 
-**Order** means an order form, online checkout, statement of work or other ordering document accepted by both parties that identifies the Services, Customer and applicable commercial terms.
+**Order** means the commercial terms for a Service that Customer selects and accepts through the console (including by paying for a subscription plan or purchasing Service Credits) or that the parties sign. An Order accepted through the console comprises the plan, price, tax basis, renewal terms and usage rates displayed at the time of acceptance.
 
 **Personal Data**, **Controller**, **Processor**, **Process**, **Data Subject**, **Personal Data Breach** and **Special Category Data** have the meanings given in applicable Data Protection Laws.
 
@@ -89,6 +84,10 @@ In these Terms:
 **Service Credits** means non-transferable contractual units recorded by PROOF as a prepayment, promotional allowance or service adjustment for Eligible Services, subject to the Service Credits and Payments Policy.
 
 **Services** means the Liskov hosted control plane, APIs, console, orchestration, deployment, routing, billing, support and other services identified in an Order. Services do not include Network Infrastructure except to the extent the Order expressly states that PROOF supplies specified capacity as principal.
+
+**Self-Custody Option** means the optional arrangement described in clause 5.4 under which Customer funds, and signs for, its own Network account.
+
+**Standard Service** means the Services as supplied under a self-service plan without an Enterprise Order.
 
 **Subscription Fees** means recurring fixed Fees for a subscription plan.
 
@@ -114,11 +113,11 @@ The Services are offered only to persons acting wholly or mainly for purposes re
 
 (d) it will not permit a person under 18 to use the Services.
 
-Customer must notify PROOF promptly if any representation becomes inaccurate. PROOF may refuse or suspend an account that appears to be used mainly for personal, family or household purposes. The Services are not available for consumer use.
+Customer must notify PROOF promptly if any representation becomes inaccurate. PROOF may refuse or suspend an account that appears to be used mainly for personal, family or household purposes. The Services are not available for consumer use. The Services are available to business customers established in any country, subject to clause 22.
 
 ### 2.2 Formation
 
-These Terms bind Customer when its authorised representative affirmatively accepts them through the Website or console to create a Workspace. An Order becomes part of the Contract when the first of the following occurs: (a) both parties sign it; (b) Customer affirmatively accepts the Order through the Website or console after being shown its commercial terms; or (c) PROOF begins supplying the ordered Services at Customer’s written request after giving Customer the Order. An Order placed by Customer is subject to PROOF’s acceptance.
+These Terms bind Customer when its authorised representative affirmatively accepts them through the console to create a Workspace. An Order becomes part of the Contract when the first of the following occurs: (a) both parties sign it; or (b) Customer selects a subscription plan or purchases Service Credits through the console after being shown the plan, price, tax basis, renewal terms and usage rates. A change of plan through the console forms a new Order on the same basis. No separate acceptance control is required for an Order formed through the console. An Order placed by Customer is subject to PROOF’s acceptance.
 
 ### 2.3 Incorporated documents and precedence
 
@@ -170,6 +169,10 @@ PROOF will provide support stated in the Order. Standard support targets are goa
 
 A Service labelled alpha, beta, preview, experimental, evaluation or similar is optional, may be changed or withdrawn at any time, may be incomplete and is not intended for production or safety-critical use. Unless the Order expressly says otherwise, no service level applies to it. Liability exclusions and caps still remain subject to applicable law.
 
+### 3.7 Availability target
+
+PROOF designs the Liskov control plane for high availability and targets 99.95% monthly availability for the production API and console. The target is a design goal, not a service level, warranty, refund or credit commitment, unless an Enterprise Order expressly makes it one. Network Infrastructure, Network Participants, RPC endpoints and third-party services are outside the target, and it does not measure whether a particular job is accepted, starts, continues or succeeds.
+
 ## 4. Network Infrastructure and decentralised execution
 
 ### 4.1 Distinct supply layers
@@ -204,7 +207,7 @@ Customer must assess whether the architecture is suitable for each workload, use
 
 ### 4.4 No location or identity assurance
 
-Unless an Enterprise Order expressly identifies an approved node pool and location commitment, PROOF does not warrant the identity, ownership, security, trustworthiness or location of a Network Participant or the country in which a Distributed Workload is executed or observed.
+Unless an Enterprise Order expressly identifies an approved node pool and location commitment, PROOF does not warrant the identity, ownership, security, trustworthiness or location of a Network Participant or the country in which a Distributed Workload is executed or observed. PROOF may display a best-effort location for a Network Participant derived from its network address; that information is provided for convenience only and is not a commitment.
 
 ### 4.5 Upstream rules
 
@@ -213,6 +216,14 @@ Customer must comply with Network rules and third-party terms notified through t
 ### 4.6 Customer verification
 
 Customer remains responsible for validating Distributed Workload inputs and outputs, cryptographic proofs, signatures, addresses, chain identifiers, token contracts, gas parameters and deployment instructions before relying on them. PROOF is not responsible for an incorrect instruction that the Services execute as submitted, except to the extent the error was caused by PROOF’s breach.
+
+### 4.7 Confidential execution design
+
+Acurast processors are designed to execute a Distributed Workload inside a hardware-backed trusted execution environment so that the processor operator does not have access to the workload’s code, inputs, outputs, secrets or logs. PROOF does not operate the processors and does not warrant that this isolation is effective in every case. Clause 4.3 applies, and Customer must treat a Distributed Workload as potentially observable by a Network Participant if that isolation fails.
+
+### 4.8 Chain-scheduled jobs
+
+A Launch creates a job scheduled on the Network for its stated period. PROOF may suspend or terminate the Services independently of that job. PROOF does not force-stop a scheduled job before its scheduled end; where an Application’s runtime supports it, Customer may end the Application early through the Services. Suspension or termination of the Services does not by itself stop, reverse or refund a job already committed to the Network.
 
 ## 5. Accounts and access
 
@@ -228,9 +239,23 @@ Customer controls access to its Workspace and is responsible for acts and omissi
 
 Customer must protect passwords, API keys, tokens, signing devices, private keys, seed phrases and recovery materials; use multi-factor authentication where available; apply least privilege; and notify PROOF promptly of suspected compromise. Customer must not share individual credentials or place private keys, seed phrases or unrestricted production secrets in a Distributed Workload, support ticket, Marketplace listing or source repository.
 
-### 5.4 Customer wallets
+### 5.4 Customer wallets and the Self-Custody Option
 
-Where the Services connect to a customer-controlled wallet, Customer remains solely responsible for the wallet, private keys and transaction approval. PROOF does not take possession of Customer’s private keys. A wallet interface may display or prepare transaction data, but Customer must verify and authorise the transaction. On-chain transactions may be irreversible.
+Where the Services connect to a customer-controlled wallet or Network account, Customer remains solely responsible for the wallet, private keys and transaction approval. PROOF never stores, recovers, uses or signs with a Customer private key. On-chain transactions may be irreversible.
+
+Where Customer uses the Self-Custody Option:
+
+(a) Customer holds and funds its own Network account and runs the supported signer software on infrastructure it controls; the private key never leaves Customer-controlled infrastructure;
+
+(b) the Services propose unsigned, bounded deployment-lifecycle transactions, and Customer’s signer independently checks, limits, signs and submits them directly to a Network RPC endpoint; PROOF signs only with its own service accounts;
+
+(c) PROOF cannot recover the key, reverse a transaction, or substitute managed custody for the Self-Custody Option without Customer’s instruction;
+
+(d) Customer is responsible for the security of the signer host, key backup and recovery, availability, RPC endpoint choice, account funding, spending limits, finality monitoring, and the tax and compliance treatment of its own tokens; and
+
+(e) Customer’s tokens remain external to the Services, and PROOF’s charges for the Services remain Fees or Service Credit charges under the applicable Order.
+
+The Self-Custody Option is a preview Service under clause 3.6.
 
 ### 5.5 Account security events
 
@@ -262,43 +287,31 @@ Customer must:
 
 Customer is responsible for its Application and any product or service it supplies using Liskov, including end-user terms, privacy information, support, sector compliance, taxes and claims.
 
-## 7. Data classification and prohibited workload data
+## 7. Distributed Workload Data
 
-### 7.1 Standard Service restriction
+### 7.1 Customer responsibility
 
-Customer must not include or permit the following in Distributed Workload Data under the Standard Service:
+A Distributed Workload under the Standard Service runs on independently operated Network Infrastructure, not on PROOF systems. PROOF does not receive, store, inspect or control Distributed Workload Data and cannot technically enforce restrictions on its contents. As between the parties, Customer is the sole Controller of any Personal Data in Distributed Workload Data, and PROOF is neither Controller nor Processor of it. Customer directs the transmission of Distributed Workload Data to the Network, must satisfy itself that the architecture is lawful and suitable for the data concerned (including minimisation, encryption, notices, lawful basis, international transfer and residency requirements), and is the exporter for any international transfer that results. An Enterprise Order may add data commitments; nothing else does.
 
-(a) Personal Data, including pseudonymised Personal Data;
+### 7.2 Prohibited workload data
 
-(b) Special Category Data or criminal-offence data;
+Customer must not include or permit the following in Distributed Workload Data:
 
-(c) children’s data;
+(a) cardholder data, bank credentials or other regulated payment data;
 
-(d) cardholder data, bank credentials or other regulated payment data;
+(b) private keys, seed phrases, unrestricted credentials, authentication secrets or cryptographic material whose disclosure would allow unauthorised access or transfer;
 
-(e) health, genetic or biometric data;
+(c) data that is subject to a contractual or legal requirement to be processed only in a named location or only in the United Kingdom; or
 
-(f) private keys, seed phrases, unrestricted credentials, authentication secrets or cryptographic material whose disclosure would allow unauthorised access or transfer;
-
-(g) data subject to a contractual or legal processing-location requirement;
-
-(h) classified, export-controlled or regulated technical data that may not lawfully be processed in an unknown country; or
-
-(i) other data whose disclosure to an untrusted infrastructure operator would create a material risk to a person, Customer or third party.
-
-Customer must treat a Distributed Workload as potentially observable by a Network Participant unless an Enterprise Order expressly provides a verified confidential-execution commitment.
-
-### 7.2 Enterprise exception
-
-Personal Data or other restricted data may be used only where an Order expressly identifies an approved enterprise data service, permitted data, node pool, locations, safeguards and applicable data schedule. A general DPA, sales statement or technical capability does not create an exception.
+(d) classified, export-controlled or regulated technical data that may not lawfully be processed in an unknown country.
 
 ### 7.3 Accidental submission
 
-If Customer becomes aware that restricted data has been submitted contrary to this clause, it must immediately stop the affected workload where possible, revoke relevant credentials, notify PROOF through the security channel and provide information reasonably needed to contain and assess the event. PROOF may suspend the workload and preserve limited evidence where necessary for security or law.
+If Customer becomes aware that data listed in clause 7.2 has been submitted, it must stop the affected workload where possible, revoke or rotate the affected credentials, notify PROOF at security@proof.computer and provide the information reasonably needed to contain and assess the event. PROOF may suspend the workload and preserve limited evidence where necessary for security or law.
 
 ### 7.4 Encryption
 
-Encryption, hashing, tokenisation or pseudonymisation does not remove Customer’s obligations where the data remains Personal Data or regulated data for a party. Customer is responsible for key architecture and must not transmit decryption keys with the same workload unless expressly approved.
+Encryption, hashing, tokenisation or pseudonymisation does not remove Customer’s obligations where the data remains Personal Data or regulated data for a party. Customer is responsible for its key architecture and should not transmit decryption keys with the same workload.
 
 ## 8. Customer Content and data licence
 
@@ -344,7 +357,7 @@ PROOF acts as an independent Controller for Account Data and other Personal Data
 
 ### 9.3 Processor activities
 
-Where PROOF processes Personal Data contained in Customer Data solely on Customer’s documented instructions to provide hosted Services, the DPA applies. The DPA does not authorise Personal Data in Distributed Workloads under the Standard Service.
+Where PROOF processes Personal Data contained in Customer Data solely on Customer’s documented instructions to provide hosted Services (application configuration, managed logs, sealed secrets and uploaded artifacts), the DPA applies. The DPA does not apply to Distributed Workload Data, for which Customer is the sole Controller under clause 7.
 
 ### 9.4 Customer obligations
 
@@ -366,7 +379,7 @@ Customer is responsible for security of Customer-controlled systems, Application
 
 ### 10.3 Security reports
 
-Customer must report a suspected vulnerability or compromise through the security contact stated on the Website and must not publicly disclose an unremediated vulnerability in a manner that creates avoidable harm. Good-faith research remains subject to the AUP and any published vulnerability disclosure policy.
+Customer must report a suspected vulnerability or compromise to security@proof.computer and must not publicly disclose an unremediated vulnerability in a manner that creates avoidable harm. Good-faith research remains subject to the AUP and any published vulnerability disclosure policy.
 
 ### 10.4 No absolute security
 
@@ -380,11 +393,11 @@ Use of the Marketplace is subject to the Marketplace Terms and Notice-and-Action
 
 ### 11.2 Free-only service
 
-Unless a later Order and separate paid-marketplace terms expressly say otherwise, Marketplace items are listed and made available without a purchase price through Liskov. PROOF does not collect payment for a publisher, pay a publisher, or act as agent in a transaction between Customer and a publisher.
+At the date of these Terms every Marketplace item is published by PROOF and made available without a purchase price under its stated licence. Unless a later Order and separate paid-marketplace terms expressly say otherwise, Marketplace items are listed and made available without a purchase price through Liskov. PROOF does not collect payment for a publisher, pay a publisher, or act as agent in a transaction between Customer and a publisher.
 
-### 11.3 Third-party items
+### 11.3 Source and third-party items
 
-A Marketplace item may be supplied by an independent publisher under its stated licence. PROOF does not own it merely because it is listed. Customer must review the licence, source, dependencies, permissions, security and suitability before use. Scanning, curation or a badge is not a warranty that an item is secure, accurate, maintained, lawful or fit for purpose.
+Every Marketplace listing identifies the item’s public source repository and immutable version. Where PROOF later admits independent publishers, an item may be supplied by an independent publisher under its stated licence; PROOF does not own it merely because it is listed. Customer must review the licence, source, dependencies, permissions, security and suitability before use. Scanning, curation, an evidence label or a badge is not a warranty that an item is secure, accurate, maintained, lawful or fit for purpose.
 
 ### 11.4 No circumvention
 
@@ -404,7 +417,7 @@ Customer will pay the Fees stated in each Order. Except where an Order says othe
 
 (d) Fees are non-cancellable and non-refundable except as expressly stated in the Contract; and
 
-(e) Customer bears bank, card, blockchain and payment-provider charges imposed on Customer.
+(e) Customer bears bank, card and payment-provider charges imposed on Customer.
 
 ### 12.2 Variable Network Costs
 
@@ -420,13 +433,13 @@ For overdue undisputed amounts, PROOF may charge interest and recovery costs ava
 
 ### 12.5 Taxes
 
-Customer is responsible for taxes arising from its purchases or use other than taxes on PROOF’s net income. PROOF may add VAT or other taxes required by law. If Customer must withhold tax, it will provide valid evidence and, unless prohibited by law, gross up the payment so PROOF receives the amount it would have received without withholding. Customer is responsible for its own tax treatment of cryptoassets, Applications and end-user transactions.
+Customer is responsible for taxes arising from its purchases or use other than taxes on PROOF’s net income. PROOF adds UK VAT at the applicable rate where Customer’s billing address is in the United Kingdom, whether or not Customer is VAT-registered. A supply to a business customer with a billing address outside the United Kingdom is outside the scope of UK VAT, and Customer accounts for any tax due in its own country, including under a reverse-charge mechanism where one applies. Tax is calculated at checkout by PROOF’s payment provider from the billing address and any VAT number Customer supplies. If Customer must withhold tax, it will provide valid evidence and, unless prohibited by law, gross up the payment so PROOF receives the amount it would have received without withholding. Customer is responsible for its own tax treatment of the Services, of its Applications and end-user transactions, and of any tokens it holds or uses under the Self-Custody Option.
 
 ### 12.6 Payment providers
 
 Payment processing may be supplied by a third party under its own terms. PROOF may receive payment status and limited payment information but need not store full card details. A payment-provider failure does not discharge Customer’s valid payment obligation.
 
-## 13. Service Credits and cryptoasset payments
+## 13. Service Credits
 
 ### 13.1 Credits Policy
 
@@ -440,13 +453,9 @@ Customer may not sell, assign, transfer, pledge, exchange, withdraw, sublicense 
 
 Amounts received for Service Credits are not held on trust, segregated or safeguarded for Customer unless an Order expressly says so following legal review. Customer has no property right in a specific bank balance, token or wallet. If PROOF becomes insolvent, an unused paid Credit balance would ordinarily be an unsecured contractual claim, subject to applicable insolvency law.
 
-### 13.4 Cryptoasset payment
+### 13.4 Payment methods and no investment relationship
 
-PROOF may accept specified cryptoassets as payment for its own Services. Acceptance does not mean that PROOF provides Customer with exchange, brokerage, custody, transfer, investment or wallet-management services. Customer must use the exact token contract, network and address shown at checkout and remains responsible for its wallet and transaction fees. PROOF may reject or pause a payment method for security, legal, sanctions, market or Network reasons.
-
-### 13.5 No investment relationship
-
-Service Credits, the Services and any payment acceptance are not an investment, deposit, security, savings product or promise of return. PROOF does not advise Customer on acquiring, holding or disposing of any cryptoasset. Customer bears the market, legal and tax risk of assets it chooses to use for payment before PROOF receives them.
+PROOF accepts payment only through the payment methods shown at checkout, which are supplied by PROOF’s payment provider. PROOF does not accept cryptoassets as payment. PROOF may reject or pause a payment method for security, legal, sanctions or fraud reasons. Service Credits and the Services are not an investment, deposit, security, savings product or promise of return, and PROOF does not advise Customer on acquiring, holding or disposing of any cryptoasset.
 
 ## 14. Intellectual property
 
@@ -570,7 +579,7 @@ PROOF may terminate immediately for a serious AUP, sanctions, fraud, security or
 
 ### 17.4 Discontinuation
 
-PROOF may discontinue a paid Service on at least 60 days’ notice. If discontinuation takes effect before the end of a prepaid committed period and no reasonably equivalent replacement is offered, PROOF will refund prepaid Subscription Fees for the unused period and refundable Service Credits. This does not require PROOF to continue a Service where law, security or an upstream Network makes continuation impracticable; PROOF will give as much notice as reasonably possible.
+PROOF may discontinue a paid Service on at least 60 days’ notice. If discontinuation takes effect before the end of a prepaid committed period and no reasonably equivalent replacement is offered, PROOF will refund prepaid Subscription Fees for the unused period and refundable Service Credits. This does not require PROOF to continue a Service where law, security or an upstream Network makes continuation impracticable; PROOF will give as much notice as reasonably possible. If PROOF terminates the Contract or discontinues the Services other than for Customer’s breach, a sanctions restriction or a legal prohibition, PROOF will refund unused paid Service Credits under the Credits Policy.
 
 ### 17.5 Consequences
 
@@ -600,7 +609,7 @@ Subject to law, security, dispute preservation and Customer instructions under t
 
 ### 18.3 Network and public records
 
-PROOF cannot guarantee deletion from Network Participants, public blockchains, customer-controlled systems or third-party services outside its control. Customer must not submit data requiring guaranteed deletion to a Distributed Workload under the Standard Service.
+PROOF cannot guarantee deletion from Network Participants, public blockchains, customer-controlled systems or third-party services outside its control. Customer must not submit data that requires guaranteed deletion to a Distributed Workload.
 
 ### 18.4 Assistance
 
@@ -808,11 +817,11 @@ Neither party may assign the Contract without the other’s prior written consen
 
 ### 25.3 Subcontracting
 
-PROOF may use subcontractors to perform the Services and remains responsible for their performance to the extent required by the Contract. Subprocessors of Personal Data are governed by the DPA. This clause does not make every Network Participant a PROOF subcontractor; the Standard Service prohibits Personal Data in Distributed Workloads for that reason.
+PROOF may use subcontractors to perform the Services and remains responsible for their performance to the extent required by the Contract. Subprocessors of Personal Data are governed by the DPA. This clause does not make a Network Participant a PROOF subcontractor: Distributed Workload Data is transmitted at Customer’s direction and Customer is its Controller under clause 7.
 
 ### 25.4 Notices
 
-A legal notice under the Contract must be in writing and sent by email to the legal contact in the Order (for Customer) or the legal address stated on the Website (for PROOF), with “Legal Notice” in the subject, and for termination for cause or a claim also by tracked post or recognised courier to the registered/geographic address in the Order or Website. Email is received on the next Business Day after transmission unless a delivery failure is received. This does not apply to service-status, billing or routine support notices.
+A legal notice under the Contract must be in writing and sent by email to the legal contact in the Order (for Customer) or to legal@proof.computer (for PROOF), with “Legal Notice” in the subject, and for termination for cause or a claim also by tracked post or recognised courier to the registered/geographic address in the Order or Website. Email is received on the next Business Day after transmission unless a delivery failure is received. This does not apply to service-status, billing or routine support notices.
 
 ### 25.5 Entire agreement
 
@@ -846,6 +855,10 @@ An Order may be signed in counterparts and electronically. Click acceptance, typ
 
 The Contract and any non-contractual obligation arising from it are governed by the law of England and Wales. The courts of England and Wales have exclusive jurisdiction, except that either party may seek urgent injunctive relief in any competent court and PROOF may pursue undisputed debt in a court with jurisdiction over Customer.
 
+## 26. Contacts
+
+General and legal/e-commerce contact: hello@proof.computer. Legal notices: legal@proof.computer. Security reports: security@proof.computer. Privacy and data-protection requests: privacy@proof.computer. Support: support@proof.computer. Abuse reports: abuse@proof.computer.
+
 ---
 
-**Publication fields still to verify:** privacy/support/security/Marketplace contacts; Website URLs; Order precedence; liability caps; export/deletion timing; approved countries; supported payment assets and networks; and live Checkout/invoice rendering of the approved supplier and VAT details.
+MOOSE LABS LTD trading as PROOF · Version 1.0 · effective 1 September 2026 · previous versions are archived by PROOF and available on request from legal@proof.computer.

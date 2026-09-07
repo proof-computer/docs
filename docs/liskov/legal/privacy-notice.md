@@ -1,260 +1,182 @@
 ---
-title: Liskov Privacy Notice — review draft
-description: Counsel-ready working notice for Liskov account, service, billing, support, security, and Marketplace data.
-draft: true
+title: Liskov Privacy Notice
+description: How PROOF uses personal data about the people who use Liskov, our websites and our support channels.
 ---
 
 # Liskov Privacy Notice
 
-:::caution[Not in force]
-Review version 1.0, dated 3 September 2026. This notice is review material, has
-no effect as a published privacy notice, and is excluded from the production
-documentation build. Its publication blockers remain open.
-:::
-
-**Version:** 1.0 — 3 September 2026
+**Version 1.0 — effective 1 September 2026**
 
 This Privacy Notice explains how MOOSE LABS LTD trading as PROOF (**PROOF**, **we**, **us**) uses Personal Data in connection with Liskov, our websites, accounts, support, billing, security, Marketplace and business communications.
 
-It applies where we determine why and how Personal Data is used and therefore act as Controller. Where we process Personal Data solely on a business customer’s instructions within a hosted Service, the customer is normally Controller and our Data Processing Addendum applies. Personal Data is not permitted in Distributed Workloads under the Standard Service.
+It applies where we decide why and how Personal Data is used and therefore act as Controller. Where we process Personal Data only on a business customer’s instructions inside the hosted parts of Liskov, the customer is the Controller and our Data Processing Addendum applies. Data that a customer processes in a Distributed Workload on the Acurast network never reaches our systems: the customer is its Controller, and this Notice does not cover it.
 
 ## 1. Who we are
 
-**Controller:** MOOSE LABS LTD trading as PROOF<br />
+**Controller:** MOOSE LABS LTD trading as **PROOF**<br />
 **Company number:** 11435949<br />
 **VAT registration:** GB311456142<br />
-**Registered office / geographic address:** The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP<br />
-**Privacy contact:** privacy@proof.computer [verify]  
-**Legal/e-commerce contact:** hello@proof.computer
+**Registered office and postal address:** The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP<br />
+**Privacy contact and data protection officer:** privacy@proof.computer<br />
+**Legal and e-commerce contact:** hello@proof.computer
 
-Our current corporate details and contact channels must also be displayed on the Website and applicable Order.
+MOOSE LABS LTD is registered with the UK Information Commissioner’s Office as a data controller. We have appointed a data protection officer, who can be reached at privacy@proof.computer. We are established in the United Kingdom and have not appointed a representative elsewhere.
 
-## 2. Scope and important decentralised-compute warning
+## 2. Liskov, the Acurast network and public chains
 
-Liskov can orchestrate workloads using decentralised Networks and independently operated nodes. Under the Standard Service, customers must not include Personal Data in code, inputs, outputs, logs, metadata or other data submitted to a Distributed Workload.
+Liskov orchestrates workloads that run on independently operated Acurast processors. Those processors are not our systems. We do not receive, store or inspect the code, inputs, outputs, logs or secrets of a running workload, and we send the processors no data about you or your organisation. If you choose to process Personal Data in an Application, you are its Controller and are responsible for doing so lawfully; the Master Business Terms (clause 7) explain what may not be placed in a workload.
 
-Public blockchains may publish wallet addresses, transaction hashes, timestamps, smart-contract events and deployment metadata globally and permanently. Once a valid record is written to an independent public blockchain, we may be unable to erase or change it. Do not put names, email addresses, support identifiers, payload data or other unnecessary Personal Data on-chain.
+The job records we write to the Acurast chain and to IPFS identify the job, the artifact and PROOF’s own service accounts. They contain no name, email address or other identifier of you or your organisation. A public blockchain record is permanent and globally replicated; we cannot erase or change it once written.
 
 ## 3. Personal Data we collect
 
-Depending on how you interact with us, we may collect:
+### 3.1 Sign-in and account data
 
-### 3.1 Identity and organisation data
+You sign in with GitHub or with a sign-in link sent to your email address. We record your GitHub account identifier and login, the display name and email address GitHub provides or you enter, when you signed in, and the session identifier. We create a personal Workspace for you automatically when you first sign in.
 
-- name, job title, organisation and role;
-- country, business address and company identifiers;
-- authority to act for a customer;
-- identity or business-verification information where needed for fraud, sanctions or legal compliance.
+### 3.2 Organisation and acceptance data
 
-### 3.2 Contact and communications data
+When you create an organisation Workspace we record its name, the country in which the business is established, your declaration that you are acting for business purposes, are at least 18 and are authorised to bind the organisation, and your acceptance of the Master Business Terms: the organisation, the accepting person, the version accepted, the time, the surface (console or API), the IP address and the browser identification string at acceptance. We record the same facts for team members you invite, together with the GitHub login or email address you invite them with.
 
-- business email address, telephone number and communication preferences;
-- messages, meeting notes, support tickets, feedback and survey responses;
-- records of legal, security, abuse and Marketplace reports.
+### 3.3 Billing and tax data
 
-### 3.3 Account and authentication data
+Payments are taken by Stripe on a page Stripe hosts. Stripe collects your name, billing address, VAT number where you supply one, and payment method; we never receive full card details. We retain the Stripe customer and invoice references, the billing address and VAT number used for tax, the subtotal, tax and total of each purchase, plan and subscription state, and the Service Credit ledger (purchases, reservations, consumption, adjustments and refunds). Our subscription orchestration provider, Autumn, receives your organisation’s identifier and name and its plan state.
 
-- account identifier, Workspace, team membership and permissions;
-- login timestamps, session identifiers, authentication method and MFA status;
-- API-key metadata and credential identifiers (not plaintext private keys or seed phrases);
-- acceptance records for Orders, Terms and Policies.
+### 3.4 Application and service data
 
-### 3.4 Billing and transaction data
+We hold the applications, manifests, policies and configuration you create; the secrets you seal, which are encrypted so that only the runtime that receives them can read them; the artifacts you upload for deployment; managed logs from your applications, if you enable them; deployment, launch and job records; and reservation and settlement records that price your usage.
 
-- plan, invoices, tax status, billing address and payment status;
-- limited card/payment details received from payment providers, such as brand, last four digits and transaction reference;
-- bank transfer references;
-- Service Credit purchases, commitments, consumption, refunds and ledger events;
-- accepted cryptoasset amount, token/network, wallet address, transaction hash, confirmations and public-chain data;
-- chargeback, fraud and compliance information.
+### 3.5 Support and communications
 
-We do not ask for or store your wallet seed phrase or private key. Never send one to us.
+Messages you send to our mailboxes are handled in our support tool, Plain. We send invitations, sign-in links and billing, security and service notices by email through Resend. If you connect a Telegram chat for notifications, we hold the chat identifier you give us.
 
-### 3.5 Technical and usage data
+### 3.6 Technical and security data
 
-- IP address, approximate location derived from IP, user agent, device/browser/OS and language;
-- page, API, command and feature usage; timestamps; response codes; performance and error data;
-- deployment and Launch metadata that does not include prohibited workload payloads;
-- cookie, local-storage and consent identifiers;
-- security logs, risk signals, rate-limit events and suspected abuse indicators.
+Our servers record the IP address, browser identification string, requested URL, time and response code of requests to the console and API, and security events such as sign-ins, invitations, role changes and refused requests. Our error-monitoring service receives technical error reports that are configured to exclude request content, headers and personal identifiers. The console sets no cookies; see the Cookie Notice for the browser storage it uses.
 
-### 3.6 Marketplace data
+### 3.7 Marketplace data
 
-- publisher profile and verification status;
-- listing text, images, documentation, source/package links, licences, versions and compatibility;
-- moderation, scan, vulnerability, complaint, ranking and appeal records;
-- reviews or ratings if those features are enabled.
+When you launch a Marketplace Item we record the launch in your Workspace as we do for any application. At the date of this Notice all Items are published by PROOF; there are no publisher profiles, reviews, ratings, comments or messages.
 
-### 3.7 Marketing and relationship data
+### 3.8 Website data
 
-- event attendance, product interests, campaign source and engagement with lawful marketing;
-- customer relationship, sales opportunity and account-management notes;
-- consent, objection, unsubscribe and suppression records.
+proof.computer uses Google Analytics only with your consent, as described in the Cookie Notice. docs.proof.computer uses no analytics.
 
-### 3.8 Sensitive data
+### 3.9 Sensitive data
 
-We do not intentionally collect Special Category Data or criminal-offence data through ordinary registration or Distributed Workloads. You should not include sensitive data in support or free-text fields unless necessary and agreed. We may process limited criminal-allegation or sanctions information where necessary to investigate fraud, abuse or legal restrictions, with an appropriate legal condition.
+We do not intentionally collect Special Category Data or criminal-offence data. Please do not include it in support messages or free-text fields. We may process limited information about suspected fraud or sanctions exposure where necessary to investigate it, with an appropriate legal condition.
 
-## 4. How we obtain Personal Data
+## 4. Where Personal Data comes from
 
-We obtain Personal Data:
+Directly from you; from an administrator who creates or manages your account or invites you; automatically from your use of the services; from GitHub when you sign in or connect a repository; from Stripe about the status of a payment; and from public sources such as company registers where we verify a business.
 
-- directly from you or your organisation;
-- from an administrator who creates or manages your account;
-- automatically from devices, browsers, APIs and use of the Services;
-- from payment, identity, fraud, analytics, support, communications and security providers;
-- from public blockchains, public company registers, sanctions lists and other lawful public sources;
-- from Marketplace publishers, users and reporters;
-- from referral partners or event organisers where they are permitted to share it; and
-- from another person investigating a security, legal or abuse issue.
-
-If you provide Personal Data about another person, you must be authorised and give them any required information.
+If you provide Personal Data about another person, such as a team member you invite, you must be authorised to do so.
 
 ## 5. Purposes and lawful bases
 
-We use Personal Data for the purposes below. More than one lawful basis may apply.
-
-| Purpose | Typical Personal Data | UK GDPR lawful basis |
+| Purpose | Personal Data | Lawful basis |
 |---|---|---|
-| Create and administer accounts and Workspaces | identity, contact, account, authentication | performance of a contract with an individual where applicable; legitimate interests in supplying B2B services and managing customer users |
-| Supply, operate and support Liskov | account, communications, technical, usage | contract; legitimate interests in service delivery, support and reliability |
-| Process payments, Credits, invoices and refunds | identity, billing, transaction, wallet/public-chain | contract; legal obligation for tax/accounting; legitimate interests in payment administration and debt recovery |
-| Authenticate users and secure Services | account, device, IP, security logs, risk signals | legitimate interests in protecting customers, PROOF, Networks and others; legal obligation where applicable |
-| Prevent and investigate fraud, abuse, sanctions and illegal use | identity, organisation, transaction, wallet, public records, logs, reports | legal obligation; legitimate interests in compliance, loss prevention and platform integrity; substantial public interest condition where required for relevant sensitive data |
-| Operate and moderate the Marketplace | publisher/listing, reports, scans, account | contract; legitimate interests in a useful, secure and lawful catalogue; legal obligation where applicable |
-| Improve and analyse products | technical, usage, support, de-identified statistics | legitimate interests in product improvement and capacity planning; consent where required for non-essential cookies/storage |
-| Communicate service, security and legal notices | contact, account, usage | contract; legitimate interests; legal obligation |
-| Send business marketing | contact, organisation, preferences and engagement | consent where required; otherwise legitimate interests and the business-marketing rules, subject to your right to object |
-| Establish, exercise or defend legal claims | relevant account, content, communications, logs and transaction data | legitimate interests; legal claims condition for sensitive data where applicable |
-| Corporate transactions, audit and governance | relevant business records | legitimate interests in corporate administration and transactions; legal obligation |
+| Create and administer accounts, Workspaces and team membership | sign-in, organisation, acceptance | performance of a contract; legitimate interests in supplying business services |
+| Supply, operate and support Liskov | account, application, service, support, technical | contract; legitimate interests in service delivery and reliability |
+| Take payments, issue invoices and credit notes, and keep the Service Credit ledger | billing and tax | contract; legal obligation for tax and accounting |
+| Keep the services and our customers secure, and prevent fraud and abuse | technical, security, account | legitimate interests in protecting customers, PROOF and others; legal obligation where applicable |
+| Comply with sanctions, law-enforcement and regulatory requests | account, billing, communications | legal obligation; legitimate interests |
+| Send service, security and legal notices | contact, account | contract; legal obligation |
+| Send business marketing | contact, organisation | legitimate interests in business marketing, subject to your right to object; consent where the law requires it |
+| Understand how proof.computer is used | analytics identifiers | consent |
+| Establish, exercise or defend legal claims, and corporate governance | relevant records | legitimate interests; legal obligation |
 
-Where we rely on legitimate interests, we assess the purpose, necessity and impact on individuals. You may ask for information about a particular assessment.
+Where we rely on legitimate interests, we have assessed the purpose, its necessity and the effect on you. You can ask us about an assessment.
 
-## 6. Automated processing and risk decisions
+## 6. Automated decisions
 
-We may use rules or risk tools to flag unusual logins, suspected abuse, sanctions exposure, payment fraud, malicious packages or account compromise. A flag may cause a payment to be held before acceptance, a workload to be isolated, or a case to be sent for review.
-
-We do not intend to make a decision based solely on automated processing that produces legal or similarly significant effects on an individual, unless we tell you, identify a lawful basis and provide applicable safeguards. Significant account termination or sanctions decisions should receive human review where lawful and practicable. Contact us to contest a decision or request review.
+We use rules to flag unusual sign-ins, payment failures and suspected abuse. A flag may hold a payment, isolate a workload or send a case for review by a person. We do not make decisions based solely on automated processing that have legal or similarly significant effects on you. Stripe applies its own fraud checks to payments under its own privacy notice.
 
 ## 7. Who receives Personal Data
 
-We may disclose Personal Data to:
-
-- your organisation, Workspace administrators and authorised team members;
-- hosting, database, content-delivery, authentication, monitoring, logging, email, support, analytics and security providers;
-- card, banking, cryptoasset payment, invoicing, tax, identity, fraud and sanctions providers;
+- your organisation’s administrators and team members;
+- the providers that host and operate Liskov and handle email, support, error monitoring and networking, each listed with its location and transfer basis in the Subprocessor and International Transfer Schedule;
+- Stripe, which processes payments and tax as an independent controller for its own purposes;
+- GitHub, which you use to sign in and whose repositories you may connect;
+- Google, for analytics on proof.computer with your consent;
+- Telegram, if you configure notifications to a chat you control;
 - professional advisers, auditors and insurers;
-- Marketplace publishers/users where needed to handle a listing, report or appeal;
-- a prospective buyer, investor or group company under confidentiality in a genuine corporate transaction;
-- courts, regulators, law-enforcement bodies and public authorities where required or lawfully necessary; and
-- another person where needed to protect rights, safety, security or prevent crime and the disclosure is lawful.
+- a buyer, investor or successor in a genuine corporate transaction, under confidentiality; and
+- courts, regulators and law-enforcement bodies where required or lawfully necessary.
 
-Our current processors/subprocessors should be listed in the Liskov Subprocessor and International Transfer Schedule. We do not sell Personal Data for money. We do not share customer source code or private Customer Data for third-party advertising.
+We do not sell Personal Data. We do not share customer source code, secrets or application data for advertising, and we do not use them to train models.
 
-## 8. Decentralised Networks and public data
+## 8. Acurast processors and public data
 
-A wallet address and transaction history are public on many blockchains. We may read, store and associate public-chain data with an account for payment, deployment, fraud, security and compliance purposes.
-
-A Network Participant may receive Distributed Workload Data when a customer launches a job. Personal Data is prohibited in Standard Service Distributed Workloads, so the standard DPA does not treat an open node population as an ordinary subprocessor chain. If an enterprise service permits Personal Data, the applicable Order and data schedule must identify the approved processing arrangement.
-
-We cannot control independent copies of public-chain data or data submitted directly by a customer to a third-party Network outside our control.
+Acurast processors execute workloads that customers direct to them. We do not send them Personal Data, and we treat them as independent network participants rather than as our processors. We look up the approximate location of a processor from its network address, using a geolocation provider, to place workloads and monitor the network. Chain and IPFS records for jobs are public and permanent; they identify jobs and PROOF’s service accounts, not people.
 
 ## 9. International transfers
 
-We and our providers may process Personal Data outside the United Kingdom. Before a restricted transfer, we use a lawful mechanism as applicable, such as:
+Liskov’s database, secrets and logs are stored in the United Kingdom (London). Some providers process data in the United States, Canada or the European Union. For each restricted transfer we rely on a lawful mechanism: the UK Extension to the EU-US Data Privacy Framework where the provider is certified, the UK Addendum to the EU Standard Contractual Clauses or the UK International Data Transfer Agreement in the provider’s data-processing terms, or UK adequacy regulations (for Canada). The Subprocessor and International Transfer Schedule names the mechanism for each provider. Contact us for more information about a safeguard.
 
-- UK adequacy regulations;
-- the UK International Data Transfer Agreement;
-- the UK Addendum to approved EU Standard Contractual Clauses;
-- another mechanism permitted by Data Protection Laws; or
-- a limited statutory derogation where appropriate.
-
-We assess relevant laws and supplementary safeguards where required. Our subprocessor schedule should state relevant countries and transfer mechanisms. Contact us for information about safeguards, subject to confidentiality and security limits.
-
-The Standard Service is not a data-residency service for Distributed Workloads. Do not use it for Personal Data or location-restricted data.
+Distributed Workloads are not a data-residency service. The location of an Acurast processor is not guaranteed; if you process Personal Data in a workload, you are the exporter for any transfer that results.
 
 ## 10. How long we keep Personal Data
 
-We retain Personal Data only as long as reasonably necessary for the purpose, legal obligations, security and claims. The periods below are launch defaults and must be verified against actual systems before publication.
-
-| Data | Proposed retention |
+| Data | Retention |
 |---|---|
-| Active account and administrator data | while the account is active |
-| Customer Data in active hosted systems after termination | export available for up to 30 days; active deletion completed within 60 days after termination; routine backups overwritten within 90 days, unless law/security requires longer |
-| Billing, invoice, tax and material transaction records | generally 6 years after the relevant financial year or longer if law requires |
-| Contract, acceptance and material commercial records | generally 6 years after termination; 12 years for a deed where applicable |
-| Basic security/access logs | normally 12 months, with shorter or longer periods where proportionate to the threat and system |
-| Detailed debug logs that might contain identifiers | normally 30–90 days unless needed for an incident |
-| Support tickets | normally 3 years after closure, with longer retention for contractual/security disputes and shorter deletion where appropriate |
-| Failed/suspected fraud, sanctions and abuse cases | normally 6 years after closure, adjusted for seriousness, legal duties and limitation periods |
-| Marketplace listing and moderation records | while listed and generally 6 years after material delisting/dispute; routine rejected drafts may be shorter |
-| Marketing contact data | until objection/unsubscribe or after a reasonable inactivity period; minimal suppression data retained to honour the objection |
-| Cookie/consent evidence | for the life of the consent plus a period needed to demonstrate compliance, normally up to 5 years |
-| Public blockchain records | determined by the independent blockchain and potentially permanent |
+| Sign-in sessions | The session expires 24 hours after sign-in; a sign-in link is valid for 15 minutes and a command-line sign-in request for 10 minutes |
+| Invitations | 14 days if not accepted; the acceptance record is kept with the organisation |
+| Account and organisation data | While the account is active, then as below for a closed account |
+| Terms acceptance and business-eligibility records | For the life of the organisation and six years after it closes |
+| Billing, invoice, tax and Service Credit ledger records | Six years after the end of the financial year they relate to |
+| Applications, configuration, secrets and artifacts | While the application exists; a deleted application is tombstoned and its secrets and artifacts are removed |
+| Managed application logs | For the retention period of the log sink you configure, within your plan’s allowance (24 hours by default), then pruned automatically |
+| Request logs and security events | 12 months |
+| Error reports | 90 days |
+| Support conversations | Three years after the conversation closes |
+| Marketplace launch and moderation records | Six years after the matter closes |
+| Cookie consent | In your browser only, for 12 months |
+| Closed account | Export available for 30 days after closure; deleted from active systems within 60 days; backups overwritten within 90 days |
+| Chain and IPFS records | Permanent; controlled by the public network |
 
-We may retain a limited record longer where necessary to establish, exercise or defend a legal claim, enforce sanctions, prevent repeated abuse or comply with a preservation requirement. Data retained only for those reasons is access-restricted.
+We may keep a limited record for longer to establish, exercise or defend a legal claim, to comply with a sanctions or preservation requirement, or to prevent repeat abuse. Such records are access-restricted.
 
 ## 11. Security
 
-We use technical and organisational measures appropriate to the risk for systems we control. Depending on the component, these may include access control, MFA for privileged access, encryption in transit, encryption at rest, tenant separation, logging, vulnerability management, backups, incident procedures, vendor review and staff confidentiality.
+Our systems run in London on Fly.io with encryption in transit and at rest. Access to production is limited to named PROOF personnel using hardware-backed multi-factor authentication, on a least-privilege basis that we review. Production and development environments are separate, and production Personal Data is not used in development or testing. Changes are peer-reviewed; our build pipeline runs dependency, vulnerability, secret, licence and provenance checks and produces a software bill of materials. Secrets you seal are encrypted so that only the receiving runtime can read them. The measures are summarised, not warranted, here; the Data Processing Addendum sets out the binding measures for customer data.
 
-No system is completely secure. Decentralised node execution has additional risks described in the Master Terms. You are responsible for your own code, endpoints, credentials, wallets, payloads, configurations and backups. Report a suspected security issue through the security contact on our Website and never send a private key or seed phrase.
-
-The measures in this Notice are a summary, not a warranty beyond the binding Contract or Security Schedule.
+No system is completely secure. Report a suspected security issue to security@proof.computer, and never send a private key or seed phrase.
 
 ## 12. Your rights
 
-Depending on the circumstances, UK data-protection law gives you rights to:
+You have rights, subject to conditions, to be informed, to access your Personal Data, to have it corrected or erased, to restrict or object to processing, to receive certain data in a portable format, to withdraw consent, and to obtain safeguards in relation to automated decisions. To exercise a right, email **privacy@proof.computer**. We may ask you to verify your identity and, where we hold data only as a customer’s Processor, we may refer your request to that customer. We cannot erase a record held on a public blockchain.
 
-- be informed about processing;
-- access your Personal Data;
-- correct inaccurate Personal Data;
-- erase Personal Data;
-- restrict processing;
-- receive certain data in a portable format;
-- object to processing based on legitimate interests or direct marketing;
-- withdraw consent without affecting earlier lawful processing;
-- obtain safeguards relating to certain automated decisions; and
-- complain to a supervisory authority.
+## 13. Complaints
 
-Rights are subject to conditions and exemptions. For example, we may retain information required for tax, security, sanctions or legal claims, and we may be unable to erase data from an independent public blockchain.
+Complain to us at privacy@proof.computer; we will acknowledge a complaint without undue delay and tell you the outcome or how to escalate it. You may also complain to the UK Information Commissioner’s Office at [ico.org.uk/make-a-complaint](https://ico.org.uk/make-a-complaint/) or to your local supervisory authority.
 
-To exercise a right, email privacy@proof.computer [verify]. We may ask for information reasonably needed to verify identity and authority. Where we hold data only for a customer as Processor, we may direct the request to that customer.
+## 14. Marketing
 
-## 13. Data-protection complaints
+You can opt out of marketing using the unsubscribe link or by contacting us. We will still send essential service, billing, security and legal messages while you have an account. We keep a minimal suppression record so we do not contact you again by mistake.
 
-You may complain to us using the privacy contact. Please describe the issue, relevant account and desired resolution without sending unnecessary sensitive data or secrets.
+## 15. Cookies and browser storage
 
-We will acknowledge a data-protection complaint within the period required by applicable law and will take appropriate steps to investigate and respond without undue delay. We will tell you the outcome or progress and how to escalate. The exact workflow and statutory timing must be verified against the commencement position under the Data (Use and Access) Act 2025.
-
-You may also complain to the UK Information Commissioner’s Office. Its contact details are available at https://ico.org.uk/make-a-complaint/. If you are elsewhere, you may have a right to contact your local supervisory authority.
-
-## 14. Marketing choices
-
-You can opt out of marketing using the unsubscribe link or by contacting us. We may still send essential service, billing, security and legal messages. We maintain a minimal suppression record so we do not re-add an opted-out address accidentally.
-
-## 15. Cookies and similar technologies
-
-We use cookies, local storage, pixels, SDK identifiers and similar technologies as described in the Liskov Cookie and Similar Technologies Notice. Non-essential technologies are used only with consent where required. You can change choices through our consent controls.
+See the [Cookie and Similar Technologies Notice](./cookie-notice).
 
 ## 16. Children
 
-Liskov is a business service and is not directed to people under 18. A customer must not create an account for a child or submit children’s Personal Data in a Distributed Workload. Contact us if you believe a child’s data has been provided improperly.
+Liskov is a business service and is not directed to people under 18. Contact us if you believe a child’s data has been provided to us.
 
-## 17. Third-party links and services
+## 17. Third-party services
 
-Liskov may link to a Network, wallet, repository, Marketplace publisher or other service. That person’s privacy notice governs its independent processing. A link or integration is not an endorsement, and we are not responsible for an independent party’s compliance.
+GitHub, Stripe, Telegram and any repository, wallet or network you connect are governed by their own privacy notices. A link or integration is not an endorsement.
 
-## 18. Changes to this Notice
+## 18. Changes
 
-We may update this Notice to reflect law, guidance, products or processing. We will publish the new date and give reasonable notice of a material change. If a new purpose is incompatible with the original purpose, we will identify an appropriate lawful basis and provide any required choice before using the data.
+We update this Notice when our processing or the law changes, and publish the new version and date. We will tell Workspace administrators about a material change.
 
 ## 19. Contact
 
-Privacy questions and rights requests: **privacy@proof.computer** [verify]  
-Security reports: **security@proof.computer** [verify]  
+Privacy questions and rights requests: **privacy@proof.computer**  
+Security reports: **security@proof.computer**  
 Postal address: **The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP**
 
 ---
 
-**Do not publish until completed:** controller address/company number; DPO or representative details if applicable; exact vendors/countries; actual retention periods; cookies/storage inventory; marketing tools; automated decision logic; security wording; complaint timing; ICO fee/registration status; international-transfer documentation.
+MOOSE LABS LTD trading as PROOF · Version 1.0 · effective 1 September 2026 · previous versions are archived by PROOF and available on request from legal@proof.computer.

@@ -1,87 +1,49 @@
 ---
-title: Liskov legal review — 3 September 2026
-description: Counsel-ready working drafts, launch blockers, and the recommended legal model for Liskov.
-draft: true
+title: Liskov legal documents
+description: The terms, policies and notices that govern business use of Liskov.
 ---
 
-# Liskov legal review — read me first
+# Liskov legal documents
 
-:::caution[Not in force]
-Review version 1.0, dated 3 September 2026. This suite is review material, has
-no contractual effect, and is excluded from the production documentation build.
-Its publication blockers remain open.
-:::
+Liskov is supplied by **MOOSE LABS LTD**, company number **11435949**, a private limited company registered in England and Wales with its registered office at **The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP**, VAT registration **GB311456142**, trading as **PROOF**. Contact: **hello@proof.computer**.
 
-**Review date:** 3 September 2026  
-**Product:** Liskov  
-**Contracting entity:** MOOSE LABS LTD, company number 11435949, VAT registration GB311456142, trading as PROOF ("PROOF")<br />
-**Legal/e-commerce contact:** hello@proof.computer<br />
-**Status:** counsel-ready working draft; not approved for publication until the launch gates below are signed off.
+These documents govern business use of Liskov. They are **Version 1.0 — effective 1 September 2026**. Liskov is a business service and is not available for consumer use.
 
-## What this bundle does
+## The documents
 
-This bundle replaces the uploaded legal drafts with a coherent UK business-to-business launch suite. It deliberately separates:
+- [Master Business Terms](./master-terms) — the contract between PROOF and a business customer for access to and use of Liskov.
+- [Service Credits and Payments Policy](./service-credits-and-payments-policy) — how Service Credits are bought, used, refunded and taxed.
+- [Acceptable Use Policy](./acceptable-use-policy) — the rules for lawful, safe and responsible use.
+- [Data Processing Addendum](./data-processing-addendum) — the terms on which PROOF processes personal data on a customer’s behalf in the hosted parts of the service.
+- [Subprocessor and International Transfer Schedule](./subprocessors) — the providers PROOF uses to process that data, where they process it and on what basis.
+- [Privacy Notice](./privacy-notice) — how PROOF uses personal data about the people who use Liskov, our websites and our support channels.
+- [Cookie and Similar Technologies Notice](./cookie-notice) — the cookies, browser storage and analytics used on PROOF’s websites and the Liskov console, and your choices.
+- [Marketplace Terms](./marketplace-terms) — the terms for using free Items published through the Liskov Marketplace.
+- [Marketplace Notice-and-Action Policy](./marketplace-notice-and-action-policy) — how to report Marketplace content and how PROOF responds.
 
-1. the hosted Liskov control-plane and support services supplied by PROOF;
-2. compute and other infrastructure supplied through independently operated decentralised networks and node operators; and
-3. blockchain, wallet and cryptoasset transactions authorised or controlled by the customer.
+## How the documents fit together
 
-That separation is substantive. Calling a balance “credits”, the service “non-custodial”, or a catalogue a “marketplace” does not determine its legal treatment. The operating model must match the contract.
+If the documents conflict, they apply in this order:
 
-## Recommended launch model
+1. the Order (the plan or purchase a customer selects in the console, or a signed order form);
+2. the Data Processing Addendum, for data-protection matters only;
+3. any Service Level Agreement or Security Schedule expressly incorporated in an Order;
+4. the Master Business Terms;
+5. the Service Credits and Payments Policy; and
+6. the Acceptable Use Policy, the Marketplace Terms and the Marketplace Notice-and-Action Policy.
 
-Launch on the following basis unless UK counsel approves a broader model:
+The Privacy Notice and the Cookie Notice are information about how PROOF processes personal data; they are not contracts a customer agrees to.
 
-- customers act wholly or mainly for business purposes;
-- the public Marketplace contains only free listings and does not collect buyer money, pay publishers, or facilitate side payments;
-- standard decentralised workloads must not contain Personal Data, special-category data, criminal-offence data, payment-card data, regulated health data, authentication secrets, or other data requiring a known processing location or conventional processor chain;
-- paid Service Credits are non-transferable contractual prepayments usable only for services supplied by PROOF;
-- PROOF purchases any network tokens or network capacity as principal and does not hold tokens or fiat money on trust for customers;
-- customer wallets remain customer-controlled and PROOF does not take possession of private keys;
-- no service level, data-residency promise, confidential-compute promise, certification, recovery objective or security control is advertised unless it has been operationally verified;
-- no paid Marketplace, seller payout, staking, yield, exchange, brokerage, token transfer, or custody feature is enabled under this suite.
+## Contact
 
-## Publication blockers
+- **hello@proof.computer** — general and legal/e-commerce contact.
+- **legal@proof.computer** — legal notices under the contract, rights-owner correspondence, and law-enforcement or regulator requests.
+- **privacy@proof.computer** — privacy questions, data-protection rights requests, and subprocessor change notices.
+- **security@proof.computer** — security vulnerabilities and security incidents.
+- **support@proof.computer** — product support, billing questions and refund requests.
+- **abuse@proof.computer** — reports of abuse, illegal content or Marketplace policy breaches.
+- **marketplace@proof.computer** — Marketplace operations.
 
-Do not publish or enable click-acceptance until all items marked **BLOCKER** in `01-LEGAL-REVIEW-MEMORANDUM.md` and `12-LAUNCH-SIGN-OFF-MATRIX.md` are resolved. At minimum:
+## Versions and changes
 
-- carry PROOF’s confirmed company number, registered office, trading name, VAT registration and `hello@proof.computer` contact consistently, and verify the live Stripe Checkout/invoice output plus the separate privacy/support/security contacts;
-- confirm every data flow, subprocessor, hosting country, retention period and international-transfer mechanism;
-- technically enforce the Standard Service restriction on Personal Data in decentralised workloads, rather than relying only on contract wording;
-- confirm the actual money, USDC, token and network-cost flow with regulatory and tax advisers;
-- adopt sanctions screening and rejected/refunded wallet procedures;
-- complete an Online Safety Act service-scope assessment before enabling publisher listings, reviews, comments, messaging or search over user-submitted content;
-- complete a cookie/storage inventory and deploy a consent mechanism before non-essential storage or analytics runs;
-- verify the security measures in the DPA and remove anything that is aspirational;
-- agree liability caps against current insurance cover and enterprise sales expectations;
-- preserve affirmative clickwrap evidence: displayed documents, version, timestamp, user, workspace, IP/device evidence where lawful, and the exact accepted Order.
-
-## Documents in the clean suite
-
-- Master Business Terms
-- Service Credits and Payments Policy
-- Acceptable Use Policy
-- Privacy Notice
-- Data Processing Addendum
-- Cookie and Similar Technologies Notice
-- Free Marketplace Publisher and User Terms
-- Marketplace Notice-and-Action Policy
-- Subprocessor and International Transfer Schedule template
-- Legal Review Memorandum
-- Change Log
-- Launch Sign-off Matrix
-
-## Precedence
-
-For a customer contract, use this order of precedence unless an Order says otherwise:
-
-1. signed or click-accepted Order;
-2. Data Processing Addendum, but only for data-protection matters;
-3. any expressly incorporated Service Level Agreement or Security Schedule;
-4. Master Business Terms;
-5. Service Credits and Payments Policy;
-6. product policies, including the Acceptable Use Policy and Marketplace terms.
-
-## Important limitation
-
-The wording reduces avoidable risk but cannot cure an operating model that contradicts it. In particular, a clause cannot make unknown node operators a compliant processor chain, convert a transferable balance into an unregulated product, or remove statutory platform-safety duties. Independent UK regulatory, data-protection and tax review remains necessary before launch and whenever the product model changes.
+Previous versions of these documents are archived by PROOF and are available on request from legal@proof.computer. PROOF notifies Workspace administrators of a material change at least 30 days before it takes effect, except for an urgent change required by law, security or a network event.
