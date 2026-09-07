@@ -1,6 +1,6 @@
 {
   "schema": "proof.liskov.docs-v5-release-contract.v1",
-  "verifiedAt": "2026-09-05",
+  "verifiedAt": "2026-09-07",
   "documentationMode": "public",
   "availability": "v1",
   "contract": {
@@ -91,16 +91,17 @@
   ],
   "activation": {
     "activatedOn": "2026-08-23",
-    "reconciledOn": "2026-09-04",
+    "reconciledOn": "2026-09-07",
     "handlerGeneration": 96,
     "readinessMode": "activation",
-    "readinessEvaluatedAtMs": 1788524178328,
+    "readinessEvaluatedAtMs": 1788766245792,
     "evidence": [
       "liskov-agent-orchestrator:docs/raw/2026-08-23-v5-production-activation.md",
       "liskov-agent-orchestrator:docs/raw/2026-09-04-dydb-fleet-census.md",
       "liskov-agent-orchestrator:docs/raw/2026-08-29-sznx-clean-run.md",
       "liskov-agent-orchestrator:docs/raw/2026-09-03-v5-managed-ssh-live-rehearsal.md",
-      "liskov-agent-orchestrator:docs/raw/2026-09-04-776u-promotion-preparation.md"
+      "liskov-agent-orchestrator:docs/raw/2026-09-04-776u-promotion-preparation.md",
+      "liskov-agent-orchestrator:docs/raw/2026-09-07-v5-docs-promotion.md"
     ]
   }
 }

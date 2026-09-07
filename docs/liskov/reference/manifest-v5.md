@@ -134,7 +134,8 @@ arguments have at most 64 items. No shell string or inline program is parsed.
 A settled `once` application does not run again on its own, and Liskov never
 re-runs it as a recovery retry. The supported way to run the same document
 again today is a new Application, which counts against your organization's
-job slots; a manual re-run verb is planned.
+job slots; an explicit re-arm of the same Application is release-gated, and
+[Capabilities and limits](./capabilities.md) owns its current boundary.
 
 ## `deployment`
 

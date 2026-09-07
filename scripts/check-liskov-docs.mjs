@@ -584,7 +584,7 @@ check(
 // 2026-09-04 (BKLG-20260817-776u): availability transition release_gated → promoted.
 // Production registration is v4_and_v5 (handler generation 96, activation-mode
 // readiness green); every pinned consumer commit is contained in a released ref.
-check(v5ReleaseContract.verifiedAt === '2026-09-05', 'V5 release contract: wrong verification date');
+check(v5ReleaseContract.verifiedAt === '2026-09-07', 'V5 release contract: wrong verification date');
 check(
   v5ReleaseContract.contract?.rcDigest === 'sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10',
   'V5 release contract: wrong RC digest',
