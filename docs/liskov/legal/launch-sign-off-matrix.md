@@ -12,6 +12,17 @@ no contractual effect, and is excluded from the production documentation build.
 Every blocker remains open until its owner records evidence and approval.
 :::
 
+## Disposition — 7 September 2026
+
+The owner (director, MOOSE LABS LTD) answered every open question on
+7 September 2026 and each **BLOCKER** row now carries a disposition in the
+orchestrator's signed register (`Q-20260904-mm3v`): `PRE` (resolved before
+publication), `ACCEPT` (risk expressly accepted), `POST` (post-launch
+obligation) or `N/A` (feature excluded). The row statuses below are the
+3–5 September working state and are superseded by that register; this matrix
+stays internal. Independent counsel review is not sought for launch (owner
+answer 2); the directors sign for every function (answer 3).
+
 **Review date:** 3 September 2026  
 **Instruction:** no item marked **BLOCKER** may be assumed complete. Record owner, evidence link, decision/date and approver.
 

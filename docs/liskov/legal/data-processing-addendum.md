@@ -1,18 +1,11 @@
 ---
-title: Liskov Data Processing Addendum — review draft
-description: Counsel-ready working UK controller-to-processor terms for PROOF-controlled hosted processing.
-draft: true
+title: Liskov Data Processing Addendum
+description: The terms on which PROOF processes personal data on a customer’s behalf in the hosted parts of Liskov.
 ---
 
 # Liskov Data Processing Addendum
 
-:::caution[Not in force]
-Review version 1.0, dated 3 September 2026. This addendum is review material,
-has no contractual effect, and is excluded from the production documentation
-build. Its publication blockers remain open.
-:::
-
-**Version:** 1.0 — 3 September 2026
+**Version 1.0 — effective 1 September 2026**
 
 This Data Processing Addendum (**DPA**) forms part of the Contract between MOOSE LABS LTD trading as PROOF (**PROOF**) and Customer. It applies only where PROOF processes Personal Data on Customer’s behalf in providing the Services.
 
@@ -20,7 +13,7 @@ This Data Processing Addendum (**DPA**) forms part of the Contract between MOOSE
 
 ### 1.1 Application
 
-This DPA applies to **Customer Personal Data**, meaning Personal Data contained in Customer Data that PROOF Processes solely on Customer’s documented instructions to provide hosted, PROOF-controlled Services.
+This DPA applies to **Customer Personal Data**, meaning Personal Data contained in Customer Data that PROOF Processes solely on Customer’s documented instructions to provide hosted, PROOF-controlled Services: application configuration and manifests, sealed secrets, uploaded artifacts, managed application logs, and support content Customer submits.
 
 ### 1.2 Excluded processing
 
@@ -28,13 +21,13 @@ This DPA does not apply to:
 
 (a) Account Data or other Personal Data for which PROOF determines its own purposes and acts as an independent Controller, as described in the Privacy Notice;
 
-(b) Distributed Workload Data under the Standard Service, because the Contract prohibits Personal Data in Distributed Workloads;
+(b) Distributed Workload Data, which runs on independently operated Network Infrastructure outside PROOF’s systems and for which Customer is the sole Controller under clause 7 of the Master Business Terms;
 
 (c) Personal Data that Customer sends directly to an independent third-party service outside PROOF’s processing chain; or
 
 (d) public blockchain records controlled by an independent Network.
 
-An Enterprise Order may extend this DPA to an expressly approved node pool only where the Order identifies the processing parties, countries, safeguards and additional terms.
+An Enterprise Order may extend this DPA to additional processing only where the Order identifies the processing parties, countries, safeguards and additional terms.
 
 ### 1.3 Precedence
 
@@ -54,7 +47,7 @@ Capitalised terms not defined here have the meanings in the Master Business Term
 
 **Restricted Transfer** means a transfer of Personal Data from the United Kingdom to a country or recipient that is not covered by applicable UK adequacy regulations and requires a transfer safeguard under Applicable Data Protection Law.
 
-**Subprocessor** means a Processor engaged by PROOF to Process Customer Personal Data on Customer’s behalf. It does not include PROOF personnel or a Network Participant handling a Standard Service Distributed Workload in which Personal Data is prohibited.
+**Subprocessor** means a Processor engaged by PROOF to Process Customer Personal Data on Customer’s behalf. It does not include PROOF personnel or a Network Participant executing a Distributed Workload at Customer’s direction.
 
 ## 3. Roles and Customer instructions
 
@@ -122,7 +115,7 @@ Taking account of the state of the art, implementation cost, nature, scope, cont
 
 ### 5.2 Scope qualification
 
-A measure applies only to the systems and Processing identified in Annex 2. PROOF does not represent that an unverified or planned measure is implemented. Before this DPA is used, PROOF must complete the factual fields in Annex 2 and remove any inaccurate statement.
+A measure applies only to the systems and Processing identified in Annex 2. Annex 2 states the measures PROOF operates at the date of this DPA; it does not represent that a planned measure is implemented.
 
 ### 5.3 Customer security
 
@@ -138,7 +131,7 @@ Customer is responsible for:
 
 (e) independent backups and recovery appropriate to Customer’s risk; and
 
-(f) not putting Personal Data in Distributed Workloads under the Standard Service.
+(f) any Personal Data it chooses to process in a Distributed Workload, of which it is the sole Controller.
 
 ### 5.4 Security testing
 
@@ -212,7 +205,7 @@ Customer may object within the notice period on reasonable, documented data-prot
 
 ### 9.5 Network Participants
 
-The general authorisation in this clause is not intended to legitimise sending Personal Data to an open or unidentified Network Participant. Personal Data remains prohibited in Standard Service Distributed Workloads. An Enterprise Order that permits it must expressly address the relevant operators and processing chain.
+The general authorisation in this clause does not make a Network Participant a Subprocessor. A Distributed Workload is transmitted to the Network at Customer’s direction and Customer is the Controller of any Personal Data in it; PROOF sends no Customer Personal Data to a Network Participant.
 
 ## 10. International transfers
 
@@ -294,7 +287,7 @@ On reasonable written request after the deletion period, PROOF will confirm comp
 
 ### 12.4 External systems and blockchains
 
-PROOF cannot delete Personal Data from Customer-controlled systems, independent public blockchains or third-party services outside PROOF’s control. Customer must not place Personal Data in Standard Service Distributed Workloads.
+PROOF cannot delete Personal Data from Customer-controlled systems, independent public blockchains, Network Participants or third-party services outside PROOF’s control.
 
 ## 13. Assistance with accountability
 
@@ -323,123 +316,95 @@ This Annex must be completed with the applicable Order where the defaults are no
 | Nature of Processing | Collection, recording, organisation, hosting, retrieval, consultation, transmission within approved hosted providers, support, security monitoring, backup, deletion and other operations initiated by Customer |
 | Purpose | To provide the Services on Customer’s documented instructions |
 | Data Subjects | Customer personnel, contractors, administrators, authorised users, support contacts, and other business individuals whose Personal Data Customer lawfully submits to hosted features |
-| Personal Data | Business identifiers and contact details; account/user IDs and roles; support content; technical identifiers; configuration and application data to the extent it contains Personal Data; other categories expressly stated in the Order |
+| Personal Data | Business identifiers and contact details; account/user IDs and roles; support content; technical identifiers; application configuration, sealed secrets, uploaded artifacts and managed logs to the extent they contain Personal Data; other categories expressly stated in the Order |
 | Special Category Data | Not permitted unless expressly identified and approved in an Enterprise Order with additional safeguards |
 | Criminal-offence data | Not permitted unless expressly identified and approved in an Enterprise Order with an applicable condition and policy safeguards |
 | Children’s data | Not permitted |
 | Frequency | As initiated by Customer and continuously as required for active hosted Services |
 | Customer instructions | The Contract, Customer’s authorised configuration/API actions and additional written instructions accepted by PROOF |
 | Return/deletion | Export for 30 days after termination; active deletion by 60 days; backup overwrite by 90 days, subject to law/security |
-| Distributed Workloads | Personal Data prohibited under Standard Service; not included in this Annex |
+| Distributed Workloads | Executed on Network Infrastructure at Customer’s direction; Customer is the Controller; not included in this Annex |
 
 ## Annex 2 — Technical and organisational measures
 
-> **Factual verification required.** Each statement must be confirmed by Security/Engineering before signature. Delete or qualify any measure that is not implemented across the relevant scope.
+These are the measures PROOF operates for the PROOF-controlled Services at the date of this DPA.
 
 ## 1. Governance and risk
 
-- documented information-security roles and escalation;
-- periodic risk assessment for systems Processing Customer Personal Data;
-- security policies reviewed on material change and at planned intervals;
-- confidentiality obligations and appropriate training for authorised personnel;
-- vendor security and privacy review proportionate to risk;
-- documented incident-response and business-continuity procedures.
+- the directors of MOOSE LABS LTD own information security and are the escalation point for incidents;
+- risk is assessed when a system, provider or data flow changes;
+- authorised personnel are bound by confidentiality obligations;
+- providers are reviewed for security and privacy before they process Customer Personal Data, and are listed in the Subprocessor Schedule.
 
 ## 2. Access control
 
-- unique user identities for personnel with administrative access;
-- role-based access and least-privilege principles;
-- MFA for privileged production access [verify scope];
-- joiner/mover/leaver process and periodic access review;
-- controlled emergency access and audit trail;
+- unique identities for each person with administrative access;
+- role-based, least-privilege access to production, reviewed periodically;
+- hardware-backed multi-factor authentication for PROOF personnel on the source-control and hosting-provider accounts that reach production;
+- a documented joiner, mover and leaver process for privileged access;
 - no routine access to Customer content except for support, security, legal or operational need.
 
 ## 3. Authentication and secrets
 
-- salted, industry-standard password hashing where PROOF stores passwords [verify provider/algorithm category without over-specification];
-- secure session management and rate limiting;
-- secrets stored using an appropriate secrets-management mechanism;
-- rotation/revocation process for privileged credentials;
-- customer private keys and seed phrases are not intentionally collected.
+- Customer sign-in is delegated to GitHub or to a single-use email link; PROOF stores no passwords, and session tokens are stored only as hashes;
+- Customer application secrets are encrypted by the secrets service so that only the runtime that receives a secret can decrypt it;
+- production credentials are held in the hosting provider’s secret store and rotated on compromise or personnel change;
+- PROOF never collects Customer private keys or seed phrases.
 
 ## 4. Encryption and communications
 
-- encryption in transit using supported modern TLS for public web/API traffic;
-- encryption at rest for primary hosted databases and object storage containing Customer Personal Data [verify exact services/scope];
-- managed key access controls and separation of duties where appropriate;
-- secure administrative channels;
-- no representation that encryption prevents access by a system or node while data is being processed.
+- encryption in transit using modern TLS for all public web and API traffic;
+- encryption at rest for the managed PostgreSQL databases and object storage that hold Customer Personal Data;
+- no representation that encryption prevents access by a system while data is being processed.
 
 ## 5. Tenant and system security
 
-- logical tenant separation in PROOF-controlled hosted systems;
-- hardened baseline and patching process for managed infrastructure;
-- network segmentation/security groups appropriate to architecture;
-- environment separation for production and non-production [verify];
-- production Personal Data not used in development/test except where necessary and protected [verify];
-- change review and controlled deployment process.
+- logical tenant separation by organisation in every hosted data store, enforced in the data model;
+- managed hosting infrastructure patched by the hosting provider, with PROOF’s services rebuilt and redeployed from source through a controlled pipeline;
+- production and non-production environments are separate, and production Personal Data is not used in development or testing;
+- every material change is peer-reviewed and deployed through the pipeline.
 
 ## 6. Secure development and vulnerability management
 
-- source control and change history;
-- peer review or equivalent control for material changes [verify];
-- dependency and vulnerability scanning [verify tools/scope];
-- remediation prioritised by severity and exploitability;
-- security testing before material releases where proportionate;
-- vulnerability-reporting route and triage;
-- software bill of materials/licence controls where implemented [verify].
+- all source is version-controlled with change history;
+- the build pipeline runs dependency, vulnerability, secret, licence, malware and provenance checks and produces a software bill of materials for each release;
+- findings are remediated in priority of severity and exploitability;
+- vulnerability reports are received at security@proof.computer and triaged by the directors.
 
 ## 7. Logging and monitoring
 
-- logging of material authentication, administrative, deployment and security events;
-- access controls and integrity protection for logs;
-- monitoring/alerting appropriate to service risk;
-- time synchronisation;
-- retention periods defined by log category;
-- payload and secret minimisation in logs;
-- investigation and escalation process.
+- authentication, invitation, role, deployment, billing and security events are logged;
+- error monitoring is configured to exclude request content, headers and personal identifiers;
+- logs minimise payloads and secrets, and have defined retention periods by category (Privacy Notice, section 10).
 
 ## 8. Availability, backup and recovery
 
-- redundancy appropriate to the hosted control-plane architecture [verify];
-- backup of defined PROOF-controlled data stores [verify scope/frequency];
-- encryption and access control for backups;
-- restoration testing at planned intervals [verify];
-- documented recovery priorities and dependencies;
-- no guarantee of backup or recovery for independent Network Infrastructure or Customer-controlled systems.
+- the control plane runs on managed infrastructure with automatic failover for its databases;
+- the hosting provider takes automatic, encrypted backups of the managed PostgreSQL databases;
+- PROOF does not back up or recover Network Infrastructure or Customer-controlled systems.
 
 ## 9. Incident management
 
-- documented detection, triage, containment, eradication and recovery workflow;
-- designated incident roles and contact tree;
-- legal/privacy escalation for suspected Personal Data Breach;
-- evidence preservation and post-incident review;
-- customer notification process under clause 6;
-- periodic tabletop or response exercise [verify frequency].
+- the directors triage, contain, investigate and remediate incidents, and preserve evidence;
+- a suspected Personal Data Breach is escalated for the customer notification in clause 6;
+- material incidents are reviewed afterwards and the lessons applied.
 
 ## 10. Data lifecycle
 
-- data classification and minimisation guidance;
-- configurable or documented retention by data category;
-- logical deletion from active systems;
-- routine backup overwrite schedule;
-- secure disposal of media and vendor deletion obligations;
-- restriction on Personal Data in Distributed Workloads;
-- export and deletion process aligned with clause 12.
+- data is classified and minimised by design in the hosted Services;
+- retention is defined by data category and enforced by automatic pruning where the system supports it;
+- deletion follows clause 12, with the hosting provider’s backup cycle overwriting residual copies;
+- providers are bound to delete or return data on termination.
 
 ## 11. Physical security
 
-Physical security for cloud data centres is provided by the relevant hosting Subprocessors and assessed through contractual and assurance materials. PROOF applies appropriate office/device controls to its own personnel and equipment [verify remote-work/device controls].
+Physical security for the data centres is provided by the hosting Subprocessors under their own certifications. PROOF applies device and remote-work controls to its own personnel and equipment, including hardware-backed authentication.
 
 ## 12. Network-specific safeguards
 
-For Standard Service:
-
-- Personal Data is prohibited in Distributed Workloads;
-- Documentation warns that node identity/location can vary;
-- Customer is instructed not to embed credentials or secrets;
-- PROOF uses only metadata reasonably necessary for orchestration, billing and security [verify];
-- an Enterprise node/data path requires a separate approved schedule.
+- Distributed Workloads execute on independently operated Network Infrastructure at Customer’s direction; PROOF sends no Customer Personal Data to a Network Participant;
+- PROOF uses only the metadata necessary for orchestration, billing and security;
+- Documentation states that a Network Participant’s identity and location can vary and instructs Customers not to embed credentials or secrets in a workload.
 
 ## Annex 3 — UK restricted-transfer mechanism
 
@@ -472,3 +437,7 @@ Where the Approved IDTA is used, the parties incorporate it with:
 ## C. Priority
 
 The executed or incorporated transfer instrument and mandatory law prevail over inconsistent terms. The parties must complete any missing mandatory field before relying on the instrument.
+
+---
+
+MOOSE LABS LTD trading as PROOF · Version 1.0 · effective 1 September 2026 · previous versions are archived by PROOF and available on request from legal@proof.computer.

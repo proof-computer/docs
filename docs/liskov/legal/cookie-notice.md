@@ -1,135 +1,75 @@
 ---
-title: Liskov Cookie and Similar Technologies Notice — review draft
-description: Counsel-ready working notice and pre-publication register for cookies, storage, analytics, and similar technologies.
-draft: true
+title: Liskov Cookie and Similar Technologies Notice
+description: The cookies, browser storage and analytics used on PROOF’s websites and the Liskov console, and your choices.
 ---
 
 # Liskov Cookie and Similar Technologies Notice
 
-:::caution[Not in force]
-Review version 1.0, dated 3 September 2026. This notice is review material, has
-no effect as a published notice, and is excluded from the production
-documentation build. Its publication blockers remain open.
-:::
+**Version 1.0 — effective 1 September 2026**
 
-**Version:** 1.0 — 3 September 2026
-
-This Notice explains how MOOSE LABS LTD trading as PROOF (**PROOF**) uses cookies, local storage, pixels, SDK identifiers and similar technologies on the Liskov website, console and related online services.
-
-> **Publication condition:** this Notice is a legally structured template. It must not be published as complete until a technical scan has identified every technology, provider, purpose, duration and country, and consent behaviour has been tested.
+This Notice explains how MOOSE LABS LTD trading as PROOF (**PROOF**) uses cookies, browser storage and similar technologies on **proof.computer**, **docs.proof.computer** and the Liskov console at **console.liskov.proof.computer**.
 
 ## 1. What these technologies are
 
-A cookie is a small text file placed on a device. Local storage and similar browser technologies store or access information on a device. Pixels and SDKs can send device, page, event and identifier information to us or a provider.
+A cookie is a small text file placed on a device. Browser storage (local storage and session storage) keeps information on a device without a cookie. An analytics script sends page and event information to a provider. UK law requires consent before information is stored on, or read from, a device unless the storage is strictly necessary to provide a service you have asked for.
 
-UK rules may require consent before information is stored on, or accessed from, a device unless a specific exception applies. Data-protection law also applies where the information is Personal Data.
-
-## 2. Categories we use
+## 2. What we use
 
 ### 2.1 Strictly necessary
 
-These are required to provide a service you request or to secure it, such as:
+We do not ask for consent for these; they exist only to sign you in, keep you signed in and remember a setting you chose.
 
-- authentication and session continuity;
-- load balancing and network routing;
-- security, fraud prevention and rate limiting;
-- storing privacy choices;
-- checkout and payment continuity;
-- remembering a user-interface action necessary for a requested feature.
+| Name | Where | Type | Purpose | Lasts |
+|---|---|---|---|---|
+| `proof.slipway.sessionToken` | Liskov console | local storage and session storage | Holds your sign-in session token after you sign in with GitHub or an email link. Cleared when you sign out. The server-side session expires after 24 hours. | Until sign-out |
+| `proof.slipway.cliLogin.bounceStartedAtMs` | Liskov console | session storage | Prevents a redirect loop while signing the command-line tool in | Browser tab |
+| `proof.slipway.theme` | Liskov console | local storage | Remembers your light or dark theme choice | Until cleared |
+| `theme` | docs.proof.computer | local storage | Remembers your light or dark theme choice | Until cleared |
+| `proof.consent` | proof.computer | local storage | Records the choice you made in the cookie banner so we do not ask again | 12 months |
 
-Where a technology is genuinely strictly necessary under applicable law, we do not ask for consent. We still describe it and use it only for the necessary purpose.
+The Liskov console sets **no cookies**; sign-in uses a token held in browser storage.
 
-### 2.2 Functional
+### 2.2 Analytics (only with your consent)
 
-These remember optional preferences or provide enhanced features, such as language, layout, saved filters or an embedded support tool. Some may require consent, depending on whether they are necessary for a feature you specifically request and on current law/guidance.
+On **proof.computer** we use Google Analytics 4 (Google Ireland Limited) to understand how the website is used. It runs only after you choose **Accept all** or enable analytics in the banner. Google Analytics 4 does not log or store IP addresses.
 
-### 2.3 Analytics and performance
+| Name | Where | Purpose | Lasts |
+|---|---|---|---|
+| `_ga` | proof.computer | Distinguishes visitors | 2 years |
+| `_ga_C9DLBP64TK` | proof.computer | Keeps session state for the analytics property | 2 years |
 
-These help us understand traffic, feature use, errors and performance. We use them only with consent where required. Where we rely on a statutory exception for limited first-party analytics or service improvement, we will document the exact conditions, give required information and provide any required opt-out.
+docs.proof.computer and the Liskov console use **no analytics**.
 
-### 2.4 Advertising and cross-service measurement
+### 2.3 Third-party requests that are not cookies
 
-These may profile interests, measure campaigns across services, create audiences or support targeted advertising. We use them only with valid consent where required. Liskov should not enable this category at launch unless there is a documented business need and compliant consent flow.
+Some pages load resources from third parties. Loading a resource sends your IP address and browser details to that provider but does not store anything on your device:
+
+- fonts from Google Fonts (all three sites);
+- the Tailwind CSS script from Tailwind Labs’ content-delivery network and, on the search page, a search library from Cloudflare’s cdnjs (proof.computer only).
+
+When you pay, you are taken to a checkout page hosted by Stripe, and when you sign in you are taken to GitHub. Their own cookie notices apply on their pages.
 
 ## 3. Your choices
 
-On first visit, our consent interface should:
+On your first visit to proof.computer a banner offers **Accept all**, **Reject non-essential** and **Choose settings** with equal prominence. Nothing optional runs until you choose. You can change your choice at any time using the **Privacy choices** link in the site footer. Withdrawing consent stops analytics from the moment you withdraw it; it does not make earlier processing unlawful.
 
-- prevent non-essential technologies from running before a valid choice;
-- explain purposes and providers in plain language;
-- offer **Accept all**, **Reject non-essential** and granular controls with comparable prominence and ease;
-- avoid pre-ticked optional purposes;
-- record the consent version, time and choices;
-- allow withdrawal as easily as consent through a persistent settings link; and
-- ask again only when reasonably necessary or when purposes materially change.
+Your choice is stored only in your browser. We do not keep a server-side record of it. Clearing your browser storage clears the choice and the banner appears again.
 
-Withdrawing consent does not make earlier processing unlawful. It stops future optional access/storage after the choice is applied, although a limited suppression or consent record may remain.
+Browser settings that block cookies or storage may stop you signing in to the console, because the session token is strictly necessary.
 
-Browser blocking may affect strictly necessary functionality and is not a substitute for our consent controls.
+## 4. Server-side records
 
-## 4. Current technology register
+Our servers record the IP address, browser type, requested URL, timestamp and response code of requests, and an error-monitoring service receives technical error reports that are configured not to include request content or personal identifiers. These records are described in the Privacy Notice; they do not store anything on your device.
 
-Complete this table from a production scan. Do not use generic placeholders on the published page.
+## 5. Changes
 
-| Name / key | Provider | Domain / app | Category | Exact purpose | Data accessed or stored | First or third party | Duration | Countries / transfer safeguard | Consent or exception |
-|---|---|---|---|---|---|---|---|---|---|
-| [insert] | [insert] | [insert] | Strictly necessary / Functional / Analytics / Advertising | [insert] | [insert] | [insert] | [session / period] | [insert] | [insert] |
+We update this Notice when the technologies we use change. A new optional purpose will not run for you until you have consented to it.
 
-The inventory must cover:
+## 6. Contact
 
-- public marketing pages;
-- Liskov console;
-- authentication/SSO;
-- checkout and payment;
-- support/chat widget;
-- status page;
-- documentation;
-- embedded video/fonts/maps;
-- analytics, error monitoring and session replay;
-- referral/affiliate tags;
-- A/B testing and feature flags;
-- CDN/WAF/bot management;
-- pixels and server-side event forwarding;
-- mobile/desktop SDK identifiers if applicable.
-
-## 5. Analytics configuration
-
-Where analytics is used, configure it to minimise data:
-
-- avoid collecting payloads, source code, secrets or full URLs containing identifiers;
-- mask or omit form content;
-- disable advertising features unless specifically consented;
-- use the shortest workable retention;
-- restrict provider access and onward use contractually;
-- assess international transfers;
-- avoid cross-customer tracking;
-- ensure “reject” prevents client and server-side optional events;
-- document any first-party analytics exception relied on.
-
-Session replay or heatmap tools require heightened review and should not record console secrets, credentials, wallet information, support content or source code.
-
-## 6. Similar server-side processing
-
-A server log may record IP address, user agent, requested URL, timestamp and security event without placing a cookie. This is described in the Privacy Notice. Device storage/access rules and data-protection rules should be assessed separately; moving a tracking event server-side does not automatically remove consent requirements where a client identifier or device information is still accessed.
-
-## 7. Third parties and transfers
-
-A third-party provider may act as our Processor or, for some purposes, an independent Controller. Its use is subject to its contract and privacy information. We identify material providers in the register and in our subprocessor schedule where applicable. Restricted international transfers require an appropriate safeguard and assessment.
-
-## 8. Retention
-
-Each technology should last no longer than necessary for its purpose. Session cookies expire when the session ends. Persistent duration must be stated in the register. Consent evidence may be retained longer than the cookie itself where needed to demonstrate compliance and honour choices.
-
-## 9. Changes
-
-We may update this Notice and the register when technologies or law change. A new optional purpose will not be enabled for a user until any required consent is obtained.
-
-## 10. Contact
-
-Questions or complaints: **privacy@proof.computer** [verify]  
-Privacy Notice: [insert URL]  
-Consent settings: [insert persistent URL or control]
+Questions: **privacy@proof.computer**  
+Privacy Notice: [docs.proof.computer/liskov/legal/privacy-notice](./privacy-notice)
 
 ---
 
-**Release test:** clear browser storage; visit every journey; reject non-essential; confirm no optional requests, identifiers or server-forwarded events; accept categories separately; withdraw; retest; verify embedded content; repeat logged-out/logged-in and across supported browsers/regions.
+MOOSE LABS LTD trading as PROOF · Version 1.0 · effective 1 September 2026 · previous versions are archived by PROOF and available on request from legal@proof.computer.
