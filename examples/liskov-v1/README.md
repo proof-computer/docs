@@ -6,7 +6,7 @@ contract values. Release validation additionally:
 
 - runs the JSON fixture through `slipway-application-policy::validate_manifest`;
 - typechecks the TypeScript fixture against
-  `@proof-computer/liskov-runtime` `v0.3.26`; and
+  `@proof-computer/liskov-runtime` `v0.3.30`; and
 - compares the workflow with the `liskov-github-actions` `v1` contract.
 
 The `v1` workflow reference is intentionally release-gated until the tag

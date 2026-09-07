@@ -11,7 +11,7 @@ Review each data type at the boundary where it is visible.
 | Data or authority | Where it exists | Important boundary |
 | --- | --- | --- |
 | GitHub source | Your repository and GitHub runner | OIDC proves runner identity facts, not source safety. |
-| JavaScript artifact bytes | GitHub runner, IPFS providers/gateways, and processor | The default reusable workflow publishes unencrypted bundles. Encrypted JavaScript payload delivery is release-gated; CID/digest identify bytes but do not make them private. |
+| JavaScript artifact bytes | GitHub runner, IPFS providers/gateways, and processor | The default reusable workflow publishes unencrypted bundles. Encrypted JavaScript payload execution is production-verified but its general release still depends on registered V5 publication; CID/digest alone do not make bytes private. |
 | Cargo rootfs bytes | Liskov object storage and Android-private processor/executor storage | The current image URL is public-by-capability. Bytes are app-private and extracted into distinct execution directories, but a future signed fetch must also authorize cache-backed image release to the requesting job. |
 | Authored manifest | Repository, CLI, and Liskov draft | Contains authority and names, never secret plaintext. |
 | Effective policy | Liskov immutable record and proof surfaces | Server-resolved, digest-bound execution contract. |
@@ -40,9 +40,10 @@ workflow and supported examples use `encryption.mode: none`.
 Encrypted JavaScript delivery is **release-gated v1**. Its public bootstrap and
 ciphertext remain readable on IPFS. The runtime loader uses the existing
 job-bound Lockbox grant to obtain the key, verifies the ciphertext and plaintext
-digests plus authenticated encryption, and then loads the local module. The
-complete released workflow and production run must pass acceptance before this
-is a supported customer path. Managed Lockbox keeps its existing trust boundary:
+digests plus authenticated encryption, and then loads the local module. Actions
+`v1.3.2` with SDK `0.3.30` completed a production encrypted-payload run.
+General customer availability still requires the registered V5 source-publication
+release. Managed Lockbox keeps its existing trust boundary:
 PROOF can access the code key during release; this is not operator-blind or
 zero-knowledge code delivery.
 
@@ -56,7 +57,9 @@ execution. The unresolved boundary is whether the trusted processor may
 re-materialize the
 same cached digest into a different requesting job's sandbox without repeating
 the artifact-entitlement decision. Encrypted JavaScript acceptance does not
-prove this Cargo cache boundary. Neither path is a supported private-code capability today.
+prove this Cargo cache boundary. Cargo private-code delivery remains unproven;
+the JavaScript path retains the
+separate V5 public-release gate.
 
 ## Managed secret detail
 

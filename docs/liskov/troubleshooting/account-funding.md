@@ -73,6 +73,20 @@ A configured Stripe supplier/VAT profile and a deployed Checkout implementation
 also do not change this release boundary. Customer payment starts only after the
 commercial enablement gate and the documented production journey pass.
 
+## Checkout reports a temporary pause
+
+`checkout_admission_disabled` means new card Checkout is paused. The request
+did not create a new payment Session. Previously paid purchases continue to be
+verified; check the selected organization's ledger before attempting another
+purchase. Existing Service Credits remain usable within normal spending limits.
+If a paid purchase is missing, contact support with the organization ID, UTC
+time and receipt reference. Never send card details, credentials or payment links.
+
+`stripe_not_configured`, `public_base_url_not_configured`, or
+`stripe_webhook_not_configured` mean payment configuration is unavailable.
+Use existing Service Credits or contact support. Customers cannot change these
+controls, and the release gate above remains in force.
+
 ## A subscription request reports a conflict
 
 `subscription_intent_conflict` means the request key already identifies a
@@ -97,6 +111,36 @@ the organization ID, request key and UTC time. Do not start another payment or
 trial, or use a new request key, to work around the uncertainty. A trial remains
 spent even when its provider result is uncertain. Never share payment links or
 credentials with the report.
+
+## Subscription change is waiting or paused
+
+`subscription_command_in_progress` means the same request is already being
+processed. Refresh its status instead of starting another request.
+
+`subscription_command_blocked` means an earlier subscription request for the
+organization still has an unresolved outcome. A different request key does not
+bypass that wait. `subscription_payment_action_pending` means an earlier request
+still needs payment or payment authentication. In an enabled billing environment,
+an organization billing admin can use **Continue payment** when it appears in
+the account's subscription section. This retrieves the existing request's payment
+link; opening it does not start another subscription request. A trial's payment
+action remains accessible only to the person who started that trial.
+
+If the link is pending, refresh the subscription status. If it has expired or is
+unavailable, contact support with the organization and request reference. Do not
+create a new subscription request to recover a link. Recovery links are available
+for at most 24 hours from capture, and may expire sooner at the provider. Never
+share the link. Production paid billing remains release-gated.
+
+`subscription_mutations_paused` or `subscription_writer_fenced` means subscription
+changes are temporarily unavailable. Status reads remain available. A paused
+request does not start a new trial; an already admitted trial stays spent.
+
+`subscription_command_rejected` is a recorded refusal. Repeating its key does
+not issue another provider request. Contact support with the organization ID,
+request key, UTC time, and error code before attempting another change.
+
+These statuses do not change the production paid-billing release gate above.
 
 ## Service Credit reads disagree
 

@@ -84,14 +84,31 @@ once with the exact reviewed artifact-version ID.
 ## Encrypted payload cannot start
 
 For the release-gated [encrypted JavaScript path](../build/encrypted-javascript.md),
-`encrypted_code_start_failed` means the loader refused startup. Pause future
-planning, then compare the attested ZIP, plaintext and ciphertext digests,
+`encrypted_code_start_failed` means the loader refused startup. SDK `0.3.30`
+also reports `encrypted_code_failure_detail` with a bounded `phase`, including
+`directory`, `module_load` or `application_start`. Exception text, keys,
+plaintext and local paths are omitted. Let an existing one-shot occurrence
+settle, then retire it or pause future launches before retrying.
+Compare the attested ZIP, plaintext and ciphertext digests,
 `encryption-secret-id`, required `LISKOV_CODE_KEY` declaration and configured
 managed key version. The key must arrive through the authenticated Lockbox
 grant; an environment value alone does not prove that delivery.
+
+For `directory`, use Actions `v1.3.2` or later: its bootstrap keeps runtime
+files inside the processor job directory. For `module_load` or `entrypoint`,
+check the self-contained CommonJS bundle and exported `start(runtime)`.
+`application_start` means the verified application itself failed during startup.
 
 A wrong key, modified ciphertext, mismatched descriptor or missing `start(runtime)`
 export must be corrected before another paid attempt. Rebuild and attest when
 artifact bytes change. Never log a key or decrypted module. Loader success
 (`encrypted_code_verified`) needs a separate application outcome and final
 job/spend readback before treating a one-shot run as successful.
+
+`lockbox_response_key_missing` occurs earlier, during runtime bootstrap. It
+identifies the processor's P-256 public key for receiving encrypted grants.
+The managed AES application code key has a separate role: successfully saving
+it does not establish that the processor can receive the grant. Keep the
+Application paused and provide the job ID, runtime failure code and policy
+digest to support. Do not substitute an arbitrary public key or rotate the
+application code key to hide this failure.

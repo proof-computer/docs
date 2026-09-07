@@ -24,8 +24,8 @@ This page is the availability owner. Guides contain only supported recipes.
 | Service Credit balance, reservation, and ledger reads | v1; read-only surfaces are supported for an existing organization (Console Account, Billing & funding, and Ledger; CLI billing/transaction reads) |
 | Plan catalog and plans page | v1 read of the catalog on `/organizations/new/plan`; paid attach, trial start, and production collection remain release-gated |
 | Plan selection and terms acceptance | Release-gated v1; the commercial go-live decision is not complete. Writing a plan id does not activate a paid plan |
-| Stripe USD checkout and Service Credit issuance | Release-gated v1; checkout is disabled for customer use and internal acceptance must not be treated as availability. The prepared contract uses automatic tax and billing/tax-ID collection, creates a Stripe invoice/receipt, and mints only the pre-tax Service Credit face value |
-| Paid subscription activation | Release-gated; a written plan id does not activate a paid plan. Usable only after reconciled Autumn/Stripe payment. Production paid billing is not enabled |
+| Stripe USD checkout and Service Credit issuance | Release-gated v1; checkout is disabled for customer use and internal acceptance must not be treated as availability. The prepared admission control can pause new purchases while preserving signed completion of earlier paid purchases. The prepared contract uses automatic tax and billing/tax-ID collection, creates a Stripe invoice/receipt, and mints only the pre-tax Service Credit face value |
+| Paid subscription activation | Release-gated; a written plan id does not activate a paid plan. Usable only after reconciled Autumn/Stripe payment. Production paid billing is not enabled; recovery of an existing payment action is available only in an enabled billing environment |
 | Curated first-party Marketplace launch | Release-gated v1; limited to internal first-party engineering acceptance |
 | Uptime Prober | Release-gated v1; an internal first-party acceptance fixture, not a supported customer offering |
 | OpenClaw offering | Release-gated v1; no versioned descriptor was present at the reviewed release |
@@ -33,9 +33,9 @@ This page is the availability owner. Guides contain only supported recipes.
 | Manifest V4 repository import/publication | Release-gated v1 |
 | Retained Manifest V5 / Policy V5 exact pair | v1; exact RC `sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10`, with one or two jobs and the retained source/runtime/schedule/spend/configuration/logging surface |
 | Retained V5 GitHub source import | v1; repository, allowed refs, workflow identity, and manifest path are bound to the Application by an organization admin before publication, and every build attests them; `liskov-github-actions` `v1.2.4` contains the exact-bound import (`aa1b83f`) |
-| Reusable GitHub build/pin/OIDC workflow | v1; moving `v1` tag verified at `v1.2.2` |
+| Reusable GitHub build/pin/OIDC workflow | v1; moving `v1` tag verified at `v1.3.2` |
 | Pinned first-party IPFS bundle | v1 |
-| Encrypted JavaScript payload delivery | Release-gated v1; the runtime loader is released as `0.3.29`, but the complete workflow and production key-release path still require acceptance |
+| Encrypted JavaScript payload delivery | Release-gated v1; production execution is verified with Actions `v1.3.2` and SDK `0.3.30`. General availability still requires the registered V5 source-publication release |
 | Private customer code inside Cargo images | Not v1; private source access, TEE execution and encrypted JavaScript do not establish job-authorized Cargo cache reuse |
 | General customer-authored Cargo/runtime image | Internal |
 
@@ -44,7 +44,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Capability | Availability / limit |
 | --- | --- |
 | Node.js background bundle and runtime SDK `0.3.26` | v1 |
-| Managed variables and managed secrets | v1 |
+| Managed variables and managed secrets | v1. V5 customer-secret installation uses runtime-contact `0.10.40` or SDK `0.3.32`; existing artifacts must be rebuilt. |
 | Managed Application logging through Console and `proof liskov application logs`, including live follow and full-history pagination through the CLI; signed diagnostics | v1 |
 | Outbound networking and declared quota | v1 |
 | Liskov-hosted HTTP/SSH ingress | Not v1 |
@@ -72,6 +72,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Organization-gated processor record in Console | v1; your deployment history, runtime contact, operability, and chain-published hardware are visible on every plan; fleet reliability, register liveness, placement assessments, confidence, conflict, and watermark require Enterprise |
 | Proof chain and signed runtime-instance evidence | v1 |
 | Pause/resume future planning | v1 |
+| Re-running a completed `once` Application | Release-gated v1; an explicit re-arm against the Application's current published revision, not a recovery retry — it authorizes one more occurrence and does not promise a launch. The Console's **Run again** control is deployed, but the CLI's `application run` is not contained in a released `@proof-computer/proof-cli-liskov` tag (`0.13.0`, the version this page pins, predates it) and no end-to-end run has been observed, so the path is not supported yet |
 | Supported bounded Action Plan retry | v1 |
 | Safe retirement and immutable receipt | v1 |
 | Force stop/delete bypass | Internal; no public bypass |

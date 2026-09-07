@@ -51,6 +51,18 @@ selected organization. A visible plan or checkout control does not change the
 release classification. If a control is disabled or unavailable, do not seek
 an internal workaround.
 
+Checkout availability is reported by the server. A temporary pause stops new
+card purchases while already-paid purchases continue through verification.
+Existing Service Credits and billing history remain available. A successful
+redirect alone does not prove credit issuance; verify the ledger.
+
+The billing read retains `addFunds.checkoutAvailable` and adds
+`addFunds.checkoutAdmission` with `enabled`, `configured`, `available`, and
+`reason`. Use `proof liskov organization billing ORGANIZATION_ID --json` to inspect these server
+fields. If an older server omits them, that response does not report Checkout
+availability. A displayed balance alone does not prove that purchases are enabled.
+These readbacks do not remove the release gate.
+
 The release-gated Checkout contract treats the amount entered as the pre-tax
 Service Credit face value. Stripe calculates applicable VAT from the customer's
 billing details and shows subtotal, tax, and total before payment. VAT is
