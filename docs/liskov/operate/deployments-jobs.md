@@ -170,6 +170,56 @@ verified runtime contact. Read the evidence label beside the identifier. Use
 an execution link only when a recorded job coordinate is available; otherwise
 use the recorded Acurast number and [diagnostic evidence](./diagnose-retry.md).
 
+## Read the Deployments page
+
+The Application workspace's **Deployments** page lists every recorded deployment
+and every job Liskov still plans to run, with its window, status and Service
+Credits.
+
+### Order
+
+An **Order** control chooses how the list is arranged. It changes the
+presentation only — the same rows, windows and amounts appear either way.
+
+- **Stable job** groups the rows by the job each deployment serves, newest
+  generation first, and shows each job's own verdict. There is no total order
+  across jobs. An Application with one job is shown as a plain list, because a
+  grouping with one member is only overhead.
+- **Time** puts every row in one chronology by the window each deployment was
+  registered for, with a divider at the present moment.
+
+The choice is part of the page's address — `?order=stable` or `?order=time` —
+so a link you share, a reload, and Back and Forward all reproduce what you were
+looking at. An address with no order, or one Liskov does not recognize, opens in
+**Stable job**.
+
+### What a row's status means
+
+- **Serving**, **Ready** and **Request ended** are recorded deployments: Liskov
+  registered a job on Acurast and can name it. The Acurast number opens the
+  deployment on the Acurast explorer.
+- **Submitted** is registered but not yet claimed. Until a processor claims it
+  the row says *no processor claimed* rather than naming one.
+- **Planned** is a job Liskov intends to run and has not registered yet. A
+  planned row has no Acurast number, no processor and no charge, and it is not
+  clickable — there is no execution to open. Its **due** time is when Liskov
+  next intends to act, which is not the same as a registered window.
+- **Blocked** means Liskov tried and could not place the job. The refusals and
+  the decision you owe are lifted out of the table into an attention block above
+  it, because a row with every deployment column empty is not a deployment.
+- **Unknown** or *Evidence unavailable* means Liskov could not read the record.
+  It is not the same as *not submitted*, *not claimed*, or *nothing there*, and
+  no amount is shown for it. A missing amount is never a zero amount.
+
+### How much history the page holds
+
+The page loads a bounded amount of history so that an Application with many
+jobs stays readable: it trims generations rather than dropping jobs, and each
+group says how many rows it is showing out of how many it has loaded. **Show
+loaded history** expands one group; **Load more** fetches the next page from the
+server. Expanded groups and loaded pages survive switching Order and reloading
+the page.
+
 ## Successors and overlaps
 
 Each logical slot has its own sequence of generations.
