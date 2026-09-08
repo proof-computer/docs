@@ -5,7 +5,7 @@ description: The providers PROOF uses to process customer personal data, where t
 
 # Liskov Subprocessor and International Transfer Schedule
 
-**Version 1.0 — effective 1 September 2026**
+**Version 1.1 — effective 8 September 2026**
 
 This Schedule identifies the third parties engaged by MOOSE LABS LTD trading as PROOF (**PROOF**) to process Customer Personal Data on a customer’s behalf under the Liskov Data Processing Addendum, and the recipients that process limited personal data for their own purposes.
 
@@ -24,6 +24,7 @@ PROOF’s own systems run in the United Kingdom (London). The primary database, 
 | Not Just Tickets Ltd, trading as Plain (United Kingdom, company 12736513) | Customer support conversations sent to support@proof.computer and other PROOF mailboxes | Name, email address, organisation, support content | United Kingdom and European Union | No restricted transfer; Plain Data Processing Addendum |
 | Rebase, Inc., trading as Autumn (United States) | Subscription and entitlement orchestration between Liskov and Stripe | Organisation identifier and organisation name, plan and entitlement state | United States | EU Standard Contractual Clauses and UK Addendum under Autumn’s terms |
 | Functional Software, Inc., trading as Sentry (United States) | Error monitoring for the control plane | Technical error events; configured not to send request bodies, headers, cookies or personal identifiers | European Union (Frankfurt data region) | Data stored in the EU; UK Extension to the EU-US Data Privacy Framework and Sentry Data Processing Addendum for support access |
+| OpenPanel AB (Sweden), Sankt Eriksgatan 100, 113 31 Stockholm | Product analytics for the authenticated Liskov console and CLI | Opaque account and organisation identifiers; plan, seat count and organisation type; closed console, CLI, account, application, team, billing and Runtime SSH event fields; pre-tax revenue and currency; IP address and user agent used to derive approximate location and a salted daily device identifier | Primary analytics data on Hetzner in Germany; encrypted backups on Cloudflare R2 in the European Union | UK adequacy regulations for the EEA; OpenPanel Data Processing Agreement. OpenPanel AI features and session replay are disabled |
 | Tailscale Inc. (Canada) | Private network connectivity for managed runtime SSH sessions | Device identifiers, network addresses and public keys of runtime instances and connecting clients; user identifiers on the PROOF tailnet | Canada and United States | Canada is covered by UK adequacy regulations; Tailscale Data Processing Agreement with the EU Standard Contractual Clauses and UK Addendum |
 | GitHub, Inc. (United States) | Sign-in (OAuth), repository access the customer authorises, and workflow identity for builds | GitHub account identifier, login and profile fields the customer authorises; repository contents the customer connects | United States | UK Extension to the EU-US Data Privacy Framework; GitHub Data Protection Agreement |
 | Vercel Inc. (United States) | Hosting for proof.computer, docs.proof.computer and the Liskov console’s static assets | Request logs (IP address, user agent, URL) | United States and global edge | UK Extension to the EU-US Data Privacy Framework; Vercel Data Processing Addendum |
@@ -55,4 +56,4 @@ Before adding a provider that will process Customer Personal Data, PROOF determi
 
 ---
 
-MOOSE LABS LTD trading as PROOF · Version 1.0 · effective 1 September 2026 · previous versions are archived by PROOF and available on request from legal@proof.computer.
+MOOSE LABS LTD trading as PROOF · Version 1.1 · effective 8 September 2026 · previous versions are archived by PROOF and available on request from legal@proof.computer.
