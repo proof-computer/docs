@@ -6,6 +6,20 @@ draft: true
 
 # Liskov legal suite — change log
 
+## Version 1.1 analytics notices — 8 September 2026
+
+The Privacy Notice, Cookie Notice and Subprocessor Schedule moved to Version
+1.1, effective 8 September 2026, before OpenPanel collection was enabled. The
+change records the default-on, cookieless product analytics used in the
+authenticated Console and CLI, the closed data vocabulary and exclusions,
+organisation-only revenue, legitimate-interests basis and objection route,
+retention, and OpenPanel AB's entity, processing locations and transfer basis.
+
+The owner confirmed on 8 September 2026 that no customer had signed up. No
+existing customer therefore required the Schedule's 15-day new-subprocessor
+notice before this publication. The contractual terms and policies remain
+Version 1.0.
+
 ## Version 1.0 publication — 7 September 2026
 
 The owner answered the 176 publication questions on 7 September 2026 and the

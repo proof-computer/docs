@@ -5,7 +5,7 @@ description: How PROOF uses personal data about the people who use Liskov, our w
 
 # Liskov Privacy Notice
 
-**Version 1.0 — effective 1 September 2026**
+**Version 1.1 — effective 8 September 2026**
 
 This Privacy Notice explains how MOOSE LABS LTD trading as PROOF (**PROOF**, **we**, **us**) uses Personal Data in connection with Liskov, our websites, accounts, support, billing, security, Marketplace and business communications.
 
@@ -58,11 +58,17 @@ Our servers record the IP address, browser identification string, requested URL,
 
 When you launch a Marketplace Item we record the launch in your Workspace as we do for any application. At the date of this Notice all Items are published by PROOF; there are no publisher profiles, reviews, ratings, comments or messages.
 
-### 3.8 Website data
+### 3.8 Product analytics
+
+We use OpenPanel to understand how people use the authenticated Liskov console and command-line tool and whether the service is useful to business customers. We send an opaque account identifier, an opaque organisation identifier, the plan, seat count and organisation type, and a closed event name. Depending on the event, this may include a safe console page or control identifier, a command identifier and CLI version, success or failure, a billing lifecycle change, or pre-tax revenue and currency. We do not send names, email addresses, application or repository names, secrets, free text, command arguments, full URLs, URL queries or fragments, or page contents. Session replay and OpenPanel AI features are disabled.
+
+OpenPanel receives the IP address and browser identification string with the request. It uses them to derive approximate location and a salted daily device identifier; it discards the raw IP address rather than storing it as an event property. The console stores its OpenPanel profile, group, device and session state only in memory while the page is open. It sets no analytics cookie and writes no analytics value to local storage, session storage or IndexedDB. Analytics is enabled by default for this business service. A CLI invocation can be excluded with `--no-analytics`, and you may object to this processing by contacting privacy@proof.computer.
+
+### 3.9 Website data
 
 proof.computer uses Google Analytics only with your consent, as described in the Cookie Notice. docs.proof.computer uses no analytics.
 
-### 3.9 Sensitive data
+### 3.10 Sensitive data
 
 We do not intentionally collect Special Category Data or criminal-offence data. Please do not include it in support messages or free-text fields. We may process limited information about suspected fraud or sanctions exposure where necessary to investigate it, with an appropriate legal condition.
 
@@ -84,6 +90,7 @@ If you provide Personal Data about another person, such as a team member you inv
 | Send service, security and legal notices | contact, account | contract; legal obligation |
 | Send business marketing | contact, organisation | legitimate interests in business marketing, subject to your right to object; consent where the law requires it |
 | Understand how proof.computer is used | analytics identifiers | consent |
+| Understand use of the authenticated Liskov console and CLI, improve the service, and measure business performance | opaque account and organisation identifiers, product events, technical data, billing lifecycle and revenue | legitimate interests in improving and measuring a business service, subject to your right to object |
 | Establish, exercise or defend legal claims, and corporate governance | relevant records | legitimate interests; legal obligation |
 
 Where we rely on legitimate interests, we have assessed the purpose, its necessity and the effect on you. You can ask us about an assessment.
@@ -98,6 +105,7 @@ We use rules to flag unusual sign-ins, payment failures and suspected abuse. A f
 - the providers that host and operate Liskov and handle email, support, error monitoring and networking, each listed with its location and transfer basis in the Subprocessor and International Transfer Schedule;
 - Stripe, which processes payments and tax as an independent controller for its own purposes;
 - GitHub, which you use to sign in and whose repositories you may connect;
+- OpenPanel, for product analytics on the authenticated Liskov console and CLI;
 - Google, for analytics on proof.computer with your consent;
 - Telegram, if you configure notifications to a chat you control;
 - professional advisers, auditors and insurers;
@@ -129,6 +137,7 @@ Distributed Workloads are not a data-residency service. The location of an Acura
 | Managed application logs | For the retention period of the log sink you configure, within your plan’s allowance (24 hours by default), then pruned automatically |
 | Request logs and security events | 12 months |
 | Error reports | 90 days |
+| Liskov product analytics | While PROOF’s OpenPanel account remains active; OpenPanel deletes the data within 30 days after the account is terminated |
 | Support conversations | Three years after the conversation closes |
 | Marketplace launch and moderation records | Six years after the matter closes |
 | Cookie consent | In your browser only, for 12 months |
@@ -179,4 +188,4 @@ Postal address: **The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP
 
 ---
 
-MOOSE LABS LTD trading as PROOF · Version 1.0 · effective 1 September 2026 · previous versions are archived by PROOF and available on request from legal@proof.computer.
+MOOSE LABS LTD trading as PROOF · Version 1.1 · effective 8 September 2026 · previous versions are archived by PROOF and available on request from legal@proof.computer.

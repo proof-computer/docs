@@ -120,8 +120,9 @@ const releaseGatedIds = [
   'marketplace/verify',
 ];
 
-// The customer-facing legal suite is published as Version 1.0, effective
-// 1 September 2026 (orchestrator Q-20260904-mm3v). The review artefacts that
+// The contractual suite remains Version 1.0, effective 1 September 2026
+// (orchestrator Q-20260904-mm3v). The three product-analytics notices moved to
+// Version 1.1 on 8 September 2026. The review artefacts that
 // are not customer documents stay `draft: true`, which excludes them from the
 // production build. Keep both lists explicit so adding, publishing or
 // accidentally exposing a legal document changes this check.
@@ -145,6 +146,11 @@ const legalReviewDraftIds = [
   'legal/marketplace-publisher-terms',
 ];
 const legalPublishedVersionLine = 'Version 1.0 — effective 1 September 2026';
+const legalPublishedVersionLines = new Map([
+  ['legal/privacy-notice', 'Version 1.1 — effective 8 September 2026'],
+  ['legal/cookie-notice', 'Version 1.1 — effective 8 September 2026'],
+  ['legal/subprocessors', 'Version 1.1 — effective 8 September 2026'],
+]);
 
 function walk(directory) {
   return readdirSync(directory, {withFileTypes: true}).flatMap((entry) => {
@@ -212,7 +218,7 @@ for (const id of legalReviewDraftIds) {
   check(/3 September 2026/i.test(content), `${id}: legal review page omits the reviewed source date`);
 }
 
-// Published legal pages: no draft flag, the 1.0 version line, no review
+// Published legal pages: no draft flag, their declared version line, no review
 // residue, no factual placeholders, and no customer crypto-payment rail
 // (ADR-0011: Stripe fiat only for v1).
 for (const id of legalPublishedIds) {
@@ -225,7 +231,8 @@ for (const id of legalPublishedIds) {
   const frontmatterEnd = content.indexOf('\n---\n', 4);
   const frontmatter = frontmatterEnd > 4 ? content.slice(4, frontmatterEnd) : '';
   check(!/^draft: true$/mu.test(frontmatter), `${id}: published legal page is still a draft`);
-  check(content.includes(legalPublishedVersionLine), `${id}: published legal page omits the 1.0 version line`);
+  const expectedVersionLine = legalPublishedVersionLines.get(id) ?? legalPublishedVersionLine;
+  check(content.includes(expectedVersionLine), `${id}: published legal page omits ${expectedVersionLine}`);
   check(!/\[verify\]|\[insert\]|review draft|not in force/i.test(content), `${id}: published legal page retains review residue`);
   check(!/USDC|cryptoasset quote|### [0-9.]+ Cryptoasset payment|accept specified cryptoassets as payment/i.test(content), `${id}: published legal page offers a customer crypto rail`);
   check(!/marketplace-legal@/.test(content), `${id}: published legal page names the retired marketplace-legal mailbox`);

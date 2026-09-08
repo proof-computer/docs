@@ -7,7 +7,11 @@ description: The terms, policies and notices that govern business use of Liskov.
 
 Liskov is supplied by **MOOSE LABS LTD**, company number **11435949**, a private limited company registered in England and Wales with its registered office at **The Old Bakery, Camden Road, Tunbridge Wells, England, TN1 2QP**, VAT registration **GB311456142**, trading as **PROOF**. Contact: **hello@proof.computer**.
 
-These documents govern business use of Liskov. They are **Version 1.0 — effective 1 September 2026**. Liskov is a business service and is not available for consumer use.
+These documents govern business use of Liskov. The contractual terms and
+policies remain **Version 1.0 — effective 1 September 2026**. The Privacy
+Notice, Cookie Notice and Subprocessor Schedule state their later version and
+effective date on the page. Liskov is a business service and is not available
+for consumer use.
 
 ## The documents
 
