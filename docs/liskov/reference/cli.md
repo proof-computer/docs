@@ -5,14 +5,14 @@ description: Public proof liskov v1 command tree, confirmations, machine-readabl
 
 # CLI
 
-The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.13.0` and
+The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.14.0` and
 requires Node.js 22 or later. All commands begin with `proof liskov`. This
 release includes the retained V5 authoring, policy, and `application
 source-binding` verbs listed below.
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov@0.13.0
+proof plugins install @proof-computer/proof-cli-liskov@0.14.0
 proof liskov --help
 ```
 
@@ -167,8 +167,15 @@ remain required. See the release-gated
 | `application resume APP_REF --reason TEXT` | Read preview; add `--yes` to resume future planning. |
 | `application retire APP_REF` | Read retirement preview/state; add `--reason` and `--yes` to start. |
 | `application retire cancel APP_REF` | Read cancellation preview; add `--yes` to cancel while allowed. If the retirement finalized first, this **exits zero** and prints the immutable receipt: the outcome was reached, so there is nothing left to cancel. |
+| `application hold release APP_REF` | Read the held job and what releasing it would do; add `--reason TEXT --yes` to request the release. `--hold-id ID` names the job when more than one is held. Available in `0.14.0` and later. |
 
 Pause and retirement do not force-stop existing Acurast jobs.
+
+Releasing a hold is not the same as resuming a paused Application. A hold stops
+one job's next generation after Liskov proved that job's own code failed; a
+release lets that job launch again **under the policy version you already
+published**. Asking twice is one release, not two. See
+[Diagnose and retry](../operate/diagnose-retry.md#5-release-a-held-job).
 
 ## Runtime SSH
 
