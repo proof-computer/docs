@@ -10,6 +10,9 @@ const workflowPath = join(root, 'examples', 'liskov-v1', 'liskov.yml');
 const cliContractPath = join(root, 'fixtures', 'liskov-cli-contract.json');
 const v5ReleaseContractPath = join(root, 'fixtures', 'liskov-v5-release-contract.json');
 const v5ManifestPath = join(root, 'fixtures', 'liskov-v5-retained-manifest.json');
+const v5StarterRoot = join(root, 'examples', 'liskov-v1', 'retained-v5-starter');
+const v5StarterManifestPath = join(v5StarterRoot, '.liskov', 'application-manifest.json');
+const v5StarterWorkflowPath = join(v5StarterRoot, 'liskov.yml');
 const errors = [];
 
 const baseExpectedIds = [
@@ -608,6 +611,11 @@ for (const oldPath of [
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
 const cliContract = JSON.parse(readFileSync(cliContractPath, 'utf8'));
 const v5Manifest = JSON.parse(readFileSync(v5ManifestPath, 'utf8'));
+const v5StarterManifest = JSON.parse(readFileSync(v5StarterManifestPath, 'utf8'));
+const v5StarterPackage = JSON.parse(readFileSync(join(v5StarterRoot, 'package.json'), 'utf8'));
+const v5StarterLock = readFileSync(join(v5StarterRoot, 'pnpm-lock.yaml'), 'utf8');
+const v5StarterSource = readFileSync(join(v5StarterRoot, 'src', 'index.ts'), 'utf8').trim();
+const v5StarterReadme = readFileSync(join(v5StarterRoot, 'README.md'), 'utf8');
 const v5GuidePage = readFileSync(join(docsRoot, 'build', 'manifest-v5.md'), 'utf8');
 const v5ReferencePage = readFileSync(join(docsRoot, 'reference', 'manifest-v5.md'), 'utf8');
 const v5SshPage = readFileSync(join(docsRoot, 'operate', 'runtime-ssh-v5.md'), 'utf8');
@@ -680,11 +688,61 @@ check(v5Manifest.schema === 'proof.liskov.application-manifest', 'V5 fixture: wr
 check(v5Manifest.schemaVersion === 5, 'V5 fixture: wrong schemaVersion');
 check(v5Manifest.release?.mode === 'source', 'V5 fixture: first use must use source release');
 check(v5Manifest.runtime?.kind === 'javascript', 'V5 fixture: first use must use JavaScript');
+check(v5Manifest.runtime?.engine === 'nodejs', 'V5 fixture: first use must select the Node.js engine');
 check(v5Manifest.execution?.mode === 'once', 'V5 fixture: first use must be one-shot');
+check(v5Manifest.deployment?.schedule?.duration === '60s', 'V5 fixture: schedule must meet the provider 60-second minimum');
 check(v5Manifest.deployment?.spend?.unit === 'service_credit_micros', 'V5 fixture: self-custody spend leaked into first use');
 check(v5Manifest.state?.mode === 'off', 'V5 fixture: retained state must be explicitly off');
+check(
+  JSON.stringify(v5StarterManifest) === JSON.stringify(v5Manifest),
+  'V5 starter: manifest differs from the retained fixture',
+);
+check(v5StarterPackage.packageManager === 'pnpm@10.33.0', 'V5 starter: pnpm version is not pinned');
+check(
+  v5StarterPackage.dependencies?.['@proof-computer/liskov-runtime'] === 'github:proof-computer/liskov-runtime-js#v0.3.32',
+  'V5 starter: runtime SDK is not pinned to released v0.3.32',
+);
+for (const script of ['typecheck', 'test', 'build']) {
+  check(typeof v5StarterPackage.scripts?.[script] === 'string', `V5 starter: missing ${script} script`);
+}
+for (const token of [
+  'f8cd0b02c7b8dd32bdddb1026ca57dae64c0ed32',
+  "specifier: github:proof-computer/liskov-runtime-js#v0.3.32",
+]) {
+  check(v5StarterLock.includes(token), `V5 starter: lock file omits ${token}`);
+}
+for (const token of [
+  'bootstrapLiskovRuntime',
+  "logging: {mode: 'required'}",
+  "secrets: {mode: 'off'}",
+  "runtime.log('starter.fetch.completed'",
+]) {
+  check(v5StarterSource.includes(token), `V5 starter: source omits ${token}`);
+}
+check(v5StarterReadme.includes('does not claim ingress, durable state, a custom image'), 'V5 starter: README expands an unsupported boundary');
 for (const deferredRoot of ['ingress', 'integrations', 'cohort', 'hooks']) {
   check(!(deferredRoot in v5Manifest), `V5 fixture: deferred root present: ${deferredRoot}`);
+}
+const firstV5SourceBlock = /```ts title="src\/index\.ts"\n([\s\S]*?)\n```/u.exec(v5GuidePage);
+check(firstV5SourceBlock !== null, 'V5 guide: missing checked starter source block');
+if (firstV5SourceBlock !== null) {
+  check(firstV5SourceBlock[1].trim() === v5StarterSource, 'V5 guide: starter source differs from the checked fixture');
+}
+const createCommandIndex = v5GuidePage.indexOf('proof liskov application create hello-liskov');
+const bindingCommandIndex = v5GuidePage.indexOf('proof liskov application source-binding set hello-liskov');
+const workflowIndex = v5GuidePage.indexOf('uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v1');
+check(
+  createCommandIndex >= 0 && createCommandIndex < bindingCommandIndex && bindingCommandIndex < workflowIndex,
+  'V5 guide: Application create and source binding must precede the first dependent workflow build',
+);
+for (const command of [
+  'pnpm install --frozen-lockfile',
+  'pnpm typecheck',
+  'pnpm test',
+  'pnpm build',
+  'test -s dist/bundle.js',
+]) {
+  check(v5GuidePage.includes(command), `V5 guide: local starter verification omits ${command}`);
 }
 const firstV5ManifestBlock = /```json title="\.liskov\/application-manifest\.json"\n([\s\S]*?)\n```/u.exec(v5GuidePage);
 check(firstV5ManifestBlock !== null, 'V5 guide: missing checked first-manifest block');
@@ -1096,6 +1154,19 @@ check(workflow.includes('id-token: write'), 'workflow fixture: missing OIDC perm
 check(workflow.includes('contents: read'), 'workflow fixture: missing contents permission');
 check(workflow.includes('authored-manifest-path:'), 'workflow fixture: missing manifest input');
 check(!/yes-spend|bearer|LISKOV_TOKEN/i.test(workflow), 'workflow fixture: contains a spend or bearer credential');
+
+const v5StarterWorkflow = readFileSync(v5StarterWorkflowPath, 'utf8');
+for (const token of [
+  'acurast-app.yml@v1',
+  'id-token: write',
+  'contents: read',
+  'app-id: hello-liskov',
+  'entrypoint: bundle.js',
+  'authored-manifest-path: .liskov/application-manifest.json',
+]) {
+  check(v5StarterWorkflow.includes(token), `V5 starter workflow: missing ${token}`);
+}
+check(!/yes-spend|bearer|LISKOV_TOKEN/i.test(v5StarterWorkflow), 'V5 starter workflow: contains a spend or bearer credential');
 
 for (const [fileId, required] of Object.entries({
   'get-started/choose-your-path': ['Marketplace', 'GitHub', 'Release-gated v1', 'customer add-funds'],
