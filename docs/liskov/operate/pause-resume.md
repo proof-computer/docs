@@ -54,3 +54,8 @@ runtime contact.
 
 Pause is reversible. If you want permanent removal, use
 [Retire an Application](./retire.md).
+
+A **held** job is not a paused Application. Pause is your decision and stops all
+new planning; a hold is Liskov's, applies to one job, and follows evidence that
+that job's own code failed. Resume does not clear a hold. See
+[Release a held job](./diagnose-retry.md#5-release-a-held-job).

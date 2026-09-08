@@ -74,6 +74,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Pause/resume future planning | v1 |
 | Re-running a completed `once` Application | Release-gated v1; an explicit re-arm against the Application's current published revision, not a recovery retry — it authorizes one more occurrence and does not promise a launch. The Console's **Run again** control is deployed, but the CLI's `application run` is not contained in a released `@proof-computer/proof-cli-liskov` tag (`0.13.0`, the version this page pins, predates it) and no end-to-end run has been observed, so the path is not supported yet |
 | Supported bounded Action Plan retry | v1 |
+| Release a job held on proven application failure, without publishing a new policy version | v1; a hold is taken only on the job's own signed fatal or an explicit `debug.holdOnFailure`, and a release re-admits that job under the version already published |
 | Safe retirement and immutable receipt | v1 |
 | Force stop/delete bypass | Internal; no public bypass |
 | Managed custody | v1 default |

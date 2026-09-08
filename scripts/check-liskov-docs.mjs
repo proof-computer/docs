@@ -829,7 +829,7 @@ check(encryptedRecipe.includes(encryptedExample), 'encrypted code module differs
 
 const cliPage = readFileSync(join(docsRoot, 'reference', 'cli.md'), 'utf8');
 check(cliContract.package === '@proof-computer/proof-cli-liskov', 'CLI fixture: wrong package');
-check(cliContract.version === '0.13.0', 'CLI fixture: wrong released version');
+check(cliContract.version === '0.14.0', 'CLI fixture: wrong released version');
 check(cliContract.command === 'liskov:application:logs', 'CLI fixture: missing logs command');
 check(cliContract.flags?.limit?.minimum === 1 && cliContract.flags?.limit?.maximum === 500, 'CLI fixture: wrong log limit bounds');
 check(

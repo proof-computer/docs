@@ -32,7 +32,7 @@
   "consumers": {
     "cli": {
       "package": "@proof-computer/proof-cli-liskov",
-      "packageVersion": "0.13.0",
+      "packageVersion": "0.14.0",
       "sourceCommit": "e135604ed2f6c59ffc737fce5fe08eaa19d77d0c",
       "releasedRefContainingCommit": "v0.13.0",
       "releasedVerbs": {
