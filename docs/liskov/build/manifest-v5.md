@@ -25,7 +25,49 @@ lifecycle hooks, durable state beyond `off`, placement diversity rules,
 non-managed SSH providers, or self-custody spend. Those concepts require a
 future policy version; adding their old draft spellings makes V5 fail closed.
 
-## 1. Start with one bounded job
+## 1. Build the checked once-mode starter
+
+The checked
+[retained V5 starter fixture](https://github.com/proof-computer/docs/tree/main/examples/liskov-v1/retained-v5-starter)
+is a complete repository root: source, tests, package and lock file, TypeScript
+configuration, manifest, and reusable-workflow caller. It makes one `GET`
+request to `https://example.com/` and records only the host, success flag, and
+HTTP status through managed logs. It sends no customer data and needs no
+variable or secret.
+
+Its entrypoint uses `@proof-computer/liskov-runtime` `v0.3.32`:
+
+```ts title="src/index.ts"
+import {bootstrapLiskovRuntime} from '@proof-computer/liskov-runtime';
+
+import {checkExampleDotCom} from './check.js';
+
+const runtime = await bootstrapLiskovRuntime({
+  component: 'hello-liskov',
+  logging: {mode: 'required'},
+  secrets: {mode: 'off'},
+});
+
+try {
+  await runtime.whenReady();
+  const result = await checkExampleDotCom();
+  await runtime.log('starter.fetch.completed', result, {
+    severity: 'info',
+    labels: {component: 'hello-liskov'},
+  });
+} catch (error) {
+  await runtime.diagnostics.fatal({
+    kind: 'explicit',
+    code: 'starter_fetch_failed',
+    component: 'hello-liskov',
+    error,
+  });
+  throw error;
+} finally {
+  await runtime.flush();
+  runtime.stop();
+}
+```
 
 Commit this JSON document as `.liskov/application-manifest.json`:
 
@@ -33,15 +75,16 @@ Commit this JSON document as `.liskov/application-manifest.json`:
 {
   "schema": "proof.liskov.application-manifest",
   "schemaVersion": 5,
-  "applicationId": "fetch",
+  "applicationId": "hello-liskov",
   "metadata": {
-    "description": "Fetch data from one API and send a result to another."
+    "description": "Fetch example.com and record the HTTP result in managed logs."
   },
   "release": {
     "mode": "source"
   },
   "runtime": {
     "kind": "javascript",
+    "engine": "nodejs",
     "entrypoint": {
       "file": "bundle.js"
     }
@@ -51,7 +94,7 @@ Commit this JSON document as `.liskov/application-manifest.json`:
   },
   "deployment": {
     "schedule": {
-      "duration": "30s"
+      "duration": "60s"
     },
     "spend": {
       "unit": "service_credit_micros",
@@ -73,7 +116,18 @@ Commit this JSON document as `.liskov/application-manifest.json`:
 state explicit. Unknown fields, duplicate JSON/YAML keys, YAML anchors, aliases,
 merge keys, tags, and multiple YAML documents are rejected.
 
-Validate locally without creating or publishing anything:
+From a clean checkout, install the exact lock, test, and build before creating
+or publishing anything:
+
+```bash
+pnpm install --frozen-lockfile
+pnpm typecheck
+pnpm test
+pnpm build
+test -s dist/bundle.js
+```
+
+Then validate the manifest locally:
 
 ```bash
 proof liskov application manifest validate \
@@ -81,10 +135,14 @@ proof liskov application manifest validate \
   --json
 ```
 
-Use `@proof-computer/proof-cli-liskov` `0.9.0` or later. It contains source
-commit `e135604ed2f6c59ffc737fce5fe08eaa19d77d0c`; the earlier `v0.7.0` tag does
-not. The `application source-binding` verbs in step 2 ship in the release
-recorded by the V5 promotion packet.
+Use `@proof-computer/proof-cli-liskov` `0.14.0`. Its released tag contains
+source commit `e135604ed2f6c59ffc737fce5fe08eaa19d77d0c`; the earlier `v0.7.0` tag does
+not. The `application source-binding` verbs in step 2 are included.
+
+The 60-second schedule is deliberate. The Manifest V5 schema can parse shorter
+durations, but the Acurast marketplace refuses a job registration below its
+60-second provider minimum. Local schema validation alone does not prove that
+a schedule can launch.
 
 ## 2. Create the Application and bind its exact GitHub source
 
@@ -97,7 +155,7 @@ Create the Application from identity alone, naming the repository that holds
 the document. Creation writes no draft and spends nothing:
 
 ```bash
-proof liskov application create fetch \
+proof liskov application create hello-liskov \
   --repository OWNER/REPO \
   --json
 ```
@@ -108,7 +166,7 @@ is revision `1`; a later change must name the revision it expects, and is
 refused if another change landed first:
 
 ```bash
-proof liskov application source-binding set fetch \
+proof liskov application source-binding set hello-liskov \
   --repository OWNER/REPO \
   --allowed-ref refs/heads/main \
   --workflow-identity OWNER/REPO/.github/workflows/liskov.yml@refs/heads/main \
@@ -121,6 +179,10 @@ proof liskov application source-binding set fetch \
 revision, and its revocation epoch; `application source-binding revoke`
 withdraws it. A publication whose ref is outside `allowedRefs`, whose workflow
 identity differs, or whose manifest path differs is refused.
+
+Run Application creation and source binding before the first push to `main`
+that contains this workflow. The workflow's first dependent build must see the
+existing binding; a successful local build does not create one.
 
 Then let the reusable workflow build, pin, and attest the document on every
 push to the bound ref. Its `app-id`, repository, workflow path, and
@@ -144,7 +206,7 @@ jobs:
   artifact:
     uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v1
     with:
-      app-id: fetch
+      app-id: hello-liskov
       working-directory: .
       entrypoint: bundle.js
       authored-manifest-path: .liskov/application-manifest.json
@@ -162,7 +224,7 @@ Publish the exact document the run attested. Every value must match what was
 bound and attested, or the publication is refused before anything is spent:
 
 ```bash
-proof liskov application policy publish fetch \
+proof liskov application policy publish hello-liskov \
   --file .liskov/application-manifest.json \
   --artifact-digest sha256:ARTIFACT_DIGEST_FROM_THE_RUN \
   --source-commit COMMIT_THE_RUN_ATTESTED \
@@ -172,8 +234,8 @@ proof liskov application policy publish fetch \
   --revocation-epoch 0 \
   --expected-pointer-version 0 \
   --yes --json
-proof liskov application policy explain fetch --json
-proof liskov application status fetch --json
+proof liskov application policy explain hello-liskov --json
+proof liskov application status hello-liskov --json
 ```
 
 Publishing is the mutation: it commits an immutable effective policy and

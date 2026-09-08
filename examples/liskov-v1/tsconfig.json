@@ -12,6 +12,8 @@
   },
   "include": [
     "runtime-entrypoint.mts",
-    "encrypted-module.mts"
+    "encrypted-module.mts",
+    "retained-v5-starter/src/**/*.ts",
+    "retained-v5-starter/test/**/*.ts"
   ]
 }
