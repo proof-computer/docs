@@ -69,6 +69,9 @@ This page is the availability owner. Guides contain only supported recipes.
 | Capability | Availability |
 | --- | --- |
 | Canonical posture, Action Plan, deployment/job timeline | v1 |
+| Console Coverage and Executions convergence strip | v1; `proof.liskov.execution-convergence.v1` on production Console `96e3f0638d948b24b516ed7713761784ad62c80f` against API `2db522130b314a044f7c50ee530c610d32868b4e`. Intended capacity is distinct from remaining charges. Quiet is not stalled. |
+| CLI execution-convergence sibling on `application execution show` | Release-gated v1; not present in documented `@proof-computer/proof-cli-liskov` `0.14.0` nor npm `0.15.0` (`6cc262d4d73bab607cc8326dece7f3094ed2731d`). Source `150b7c96d0caa23e757222dd1eb0288db48a368d` is not a released package. |
+| Desired-execution candidate writer selection | Internal; incumbent remains selected until a later authorized activation |
 | Organization-gated processor record in Console | v1; your deployment history, runtime contact, operability, and chain-published hardware are visible on every plan; fleet reliability, register liveness, placement assessments, confidence, conflict, and watermark require Enterprise |
 | Proof chain and signed runtime-instance evidence | v1 |
 | Pause/resume future planning | v1 |

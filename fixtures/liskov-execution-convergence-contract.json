@@ -1,0 +1,47 @@
+{
+  "schema": "proof.liskov.docs-execution-convergence-contract.v1",
+  "verifiedAt": "2026-09-12",
+  "envelope": {
+    "schema": "proof.liskov.execution-convergence.v1",
+    "budgetBytes": 49152,
+    "path": "/api/applications/:ref/policy?view=convergence"
+  },
+  "progress": ["quiet", "overdue", "in_flight", "ended_unsettled", "unknown"],
+  "completeness": ["complete", "incomplete", "stale", "unknown"],
+  "customerStates": [
+    "permission withheld",
+    "pending launch",
+    "unknown submission",
+    "ended/unsettled",
+    "complete",
+    "partial history",
+    "selected versus proposed"
+  ],
+  "owners": {
+    "api": {
+      "repo": "liskov-rs",
+      "commit": "2db522130b314a044f7c50ee530c610d32868b4e",
+      "pr": 819
+    },
+    "console": {
+      "repo": "liskov-ui",
+      "commit": "96e3f0638d948b24b516ed7713761784ad62c80f",
+      "head": "fe6578cc9d153184af4af6a1f330ace79d02d6a3",
+      "pr": 113,
+      "production": true
+    },
+    "cli": {
+      "repo": "proof-cli-liskov",
+      "commit": "150b7c96d0caa23e757222dd1eb0288db48a368d",
+      "head": "b6d88f32854014e063267585cb056c2284e600eb",
+      "pr": 46,
+      "documentedPackage": "@proof-computer/proof-cli-liskov@0.14.0",
+      "npmLatest": "0.15.0",
+      "npmGitHead": "6cc262d4d73bab607cc8326dece7f3094ed2731d",
+      "npmContainsCommit": false
+    }
+  },
+  "writerActivationAuthorized": false,
+  "actionPlanRoutesToCoverage": true,
+  "newCustomerMutation": false
+}

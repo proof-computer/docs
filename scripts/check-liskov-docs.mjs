@@ -9,6 +9,7 @@ const manifestPath = join(root, 'examples', 'liskov-v1', 'application-manifest.j
 const workflowPath = join(root, 'examples', 'liskov-v1', 'liskov.yml');
 const cliContractPath = join(root, 'fixtures', 'liskov-cli-contract.json');
 const v5ReleaseContractPath = join(root, 'fixtures', 'liskov-v5-release-contract.json');
+const executionConvergenceContractPath = join(root, 'fixtures', 'liskov-execution-convergence-contract.json');
 const v5ManifestPath = join(root, 'fixtures', 'liskov-v5-retained-manifest.json');
 const v5StarterRoot = join(root, 'examples', 'liskov-v1', 'retained-v5-starter');
 const v5StarterManifestPath = join(v5StarterRoot, '.liskov', 'application-manifest.json');
@@ -82,6 +83,7 @@ const baseExpectedIds = [
   'troubleshooting/account-funding',
   'troubleshooting/build-publish',
   'troubleshooting/deployment',
+  'troubleshooting/execution-coverage',
   'troubleshooting/config-bootstrap',
   'troubleshooting/logs',
   'troubleshooting/billing-retirement',
@@ -908,6 +910,61 @@ check(
   'CLI fixture: wrong request-scoped organization selector contract',
 );
 check(cliPage.includes(`\`${cliContract.package}\` \`${cliContract.version}\``), 'CLI page omits the fixture package version');
+
+const executionConvergenceContract = JSON.parse(readFileSync(executionConvergenceContractPath, 'utf8'));
+check(
+  executionConvergenceContract.schema === 'proof.liskov.docs-execution-convergence-contract.v1',
+  'execution-convergence contract: wrong schema',
+);
+check(
+  executionConvergenceContract.envelope?.schema === 'proof.liskov.execution-convergence.v1',
+  'execution-convergence contract: wrong envelope schema',
+);
+check(
+  executionConvergenceContract.envelope?.budgetBytes === 49152,
+  'execution-convergence contract: wrong budget',
+);
+check(
+  executionConvergenceContract.owners?.console?.commit === '96e3f0638d948b24b516ed7713761784ad62c80f',
+  'execution-convergence contract: wrong Console commit',
+);
+check(
+  executionConvergenceContract.owners?.api?.commit === '2db522130b314a044f7c50ee530c610d32868b4e',
+  'execution-convergence contract: wrong API commit',
+);
+check(
+  executionConvergenceContract.owners?.cli?.commit === '150b7c96d0caa23e757222dd1eb0288db48a368d',
+  'execution-convergence contract: wrong CLI commit',
+);
+check(
+  executionConvergenceContract.owners?.cli?.npmContainsCommit === false,
+  'execution-convergence contract: CLI source must not be claimed as an npm release',
+);
+check(
+  executionConvergenceContract.writerActivationAuthorized === false,
+  'execution-convergence contract: writer activation must stay unauthorized',
+);
+check(
+  executionConvergenceContract.actionPlanRoutesToCoverage === true
+    && executionConvergenceContract.newCustomerMutation === false,
+  'execution-convergence contract: Action Plan must keep Coverage routing with no new mutation',
+);
+check(
+  /\| Console Coverage and Executions convergence strip \| v1;/.test(capabilitiesPage),
+  'capability matrix omits the released Console convergence strip',
+);
+check(
+  /\| CLI execution-convergence sibling on `application execution show` \| Release-gated v1;/.test(capabilitiesPage),
+  'capability matrix does not gate the unreleased CLI convergence sibling',
+);
+check(
+  /\| Desired-execution candidate writer selection \| Internal; incumbent remains selected/.test(capabilitiesPage),
+  'capability matrix omits the incumbent writer boundary',
+);
+check(
+  cliPage.includes('150b7c96d0caa23e757222dd1eb0288db48a368d'),
+  'CLI reference omits the unreleased convergence source commit',
+);
 for (const token of ['application logs APP_REF', '--limit', '--deployment', '--job', 'runtime-ssh', '--json', '--follow', '--from-start', '--event', '--ndjson']) {
   check(cliPage.includes(token), `CLI page omits managed logging contract token: ${token}`);
 }
@@ -1185,6 +1242,19 @@ for (const [fileId, required] of Object.entries({
   'operate/proof-chain': ['GitHub OIDC', 'policy digest', 'runtime instance'],
   'operate/processors': ['your org', 'whole fleet', 'Enterprise', 'storageBytes', 'read-only', 'not-found', 'Redaction and missing data are not the same state'],
   'troubleshooting/deployment': ['Normal waiting', 'Needs action', 'decision-id', 'processorAtMatchCap', 'authoringFault'],
+  'troubleshooting/execution-coverage': [
+    'permission withheld',
+    'pending launch',
+    'unknown submission',
+    'ended/unsettled',
+    'partial history',
+    'selected versus proposed',
+    'Quiet is not stalled',
+    '96e3f0638d948b24b516ed7713761784ad62c80f',
+    '2db522130b314a044f7c50ee530c610d32868b4e',
+    '150b7c96d0caa23e757222dd1eb0288db48a368d',
+    'incumbent remains selected',
+  ],
   'configure/variables': ['Manifest V5', '"source": "managed"', '"source": "literal"', '"value": "safe"', 'Empty strings'],
   'configure/secrets': ['"kind": "environment"', '"kind": "file"', '0.10.40', '0.3.32', '0600', 'independently'],
   'troubleshooting/config-bootstrap': ['runtime_bootstrap_customer_secrets_runtime_incompatible', 'runtime_secrets_file_installation'],
@@ -1195,7 +1265,15 @@ for (const [fileId, required] of Object.entries({
   'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Encrypted JavaScript payload delivery', 'Private customer code inside Cargo images'],
   'reference/cli': ['0.13.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key', 'withdrawn-key'],
   'reference/manifest-v4': ['deprecated_manifest_field', 'profileId', 'sinkName', 'future schema', 'durationMs', '60000', 'maxStartDelayMs', '3600000'],
-  'reference/statuses-actions-errors': ['processorAtMatchCap', 'authoringFault', 'acurast_job_registration_duration_below_minimum'],
+  'reference/statuses-actions-errors': [
+    'processorAtMatchCap',
+    'authoringFault',
+    'acurast_job_registration_duration_below_minimum',
+    'quiet',
+    'ended_unsettled',
+    'selected',
+    'proposed',
+  ],
   'configure/logging-diagnostics': ['only logging field needed', 'provisions', 'application logs'],
   'operate/logs-activity': ['application logs', '--deployment', '--job', '--follow', '--from-start', 'Retained log history', 'Free | 24 hours', 'Enterprise | 90 days'],
   'troubleshooting/logs': ['exits zero', 'malformed-response failures'],

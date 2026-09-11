@@ -90,6 +90,12 @@ environment.
 An `APP_REF` can be the accepted Application UID, name, or ID. Prefer the UID
 for automation and support.
 
+Console Coverage already shows the server's execution-convergence document.
+The published plugin versions above do not include a CLI sibling for that
+read. Source `150b7c96d0caa23e757222dd1eb0288db48a368d` is not a released
+package. Use [Intended capacity versus remaining charges](../troubleshooting/execution-coverage.md)
+on Console until a later plugin release contains that commit.
+
 ### Application log flags
 
 ```bash
