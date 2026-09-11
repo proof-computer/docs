@@ -93,6 +93,27 @@ A refusal creates no organization, membership, Terms acceptance, trial, or
 Service Credit grant. If you cannot make the statement because your use is
 personal, family, or household use, do not retry: that use is unsupported.
 
+## Execution coverage
+
+The Console Coverage strip decodes `proof.liskov.execution-convergence.v1`.
+Clients do not derive generation, phase, desired capacity, or finance from
+raw policy or truncated rows. Unknown fields and older servers refuse
+explicitly.
+
+| Token | Meaning |
+| --- | --- |
+| `quiet` | No required work. Not stalled, even when last progress is old. |
+| `in_flight` | Required work is inside its due window (pending launch). |
+| `unknown` | Evidence is missing or unreadable; do not infer a phase. |
+| `ended_unsettled` | Occupancy is vacant and a charge, reserve, or review hold remains. |
+| `overdue` | Required work is past due with no successful progress. `stalled` is true only here. |
+| `complete` / `incomplete` / `stale` / `unknown` | Completeness of the page. Truncation is partial history. |
+| `selected` | Authoritative writer. Follow this next action. |
+| `proposed` | Shadow suggestion. Never authorization. |
+| `execution_convergence_unauthorized` | Permission withheld. |
+
+See [Intended capacity versus remaining charges](../troubleshooting/execution-coverage.md).
+
 ## Manifest and publication diagnostics
 
 | Code | Meaning / response |

@@ -56,6 +56,11 @@ proof liskov application action-plan APPLICATION_ID
 Record a stable decision ID from the CLI plan before acting. Do not translate
 an internal event name into your own retry instruction.
 
+Coverage on Overview and Executions reports intended versus effective capacity
+and remaining charges. It is not a second Action Plan and does not introduce a
+retry. When selected and proposed disagree, the selected line is authoritative.
+See [Intended capacity versus remaining charges](../troubleshooting/execution-coverage.md).
+
 ## Retry only when offered
 
 When the plan exposes retry authority:

@@ -96,6 +96,13 @@ Enterprise page says register data was not reported, treat that as missing data
 rather than an entitlement failure. See
 [Inspect a processor your organization used](../operate/processors.md).
 
+## Intended capacity is not running
+
+Coverage can show pending launch, unknown submission, or overdue required work
+while posture is still **In progress**. That strip is not a second Action Plan.
+See [Intended capacity versus remaining charges](./execution-coverage.md)
+before retrying.
+
 ## Escalate
 
 If the same condition remains past its documented observation window, collect

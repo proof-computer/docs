@@ -119,6 +119,7 @@ const sidebars: SidebarsConfig = {
         'troubleshooting/account-funding',
         'troubleshooting/build-publish',
         'troubleshooting/deployment',
+        'troubleshooting/execution-coverage',
         'troubleshooting/config-bootstrap',
         'troubleshooting/logs',
         'troubleshooting/billing-retirement',

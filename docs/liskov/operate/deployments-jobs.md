@@ -228,6 +228,19 @@ chain-owned until scheduled end. The timeline is authoritative about actual
 overlap or gaps. “Desired replacement” is not proof that a successor was
 submitted, assigned, or ready.
 
+## Coverage versus remaining charges
+
+Application **Overview** Coverage, and the same strip on an execution detail,
+show the server's intended slots, effective members, pending reserves, and
+whether a charge is still open after a run has ended. An ended job with an
+open reserve is not "Coverage below desired." A quiet Application with no
+required work is not stalled.
+
+Follow **selected** when a proposed line disagrees. Coverage does not add a
+retry or re-arm control; typed Action Plan still owns that boundary.
+
+See [Intended capacity versus remaining charges](../troubleshooting/execution-coverage.md).
+
 ## Verify
 
 When investigating, name the exact deployment and job rather than saying “the Application failed.” Compare scheduled end with the latest runtime evidence and Action

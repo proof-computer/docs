@@ -43,3 +43,10 @@ V5 pair are public authoring contracts; unknown future pairs remain opaque.
 These discovery routes do not announce a generally supported public REST API.
 Use Console and the public CLI for customer workflows unless another endpoint
 is explicitly documented as a stable product contract.
+
+Console Coverage reads the adjacent
+`proof.liskov.execution-convergence.v1` document. That is a bounded server
+projection consumed by the existing Overview and Executions views, not a
+general REST surface and not a second Action Plan. The published CLI plugin
+does not yet include the sibling. See
+[Intended capacity versus remaining charges](../troubleshooting/execution-coverage.md).

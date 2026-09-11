@@ -37,6 +37,11 @@ runtime diagnostics. Each attestation proves only its stated boundary.
 
 ## D–J
 
+**Coverage** — The Application Overview and Executions strip that reports the
+server's intended slots, effective members, pending work, and remaining
+charges. It is not a second Action Plan. An ended job with an open charge is
+not missing capacity.
+
 **deployment** — Liskov's recorded attempt or generation for realizing an
 effective policy. A deployment can create one or more external facts over its
 lifetime; v1 supports one stable job slot.

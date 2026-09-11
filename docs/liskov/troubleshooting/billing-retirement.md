@@ -16,6 +16,13 @@ internal funding endpoint. The customer does not fund a crypto wallet.
 A balance change does not necessarily retry a blocked deployment. Return to
 the Action Plan.
 
+## The run ended and a charge is still open
+
+Coverage can report **ended-unsettled** when occupancy is vacant and a reserve,
+review-pending hold, or older liability remains. That is remaining money, not
+missing capacity. Do not relaunch to close it. See
+[Intended capacity versus remaining charges](./execution-coverage.md).
+
 ## Reserve remains open
 
 Match the reserve to Application UID, deployment, job, and current execution

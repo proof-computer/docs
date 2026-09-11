@@ -14,6 +14,7 @@ Choose the symptom you can observe:
 - [Sign-in, organization, and funding](./account-funding.md)
 - [Build, attestation, import, and publication](./build-publish.md)
 - [Deployment waiting or needs action](./deployment.md)
+- [Intended capacity versus remaining charges](./execution-coverage.md)
 - [Variables, secrets, and runtime bootstrap](./config-bootstrap.md)
 - [Logs and diagnostics](./logs.md)
 - [Runtime SSH refused or not connecting](../operate/runtime-ssh.md#when-something-is-wrong)

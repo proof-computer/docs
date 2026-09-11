@@ -24,3 +24,6 @@ Plan tells you when Liskov needs a decision or new input.
 
 If you are unsure whether a wait is normal, begin with
 [Deployment waiting or needs action](../troubleshooting/deployment.md).
+Coverage on Overview and Executions reports intended versus effective
+capacity and remaining charges; it is not a second Action Plan. See
+[Intended capacity versus remaining charges](../troubleshooting/execution-coverage.md).
