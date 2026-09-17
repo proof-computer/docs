@@ -66,10 +66,11 @@ processor-market reality, or retirement.
 
 ## 5. Release a held job
 
-A job is **Held** only when Liskov has evidence that your own code failed: a
-signed runtime fatal from the job, or a crash under an explicit
-`debug.holdOnFailure`. A processor going quiet, a matching failure, or a chain
-delay is not a hold — those keep recovering on their own.
+A job is **Held** after proof-standard signed failure evidence or an explicit
+`debug.holdOnFailure`. The exact stage matters. `runtime.fatal.bootstrap`
+happens before workload code starts; it does not prove that the workload,
+artifact, or policy changed. Application-stage fatals happen after bootstrap.
+A processor going quiet, a matching failure, or a chain delay is not a hold.
 
 A hold stops that one job's next generation. It does not stop the money already
 committed: the held generation still closes out and releases its reserve.
@@ -79,6 +80,11 @@ can look healthy while running at half the capacity you asked for. The Console's
 coverage view marks the held job and names that shortfall. From the CLI, the
 release preview below is the read: it reports the held job, when it was held,
 and the evidence digest, and it changes nothing.
+
+When more than one slot is held, the organization Action Plan shows each slot
+once and binds each Release control to that hold ID. A new bootstrap hold may
+also clear automatically if the same stable member and exact policy later
+reports signed Ready. Contact or completed accounting alone is insufficient.
 
 You have two ways back, and they are equivalent authorities:
 

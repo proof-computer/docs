@@ -44,13 +44,23 @@ Unknown active detail maps to `in_progress`/`unknown_active_state`, not `ready`.
 ## Action Plan vocabulary
 
 The Console **organization Action Plan** lists only Holds: work Liskov has
-stopped on and will not resolve without you. Causes are `intent` (you stopped
-it), `funds` (authorised cap), and `app_fault` (workload, artifact, or policy
-version). `platform` never appears as a customer decision. A job Liskov is
-still retrying is withheld; the page says so.
+stopped on. Causes are `intent` (you stopped it), `funds` (authorised cap), and
+`app_fault` (signed runtime/application or delivery evidence). `app_fault` does
+not assert that the workload, artifact, or policy changed: inspect
+`failureStage` and `failureCode`. `platform` never appears as a customer
+decision. Work Liskov is still retrying is withheld. An eligible new bootstrap
+hold can disappear after stronger signed Ready evidence arrives.
 
-Each Hold names one cause and one action pair: **Resume trying** / **Stop**.
-Per-code next-action prose stays on the execution detail.
+Each V5 hold carries `holdId`, `stateRevision`, stable slot/generation, failure
+stage/code, `pendingRelease`, and server-owned `actions`. `release_hold` posts
+the exact hold ID to the hold-release route. `pause_application` and
+`resume_application` post to the lifecycle status route and never imply a hold
+release. `holdCount` counts held slots; `applicationCount` counts distinct
+Applications.
+
+Each Hold names one cause. Its server-owned controls distinguish releasing one
+held slot from pausing or resuming the whole Application. Per-code next-action
+prose stays on the execution detail.
 
 The CLI `proof liskov application action-plan` still returns one Application's
 plan items. Use those tokens for a bounded retry; do not treat `wait` or

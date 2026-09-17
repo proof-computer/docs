@@ -229,7 +229,9 @@ destinations.
 ## `observability`, `state`, and `debug`
 
 - `observability.logs.enabled` is the only authored logging field.
-- `state` is required and has only `mode: off`.
+- `state` is required and has only `mode: off`. This opts out of durable
+  storage; it does not pause the Application or disable continuous execution.
+  Pause is a separate Application lifecycle action.
 - `debug.holdOnFailure` defaults to false and is reserved for diagnostic
   fixtures, not ordinary customer operation.
 
