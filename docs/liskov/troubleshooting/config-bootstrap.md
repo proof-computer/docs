@@ -33,6 +33,17 @@ deployment ID, job ID, processor ID, and runtime-instance ID. Identity, policy,
 job, expiry, destination, or version mismatch must fail closed. Never copy an
 encrypted grant from another job or enable a downgrade.
 
+`job_grant_not_found` during signed discovery is retryable for a bounded
+minute because a newly verified grant can become visible while the runtime is
+starting. The runtime must keep the same job identity and request a fresh
+signed discovery message on each attempt. Other binding, signature, expiry, or
+ambiguity failures remain fail-closed.
+
+Managed logging is fail-soft. When logging is the only required Lockbox value
+and its exact grant cannot be made active during bootstrap, Liskov records a
+platform alert and starts the workload without managed logs. This exception
+does not apply to customer-authored required secrets.
+
 ## Native helper or file installation is incompatible
 
 `runtime_bootstrap_customer_secrets_runtime_incompatible` means the pinned

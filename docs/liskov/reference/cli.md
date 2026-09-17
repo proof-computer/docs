@@ -178,7 +178,8 @@ remain required. See the release-gated
 Pause and retirement do not force-stop existing Acurast jobs.
 
 Releasing a hold is not the same as resuming a paused Application. A hold stops
-one job's next generation after Liskov proved that job's own code failed; a
+one job's next generation after proof-standard signed failure evidence; a
+bootstrap-stage hold occurs before workload code starts. A
 release lets that job launch again **under the policy version you already
 published**. Asking twice is one release, not two. See
 [Diagnose and retry](../operate/diagnose-retry.md#5-release-a-held-job).

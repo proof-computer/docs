@@ -29,19 +29,36 @@ assessment based on the desired policy.
 ## Organization Action Plan
 
 Open **Action Plan** in the organization rail. It lists only jobs Liskov has
-**stopped** on. A job Liskov is still retrying is not listed — the page says so
-rather than silently omitting it.
+**stopped** on. Each held slot is listed separately, even when several belong
+to one Application. Retryable work remains off the page while Liskov is still
+handling it.
 
-Each hold names one cause and one action pair: **Resume trying** / **Stop**.
-Causes are:
+The page serves actions rather than naming links as actions:
+
+- **Release hold** applies to one exact held slot. It can launch a later
+  generation and spend Service Credits.
+- **Pause application** stops planning new work for the whole Application.
+- **Resume application** restarts planning for a paused Application. It does
+  not release a held slot.
+
+The release and lifecycle actions are independent. A two-slot Application gets
+one release control for each held slot and one lifecycle control.
+
+Causes include:
 
 - **You stopped it** — paused or otherwise on your instruction.
 - **Money** — Liskov will not spend past the authorised cap.
-- **The application** — the workload, artifact, or policy version is at fault.
+- **Runtime or application** — read the exact signed failure stage. A bootstrap
+  failure happened before workload code started and is not evidence that the
+  workload, artifact, or policy changed.
 
 Platform uncertainty (including first-contact silence and register silence) is
 never a customer decision. Per-code next-action prose stays on the execution
 detail, not in this queue.
+
+A new bootstrap hold can clear automatically when the same stable member under
+the same exact policy later supplies signed Ready evidence. Application-stage
+fatals and explicit `debug.holdOnFailure` holds remain explicit-release only.
 
 ## Read from Console or CLI
 
