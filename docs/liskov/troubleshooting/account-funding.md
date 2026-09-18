@@ -13,6 +13,26 @@ troubleshooting procedure yet. Do not submit payment details, retry a disabled
 control, or call an internal funding endpoint.
 :::
 
+## Liskov says it is invitation-only
+
+Your sign-in worked. Liskov is invitation-only, and the identity you signed in
+with does not have a Liskov account yet, so none was created.
+
+- If you have an invitation email, open the link in the **most recent** one.
+  Each invitation replaces the one before it, and each expires 14 days after it
+  was sent.
+- If the invitation page says the link is no longer active, request a new one.
+- If you do not have an invitation, request one through the
+  [wait-list form](https://form.typeform.com/to/pNe4ot4a).
+- If you already have a Liskov account, check you signed in with the same
+  identity — the GitHub account, or the email address, the account was created
+  with. Signing in a second way creates a second identity, which is not the
+  same account.
+
+Do not retry the sign-in repeatedly and do not forward your invitation link:
+the link is addressed to you, and signing in from it as somebody else does not
+admit them.
+
 ## GitHub sign-in does not complete
 
 1. Confirm you are signing into the intended GitHub account.

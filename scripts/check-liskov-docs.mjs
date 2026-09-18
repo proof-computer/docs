@@ -1280,6 +1280,7 @@ for (const [fileId, required] of Object.entries({
   'concepts/trust-boundaries': ['briefly PROOF over TLS', 'Plaintext is not persisted', 'Private source is not private deployed code', 'cache reuse'],
   'build/artifacts-provenance': ['reusable GitHub pin action requires `none`', 'complete path is not supported today'],
   'troubleshooting/account-funding': [
+    'Liskov says it is invitation-only',
     'There is no supported customer checkout',
     'Service Credit reads disagree',
     'subscription_intent_conflict',
@@ -1309,8 +1310,26 @@ for (const [pattern, message] of [
   [/\| Curated first-party Marketplace launch \| Release-gated v1;/, 'capability matrix does not gate Marketplace launch'],
   [/\| Uptime Prober \| Release-gated v1;/, 'capability matrix does not gate Uptime Prober'],
   [/\| Organization-gated processor record in Console \| v1;[^\n]+Enterprise \|/, 'capability matrix omits the released processor record or its Enterprise boundary'],
+  // BKLG-20260918-83o6: new-account creation became invitation-only when
+  // LISKOV_SIGNUP_WAITLIST was turned on. Existing sign-in stays v1; the
+  // availability transition is the part that must not silently regress.
+  [/\| GitHub sign-in; browser-confirmed CLI login \| v1 for an existing account\.[^\n]+invitation-only[^\n]+\|/, 'capability matrix does not state that new-account creation is invitation-only'],
 ]) {
   check(pattern.test(capabilitiesPage), message);
+}
+
+// BKLG-20260918-83o6: the invitation-only boundary is only actionable if the
+// wait-list form is on the pages a turned-away visitor and a first-time reader
+// actually open, and the URL is exact.
+const WAITLIST_FORM_HREF = 'https://form.typeform.com/to/pNe4ot4a';
+for (const fileId of [
+  'reference/capabilities',
+  'get-started/set-up-liskov',
+  'troubleshooting/account-funding',
+]) {
+  const page = readFileSync(join(docsRoot, `${fileId}.md`), 'utf8');
+  check(page.includes('invitation-only'), `invitation-only boundary: ${fileId} does not state it`);
+  check(page.includes(WAITLIST_FORM_HREF), `invitation-only boundary: ${fileId} omits the wait-list form`);
 }
 
 for (const command of [
