@@ -19,7 +19,7 @@ This page is the availability owner. Guides contain only supported recipes.
 
 | Capability | Availability |
 | --- | --- |
-| GitHub sign-in; browser-confirmed CLI login | v1 |
+| GitHub sign-in; browser-confirmed CLI login | v1 for an existing account. **Creating a new account is invitation-only**: signing in with an identity that has no Liskov account does not create one, and returns an invitation-only notice instead. Request an invitation through the [wait-list form](https://form.typeform.com/to/pNe4ot4a); an invitation arrives by email as a single-use link that expires in 14 days. Existing accounts, sessions, and CLI logins are unaffected |
 | Organizations, persistent and request-scoped CLI selection, team invitations, assignable roles | v1; the plan seat allowance is enforced at invite time with no overage, and while paid plan activation is release-gated every organization resolves to the Free allowance of one seat. New non-personal organizations require a two-letter business-establishment country and the versioned, non-pre-ticked business-purpose/18+/authority statement. Personal, family, and household use is not supported |
 | Service Credit balance, reservation, and ledger reads | v1; read-only surfaces are supported for an existing organization (Console Account, Billing & funding, and Ledger; CLI billing/transaction reads) |
 | Plan catalog and plans page | v1 read of the catalog on `/organizations/new/plan`; paid attach, trial start, and production collection remain release-gated |

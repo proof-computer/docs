@@ -8,6 +8,15 @@ description: Sign in with GitHub, select an organization, and read its existing 
 This setup establishes the identity and organization context that will own your
 Application.
 
+:::info Liskov is invitation-only
+Creating a new Liskov account requires an invitation. Signing in with an
+identity that does not already have an account will not create one; you will be
+shown an invitation-only notice instead. Request an invitation through the
+[wait-list form](https://form.typeform.com/to/pNe4ot4a). An invitation arrives
+by email as a single-use link that expires in 14 days; open the most recent one
+you were sent. This does not affect existing accounts, sessions, or CLI logins.
+:::
+
 :::caution Release boundary
 Plan selection, terms acceptance, Stripe checkout, and issuance of new USD
 Service Credits are release-gated. A paid plan is not usable merely because a
@@ -24,15 +33,25 @@ create an organization for personal, family, or household use. If you believe
 your use is business use and need help, contact
 [hello@proof.computer](mailto:hello@proof.computer).
 
-You need a GitHub account and access to an existing Liskov organization. To
+You need an invitation to Liskov, a GitHub account, and access to an existing
+Liskov organization. To
 continue to a deployment, that organization must already be eligible for the
 requested capability and have enough available Service Credits for its
 displayed reserve.
 
 ## 1. Sign in
 
-Open the [Liskov Console](https://console.liskov.proof.computer) and choose **Continue with GitHub**. Review the GitHub
-authorization and return to Liskov.
+If you were invited, open the link in your invitation email. It opens a
+sign-in page addressed to you.
+
+Otherwise open the [Liskov Console](https://console.liskov.proof.computer).
+
+Either way, choose **Continue with GitHub**, or ask for an email sign-in link.
+Review the GitHub authorization and return to Liskov.
+
+If you do not already have an account and have not been invited, Liskov tells
+you it is invitation-only and links the wait-list form. Your sign-in itself
+worked; nothing is broken and there is nothing to retry.
 
 Liskov uses this identity for your session and, when you bring a repository,
 to verify repository access. It does not make every repository visible to
