@@ -266,7 +266,10 @@ Choose one execution arm:
 
 A `once` Application runs one job and settles. It does not run again on its own.
 To run the same document again today, create a new Application, which counts
-against your organization's job slots. A manual re-run verb is planned.
+against your organization's job slots. An explicit re-arm of the same
+Application is release-gated, and
+[Capabilities and limits](../reference/capabilities.md) owns its current
+boundary.
 
 ```json
 {"mode": "continuous", "until": "2027-01-01T00:00:00Z"}
