@@ -32,7 +32,8 @@ submit a chain transaction, reserve Service Credits, or add a final charge.
 2. Open the Application and choose **Deployments** or **Executions**.
 3. Select the processor identifier.
 
-The Console opens an organization-level route under **Operations**:
+The Console opens the Processor page. It is an organization-level page, reached
+from an Application's **Deployments** or **Executions**, and its route is:
 
 ```text
 /operations/processors/<PROCESSOR_ID>
@@ -99,7 +100,7 @@ data was not reported. Redaction and missing data are not the same state.
 
 Confirm that:
 
-- the page appears under **Operations**, not inside one Application;
+- the page is organization-level, not inside one Application;
 - the deployments table includes only the active organization's history;
 - each section is labelled **your org** or **whole fleet**;
 - chain-published hardware remains visible regardless of plan; and
