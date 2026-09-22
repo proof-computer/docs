@@ -91,7 +91,7 @@ plaintext and local paths are omitted. Let an existing one-shot occurrence
 settle, then retire it or pause future launches before retrying.
 Compare the attested ZIP, plaintext and ciphertext digests,
 `encryption-secret-id`, required `LISKOV_CODE_KEY` declaration and configured
-managed key version. The key must arrive through the authenticated Lockbox
+managed key version. The key must arrive through the authenticated secret
 grant; an environment value alone does not prove that delivery.
 
 For `directory`, use Actions `v1.3.2` or later: its bootstrap keeps runtime

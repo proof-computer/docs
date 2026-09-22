@@ -16,7 +16,7 @@ publication. Its general customer release remains gated separately; the
 
 The build encrypts your application module before upload. IPFS carries a public
 bootstrap, a public descriptor and ciphertext. The bootstrap obtains the key
-through the existing job-bound managed Lockbox grant, verifies both payload
+through the existing job-bound managed secret grant, verifies both payload
 digests and AES-GCM authentication, and loads the module inside the processor.
 PROOF can access the managed key during release. This protects the payload
 from public artifact readers; it is not operator-blind code delivery, and it
@@ -106,7 +106,7 @@ jobs:
 The workflow runs the caller's typecheck, tests and build. It encrypts with a
 fresh AES-256-GCM nonce, verifies the uploaded bytes through the specified
 gateway, and attests the artifact through GitHub OIDC. It does not publish the
-policy, configure Lockbox, or spend Service Credits.
+policy, configure managed secrets, or spend Service Credits.
 
 Download the run's build manifest. Record `scriptIpfs`, `scriptHash`, the
 `encryptedCode` descriptor, exact source commit, source-binding revision and
@@ -160,7 +160,7 @@ your application's business result. For a one-shot run, record terminal job
 state and the settled Service Credit amount.
 
 The loader accepts only a key installed from the matching authenticated
-Lockbox grant. Setting an environment variable alone is insufficient. It
+secret grant. Setting an environment variable alone is insufficient. It
 uses a runtime home inside the processor job directory, creates it when
 needed, loads a private CommonJS module, and removes the temporary plaintext file and module-cache entry after
 `start(runtime)` completes. It does not use a shared plaintext cache.
