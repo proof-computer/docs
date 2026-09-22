@@ -96,6 +96,11 @@ read. Source `150b7c96d0caa23e757222dd1eb0288db48a368d` is not a released
 package. Use [Intended capacity versus remaining charges](../troubleshooting/execution-coverage.md)
 on Console until a later plugin release contains that commit.
 
+The interval schedule line on `application execution show`, and the `schedule`
+key its `--json` output adds beside `explanation` and `convergence`, are in
+source `8a930c4`, which is not in npm `0.15.0`. Fixed-interval execution itself
+is release-gated; see [Capabilities and limits](./capabilities.md).
+
 ### Application log flags
 
 ```bash

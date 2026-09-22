@@ -137,6 +137,31 @@ again today is a new Application, which counts against your organization's
 job slots; an explicit re-arm of the same Application is release-gated, and
 [Capabilities and limits](./capabilities.md) owns its current boundary.
 
+### `interval`
+
+Fixed-interval execution is release-gated: the schema accepts it, but Liskov
+does not launch an interval Application yet. Check
+[Capabilities and limits](./capabilities.md) before relying on it.
+
+`every` is a duration, such as `1h`. `until` is an optional UTC bound; no
+occurrence starts at or after it. Boundaries are fixed durations in UTC, so
+there is no time zone, daylight-saving, or calendar arithmetic. The accepted
+behavior is:
+
+- at most one occurrence, and one Service Credit reserve, for each boundary,
+  across restarts and concurrent Liskov workers;
+- no overlap: a boundary that arrives while the previous occurrence is still
+  active is skipped and recorded, with no reserve and no job;
+- a boundary that cannot start in time is recorded as missed rather than run
+  late; and
+- no catch-up burst: after a pause or a Liskov outage, the schedule resumes at
+  the next future boundary.
+
+A due boundary is not spend authority. Placement, balance, spend limits, and
+retirement still apply to each occurrence. Cron expressions, calendar rules,
+catch-up queues, overlap modes, and manual runs of an interval Application are
+not part of V5.
+
 ## `deployment`
 
 | Field | Required | Type, default, and bound |

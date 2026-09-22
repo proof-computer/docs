@@ -61,6 +61,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Immediate or next-renewal update | v1 |
 | Existing jobs run to scheduled end | v1 |
 | Cooperative cease | Release-gated v1 |
+| Fixed-interval execution (Manifest V5 `execution.mode: interval`) | Release-gated v1; the schema accepts `every` and an optional `until`, but no interval run has been observed in production and Liskov does not yet launch an interval Application: it stops before any Service Credit reserve or job is created. The accepted behavior is one occurrence per boundary, no overlap, no catch-up burst after a pause or outage, and a recorded skip for a missed boundary. Cron, calendar, and local-time schedules are not v1 |
 | Launch retry budget | v1; `maxRetries` 0–10, default 5 |
 | Runtime replace-after-failure | Internal; v1 waits for scheduled end |
 
@@ -71,6 +72,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Canonical posture, Action Plan, deployment/job timeline | v1 |
 | Console Coverage and Executions convergence strip | v1; `proof.liskov.execution-convergence.v1` on production Console `96e3f0638d948b24b516ed7713761784ad62c80f` against API `2db522130b314a044f7c50ee530c610d32868b4e`. Intended capacity is distinct from remaining charges. Quiet is not stalled. |
 | CLI execution-convergence sibling on `application execution show` | Release-gated v1; not present in documented `@proof-computer/proof-cli-liskov` `0.14.0` nor npm `0.15.0` (`6cc262d4d73bab607cc8326dece7f3094ed2731d`). Source `150b7c96d0caa23e757222dd1eb0288db48a368d` is not a released package. |
+| Interval schedule line in Console Coverage and on `application execution show` | Release-gated v1, with fixed-interval execution. Both clients print only the boundary Liskov's schedule owner recorded, judged against the same read: next run, run due with a run still active, run due with no run started, no next run while stopped, no next run scheduled, or next run not reported. Console source `6dea483b58c9ea0847f3429b16e0eef1959bea3f`; CLI source `8a930c4` is not in npm `0.15.0` |
 | Desired-execution candidate writer selection | Internal; incumbent remains selected until a later authorized activation |
 | Organization-gated processor record in Console | v1; your deployment history, runtime contact, operability, and chain-published hardware are visible on every plan; fleet reliability, register liveness, placement assessments, confidence, conflict, and watermark require Enterprise |
 | Proof chain and signed runtime-instance evidence | v1 |

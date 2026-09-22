@@ -45,6 +45,12 @@ Resume allows Liskov to evaluate desired state again. It can create a new
 successor and reserve new Service Credits; it does not revive an ended job.
 Resolve organization Action Plan blockers before repeating resume.
 
+Fixed-interval execution is release-gated; see
+[Capabilities and limits](../reference/capabilities.md). Its accepted pause
+behavior is that a paused interval Application starts no new occurrence, and
+resume continues at the next future boundary: boundaries that passed while it
+was paused are not run afterwards.
+
 ## Verify
 
 After pause, verify inactive posture and the absence of newly admitted work;
