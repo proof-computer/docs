@@ -93,7 +93,7 @@ the registered V5 source-publication release in the
 
 The [encrypted JavaScript recipe](./encrypted-javascript.md) records the exact
 inputs, module contract, paused key setup and verification steps. It uses the
-existing managed Lockbox boundary and does not grant a build workflow publication
+existing managed secrets boundary and does not grant a build workflow publication
 or spending authority. See [Trust and data boundaries](../concepts/trust-boundaries.md)
 before making a private-code claim; Cargo image and cache confidentiality remains
 separate.

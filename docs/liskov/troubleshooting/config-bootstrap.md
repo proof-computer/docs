@@ -39,7 +39,7 @@ starting. The runtime must keep the same job identity and request a fresh
 signed discovery message on each attempt. Other binding, signature, expiry, or
 ambiguity failures remain fail-closed.
 
-Managed logging is fail-soft. When logging is the only required Lockbox value
+Managed logging is fail-soft. When logging is the only required managed-secret value
 and its exact grant cannot be made active during bootstrap, Liskov records a
 platform alert and starts the workload without managed logs. This exception
 does not apply to customer-authored required secrets.

@@ -373,6 +373,7 @@ for (const [pattern, explanation] of [
   [/\bzero[- ]trust\b/i, 'unsupported zero-trust claim'],
   [/\b(?:just(?! Tickets Ltd)|simply|obviously)\b/i, 'unfriendly shortcut word'], // "Not Just Tickets Ltd" is Plain's legal name in the Subprocessor Schedule
   [/\bblackbox\b|BLACKBOX_/i, 'internal logging implementation name'],
+  [/\blockbox\b/i, 'internal secrets implementation name'],
   [/\bTBD\b|\bTODO\b|coming soon/i, 'placeholder copy'],
 ]) {
   check(!pattern.test(combined), `public content contains ${explanation}: ${pattern}`);

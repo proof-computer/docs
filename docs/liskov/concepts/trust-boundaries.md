@@ -39,11 +39,11 @@ workflow and supported examples use `encryption.mode: none`.
 
 Encrypted JavaScript delivery is **release-gated v1**. Its public bootstrap and
 ciphertext remain readable on IPFS. The runtime loader uses the existing
-job-bound Lockbox grant to obtain the key, verifies the ciphertext and plaintext
+job-bound secret grant to obtain the key, verifies the ciphertext and plaintext
 digests plus authenticated encryption, and then loads the local module. Actions
 `v1.3.2` with SDK `0.3.30` completed a production encrypted-payload run.
 General customer availability still requires the registered V5 source-publication
-release. Managed Lockbox keeps its existing trust boundary:
+release. Managed secrets keep their existing trust boundary:
 PROOF can access the code key during release; this is not operator-blind or
 zero-knowledge code delivery.
 
