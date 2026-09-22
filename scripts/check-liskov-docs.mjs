@@ -182,6 +182,8 @@ const unlistedIds = new Set([
   ...(!v5PagesPromoted ? v5PromotedIds : []),
   'configure/clustering',
   'build/encrypted-javascript',
+  // The V6 manifest contract, drafted ahead of the release (BKLG-20260907-fgtk); BKLG-20260907-ie6x promotes it.
+  'reference/manifest-v6',
 ]);
 
 const ids = files
