@@ -14,6 +14,9 @@
     "runtime-entrypoint.mts",
     "encrypted-module.mts",
     "retained-v5-starter/src/**/*.ts",
-    "retained-v5-starter/test/**/*.ts"
+    "retained-v5-starter/test/**/*.ts",
+    "builder-iteration/src/**/*.ts",
+    "builder-iteration/variants/**/*.ts",
+    "builder-iteration/test/**/*.ts"
   ]
 }

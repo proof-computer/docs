@@ -11,3 +11,7 @@ check verifies their stable contract values. Release validation additionally:
 - compares the workflow with the `liskov-github-actions` `v1` contract.
 
 The moving `v1` workflow reference was verified at immutable release `v1.2.4`.
+
+`builder-iteration/` is the input for the `453u` builder edit / diagnose / recover
+exercise; its own tests, not the docs content check, pin its exact A, B and C
+variants.

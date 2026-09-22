@@ -1,0 +1,50 @@
+{
+  "schema": "proof.liskov.application-manifest",
+  "schemaVersion": 5,
+  "applicationId": "builder-iteration",
+  "metadata": {
+    "description": "Record which builder-iteration variant ran, with a literal variable and a managed secret, in managed logs."
+  },
+  "release": {
+    "mode": "source"
+  },
+  "runtime": {
+    "kind": "javascript",
+    "engine": "nodejs",
+    "entrypoint": {
+      "file": "bundle.js"
+    }
+  },
+  "execution": {
+    "mode": "once"
+  },
+  "deployment": {
+    "schedule": {
+      "duration": "60s"
+    },
+    "spend": {
+      "unit": "service_credit_micros",
+      "perJob": "50000"
+    }
+  },
+  "configuration": {
+    "variables": [
+      {"source": "literal", "name": "ITERATION_GREETING", "value": "hello-from-a-literal-variable"}
+    ],
+    "secrets": [
+      {
+        "secretId": "iteration-token",
+        "required": true,
+        "destination": {"kind": "environment", "name": "ITERATION_TOKEN"}
+      }
+    ]
+  },
+  "state": {
+    "mode": "off"
+  },
+  "observability": {
+    "logs": {
+      "enabled": true
+    }
+  }
+}
