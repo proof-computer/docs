@@ -1232,13 +1232,101 @@ for (const token of [
 }
 check(!/yes-spend|bearer|LISKOV_TOKEN/i.test(v5StarterWorkflow), 'V5 starter workflow: contains a spend or bearer credential');
 
+// BKLG-20260908-w0oi: the recommended entry route reaches the retained V5
+// path end to end. The landing page's first recommendation is the GitHub
+// journey; that journey installs the released CLI from the contract fixture
+// (never the 0.7.0 plugin that predates `application source-binding`), copies
+// the checked starter, and creates and binds the Application before the first
+// push that runs the dependent workflow build, then publishes from it.
+const entryRouteGithubPage = readFileSync(join(docsRoot, 'get-started', 'github.md'), 'utf8');
+const entryRouteChoosePage = readFileSync(join(docsRoot, 'get-started', 'choose-your-path.md'), 'utf8');
+const landingStartLink = /Start with \*\*\[[^\]]+\]\(([^)]+)\)\*\*/u.exec(liskovIndexPage);
+check(
+  landingStartLink?.[1] === './get-started/github.md',
+  'entry route: the Liskov landing page must recommend the GitHub journey first',
+);
+check(/Manifest V5/.test(liskovIndexPage), 'entry route: the landing page does not name the Manifest V5 path');
+check(
+  /\| \*\*GitHub\*\* \| v1 with retained Manifest V5 source import\. \|/.test(entryRouteChoosePage),
+  'entry route: choose-your-path does not classify GitHub as the retained V5 path',
+);
+check(
+  !/Available only where Manifest V4 publication is enabled/.test(entryRouteChoosePage),
+  'entry route: choose-your-path still gates the GitHub path on Manifest V4 publication',
+);
+check(
+  entryRouteGithubPage.includes(`proof plugins install @proof-computer/proof-cli-liskov@${cliContract.version}`),
+  `entry route: the GitHub journey does not install the released CLI ${cliContract.version}`,
+);
+for (const fileId of ['index', 'get-started/index', 'get-started/choose-your-path', 'get-started/set-up-liskov', 'get-started/github', 'get-started/first-deployment', 'build/manifest-v5']) {
+  const page = readFileSync(join(docsRoot, `${fileId}.md`), 'utf8');
+  check(
+    !/proof-cli-liskov@0\.7\.0/.test(page),
+    `entry route: ${fileId} installs the pre-source-binding CLI 0.7.0`,
+  );
+}
+check(
+  !/^## \d+\. Author Manifest V4/mu.test(entryRouteGithubPage),
+  'entry route: the GitHub journey still authors Manifest V4 as its first-use step',
+);
+check(
+  entryRouteGithubPage.includes('examples/liskov-v1/retained-v5-starter'),
+  'entry route: the GitHub journey does not copy the checked V5 starter',
+);
+check(
+  v5StarterManifest.applicationId === 'hello-liskov' && v5StarterWorkflow.includes('app-id: hello-liskov'),
+  'entry route: the starter manifest or workflow names a different Application than the journey creates',
+);
+{
+  const order = [
+    'proof plugins install @proof-computer/proof-cli-liskov@',
+    'pnpm install --frozen-lockfile',
+    'proof liskov application manifest validate',
+    'proof liskov application create hello-liskov',
+    'proof liskov application source-binding set hello-liskov',
+    'git push origin main',
+    'proof liskov application source-binding show hello-liskov',
+    'proof liskov application policy publish hello-liskov',
+    'proof liskov application policy explain hello-liskov',
+    'proof liskov application logs hello-liskov',
+  ].map((token) => [token, entryRouteGithubPage.indexOf(token)]);
+  for (const [token, index] of order) {
+    check(index >= 0, `entry route: the GitHub journey omits ${token}`);
+  }
+  for (let i = 1; i < order.length; i += 1) {
+    if (order[i - 1][1] < 0 || order[i][1] < 0) continue;
+    check(
+      order[i - 1][1] < order[i][1],
+      `entry route: "${order[i - 1][0]}" must precede "${order[i][0]}" in the GitHub journey`,
+    );
+  }
+}
+check(
+  entryRouteGithubPage.includes('uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v1'),
+  'entry route: the GitHub journey does not call the reusable workflow at @v1',
+);
+check(
+  entryRouteGithubPage.includes(v5StarterManifest.deployment.schedule.duration) &&
+    /60-second\s+provider minimum/.test(entryRouteGithubPage),
+  'entry route: the GitHub journey does not keep the 60-second provider minimum',
+);
+check(
+  /Publishing in step 6 is the mutation/.test(entryRouteGithubPage) &&
+    /A green workflow is a built artifact, not a running Application/.test(entryRouteGithubPage),
+  'entry route: the GitHub journey does not separate the spend mutation from a green build',
+);
+check(
+  /release-gated/.test(entryRouteGithubPage) && /already-available Service Credits/.test(entryRouteGithubPage),
+  'entry route: the GitHub journey does not state the existing-credit funding prerequisite',
+);
+
 for (const [fileId, required] of Object.entries({
   'get-started/choose-your-path': ['Marketplace', 'GitHub', 'Release-gated v1', 'customer add-funds'],
   'get-started/set-up-liskov': ['read', 'release-gated', 'Available', 'Reserved'],
   'get-started/marketplace': ['Release-gated v1', 'engineering acceptance', 'not supported customer paths'],
   'marketplace/uptime-prober': ['Release-gated v1', 'engineering acceptance', 'not a supported customer offering'],
   'organizations/service-credits': ['read-only', 'Customer funding is release-gated', 'payment details'],
-  'get-started/github': ['Publication availability', 'v1.2.2', 'artifact-version-id', 'Proof'],
+  'get-started/github': ['Manifest V5', 'retained-v5-starter', 'v1.2.4', 'source-binding set', 'Artifact sha256:', 'Proof'],
   'operate/proof-chain': ['GitHub OIDC', 'policy digest', 'runtime instance'],
   'operate/processors': ['your org', 'whole fleet', 'Enterprise', 'storageBytes', 'read-only', 'not-found', 'Redaction and missing data are not the same state'],
   'troubleshooting/deployment': ['Normal waiting', 'Needs action', 'decision-id', 'processorAtMatchCap', 'authoringFault'],

@@ -12,9 +12,10 @@ execution environments (TEEs): hardware-isolated places where your code can
 run away from a conventional cloud server.
 
 Start with **[Deploy from GitHub](./get-started/github.md)** when you are
-bringing your own repository and want a verifiable release trail. Publication
-is enabled only for eligible organizations, so check the availability note
-before preparing a release.
+bringing your own repository and want a verifiable release trail. It takes a
+checked Manifest V5 starter from your repository to a published Application.
+Building and validating spend nothing; publishing draws on Service Credits
+your organization already has, because customer funding is release-gated.
 
 :::caution Release boundary
 Marketplace launch, Uptime Prober, plan and terms acceptance, and Stripe USD

@@ -1,6 +1,6 @@
 ---
 title: Get started
-description: Set up a Liskov organization and prepare an eligible own-repository deployment.
+description: Set up a Liskov organization and deploy the checked Manifest V5 starter from your own repository.
 ---
 
 # Get started
@@ -10,8 +10,9 @@ first launch. The docs introduce the underlying model when it becomes useful.
 
 1. [Review the available path](./choose-your-path.md).
 2. [Set up Liskov](./set-up-liskov.md) with a GitHub identity and organization.
-3. Prepare [Deploy from GitHub](./github.md) if publication is enabled for your
-   organization and it already has enough available Service Credits.
+3. [Deploy from GitHub](./github.md) with the checked Manifest V5 starter. You
+   can build and validate it at no cost; publishing needs enough Service
+   Credits already available in your organization.
 4. [Follow your first deployment](./first-deployment.md) and verify its result.
 
 Marketplace, Uptime Prober, terms acceptance, and Stripe checkout are not

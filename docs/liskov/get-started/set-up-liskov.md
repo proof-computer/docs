@@ -100,8 +100,9 @@ not available for a new launch.
 
 ## Next
 
-- [Deploy from GitHub](./github.md) if publication is enabled for the
-  organization.
+- [Deploy from GitHub](./github.md) with the checked Manifest V5 starter. You
+  can build and validate it before the organization has credits; stop before
+  publication if **Available** is not enough.
 
 If sign-in, organization, or balance state does not update, use
 [Sign-in, organization, and Service Credit reads](../troubleshooting/account-funding.md).
