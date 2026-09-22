@@ -25,6 +25,11 @@ lifecycle hooks, durable state beyond `off`, placement diversity rules,
 non-managed SSH providers, or self-custody spend. Those concepts require a
 future policy version; adding their old draft spellings makes V5 fail closed.
 
+For the complete first-use route — CLI installation, copying the starter into
+your repository, publication, and verification — follow
+[Deploy from GitHub](../get-started/github.md). This guide explains the
+document itself.
+
 ## 1. Build the checked once-mode starter
 
 The checked
@@ -175,7 +180,7 @@ proof liskov application source-binding set hello-liskov \
   --yes --json
 ```
 
-`application source-binding show fetch --json` reads the binding, its
+`application source-binding show hello-liskov --json` reads the binding, its
 revision, and its revocation epoch; `application source-binding revoke`
 withdraws it. A publication whose ref is outside `allowedRefs`, whose workflow
 identity differs, or whose manifest path differs is refused.
