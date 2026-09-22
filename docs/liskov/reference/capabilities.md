@@ -75,11 +75,12 @@ This page is the availability owner. Guides contain only supported recipes.
 | Organization-gated processor record in Console | v1; your deployment history, runtime contact, operability, and chain-published hardware are visible on every plan; fleet reliability, register liveness, placement assessments, confidence, conflict, and watermark require Enterprise |
 | Proof chain and signed runtime-instance evidence | v1 |
 | Pause/resume future planning | v1 |
-| Re-running a completed `once` Application | Release-gated v1; an explicit re-arm against the Application's current published revision, not a recovery retry — it authorizes one more occurrence and does not promise a launch. The Console's **Run again** control is deployed, but the CLI's `application run` is not contained in a released `@proof-computer/proof-cli-liskov` tag (`0.13.0`, the version this page pins, predates it) and no end-to-end run has been observed, so the path is not supported yet |
+| Re-running a completed `once` Application | Release-gated v1; an explicit re-arm against the Application's current published revision, not a recovery retry — it authorizes one more occurrence and does not promise a launch. The Console's **Run again** control is deployed, and `@proof-computer/proof-cli-liskov` `0.14.0` contains the CLI's `application run`, but no end-to-end run has been observed, so the path is not supported yet |
 | Supported bounded Action Plan retry | v1 |
 | Release a job held on proven application failure, without publishing a new policy version | v1; a hold is taken only on the job's own signed fatal or an explicit `debug.holdOnFailure`, and a release re-admits that job under the version already published |
 | Safe retirement and immutable receipt | v1 |
 | Force stop/delete bypass | Internal; no public bypass |
+| Operator adjudication of a review-blocked retirement lineage | Internal; a platform operator action, never a customer action |
 | Managed custody | v1 default |
 | Quote, reserve, final charge, release, history | v1 |
 | Managed no-report settlement | v1 billing rule; after the strict report deadline, scanner-proven absence is not billed, closes at zero charge, releases the full reserve, and needs no customer action |

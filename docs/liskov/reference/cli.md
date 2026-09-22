@@ -174,6 +174,7 @@ remain required. See the release-gated
 | `application retire APP_REF` | Read retirement preview/state; add `--reason` and `--yes` to start. |
 | `application retire cancel APP_REF` | Read cancellation preview; add `--yes` to cancel while allowed. If the retirement finalized first, this **exits zero** and prints the immutable receipt: the outcome was reached, so there is nothing left to cancel. |
 | `application hold release APP_REF` | Read the held job and what releasing it would do; add `--reason TEXT --yes` to request the release. `--hold-id ID` names the job when more than one is held. Available in `0.14.0` and later. |
+| `application run APP_REF` | Read the dry run of one more occurrence; add `--reason TEXT --yes` to authorize it. A settled `once` Application only. It authorizes exactly one more occurrence against the Application's current published revision and does not promise a launch. Available in `0.14.0` and later. |
 
 Pause and retirement do not force-stop existing Acurast jobs.
 
@@ -183,6 +184,24 @@ bootstrap-stage hold occurs before workload code starts. A
 release lets that job launch again **under the policy version you already
 published**. Asking twice is one release, not two. See
 [Diagnose and retry](../operate/diagnose-retry.md#5-release-a-held-job).
+
+Release-gated v1: read [Capabilities and limits](./capabilities.md) before you
+rely on `application run`. Without `--yes` the server answers with a dry run
+that names the settled generation the new occurrence would follow, how many
+jobs it would create and over what window, the reserve that would be opened,
+and the Service Credit available to your organization. `--yes` authorizes the
+run, `--reason TEXT` is recorded on the request, and `--json` returns the
+server's body unchanged. Authorizing is not a recovery retry and not a policy
+change: the executor's admission checks still decide whether the occurrence
+launches. Asking twice is one authorization, not two — a run already
+authorized and unspent answers `noop: true`, exits zero, and queues nothing
+further. A refusal exits `1` and carries a `refusal.code`:
+`application_run_not_admitted` (resume the Application first; one that is
+retired or deleted is never re-runnable), `application_run_not_supported`
+(only a `once` policy can run again), and `application_run_not_terminal`
+(wait until the current occurrence settles). Key automation on `refusal.code`
+rather than on the message text: the CLI passes through any code it does not
+recognize, and the set of codes is not guaranteed to be append-only.
 
 ## Runtime SSH
 
