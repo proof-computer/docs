@@ -186,6 +186,8 @@ const unlistedIds = new Set([
   'reference/manifest-v6',
   // The Billing Spend guide, prepared from the served spendHistory contract (BKLG-20260922-kmc0); BKLG-20260922-j7nu promotes it.
   'organizations/spend-analysis',
+  // The Compute guide, prepared from the committed Compute route vectors (BKLG-20260923-5y9y); BKLG-20260922-j7nu promotes it.
+  'organizations/compute',
 ]);
 
 const ids = files
@@ -1506,6 +1508,87 @@ for (const [pattern, claim] of [
 ]) {
   const prose = spendAnalysisPage.replace('Spend does not draw a forecast band, a daily cap, or a chart of\nheld reserves.', '');
   check(!pattern.test(prose), `Billing Spend guide makes ${claim}: ${pattern}`);
+}
+
+// BKLG-20260923-5y9y — the unlisted Compute guide, prepared from the committed
+// Compute route vectors (liskov-rs crates/liskov-control-plane-api/vectors/
+// compute_{summary,feasibility,errors}.json at 62b34f9a73c20c174131a2c98012007b897316f0,
+// served by PR 1077, BKLG-20260923-7t1d). It stays Not released (the unlisted
+// loop above pins the notice and the sidebar) until BKLG-20260922-j7nu verifies
+// the deployed path; nothing public may link to it or classify it first.
+const computeGuideId = 'organizations/compute';
+const computeGuidePage = readFileSync(join(docsRoot, `${computeGuideId}.md`), 'utf8');
+for (const file of files) {
+  if (idFor(file) === computeGuideId) continue;
+  check(!/organizations\/compute\b|\(\.\/compute\.md|\/compute\.md/.test(readFileSync(file, 'utf8')), `${idFor(file)}: links the unreleased Compute guide`);
+}
+check(!/organizations\/compute\b|compute\.md|['"]\/compute/.test(readFileSync(join(root, 'src', 'pages', 'index.tsx'), 'utf8')), 'landing page links the unreleased Compute guide');
+check(!/organizations\/compute\b|compute\.md|\*\*Compute\*\* page|placement check/i.test(capabilitiesPage), 'capabilities classifies the Compute page before its release verification');
+for (const [token, meaning] of [
+  // Path and access: network-wide counts behind a signed-in membership.
+  ['open **Compute** in the navigation', 'the Console path'],
+  ['`/compute`, and the placement check at `/compute/placement`', 'the Console routes'],
+  ['every\norganization sees the same counts', 'counts describe the network, not the organization'],
+  // Counts, never inventory, with the suppression floor and zero kept apart.
+  ['never shows a\nprocessor or manager identifier', 'no inventory'],
+  ['It is either **zero** or **20 or more**.', 'the suppression floor'],
+  ['| **Fewer than 20** | `suppressed` |', 'the suppressed state'],
+  ['| Hidden | `withheld` |', 'the withheld state'],
+  ['This is not zero and not fewer than 20.', 'unavailable is not zero'],
+  ['**Zero is shown as zero.**', 'zero stays zero'],
+  // Upper bounds with placement headroom, and only the supported V5 fields.
+  ['They are **upper bounds** on what is\nplaceable', 'reported capability as an upper bound'],
+  ['at least 10%\nmore than it', 'memory and storage headroom'],
+  ['at least 50% more', 'CPU score headroom'],
+  ['| Memory | `deployment.placement.minimums.memory` |', 'the memory minimum'],
+  ['| Storage | `deployment.placement.minimums.storage` |', 'the storage minimum'],
+  ['| Single-core score | `deployment.placement.minimums.cpuSingleCoreScore` |', 'the single-core minimum'],
+  ['| Multi-core score | `deployment.placement.minimums.cpuMultiCoreScore` |', 'the multi-core minimum'],
+  ['| Runtime | `runtime.kind` |', 'the runtime kind'],
+  ['| Jobs | `deployment.jobs` | 1–256; one if you leave it out', 'the jobs default'],
+  // Missing, stale and conflicting sources stay distinct.
+  ['| `projection_missing` |', 'the missing projection'],
+  ['| `source_not_built` |', 'the unbuilt source'],
+  ['| `no_measured_basis` |', 'the unmeasured basis'],
+  ['| `source_conflict` |', 'conflicting facts'],
+  ['| `not_served` |', 'the unserved panel'],
+  ['- **Stale** — the last observation is older than expected', 'the stale state'],
+  ['An unavailable\npanel shows no figures at all, never zeros.', 'an unavailable panel draws no zeros'],
+  ['- **The read failed.**', 'the read-error state'],
+  ['It does not show zeros in their place.', 'a failed read is not zero'],
+  // Observed liveness, not inferred reliability.
+  ['**observed** heartbeating', 'observed heartbeats'],
+  ['It does not infer missed heartbeats', 'no inferred missed heartbeats'],
+  ['is **unavailable**, not zero', 'an uncovered hour is not zero'],
+  // Located-only geography, and no country or manager control in V5.
+  ['**only processors Liskov has already located**', 'located-only geography'],
+  ['**of the located**, never of the whole network', 'shares of the located'],
+  ['never extrapolates', 'no extrapolation'],
+  ['they are not enabled by these\nV5 pages', 'country and manager controls not enabled'],
+  ['| `unsupported_in_v5` |', 'the V6 control refusal'],
+  ['| `unsupported_selector` |', 'the processor selector refusal'],
+  // Occupancy: absent is not zero capacity.
+  ['**Absent occupancy is not zero capacity**', 'absent occupancy'],
+  // Memory sizing, one workload per device, no speed claim.
+  ['**one workload of\n  that size per device**', 'one workload per device'],
+  ['It is **not a CPU-speed claim**', 'no CPU-speed claim'],
+  ['Liskov does not substitute an assumed\nreserve.', 'no assumed reserve'],
+  // Final JIT stays the allocation authority.
+  ['The answer is **advisory**. It is an upper bound', 'feasibility is advisory'],
+  ['**final placement at launch** is what assigns a processor', 'final JIT authority'],
+  ['A result of 20\nor more is not a promise', 'no placement promise'],
+  ['`compute_summary_v1`', 'the summary schema'],
+  ['`compute_feasibility_v1`', 'the feasibility schema'],
+]) {
+  check(computeGuidePage.includes(token), `Compute guide omits ${meaning}: ${token}`);
+}
+for (const [pattern, claim] of [
+  [/\b(?:Compute|placement check)\b(?:\*\*)?(?: page)? (?:is|are) (?:now )?(?:available|released|live)\b/i, 'a production availability claim'],
+  [/processor(?:Id)?s?\s*[:=]\s*["'`]?0x|\b[1-9]\d{2,}\s+(?:processors|devices|phones)\b/i, 'a processor inventory or sample count'],
+  [/\b(?:t4g|EC2|equivalent to)\b/i, 'a cloud-instance speed equivalence'],
+  [/\bprobe\b|\bproof liskov (?:admin|platform)\b|\bSQL\b|\bre-?run the (?:projection|ingest)/i, 'a probe or operator repair instruction'],
+]) {
+  check(!pattern.test(computeGuidePage), `Compute guide makes ${claim}: ${pattern}`);
 }
 
 check(combined.includes('v0.3.26'), 'runtime reference omits the supported SDK version');
