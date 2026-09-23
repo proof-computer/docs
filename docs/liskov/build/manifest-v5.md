@@ -40,38 +40,57 @@ request to `https://example.com/` and records only the host, success flag, and
 HTTP status through managed logs. It sends no customer data and needs no
 variable or secret.
 
-Its entrypoint uses `@proof-computer/liskov-runtime` `v0.3.32`:
+Its entrypoint uses `@proof-computer/liskov-runtime` `v0.3.33`:
 
 ```ts title="src/index.ts"
 import {bootstrapLiskovRuntime} from '@proof-computer/liskov-runtime';
 
 import {checkExampleDotCom} from './check.js';
 
-const runtime = await bootstrapLiskovRuntime({
-  component: 'hello-liskov',
-  logging: {mode: 'required'},
-  secrets: {mode: 'off'},
-});
-
-try {
-  await runtime.whenReady();
-  const result = await checkExampleDotCom();
-  await runtime.log('starter.fetch.completed', result, {
-    severity: 'info',
-    labels: {component: 'hello-liskov'},
-  });
-} catch (error) {
-  await runtime.diagnostics.fatal({
-    kind: 'explicit',
-    code: 'starter_fetch_failed',
+async function main(): Promise<void> {
+  const runtime = await bootstrapLiskovRuntime({
     component: 'hello-liskov',
-    error,
+    logging: {mode: 'required'},
+    secrets: {mode: 'background'},
   });
-  throw error;
-} finally {
-  await runtime.flush();
-  runtime.stop();
+
+  try {
+    await waitUntilReady(runtime);
+    const result = await checkExampleDotCom();
+    await runtime.log('starter.fetch.completed', result, {
+      severity: 'info',
+      labels: {component: 'hello-liskov'},
+    });
+  } catch (error) {
+    await runtime.diagnostics.fatal({
+      kind: 'explicit',
+      code: 'starter_fetch_failed',
+      component: 'hello-liskov',
+      error,
+    });
+    throw error;
+  } finally {
+    await runtime.flush();
+    runtime.stop();
+  }
 }
+
+// Managed log configuration can arrive after bootstrap. This check is bounded
+// and never sends customer data before the runtime is ready.
+async function waitUntilReady(runtime: {whenReady(): Promise<unknown>}): Promise<void> {
+  const deadline = Date.now() + 40_000;
+  for (;;) {
+    try {
+      await runtime.whenReady();
+      return;
+    } catch (error) {
+      if (Date.now() >= deadline) throw error;
+      await new Promise(resolve => setTimeout(resolve, 1_000));
+    }
+  }
+}
+
+void main().catch(() => { process.exitCode = 1; });
 ```
 
 Commit this JSON document as `.liskov/application-manifest.json`:
@@ -131,6 +150,10 @@ pnpm test
 pnpm build
 test -s dist/bundle.js
 ```
+
+The build emits a CommonJS artifact and runs a compile-only smoke check. Acurast
+loads the entrypoint with `require()`, so asynchronous startup stays inside
+`main` instead of using top-level await.
 
 Then validate the manifest locally:
 
