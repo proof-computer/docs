@@ -184,6 +184,8 @@ const unlistedIds = new Set([
   'build/encrypted-javascript',
   // The V6 manifest contract, drafted ahead of the release (BKLG-20260907-fgtk); BKLG-20260907-ie6x promotes it.
   'reference/manifest-v6',
+  // The Billing Spend guide, prepared from the served spendHistory contract (BKLG-20260922-kmc0); BKLG-20260922-j7nu promotes it.
+  'organizations/spend-analysis',
 ]);
 
 const ids = files
@@ -1442,6 +1444,58 @@ for (const command of [
 
 for (const token of ['?order=stable', '?order=time', '?order=job', '#slot-1:g3', 'Job identity not reported', 'Load more', 'Show loaded history', 'Evidence unavailable', '$0.0008', 'stale']) {
   check(deploymentsPage.includes(token), `Deployments operating guide omits released contract: ${token}`);
+}
+
+// BKLG-20260922-kmc0 — the unlisted Billing Spend guide, prepared from the
+// spendHistory block liskov-rs PR 1045 serves on the organization billing read
+// and the Console page BKLG-20260922-ufrz builds. It stays Not released (the
+// unlisted loop above pins the notice and the sidebar) until the release
+// verification promotes it; nothing public may link to it or classify it first.
+const spendAnalysisId = 'organizations/spend-analysis';
+const spendAnalysisPage = readFileSync(join(docsRoot, `${spendAnalysisId}.md`), 'utf8');
+for (const file of files) {
+  if (idFor(file) === spendAnalysisId) continue;
+  check(!readFileSync(file, 'utf8').includes('spend-analysis'), `${idFor(file)}: links the unreleased Billing Spend guide`);
+}
+check(!readFileSync(join(root, 'src', 'pages', 'index.tsx'), 'utf8').includes('spend-analysis'), 'landing page links the unreleased Billing Spend guide');
+check(!/spend-analysis|Billing Spend|\*\*Spend\*\* page/.test(capabilitiesPage), 'capabilities classifies the Billing Spend page before its release verification');
+for (const [token, meaning] of [
+  // Path: a Billing child, not a new section.
+  ['open **Billing & funding**, then **Spend**', 'the path through Billing'],
+  ['`/settings/billing/spend`', 'the Console route'],
+  // Ranges: whole UTC days, the partial present day, cut from 90 served days.
+  ['**7 days**, **30 days**, or **90 days**', 'the three ranges'],
+  ['**UTC days**', 'the UTC day basis'],
+  ['**Today is partial.**', 'the partial present day'],
+  ['Exactly 90 entries, oldest first', 'the 90 served days'],
+  // Consumption kinds, each tied to its ledger kind.
+  ['| **Compute** | `deploy_spend` |', 'Compute as deploy_spend'],
+  ['| **Deployment fee** | `deployment_fee` |', 'Deployment fee as deployment_fee'],
+  ['| **Platform usage** | `usage_charge` |', 'Platform usage as usage_charge'],
+  // Reserves are held, not charged spend.
+  ['It is held, not charged.', 'a reserve is not spend'],
+  ['**Top-ups, refunds, and plan invoices.**', 'the excluded ledger rows'],
+  // Forecasts are estimates, never invoices, and absent without history.
+  ['Neither is an invoice, a quote, a limit, or a promise.', 'runway and daily average are estimates'],
+  ['fewer than seven days of counted', 'the history threshold'],
+  ['`insufficient_history`', 'the insufficient-history absence'],
+  ['`no_current_period`', 'the no-current-period absence'],
+  ['Liskov never stores it, never\nbills it', 'the projection is never billed'],
+  ['**current billing period**', 'Spend by application stays the current period'],
+  // Absent and error states stay apart; unknown never becomes zero.
+  ['- **No spend.** Every day is present and zero.', 'the zero-spend state'],
+  ['- **Not enough history.**', 'the insufficient-history state'],
+  ['- **The read failed.**', 'the read-error state'],
+  ['It does not show zeros in their place', 'unknown is not drawn as zero'],
+]) {
+  check(spendAnalysisPage.includes(token), `Billing Spend guide omits ${meaning}: ${token}`);
+}
+for (const [pattern, claim] of [
+  [/\bSpend\b(?:\*\*)?(?: page)? is (?:now )?(?:available|released|live)\b/i, 'a production availability claim'],
+  [/forecast band|daily cap|escrow/i, 'an unagreed forecast, cap or escrow series'],
+]) {
+  const prose = spendAnalysisPage.replace('Spend does not draw a forecast band, a daily cap, or a chart of\nheld reserves.', '');
+  check(!pattern.test(prose), `Billing Spend guide makes ${claim}: ${pattern}`);
 }
 
 check(combined.includes('v0.3.26'), 'runtime reference omits the supported SDK version');
