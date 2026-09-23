@@ -188,6 +188,8 @@ const unlistedIds = new Set([
   'organizations/spend-analysis',
   // The Compute guide, prepared from the committed Compute route vectors (BKLG-20260923-5y9y); BKLG-20260922-j7nu promotes it.
   'organizations/compute',
+  // The Google sign-in and invitation guide, prepared from ADR-0155 and the merged Google packets (BKLG-20260923-v8en); BKLG-20260921-spd9 promotes it.
+  'get-started/google-sign-in',
 ]);
 
 const ids = files
@@ -1589,6 +1591,75 @@ for (const [pattern, claim] of [
   [/\bprobe\b|\bproof liskov (?:admin|platform)\b|\bSQL\b|\bre-?run the (?:projection|ingest)/i, 'a probe or operator repair instruction'],
 ]) {
   check(!pattern.test(computeGuidePage), `Compute guide makes ${claim}: ${pattern}`);
+}
+
+// BKLG-20260923-v8en — the unlisted Google sign-in and invitation guide,
+// prepared from ADR-0155 and the merged Google packets (liskov-rs d3ef06f8:
+// PRs 1060, 1070, 1087; liskov-ui f8205a8: PRs 178, 189). It stays Not released
+// (the unlisted loop above pins the notice and the sidebar) until
+// BKLG-20260921-spd9 verifies the deployed path with production evidence and a
+// legal disposition; nothing public may link to it, classify it, or describe
+// Google sign-in first.
+const googleGuideId = 'get-started/google-sign-in';
+const googleGuideFile = join(docsRoot, `${googleGuideId}.md`);
+const googleGuidePage = existsSync(googleGuideFile) ? readFileSync(googleGuideFile, 'utf8') : '';
+const googleSignInClaim = /sign(?:ing)? in with Google|Google sign-in|(?:Continue|Accept) with Google|Google account/i;
+for (const file of files) {
+  const id = idFor(file);
+  if (id === googleGuideId) continue;
+  const content = readFileSync(file, 'utf8');
+  check(!/get-started\/google-sign-in\b|google-sign-in\.md/.test(content), `${id}: links the unreleased Google sign-in guide`);
+  check(!googleSignInClaim.test(content), `${id}: describes Google sign-in before its release verification`);
+}
+check(!/google-sign-in/.test(readFileSync(join(root, 'src', 'pages', 'index.tsx'), 'utf8')), 'landing page links the unreleased Google sign-in guide');
+check(!/\bGoogle\b/.test(capabilitiesPage), 'capabilities classifies Google sign-in before its release verification');
+for (const [token, meaning] of [
+  // ADR-0155 §1: the verified mailbox is the native account the email link reaches.
+  ['**the same account**', 'Google and the email link reach one account'],
+  ['Your Liskov account is your email address.', 'the mailbox is the account'],
+  ['**without regard to capital letters**, and nothing\n  else.', 'case normalisation only'],
+  ['are **three different\n  accounts** here', 'no Gmail dot or + canonicalisation'],
+  ['Google must have **confirmed** the address.', 'email_verified is required'],
+  ['reaches the account for the new address, not the old one', 'a changed Google address is another account'],
+  // ADR-0155 §3 and §6: GitHub stays separate; Google confers no repository access.
+  ['**two separate\naccounts**', 'GitHub is a separate account'],
+  ['Liskov never merges or links the two, and never tells you that another\n  account exists.', 'no merge, link or disclosure'],
+  ['**A Google sign-in grants no GitHub repository access.**', 'no repository access'],
+  ['Signing in with Google does not change which actions need GitHub.', 'GitHub-gated actions unchanged'],
+  // The agreed sign-in page (liskov-ui PR 178) and the hjxz flow.
+  ['**Continue with Google**', 'the sign-in control'],
+  ['**Google login not configured** or **Google login\nunavailable**', 'the unconfigured and unavailable states'],
+  ['> We couldn\'t sign you in. Try again, or use another way to sign in.', 'the generic failure copy'],
+  ['> Google didn\'t confirm an email address for this account. Use the magic link instead.', 'the unverified-email copy'],
+  ['so it never says whether an\naccount exists', 'failure never discloses an account'],
+  ['Finish within 10 minutes, in the same browser you started in.', 'the flow lifetime and browser binding'],
+  ['Signing in never spends Service Credits.', 'no spend'],
+  // ADR-0155 §4: the wait-list treats Google exactly as email.
+  ['A Google sign-in is admitted exactly as an email sign-in is.', 'wait-list parity'],
+  ['**Liskov is invitation-only right now**', 'the wait-list screen'],
+  ['you do not need a\nnew invitation to use Google with the same address', 'a returning mailbox needs no second invitation'],
+  // ADR-0155 §5 and the invitation page (liskov-rs PR 1087, liskov-ui PR 189).
+  ['A GitHub\n  sign-in proves no email address, so it cannot accept an invitation sent to\n  one.', 'GitHub cannot accept an email invitation'],
+  ['**An invitation sent to a GitHub account** is accepted with GitHub', 'the GitHub-login invitation is unchanged'],
+  ['**Accept with Google**', 'the invitation control'],
+  ['**Sign in as that address to accept it.**', 'the mailbox refusal'],
+  ['the invitation stays usable by\nthe person it was sent to', 'a refused link stays redeemable'],
+  ['**This invitation has already been used, so it cannot seat anyone again.**', 'the 409 state'],
+  ['**This invitation has expired.**', 'the 410 state'],
+  ['no other organization and no GitHub repository\naccess', 'acceptance grants only the role'],
+]) {
+  check(googleGuidePage.includes(token), `Google sign-in guide omits ${meaning}: ${token}`);
+}
+for (const [pattern, claim] of [
+  [/\bGoogle\b[^.\n]*\b(?:is|are) (?:now )?(?:available|released|live)\b/i, 'a production availability claim'],
+  [/\b(?:automatically|will|we) (?:merge|link|join|combine)\b|\b(?:merged|linked) (?:with|to) your GitHub/i, 'an account merge or link'],
+  [/\bGoogle\b[^.\n]*\b(?:grants?|gives?) (?:you )?(?:GitHub )?(?:repository|repo) access/i, 'a repository-access grant'],
+  [/\b(?:ignores?|removes?|strips?) (?:the )?(?:dots|`?\+`? suffix)/i, 'Gmail address canonicalisation'],
+  [/\bDecline\b/i, 'the undecided Decline invitation control'],
+  [/\bno seat\b|\bseat (?:limit|allowance)\b/i, 'a seat refusal the accept route does not have'],
+  [/invite_email_mismatch|invite_not_for_you|LISKOV_GOOGLE_|\/api\/auth\/google|platform admin/i, 'a server code, operator setting or internal route'],
+]) {
+  check(!pattern.test(googleGuidePage), `Google sign-in guide makes ${claim}: ${pattern}`);
 }
 
 check(combined.includes('v0.3.26'), 'runtime reference omits the supported SDK version');
