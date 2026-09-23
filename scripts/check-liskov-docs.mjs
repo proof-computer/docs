@@ -712,23 +712,33 @@ check(
   'V5 starter: manifest differs from the retained fixture',
 );
 check(v5StarterPackage.packageManager === 'pnpm@10.33.0', 'V5 starter: pnpm version is not pinned');
+
+for (const fixture of ['retained-v5-starter', 'builder-iteration']) {
+  const fixtureRoot = join(root, 'examples', 'liskov-v1', fixture);
+  const pkg = JSON.parse(readFileSync(join(fixtureRoot, 'package.json'), 'utf8'));
+  check(pkg.scripts.build.includes('--format=cjs'), `${fixture}: Acurast requires a CommonJS artifact`);
+  check(pkg.scripts.build.includes('node scripts/smoke-bundle.mjs'), `${fixture}: build must smoke the finished artifact`);
+  const smoke = readFileSync(join(fixtureRoot, 'scripts', 'smoke-bundle.mjs'), 'utf8');
+  check(smoke.includes('new Script(bundle'), `${fixture}: smoke must parse the actual bundle without executing bootstrap`);
+}
+
 check(
-  v5StarterPackage.dependencies?.['@proof-computer/liskov-runtime'] === 'github:proof-computer/liskov-runtime-js#v0.3.32',
-  'V5 starter: runtime SDK is not pinned to released v0.3.32',
+  v5StarterPackage.dependencies?.['@proof-computer/liskov-runtime'] === 'github:proof-computer/liskov-runtime-js#v0.3.33',
+  'V5 starter: runtime SDK is not pinned to released v0.3.33',
 );
 for (const script of ['typecheck', 'test', 'build']) {
   check(typeof v5StarterPackage.scripts?.[script] === 'string', `V5 starter: missing ${script} script`);
 }
 for (const token of [
-  'f8cd0b02c7b8dd32bdddb1026ca57dae64c0ed32',
-  "specifier: github:proof-computer/liskov-runtime-js#v0.3.32",
+  'e13d3651052110e177d6460657e08e1a6ea47e06',
+  "specifier: github:proof-computer/liskov-runtime-js#v0.3.33",
 ]) {
   check(v5StarterLock.includes(token), `V5 starter: lock file omits ${token}`);
 }
 for (const token of [
   'bootstrapLiskovRuntime',
   "logging: {mode: 'required'}",
-  "secrets: {mode: 'off'}",
+  "secrets: {mode: 'background'}",
   "runtime.log('starter.fetch.completed'",
 ]) {
   check(v5StarterSource.includes(token), `V5 starter: source omits ${token}`);

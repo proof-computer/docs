@@ -7,10 +7,10 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test test/*.test.ts",
-    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/bundle.js"
+    "build": "esbuild src/index.ts --bundle --platform=node --format=cjs --target=node22 --outfile=dist/bundle.js && node scripts/smoke-bundle.mjs"
   },
   "dependencies": {
-    "@proof-computer/liskov-runtime": "github:proof-computer/liskov-runtime-js#v0.3.32"
+    "@proof-computer/liskov-runtime": "github:proof-computer/liskov-runtime-js#v0.3.33"
   },
   "devDependencies": {
     "@types/node": "24.10.1",

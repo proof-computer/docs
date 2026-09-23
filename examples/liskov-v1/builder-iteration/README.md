@@ -7,7 +7,7 @@ contents to a repository root, moving `liskov.yml` to
 
 It pins the same versions as the retained V5 starter:
 
-- `@proof-computer/liskov-runtime` `v0.3.32`;
+- `@proof-computer/liskov-runtime` `v0.3.33`;
 - pnpm `10.33.0`; and
 - the `liskov-github-actions` `v1` interface verified at `v1.2.4`.
 
@@ -60,3 +60,7 @@ and its length never reach a log or an error.
 
 The fixture is deliberately once-mode. It does not claim ingress, durable
 state, a custom image, or a manual rerun path.
+
+The build emits CommonJS for Acurast's `require()` entry loader and parses the
+finished artifact as a script before upload. Keep asynchronous startup inside
+`main`; an ESM entrypoint with top-level await cannot be loaded by that loader.
