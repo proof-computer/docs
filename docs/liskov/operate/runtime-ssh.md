@@ -18,7 +18,7 @@ Runtime SSH through the Liskov relay is available on Developer and above. It is
 a Preview capability: the behaviour below is supported, but the relay that
 carries managed sessions runs on a single machine. If that machine is lost or
 restarted, every open session drops until it returns; reconnect when it does.
-Your jobs keep running and are unaffected when that happens. A helper or sidecar death ends managed SSH for that job until the job's next run; the job itself is unaffected.
+Your jobs keep running and are unaffected when that happens. If the processor relaunches the job's sandbox (it does this under memory pressure), managed SSH reconnects on its own, usually within a minute, under a new host key; see [Connect](#3-connect) below. A helper that stops cleanly, or an SSH sidecar that keeps failing, still ends managed SSH for that job until the job's next run; the job itself is unaffected.
 
 Interactive administration is included. Traffic through the relay counts
 against your plan's included log volume, and bytes above it are charged to
@@ -119,9 +119,13 @@ proof liskov ssh APP_REF --identity ~/.ssh/liskov-runtime
 
 The first connection to a job shows its host key and asks you to confirm it.
 Accept it once and it is pinned; a later mismatch is refused rather than
-re-prompted, so **a second prompt for a job you have already trusted is a
-warning, not a formality**. Add `--accept-host-key` to trust the first key
-without prompting in scripts.
+re-prompted. The one exception is a relaunched sandbox: it starts with a new
+host key, Liskov reports the key it replaced, and CLI `0.16.0` and later say
+the job's runtime restarted, show both fingerprints and ask you to confirm
+again. Only Liskov vouches for the new key, as on first use. **A second prompt
+that does not name a restart is a warning, not a formality.** Add
+`--accept-host-key` to trust the first key, or a restart's new key, without
+prompting in scripts; it never accepts any other mismatch.
 
 You get an ordinary interactive shell. Your customer process keeps running
 alongside you.
@@ -281,6 +285,9 @@ the whole attachment. A new attachment is created when a new job launches.
 **A host-key mismatch warning** — stop. The key pinned on your machine does not
 match the job answering. Do not override it. Re-run with `--print-command
 --json` and compare the fingerprint against the activity feed for that job.
+A job whose sandbox was relaunched answers with a new key: CLI `0.16.0` and
+later recognise that case and ask you to confirm it instead of refusing, so
+upgrade an older CLI rather than editing the known-hosts file.
 
 **`runtime_ssh_plan_required`** — the Application's organization is on a plan
 that does not include Runtime SSH.
@@ -309,7 +316,9 @@ when it closes.
 
 **`access_proxy_rejected_connector_not_registered`** — the runtime has not
 connected to the relay for this job. Check that the job is still running. If
-its access sidecar failed, that is terminal for this run: launch a new job.
+its sandbox was relaunched moments ago, the access sidecar reconnects on its own,
+usually within a minute; allow up to three, then retry. If it does not, or its
+helper stopped, that is terminal for this run: launch a new job.
 
 **`access_proxy_rejected_connector_unavailable`** — the runtime's connection
 to the relay is not ready yet. Retry in a few seconds.

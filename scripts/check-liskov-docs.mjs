@@ -842,8 +842,13 @@ for (const token of [
   'first launch',
   'runtime_ssh_operator_key_registry_empty',
   // BKLG-20260813-gebd / BKLG-20260903-futx: both blast radii, and ADR-0112 metering.
+  // BKLG-20260924-seyr (ADR-0158): a relaunched sandbox reconnects and re-pins;
+  // a clean helper stop still ends access for the run.
   'The relay is a single machine',
-  'helper or sidecar death',
+  'relaunches the job\'s sandbox',
+  'stops cleanly',
+  'host.previousFingerprint',
+  'It never accepts any\nother mismatch',
   'log overage rate',
 ]) {
   check(v5SshPage.includes(token), `V5 Managed SSH guide omits ${token}`);
@@ -1190,9 +1195,10 @@ check(
   'capabilities: managed Runtime SSH must state the single-machine relay and the shared log allowance',
 );
 check(
-  /helper or sidecar death ends managed SSH for that job until the next run/.test(capabilitiesPage)
+  /relaunches the job's sandbox, managed SSH reconnects/.test(capabilitiesPage)
+    && /ends managed SSH for that job until the next run/.test(capabilitiesPage)
     && /job itself is unaffected/.test(capabilitiesPage),
-  'capabilities: managed Runtime SSH must state the helper/sidecar-death blast radius beside the single-gateway acceptance',
+  'capabilities: managed Runtime SSH must state the sandbox-relaunch reconnect and the helper/sidecar blast radius beside the single-gateway acceptance',
 );
 for (const token of [
   'Developer and above',
@@ -1200,7 +1206,8 @@ for (const token of [
   'included log volume',
   'Pro and above',
   'runtime_ssh_provider_plan_required',
-  'helper or sidecar death',
+  'relaunches the job\'s sandbox',
+  'stops cleanly',
 ]) {
   check(
     readFileSync(join(docsRoot, 'operate', 'runtime-ssh.md'), 'utf8').includes(token),
