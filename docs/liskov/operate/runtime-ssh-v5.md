@@ -12,8 +12,11 @@ managed-provider only (`access.ssh.provider.kind: liskov_managed`) on a
 `native_image` runtime; a customer-owned Tailscale provider is not part of
 the retained V5 arm. The relay is a single machine: if it is lost, open
 sessions drop until it returns and you reconnect; your jobs are unaffected.
-A helper or sidecar death ends managed SSH for that job until the next run;
-the job itself is unaffected. Relay traffic counts against your plan's
+If the processor relaunches the job's sandbox, managed SSH reconnects on its
+own, usually within a minute, under a new host key that CLI `0.16.0` and
+later ask you to confirm. A helper that stops cleanly, or an SSH sidecar that
+keeps failing, still ends managed SSH for that job until the next run; the
+job itself is unaffected. Relay traffic counts against your plan's
 included log volume and is charged at the log overage rate above it. For
 V4 policy syntax, use the [Manifest V4 Runtime SSH procedure](./runtime-ssh.md).
 
@@ -122,8 +125,15 @@ proof liskov ssh APP_REF --identity ~/.ssh/liskov-runtime
 
 The first connection displays the signed job host fingerprint. Accepting it
 pins the key under an attachment-specific alias in the CLI's mode-0600
-`runtime-ssh-known-hosts` file. `--accept-host-key` automates first use only.
-It never accepts a mismatch.
+`runtime-ssh-known-hosts` file. `--accept-host-key` automates first use, and
+the re-pin after a relaunched sandbox described below. It never accepts any
+other mismatch.
+
+A relaunched sandbox starts with a new host key. The connection then reports
+`host.previousFingerprint` and `host.rotatedAtMs`. When the pinned key is
+exactly the previous one, CLI `0.16.0` and later say the job's runtime
+restarted, show both fingerprints, and ask you to confirm. As on first use,
+only Liskov vouches for the new key.
 
 A later mismatch is `RUNTIME_SSH_HOST_KEY_MISMATCH`. Stop; do not delete the
 known-hosts file or relax OpenSSH checking. Re-run `--print-command --json`,
@@ -234,7 +244,7 @@ restarts, replaces, or marks the customer process unhealthy.
 | `RUNTIME_SSH_IDENTITY_NOT_AUTHORIZED` | The selected key is not in this attachment's effective set. Compare it with `snapshotKeyFingerprints` and `withdrawnKeyFingerprints` from `--print-command --json`; a key registered after the attachment was created reaches only new attachments. |
 | `runtime_ssh_operator_key_withdrawn` | This key's access was withdrawn for the organization. An administrator can lift it with `withdrawn-key remove`; otherwise use another authorized key. |
 | `access_proxy_rejected_session_already_open` | A session is already open on this job; managed Runtime SSH allows one at a time. Retry when it closes. |
-| `access_proxy_rejected_connector_not_registered` | The runtime has not connected to the relay for this job. If its access sidecar failed, that is terminal for this run; launch a new job. |
+| `access_proxy_rejected_connector_not_registered` | The runtime has not connected to the relay for this job. If its sandbox was relaunched moments ago, the access sidecar reconnects on its own, usually within a minute; allow up to three, then retry. If it does not, or its helper stopped, that is terminal for this run; launch a new job. |
 | `access_proxy_rejected_connector_unavailable` | The runtime's relay connection is not ready yet. Retry in a few seconds. |
 | `access_proxy_rejected_credential_rejected` | The relay refused the one-time ticket. This is not your key: the ticket is minted seconds before use. Retry once, then report the `attachmentId` and the time. |
 | `runtime_ssh_attachment_not_ready` with `failureCode: operator_revoked` | Access to this attachment was revoked deliberately by an administrator in your organization. Retrying will not help; a new attachment is created when a new job launches. |
