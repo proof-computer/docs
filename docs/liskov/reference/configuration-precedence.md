@@ -63,6 +63,12 @@ policy, deployment, job, processor, and runtime instance; installs managed
 runtime-env values; obtains secrets; and attaches logging. Application code
 must use `runtime.env` after bootstrap.
 
+For SDK-enabled V5 JavaScript, this signed runtime-env read also recovers the
+declared public variables when an Acurast environment handoff arrives too late
+for the process snapshot. The same pinned-policy and signed-job checks apply.
+Bundles that do not use the SDK continue to depend on Acurast delivery; the
+signed route never returns customer secrets.
+
 ## Built-ins and reserved names
 
 Liskov supplies reserved identity, bootstrap, secret, and logging values where

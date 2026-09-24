@@ -1,6 +1,6 @@
 ---
 title: Runtime SDK
-description: Public @proof-computer/liskov-runtime v0.3.26 bootstrap handle, capability states, options, and environment behavior.
+description: Public @proof-computer/liskov-runtime bootstrap handle, capability states, options, and environment behavior.
 ---
 
 # Runtime SDK
@@ -9,12 +9,14 @@ Supported package:
 
 ```text
 @proof-computer/liskov-runtime
-github:proof-computer/liskov-runtime-js#v0.3.26
+github:proof-computer/liskov-runtime-js#v0.3.33
 ```
 
 The main export keeps the compatibility name `bootstrapSlipwayRuntime`.
 `bootstrapLiskovRuntime` is an alias in this release. Use the documented
 high-level handle rather than low-level protocol modules.
+Version `v0.3.26` remains the public bootstrap baseline. Use `v0.3.33` for
+the V5 JavaScript signed runtime-env fallback and current secret installation.
 
 ## Minimal call
 

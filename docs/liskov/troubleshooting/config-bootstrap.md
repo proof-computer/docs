@@ -10,10 +10,14 @@ description: Diagnose missing managed values, secret grants, identity mismatch, 
 1. Confirm the name exactly matches Manifest V5, including case.
 2. Check whether a managed value is set for the intended Application.
 3. Otherwise verify a non-secret manifest default exists.
-4. Publish/apply a successor according to update policy.
+4. For an SDK JavaScript job, inspect `runtime.status().capabilities.runtimeEnv`.
+   If signed delivery failed, record its non-secret error code and the exact
+   Application UID, policy and job IDs for support. Publish a successor when
+   the declared value or policy actually changed.
 
 An empty string is an explicit value. A configuration save does not mutate a
-running process.
+running process. Raw bundles still depend on Acurast environment delivery;
+the SDK's signed fallback serves declared public variables only.
 
 ## Required secret is missing
 

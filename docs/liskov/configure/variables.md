@@ -65,6 +65,13 @@ current managed value and a changed configuration revision. Acurast encrypted
 environment delivery freezes the selected values for that job. Saving a value
 does not rewrite an already running process or publish a new policy.
 
+For a V5 JavaScript job using the Liskov runtime SDK, signed bootstrap can
+fetch declared **non-secret** variables if Acurast's encrypted environment
+handoff was not ready before the process started. Raw JavaScript bundles still
+use the Acurast handoff. Customer secrets use their own encrypted grants, not
+runtime-env. Both variable paths use the job's pinned policy; a signed
+refresh may pick up a newer managed value during a running SDK job.
+
 ## Read and verify
 
 Read values after SDK bootstrap:

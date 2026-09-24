@@ -1663,6 +1663,8 @@ for (const [pattern, claim] of [
 }
 
 check(combined.includes('v0.3.26'), 'runtime reference omits the supported SDK version');
+check(combined.includes('v0.3.33') && combined.includes('signed runtime-env fallback'),
+  'runtime reference omits the released JavaScript signed fallback');
 check(combined.includes('QmQCpRJ593xRyKko9smvtFixzfAGwDuG6gXBemRtUeSe4U'), 'Uptime Prober CID differs from descriptor');
 check(combined.includes('7545ffe44288c548ff4dea09ef0c0dc318a8dd490c5dc822becec3ff0d307d57'), 'Uptime Prober digest differs from descriptor');
 check(combined.includes('UPTIME_PROBER_TG_BOT_TOKEN'), 'Uptime Prober secret destination differs from descriptor');
