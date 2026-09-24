@@ -65,6 +65,16 @@ accounting and is not reclassified as an ACU refund or reversal.
 
 ## Verify
 
+To read one Application's charges, open the Application and choose **Spend**.
+**Recent charges** lists its latest executions, one row each: **Requested** is
+what the execution reserved, **Charged** is its final charge, and **Still
+holding** is reserve that has not been released yet. A charge in review reads
+*Not billed*, with the status *Under review by Liskov*, and its hold stays under
+**Still holding** until it settles. The **Charged** figure above the table is
+the Application's final charges over the last 30 days, as Liskov computes them.
+**Full ledger →** opens **Ledger** for that Application, which remains the
+organization-wide record with each lineage's detail.
+
 Open **Ledger** (from **Billing & funding**) and match the reserve, settlement,
 and release rows to the Application UID and deployment. A reserve is a ceiling,
 not a cost; open the lineage on a settled `deploy_spend` row to see the
