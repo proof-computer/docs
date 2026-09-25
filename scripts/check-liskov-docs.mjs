@@ -1039,6 +1039,12 @@ for (const token of [
   check(cliPage.includes(token), `CLI page omits operator-key contract token: ${token}`);
 }
 check(!cliPage.includes('does not revoke access'), 'CLI page repeats the retracted non-revocation claim');
+// BKLG-20260925-my1k: `application vars list|set|unset` exist (Q-20260920-9s7a), so the
+// Variables page must not return to saying the CLI cannot write a value.
+check(
+  !readFileSync(join(docsRoot, 'configure', 'variables.md'), 'utf8').includes('does not provide a public v1 command'),
+  'Variables page still says the CLI has no v1 command for writing variable values',
+);
 check(
   JSON.stringify(cliContract.withdrawnKeyCommands) ===
     JSON.stringify([
@@ -1371,7 +1377,18 @@ for (const [fileId, required] of Object.entries({
     '150b7c96d0caa23e757222dd1eb0288db48a368d',
     'incumbent remains selected',
   ],
-  'configure/variables': ['Manifest V5', '"source": "managed"', '"source": "literal"', '"value": "safe"', 'Empty strings'],
+  'configure/variables': [
+    'Manifest V5',
+    '"source": "managed"',
+    '"source": "literal"',
+    '"value": "safe"',
+    'Empty strings',
+    'application vars list APP_REF',
+    'application vars set APP_REF',
+    'application vars unset APP_REF',
+    'put credentials',
+    '497899feccd466ae10a819c4c86f55303d9bfe88',
+  ],
   'configure/secrets': ['"kind": "environment"', '"kind": "file"', '0.10.40', '0.3.32', '0600', 'independently'],
   'troubleshooting/config-bootstrap': ['runtime_bootstrap_customer_secrets_runtime_incompatible', 'runtime_secrets_file_installation'],
   'reference/configuration-precedence': ['Application-managed value', 'process.env', 'Signed runtime bootstrap', 'LISKOV_ORGANIZATION', 'persistent organization'],
@@ -1379,7 +1396,9 @@ for (const [fileId, required] of Object.entries({
   'operate/update': ['successor', 'without mutating'],
   'operate/retire': ['does not stop existing jobs', 'receipt'],
   'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Encrypted JavaScript payload delivery', 'Private customer code inside Cargo images'],
-  'reference/cli': ['0.13.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key', 'withdrawn-key'],
+  'reference/cli': ['0.13.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key', 'withdrawn-key',
+    'application vars list APP_REF', 'application vars set APP_REF NAME VALUE', 'application vars unset APP_REF NAME',
+    '497899feccd466ae10a819c4c86f55303d9bfe88'],
   'reference/manifest-v4': ['deprecated_manifest_field', 'profileId', 'sinkName', 'future schema', 'durationMs', '60000', 'maxStartDelayMs', '3600000'],
   'reference/statuses-actions-errors': [
     'processorAtMatchCap',

@@ -43,9 +43,41 @@ Open the Application's configuration, choose **Variables**, and set a value for
 each managed name. The Console shows names and presence to authorized members.
 Review the change and its target Application before saving.
 
-The active CLI can read Application state but does not provide a public v1
-command for writing variable values. Do not put an environment-specific value
-into the repository merely to work around that boundary.
+The CLI offers the same operations beside the Console. Each one works on the
+managed variables that the Application's active policy declares:
+
+```bash
+proof liskov application vars list APP_REF
+proof liskov application vars set APP_REF API_ENDPOINT https://example.com/api --yes
+proof liskov application vars unset APP_REF API_ENDPOINT --yes
+```
+
+- `vars list` shows every declared managed variable with its status (`set`,
+  `default`, or `unset`), its value, and its default. Add `--json` to get the
+  server's response unchanged.
+- `vars set APP_REF NAME VALUE` shows the current value and the value it would
+  save, then exits without writing. Add `--yes` to save it. An empty string is
+  a value; to pass a value that starts with a dash, put `--` before it.
+- `vars unset APP_REF NAME` shows what clearing would leave: the declared
+  default, or no value. Add `--yes` to clear the saved value.
+
+Without `--yes`, `set` and `unset` are dry runs and change nothing. Values are
+shown in the clear because a managed variable is not secret. Put credentials
+in [Secrets](./secrets.md).
+
+The commands set and clear values only. Declaring, renaming, or removing a
+variable is a manifest change. A write is refused for a name the active policy
+does not declare (`undeclared_variable`), a Liskov built-in name
+(`reserved_builtin_name`), or a value over 4096 bytes
+(`variable_value_too_large`). Key automation on the `reason` code, not the
+message.
+
+The `vars` commands are in CLI source
+`497899feccd466ae10a819c4c86f55303d9bfe88`, which is not a released package.
+Set values in the Console until a later plugin release contains that commit.
+
+Keep environment-specific values out of the repository. Set them as managed
+values rather than committing them into the manifest as literals.
 
 ## Precedence
 

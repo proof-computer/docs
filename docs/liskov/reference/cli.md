@@ -83,12 +83,18 @@ environment.
 | `application logs APP_REF` | Read managed Application logs: recent by default, streamed live with `--follow`, or the full retained history with `--from-start`. |
 | `application action-plan APP_REF` | Read current blockers and supported actions. |
 | `application secrets APPLICATION_ID` | Read declared secret requirements, never values. |
+| `application vars list APP_REF` | Read the active policy's managed variables with their status, default, and value. Values are shown in the clear; put credentials in Secrets. Not yet in a released plugin; see below. |
 | `application plans APPLICATION_ID` | Advanced effective-policy/plan inspection. |
 | `application deployment status APP_REF` | Advanced deployment evidence. |
 | `application artifact-pin list APP_REF` | Advanced artifact-version evidence. |
 
 An `APP_REF` can be the accepted Application UID, name, or ID. Prefer the UID
 for automation and support.
+
+The `application vars list`, `application vars set`, and `application vars
+unset` commands are in source `497899feccd466ae10a819c4c86f55303d9bfe88`, which
+is not a released package. Set managed values in the Console until a later
+plugin release contains that commit. See [Variables](../configure/variables.md).
 
 Console Coverage already shows the server's execution-convergence document.
 The published plugin versions above do not include a CLI sibling for that
@@ -179,6 +185,8 @@ remain required. See the release-gated
 | `application retire APP_REF` | Read retirement preview/state; add `--reason` and `--yes` to start. |
 | `application retire cancel APP_REF` | Read cancellation preview; add `--yes` to cancel while allowed. If the retirement finalized first, this **exits zero** and prints the immutable receipt: the outcome was reached, so there is nothing left to cancel. |
 | `application hold release APP_REF` | Read the held job and what releasing it would do; add `--reason TEXT --yes` to request the release. `--hold-id ID` names the job when more than one is held. Available in `0.14.0` and later. |
+| `application vars set APP_REF NAME VALUE` | Read preview of the current and new value; add `--yes` to apply. An empty string is a value. The name must be a managed variable the active policy declares. Not yet in a released plugin. |
+| `application vars unset APP_REF NAME` | Read preview of what clearing leaves: the declared default, or no value. Add `--yes` to apply. Not yet in a released plugin. |
 | `application run APP_REF` | Read the dry run of one more occurrence; add `--reason TEXT --yes` to authorize it. A settled `once` Application only. It authorizes exactly one more occurrence against the Application's current published revision and does not promise a launch. Available in `0.14.0` and later. |
 
 Pause and retirement do not force-stop existing Acurast jobs.
