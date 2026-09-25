@@ -5,6 +5,38 @@ description: Follow a proposed deployment from estimate and temporary hold to se
 
 # Quotes, reserves, and final charges
 
+## When you are charged
+
+A job holds Service Credit before it runs and is charged only when it settles.
+Five facts decide what you pay:
+
+1. **Reserved before submission.** Liskov reserves Service Credit when it
+   commits to launching your job, before the job is sent to the network. The
+   reserve is the job's reward cap at the rate locked when the offer was made.
+   It is a ceiling, never an estimate and never a cost.
+2. **Charged at settlement.** Credit is charged only when the job settles,
+   after the evidence of its execution reports is final. If that final evidence
+   shows no report was filed, the charge is zero and the whole reserve is
+   released. If the evidence is unclear, the reserve stays held and the item is
+   under review; Liskov never guesses.
+3. **A job that never runs costs nothing.** A job that is sent to the network
+   but is never matched to a processor, never starts, or never reports settles
+   to a zero charge, and its reserve is released. Liskov bears whatever the
+   network kept.
+4. **Only the consumed reward is charged.** The charge is the job's reward
+   budget minus what the network returned when the job was ended, converted at
+   the locked rate and never more than the reserve; the rest is released.
+   Liskov absorbs every network transaction fee: no fee to deploy a job, end
+   it, or make any other transaction is ever charged to you. Whether the run
+   succeeded or failed is not part of the amount. A completed run is typically
+   charged a fraction of its reserve.
+5. **A pending reserve is a ceiling.** While a job's money is pending, you see
+   a reserved amount held against your balance, shown as "up to" that amount.
+   Your available credit is your balance minus open reserves. The charge
+   appears only at settlement.
+
+## From quote to final charge
+
 Liskov separates estimation, authorization, and settlement so a customer can
 review a bounded commitment before work proceeds.
 
@@ -46,22 +78,23 @@ denominated in USD Service Credits and should explain the related Application,
 deployment, job, and reason.
 
 Execution evidence determines whether Liskov may settle a managed final charge.
-When Liskov submits a deregistration transaction, the gross refund in its
-finalized chain events determines how much of the reserved amount is reclaimed
-at the settlement's locked rate. The native transaction fee is recorded
-separately. Wallet balance movement corroborates those facts; it does not set
-the reclaim amount.
+When Liskov submits a deregistration transaction, the amount the deregistration
+returned in its finalized chain events (the chain calls this the gross refund)
+determines how much of the reserved amount is released at the
+settlement's locked rate. The native transaction fee is recorded separately
+and is not part of your charge. Wallet balance movement corroborates those
+facts; it does not set the returned amount.
 
-An included deregistration with a gross refund of zero means the transaction
-finalized and returned no gross refund. That is different from a case where no
-deregistration was submitted: there is then no chain coordinate or refund
+An included deregistration that returned zero means the transaction finalized
+and returned nothing. That is different from a case where no
+deregistration was submitted: there is then no chain coordinate and no returned
 amount. Missing chain evidence must not be presented as a zero return.
 
 The managed zero-charge decision is made from report absence, not by erasing
-treasury facts. Liskov retains the admitted network budget, gross refund,
-processor payout, and deregistration fee for operator accounting. Those facts
-do not appear as a customer balance. Self-custody remains immutable ACU chain
-accounting and is not reclassified as an ACU refund or reversal.
+treasury facts. Liskov retains the admitted network budget, the amount the
+deregistration returned, processor payout, and deregistration fee for operator
+accounting. Those facts do not appear as a customer balance. Self-custody
+remains immutable ACU chain accounting and is never reclassified or reversed.
 
 ## Verify
 

@@ -51,16 +51,17 @@ the final charge is determined at settlement rather than predicted.
 | The job is still running, or the schedule has not ended | None yet | Stays open |
 
 Two of these look alike and are not. A registration that **ended and returned
-nothing** has a chain coordinate and a zero refund. A registration where **no
-deregistration was submitted** has neither, and missing chain evidence must
-never be read as a zero return — that case is deferred or reviewed, not charged.
+nothing** has a chain coordinate and a zero returned amount. A registration
+where **no deregistration was submitted** has neither, and missing chain
+evidence must never be read as a zero return — that case is deferred or
+reviewed, not charged.
 
 The managed no-report row is also distinct. It is authorized only after the
 strict deadline by a finalized, readable scanner result. It closes with
 `report_absent_not_billed`, no unresolved amount, and no customer action. An
 open deadline or unreadable, unavailable, outside-coverage, conflicting, or
 failed scan stays deferred. Self-custody does not use this Service Credit rule;
-its ACU movement remains immutable chain accounting, not a refund or reversal.
+its ACU movement remains immutable chain accounting and is never reversed.
 
 ## Pausing, retiring, and renewing
 
