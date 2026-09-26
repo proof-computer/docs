@@ -77,12 +77,12 @@ and successor relationships with the listing's lifecycle.
 Separate:
 
 - Marketplace software price;
-- quoted and reserved Liskov/Acurast service;
+- the per-job cap and reserve for Liskov/Acurast service;
 - final Service Credit charge; and
 - direct external-service fees, such as Telegram or an API provider.
 
 One party's “free” label does not erase another boundary.
 
 Use [Inspect the proof chain](../operate/proof-chain.md) for the detailed
-sequence and [Quotes, reserves, and final charges](../organizations/charges.md)
+sequence and [Per-job caps, reserves, and final charges](../organizations/charges.md)
 for settlement.

@@ -8,10 +8,10 @@ description: Resolve insufficient credits, long-lived reserves, settlement revie
 ## Insufficient Service Credits
 
 Confirm the active organization and read available versus reserved credit.
-Review the deployment quote and policy cap. Customer Stripe checkout and new
-Service Credit issuance are release-gated. If an existing organization lacks
-available credit, stop before retrying and contact support; do not call an
-internal funding endpoint. The customer does not fund a crypto wallet.
+Review the deployment's per-job cap and the reserve a run needs. Customer
+Stripe checkout and new Service Credit issuance are release-gated. If an
+existing organization lacks available credit, stop before retrying and contact
+support; do not call an internal funding endpoint. The customer does not fund a crypto wallet.
 
 A balance change does not necessarily retry a blocked deployment. Return to
 the Action Plan.
@@ -38,7 +38,7 @@ that closeout; preserve the evidence and wait or escalate the typed blocker.
 
 ## Final amount is under review
 
-Preserve quote, reserve, policy cap, job schedule, chain evidence, and
+Preserve reserve, policy cap, job schedule, chain evidence, and
 transaction IDs. Liskov must fail closed when the sources are ambiguous.
 Customer-facing support should investigate; no public command can assert a
 made-up final amount.

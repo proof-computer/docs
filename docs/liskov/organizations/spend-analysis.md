@@ -94,7 +94,7 @@ average:
 So a large reserve can lower **Available** on **Billing & funding** without
 changing Spend at all. A charge appears on the day its settlement row is
 written and does not move afterwards, so a past day's bar never shrinks. See
-[Quotes, reserves, and final charges](./charges.md) for how a reserve becomes
+[Per-job caps, reserves, and final charges](./charges.md) for how a reserve becomes
 a charge.
 
 ## Compare the last 30 days

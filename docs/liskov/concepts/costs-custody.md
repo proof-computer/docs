@@ -12,9 +12,10 @@ Application's effective policy and the organization's customer controls.
 ## Customer money model
 
 USD Service Credits are the account unit. Liskov supports read-only views of
-available, reserved, used, and transaction history in USD. It quotes work,
-reserves bounded credit, settles a final charge from evidence, and releases
-unused reserve for eligible, already-funded organizations.
+available, reserved, used, and transaction history in USD. It shows the
+per-job cap you authored and the reserve a run opens, reserves bounded credit,
+settles a final charge from evidence, and releases unused reserve for
+eligible, already-funded organizations.
 
 Customer Stripe checkout and issuance of new Service Credits remain
 release-gated. Internal first-party acceptance uses an existing pre-funded
@@ -48,7 +49,7 @@ A deployment must fit all relevant boundaries:
 
 1. manifest/effective-policy caps;
 2. enabled product capability and organization entitlement;
-3. current quote and reserve;
+3. the Service Credit reserve (per-job cap × jobs);
 4. available USD Service Credits;
 5. explicit customer confirmation where required; and
 6. network acceptance.
@@ -72,4 +73,5 @@ to self-custody: ACU movement remains immutable chain accounting, never an ACU
 refund or reversal invented by Liskov.
 
 See [Read USD Service Credits](../organizations/service-credits.md) and
-[Quotes, reserves, and final charges](../organizations/charges.md) for tasks.
+[Per-job caps, reserves, and final charges](../organizations/charges.md) for
+tasks.

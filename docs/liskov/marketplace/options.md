@@ -23,7 +23,8 @@ Check:
 - source repository, version, artifact CID, digest, and encryption mode;
 - schedule, resources, and renewal behavior;
 - external accounts, credentials, URLs, or allowlisting you must prepare;
-- Marketplace price, Liskov/Acurast quote, and third-party costs; and
+- Marketplace price, Liskov/Acurast per-job cap and reserve, and third-party
+  costs; and
 - whether changing an option requires a successor deployment.
 
 “Free” on a listing means no Marketplace software fee. Compute, Liskov service,
@@ -58,7 +59,7 @@ inside a running Acurast job.
 
 Before public release, acceptance must prove that the review identifies the
 active organization, Application name, every secret label and external
-account, displayed quote/reserve, and maximum commitment. The created
+account, displayed per-job cap and reserve, and maximum commitment. The created
 Application must show the selected offering ID and version.
 
 Review [Uptime Prober](./uptime-prober.md) for the first-party acceptance

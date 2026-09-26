@@ -573,6 +573,30 @@ check(
   'billing troubleshooting does not close ordinary managed no-report rows without customer action',
 );
 
+// BKLG-20260926-bsr6 — ADR-0176 §1. Before a launch a managed V5 customer sees
+// the per-job cap they authored and the reserve a run opens (perJob × jobs);
+// no Console or CLI surface shows a pre-launch cost estimate. A page that asks
+// the customer to review a quote promises a number the product does not show.
+const spendLimitsPage = readFileSync(join(docsRoot, 'configure', 'spend-limits.md'), 'utf8');
+check(
+  /## Verify before launch\s+Review the per-job cap, the reserve a run opens \(per-job cap × jobs\),\s+available credit, duration, renewal, and parallelism together\./.test(spendLimitsPage),
+  'spend limits page does not name the per-job cap and the reserve a run opens under "Verify before launch"',
+);
+for (const token of ['"unit": "service_credit_micros"', '"perJob":', '"rate":', '1,000,000 micros is USD 1.00', '../reference/manifest-v5.md#spend', '../reference/manifest-v4.md#deploymentspend']) {
+  check(spendLimitsPage.includes(token), `spend limits page omits the V5 deployment.spend contract: ${token}`);
+}
+check(!/planck/i.test(spendLimitsPage), 'spend limits page teaches a planck amount instead of V5 Service Credit micros');
+check(
+  /C\[Policy caps\] --> R\[Service Credit reserve\]/.test(chargesPage),
+  'charge lifecycle flowchart does not run from policy caps straight to the Service Credit reserve',
+);
+check(!/\[Quote\]|A \*\*quote\*\*/.test(chargesPage), 'charge lifecycle defines a pre-launch quote');
+const preLaunchQuote = /\| Quote \||\bquote\s*\/\s*reserve|\bquote,\s+(and\s+)?reserve|\breview[^.]{0,60}\bquote\b|Quotes, reserves, and final charges|\bquotes work\b|\bquoted and reserved\b/i;
+for (const file of files) {
+  if (idFor(file).startsWith('legal/')) continue;
+  check(!preLaunchQuote.test(readFileSync(file, 'utf8')), `${idFor(file)}: presents a quote as something a customer reviews before launch`);
+}
+
 
 const sidebar = readFileSync(sidebarPath, 'utf8');
 const publicEntry = allContent[0];

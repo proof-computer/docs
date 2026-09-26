@@ -27,8 +27,8 @@ A customer recipe will be appropriate only after the product owners confirm:
 
 - the exact first-party listing and its admitted version;
 - listing-to-Application artifact and policy provenance;
-- clear prerequisites, option labels, secret handling, quote, reserve, and
-  maximum commitment;
+- clear prerequisites, option labels, secret handling, per-job cap, reserve,
+  and maximum commitment;
 - collision-safe Application naming and an actionable post-launch timeline;
 - a supported customer funding and commercial-terms path; and
 - complete production acceptance and public release approval.
