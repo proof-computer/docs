@@ -28,6 +28,7 @@ const baseExpectedIds = [
   'build/workload-requirements',
   'build/runtime-sdk',
   'build/manifest-v4',
+  'build/policy-skill',
   'build/github-actions',
   'build/artifacts-provenance',
   'build/validate-import-publish',
@@ -1498,6 +1499,19 @@ for (const fileId of [
   check(page.includes('invitation-only'), `invitation-only boundary: ${fileId} does not state it`);
   check(page.includes(WAITLIST_FORM_HREF), `invitation-only boundary: ${fileId} omits the wait-list form`);
 }
+
+const policySkillPage = readFileSync(join(docsRoot, 'build', 'policy-skill.md'), 'utf8');
+check(
+  policySkillPage.includes('git tag `v1.0.0`')
+    && policySkillPage.includes('proof liskov application manifest validate --file PATH --json --no-analytics')
+    && policySkillPage.includes('does not publish, deploy, reserve, or charge')
+    && policySkillPage.includes('schemaVersion` `6`'),
+  'policy skill guide must name release v1.0.0, the local validate command, and the V5 boundary',
+);
+check(
+  capabilitiesPage.includes('| Local V5 manifest drafting with the liskov-policy skill | v1 authoring aid at skill release `1.0.0`'),
+  'capabilities must classify the liskov-policy skill as local V5 drafting',
+);
 
 for (const command of [
   'proof liskov login',
