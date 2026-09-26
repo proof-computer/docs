@@ -186,6 +186,8 @@ const unlistedIds = new Set([
   'build/encrypted-javascript',
   // The V6 manifest contract, drafted ahead of the release (BKLG-20260907-fgtk); BKLG-20260907-ie6x promotes it.
   'reference/manifest-v6',
+  // The V7 public-HTTP manifest contract, prepared from the merged grammar (BKLG-20260926-2r3t, per BKLG-20260906-5w4m); promotion is a later release gate, not this page.
+  'reference/manifest-v7',
   // The Billing Spend guide, prepared from the served spendHistory contract (BKLG-20260922-kmc0); BKLG-20260922-j7nu promotes it.
   'organizations/spend-analysis',
   // The Compute guide, prepared from the committed Compute route vectors (BKLG-20260923-5y9y); BKLG-20260922-j7nu promotes it.
