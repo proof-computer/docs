@@ -195,6 +195,8 @@ const unlistedIds = new Set([
   'organizations/compute',
   // The Google sign-in and invitation guide, prepared from ADR-0155 and the merged Google packets (BKLG-20260923-v8en); BKLG-20260921-spd9 promotes it.
   'get-started/google-sign-in',
+  // The Console New application guide, prepared from the merged Console flow (BKLG-20260922-1g4v); BKLG-20260624-8s1v promotes it into the GitHub guide.
+  'get-started/console-application',
 ]);
 
 const ids = files
@@ -1734,6 +1736,74 @@ for (const [pattern, claim] of [
   [/invite_email_mismatch|invite_not_for_you|LISKOV_GOOGLE_|\/api\/auth\/google|platform admin/i, 'a server code, operator setting or internal route'],
 ]) {
   check(!pattern.test(googleGuidePage), `Google sign-in guide makes ${claim}: ${pattern}`);
+}
+
+// BKLG-20260922-1g4v — the unlisted Console New application guide, prepared
+// from the merged flow (liskov-ui a81b49c: PRs 164, 213, 214 for npfa, 3cf4,
+// uceq) over the liskov-rs reads lel3, m2vp and m59i and the existing
+// identity-only POST /api/applications. It stays Not released (the unlisted
+// loop above pins the notice and the sidebar) until BKLG-20260624-8s1v records
+// the deployed flow and folds it into get-started/github; until then nothing
+// public may link to it or describe the Console flow, and the GitHub guide
+// stays the supported own-repository path.
+const consoleAppGuideId = 'get-started/console-application';
+const consoleAppGuideFile = join(docsRoot, `${consoleAppGuideId}.md`);
+const consoleAppGuidePage = existsSync(consoleAppGuideFile) ? readFileSync(consoleAppGuideFile, 'utf8') : '';
+for (const file of files) {
+  const id = idFor(file);
+  if (id === consoleAppGuideId) continue;
+  const content = readFileSync(file, 'utf8');
+  check(!/get-started\/console-application\b|console-application\.md/.test(content), `${id}: links the unreleased Console New application guide`);
+  check(!/\bNew application\b|\/applications\/new\b|Create this application/.test(content), `${id}: describes the Console New application flow before its release verification`);
+}
+check(!/console-application/.test(readFileSync(join(root, 'src', 'pages', 'index.tsx'), 'utf8')), 'landing page links the unreleased Console New application guide');
+check(!/New application|console-application/.test(capabilitiesPage), 'capabilities classifies the Console New application flow before its release verification');
+for (const [token, meaning] of [
+  // The release gate: the CLI + Actions guide stays authoritative.
+  ['[Deploy from GitHub](./github.md) — the CLI and GitHub Actions — is\nthe supported way', 'the GitHub guide stays the supported path'],
+  // The implemented route and steps (liskov-ui newApplication.ts, dashboardView.ts).
+  ['`https://console.liskov.proof.computer/applications/new`', 'the implemented route'],
+  ['under **Your first application**, choose **New\n   application**', 'the Dashboard entry'],
+  ['**Repository**, **Policy**, and **Confirm**', 'the three steps'],
+  ['**Continue to policies →**', 'the repository step action'],
+  ['There\n   is no branch list: type the name exactly.', 'the free-text base branch'],
+  ['**Review this application →**', 'the policy step action'],
+  ['**Create this application**', 'the create control'],
+  // One source, one commit (m2vp discovery, m59i summary, 409 github_ref_commit_mismatch).
+  ['Liskov resolves the branch to **one\ncommit**', 'discovery reads one commit'],
+  ['comes from the **exact commit** step 2\nscanned', 'the summary is bound to the scanned commit'],
+  ['**has changed since you chose this policy. Review it again before\ncreating the application.**', 'the moved-branch state'],
+  // Summary states: valid, invalid, unsupported; nothing computed in the browser.
+  ["Liskov's validator produces this\nsummary on the server; the Console does not compute it.", 'the server-owned summary'],
+  ['**This policy is not valid, so it cannot create an application.**', 'the invalid state'],
+  ["**Liskov cannot create an application from this policy's schema**", 'the unsupported state'],
+  ['Only retained V5 creates an\n  Application here.', 'V5 only'],
+  // Discovery states: already imported, no policy, add-a-policy with the released skill.
+  ['| **Already imported** |', 'the already-imported state'],
+  ['**No application policy\nfound**', 'the no-policy state'],
+  ['**Add a policy in your\n   repository**', 'the add-a-policy page'],
+  ['[liskov-policy skill](../build/policy-skill.md)', 'the released policy skill (v8jb)'],
+  ["**I've added a policy — scan again →**", 'the scan-again action'],
+  // Creating an identity is not publishing or spending (uceq; POST /api/applications).
+  ['**Creating spends nothing**', 'creation spends nothing'],
+  ['Creating an Application is not publishing it.', 'creation is not publication'],
+  ['A second click sends nothing: one request is made.', 'one in-flight create'],
+  ['**now has an identity.\nPublish the reviewed policy before deploying.**', 'the created state'],
+  ['**The application was not created.**', 'the refused-create state'],
+  ["**Liskov's answer could not be read. Check Applications\nbefore trying again.**", 'the unreadable-answer state'],
+  ['**Publishing is the step that spends.**', 'publication is the spend'],
+  ['[step 4](./github.md#4-create-the-application-and-bind-its-source)', 'the next step on the GitHub guide'],
+]) {
+  check(consoleAppGuidePage.includes(token), `Console New application guide omits ${meaning}: ${token}`);
+}
+for (const [pattern, claim] of [
+  [/\b(?:New application|Console flow)\b[^.\n]*\b(?:is|are) (?:now )?(?:available|released|live)\b/i, 'a production availability claim'],
+  [/\bcreat(?:e|es|ing)\b[^.\n]*\b(?:publishes|deploys|launches|starts a (?:job|deployment)|reserves|charges)\b/i, 'creation that publishes, launches or spends'],
+  [/\b(?:automatically|auto-?)(?:publish|resume|deploy|launch)/i, 'an automatic publish, resume or launch'],
+  [/\bbranch (?:list|picker|dropdown) (?:shows|lists)\b/i, 'a branch list the flow does not draw'],
+  [/github_ref_commit_mismatch|\/api\/policy-sources|\/api\/applications\b|application\.import|policy\.source\.preview/i, 'a server code or internal route'],
+]) {
+  check(!pattern.test(consoleAppGuidePage), `Console New application guide makes ${claim}: ${pattern}`);
 }
 
 check(combined.includes('v0.3.26'), 'runtime reference omits the supported SDK version');
