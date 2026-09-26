@@ -48,6 +48,16 @@ Processor assignment is not runtime readiness. A registered job can still be
 waiting to boot, fetch configuration, obtain required secret grants, or report
 health.
 
+For a V5 job that never makes signed runtime contact, Liskov can replace the
+paid registration once its chain-verified start, assigned maximum start delay,
+and five-minute grace have passed. This can create another paid job while the
+first registration remains open. A recent verified contact from elsewhere in
+the fleet is required; if Liskov cannot establish that its contact ingest is
+working, it defers replacement and spends nothing. Coverage and Activity name
+the no-contact reason and whether recovery is waiting, proceeding, or refused.
+An exact processor selection with no other eligible processor can be refused
+without buying a second registration.
+
 After a job's strict reporting window closes, the timeline may say **Not billed
 — no report filed**. For managed custody this means the finalized scanner proved
 report absence, the charge is zero, the full reserve is released, and there is
