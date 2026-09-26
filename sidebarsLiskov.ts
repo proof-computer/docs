@@ -24,6 +24,7 @@ const sidebars: SidebarsConfig = {
         'build/runtime-sdk',
         'build/manifest-v4',
         'build/manifest-v5',
+        'build/policy-skill',
         'build/github-actions',
         'build/artifacts-provenance',
         'build/validate-import-publish',
