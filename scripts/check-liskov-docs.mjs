@@ -419,6 +419,12 @@ const billingRetirementPage = readFileSync(join(docsRoot, 'troubleshooting', 'bi
 const accountFundingPage = readFileSync(join(docsRoot, 'troubleshooting', 'account-funding.md'), 'utf8');
 const teamsPage = readFileSync(join(docsRoot, 'organizations', 'teams.md'), 'utf8');
 const rolesPage = readFileSync(join(docsRoot, 'organizations', 'roles.md'), 'utf8');
+check(capabilitiesPage.includes("Application execution detail's 30-day charge window"),
+  'capabilities omit the released execution spend window');
+check(serviceCreditsPage.includes('Reserved, not charged')
+  && serviceCreditsPage.includes('a missing or failed read is')
+  && serviceCreditsPage.includes('unavailable, not zero'),
+  'Service Credit guide must distinguish missing reserve and charge reads from measured zero');
 // BKLG-20260903-ytrn — the Team page and the seat allowance.
 //
 // The seat rule is the launch decision of 2026-09-03: refuse beyond the

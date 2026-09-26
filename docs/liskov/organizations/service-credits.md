@@ -30,6 +30,15 @@ The **Ledger** page is the line-by-line audit trail, including the running
 balance after each counted row. A reserve, review hold, or released reserve
 does not move that running balance.
 
+On an Application's **Executions** detail page, **This spend window** shows
+**Charged so far** for that Application over the rolling last 30 days. The
+number of turns describes the same window. It is the ledger's total for the
+Application, so it may include other executions; use **Service credits** on
+the page for this execution's own amounts. **Reserved, not charged** and
+**Headroom** show a dash when the ledger does not report a period reserve total
+or a cap. A measured zero charge is shown as $0.00; a missing or failed read is
+unavailable, not zero. Opening the page does not move Service Credits.
+
 The release-gated refund flow sets aside purchased credit when a refund is
 accepted. That value cannot also pay for a deployment or platform usage, or fund
 another refund. The Ledger shows a **Refund hold** until the payment outcome is
