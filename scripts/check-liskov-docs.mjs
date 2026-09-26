@@ -398,6 +398,8 @@ check(!existsSync(join(root, 'static', 'examples', 'liskov')), 'superseded downl
 
 const retirementPage = readFileSync(join(docsRoot, 'operate', 'retire.md'), 'utf8');
 const capabilitiesPage = readFileSync(join(docsRoot, 'reference', 'capabilities.md'), 'utf8');
+const replacementCustodyPage = readFileSync(join(docsRoot, 'concepts', 'replacement-custody.md'), 'utf8');
+const executionCoveragePage = readFileSync(join(docsRoot, 'troubleshooting', 'execution-coverage.md'), 'utf8');
 const githubActionsPage = readFileSync(join(docsRoot, 'build', 'github-actions.md'), 'utf8');
 check(capabilitiesPage.includes('| Encrypted JavaScript payload delivery | Release-gated v1;'),
   'encrypted JavaScript must preserve the separate registered V5 public-release gate');
@@ -1008,6 +1010,12 @@ check(
 check(
   /\| Console Coverage and Executions convergence strip \| v1;/.test(capabilitiesPage),
   'capability matrix omits the released Console convergence strip',
+);
+check(
+  /\| V5 job with no signed first contact \| v1; at most one early replacement per occurrence/.test(capabilitiesPage)
+    && /assigned\s+maximum start delay, and five more minutes/.test(replacementCustodyPage)
+    && /Waiting for verified fleet contact/.test(executionCoveragePage),
+  'public V5 first-contact recovery boundary or customer explanation is missing',
 );
 check(
   /\| CLI execution-convergence sibling on `application execution show` \| Release-gated v1;/.test(capabilitiesPage),

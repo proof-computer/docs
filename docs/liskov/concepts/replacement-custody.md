@@ -49,9 +49,17 @@ ambiguous nonzero gate into “complete.”
 ## Failure budgets
 
 Launch retries are bounded by policy and surfaced through the Action Plan.
-Runtime replace-after-failure is not enabled in the first public capability
-set; v1 waits for scheduled end. This avoids hiding repeated spend or creating
-unbounded replacement loops.
+For a V5 registration that makes no signed runtime contact, Liskov may buy one
+replacement for the occurrence after the verified scheduled start, the assigned
+maximum start delay, and five more minutes. It does so only while other jobs
+have recently made verified contact with Liskov. The original registration and
+its financial closeout continue independently, and a late contact does not
+erase a replacement already reserved. The absence of contact does not establish
+a fault in your application or prove that the processor crashed.
+
+Other runtime replace-after-failure behavior remains internal; v1 otherwise
+waits for scheduled end. The one no-contact replacement still passes the
+authored spend ceiling and launch pacing, so it may be deferred or refused.
 
 The core distinction is simple: policy describes allowed intent; evidence
 describes what actually happened.

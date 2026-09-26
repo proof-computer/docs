@@ -42,6 +42,23 @@ Console labels:
 Quiet is not stalled. Ended-unsettled is a remaining-charge state, not overdue
 execution. Incomplete, stale, and unknown never become quiet or overdue.
 
+## A registered V5 job never contacted Liskov
+
+If Coverage names **No signed first contact**, check the registered start and
+latest-start allowance before treating the job as late. Liskov permits one
+early replacement only after that allowance and five more minutes. The
+replacement is still subject to the Application's spend limit, launch pacing,
+and an eligible processor. An exact selection with no alternative can refuse
+the replacement before another reserve is made.
+
+**Waiting for verified fleet contact** means Liskov cannot currently prove its
+runtime-contact ingest is healthy; it defers the replacement without spending.
+Refresh Coverage and Activity for the recorded recovery decision. Do not infer
+that your code failed or that the processor crashed from missing contact alone.
+If the deferral persists after contact resumes, collect the Application and
+job identifiers for support. The first registration keeps its own scheduled
+end and financial closeout even if a successor starts.
+
 ## Remaining charges are not Coverage below desired
 
 An ended job can still have:
