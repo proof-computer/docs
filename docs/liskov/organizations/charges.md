@@ -1,9 +1,9 @@
 ---
-title: Quotes, reserves, and final charges
-description: Follow a proposed deployment from estimate and temporary hold to settled Service Credit facts.
+title: Per-job caps, reserves, and final charges
+description: Follow a proposed deployment from its per-job cap and temporary reserve to settled Service Credit facts.
 ---
 
-# Quotes, reserves, and final charges
+# Per-job caps, reserves, and final charges
 
 ## When you are charged
 
@@ -35,15 +35,16 @@ Five facts decide what you pay:
    Your available credit is your balance minus open reserves. The charge
    appears only at settlement.
 
-## From quote to final charge
+## From per-job cap to final charge
 
-Liskov separates estimation, authorization, and settlement so a customer can
-review a bounded commitment before work proceeds.
+Liskov separates authorization and settlement so a customer can review a
+bounded commitment before work proceeds. Before a run, you see the per-job cap
+you authored and the reserve the run would open (per-job cap × jobs). There is
+no separate pre-launch cost estimate: the reserve is a bound, not a quote.
 
 ```mermaid
 flowchart LR
-  C[Policy caps] --> Q[Quote]
-  Q --> R[Service Credit reserve]
+  C[Policy caps] --> R[Service Credit reserve]
   R --> E[Execution evidence]
   E --> F[Final charge]
   E --> U[Unused reserve released]
@@ -52,15 +53,13 @@ flowchart LR
 ## Read each amount correctly
 
 - A **policy cap** is the maximum authority authored for a job or generation.
-- A **quote** is a current estimate based on the proposed work and known market
-  facts.
 - A **reserve** temporarily reduces available Service Credits so the bounded
   work can settle.
 - A **final charge** is the amount actually debited after required evidence.
 - A **release** returns unused reserve to available credit.
 
 A reserve is not a charge and not proof of successful execution. A final
-charge can be below the cap and quote. A financial item can enter review when
+charge can be below the cap and the reserve. A financial item can enter review when
 network evidence is incomplete or contradictory; Liskov must not guess.
 
 For managed custody, a finalized scanner can instead prove that the strict

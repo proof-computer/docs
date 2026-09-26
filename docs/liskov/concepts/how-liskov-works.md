@@ -22,7 +22,7 @@ sequenceDiagram
 
   U->>L: Import Manifest V4
   G->>L: Attest exact artifact provenance
-  U->>L: Review policy, quote, and reserve
+  U->>L: Review policy, per-job cap, and reserve
   L->>A: Register bounded job
   A-->>L: Job and processor evidence
   P->>L: Signed bootstrap identity
@@ -41,7 +41,7 @@ this sequence yet.
 
 The policy says what Liskov is authorized to seek: artifact, runtime,
 configuration, schedule, placement, lifecycle, and spend bounds. The network
-then produces observed facts: quote, reserve, registration, processor
+then produces observed facts: reserve, registration, processor
 assignment, runtime contact, actual overlap or gap, and final charge.
 
 Liskov does not rewrite observed history to match intent. If a successor is

@@ -21,7 +21,7 @@ Review each data type at the boundary where it is visible.
 | Application logs | Job before encryption; authorized Liskov read path after decryption | Customer code chooses content; never log secrets. |
 | Runtime diagnostics | Processor identity signs bounded events | Supports identity/health claims, not business correctness. |
 | Customer balance | Liskov Service Credit ledger | Reads are supported; Stripe checkout and issuance remain release-gated. The customer has no Acurast crypto wallet. |
-| Network spend authority | Effective policy plus Liskov managed custody | Bounded by caps, quote/reserve, and server controls. |
+| Network spend authority | Effective policy plus Liskov managed custody | Bounded by caps, the Service Credit reserve, and server controls. |
 
 ## Trusted execution environment
 

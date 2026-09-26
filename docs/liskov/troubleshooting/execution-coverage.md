@@ -51,7 +51,7 @@ An ended job can still have:
 - truncated older liability.
 
 Those facts live on the same strip as **Open charge** and in
-[Quotes, reserves, and final charges](../organizations/charges.md). They do
+[Per-job caps, reserves, and final charges](../organizations/charges.md). They do
 not mean intended capacity is missing, and they are not a new Action Plan
 retry. See [Billing, settlement, and retirement](./billing-retirement.md).
 

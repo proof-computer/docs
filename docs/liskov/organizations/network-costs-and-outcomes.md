@@ -5,7 +5,7 @@ description: Match a reserve, final charge, release, or review to the way your d
 
 # What each deployment outcome costs
 
-[Quotes, reserves, and final charges](charges.md) explains the money lifecycle.
+[Per-job caps, reserves, and final charges](charges.md) explains the money lifecycle.
 This page answers the question that follows it: **for each way a deployment can
 end, what happens to the money?**
 
@@ -39,7 +39,7 @@ the final charge is determined at settlement rather than predicted.
 
 | What happened | Final charge | Reserve |
 | --- | --- | --- |
-| No reserve was taken — insufficient credit, a policy cap, or a stale quote | None | Never taken |
+| No reserve was taken — insufficient credit, a policy cap, or a stale exchange rate | None | Never taken |
 | Nothing was ever broadcast to the network | None | Released in full |
 | The network refused the registration | None | Released in full |
 | The job ran and ended, and settlement evidence is complete | From evidence, up to the reserve | Remainder released |
@@ -111,7 +111,7 @@ deployment. Never infer a charge by subtracting two displayed balances.
 
 ## Related
 
-- [Quotes, reserves, and final charges](charges.md) — the money lifecycle.
+- [Per-job caps, reserves, and final charges](charges.md) — the money lifecycle.
 - [Read USD Service Credits](service-credits.md) — balances, history, and
   promotional credit.
 - [Spend limits](../configure/spend-limits.md) — the caps you author.
