@@ -65,6 +65,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Fixed-interval execution (Manifest V5 `execution.mode: interval`) | Release-gated v1; the schema accepts `every` and an optional `until`, but no interval run has been observed in production and Liskov does not yet launch an interval Application: it stops before any Service Credit reserve or job is created. The accepted behavior is one occurrence per boundary, no overlap, no catch-up burst after a pause or outage, and a recorded skip for a missed boundary. Cron, calendar, and local-time schedules are not v1 |
 | Launch retry budget | v1; `maxRetries` 0–10, default 5 |
 | Runtime replace-after-failure | Internal; v1 waits for scheduled end |
+| Early replacement of a retained V5 job that never makes signed contact | Release-gated v1; the bounded recovery path is not a supported customer capability yet |
 
 ## Operation, money, and custody
 
