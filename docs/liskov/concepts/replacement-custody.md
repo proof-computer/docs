@@ -53,5 +53,22 @@ Runtime replace-after-failure is not enabled in the first public capability
 set; v1 waits for scheduled end. This avoids hiding repeated spend or creating
 unbounded replacement loops.
 
+### Never-contacted retained V5 jobs (release-gated)
+
+The accepted retained V5 behavior permits one early replacement when a paid
+registration makes no signed runtime contact after its chain-confirmed start,
+assigned start allowance, and five more minutes. Liskov first requires a
+verified contact elsewhere in its fleet within the previous two minutes. If
+that ingest check is unproven, recovery waits without another reserve.
+
+The replacement still uses the existing spend limits and placement checks. A
+late valid contact withdraws the trigger before a replacement is reserved.
+The original job keeps its own scheduled window and financial closeout; an
+inferred lack of contact does not prove that your code failed or globally
+exclude the processor. When released, Activity and Coverage will identify
+the reason and show when Liskov is waiting for contact ingest. This behavior
+remains [release-gated](../reference/capabilities.md); do not rely on it for a
+customer Application yet.
+
 The core distinction is simple: policy describes allowed intent; evidence
 describes what actually happened.
