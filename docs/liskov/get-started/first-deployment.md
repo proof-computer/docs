@@ -26,10 +26,10 @@ when a literal token matters.
 ## Read Application posture
 
 - **Ready** — the desired Application has healthy current runtime evidence.
-- **In progress** — Liskov is advancing a normal stage or waiting for an
-  expected external fact.
-- **Needs action** — a typed blocker requires your input or offers a supported
-  bounded action.
+- **In progress** — Liskov is advancing a normal stage, checking a launch, or
+  waiting for an expected external fact. No input from you is needed.
+- **Needs action** — the organization Action Plan holds a job for this
+  Application and is waiting for your decision.
 - **Inactive** — the Application is paused, retiring, retired, or otherwise not
   admitting new execution.
 

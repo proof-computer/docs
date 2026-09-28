@@ -15,10 +15,30 @@ transition and must not be used as proof that one detailed event occurred.
 | --- | --- | --- | --- |
 | `ready` | `ok` | false | Positive current runtime-ready evidence satisfies desired state. |
 | `in_progress` | `warn` | false | Normal progress, observation, recovery, or an evidence state without a customer action. |
-| `needs_action` | `danger` | true | A blocked/parked/failed/review deployment exposes customer action. |
+| `needs_action` | `danger` | true | The Application has a current organization Action Plan Hold that still needs a customer decision. |
 | `inactive` | `idle` | false | Draft, paused, disabled, retiring/retired, or otherwise inactive. |
 
-The object also includes stable `reason` and human `label`. Common reasons:
+`needs_action` and `actionable: true` are served only for a current `funds` or
+`app_fault` Hold whose release has not been requested. A Hold with
+`pendingRelease: true`, an `intent` stop, and platform recovery do not make an
+Application actionable. Retiring, retired, and deleted Applications are always
+`inactive`.
+
+The object also includes:
+
+| Field | Meaning |
+| --- | --- |
+| `reason` | Stable token; use it in automation. |
+| `label` | Human wording for `reason`. |
+| `state` | Coarse health: `active`, `waiting`, `degraded`, `paused`, or `complete`. |
+| `evidence` | Which facts decided the posture: `lifecycle`, `deployment`, or `execution`. |
+
+`state` and `category` answer different questions. `state: degraded` means
+required capacity is short or placement is blocked; it does not say who acts.
+An `in_progress` Application can be `degraded` with `actionable: false`, and a
+`needs_action` Application can be `active`.
+
+Common reasons:
 
 | Reason | Interpretation |
 | --- | --- |
@@ -35,9 +55,16 @@ The object also includes stable `reason` and human `label`. Common reasons:
 | `runtime_fatal_reported` | The runtime signed a terminal application diagnostic. |
 | `runtime_evidence_disagrees` | Independent evidence sources disagree; do not guess. |
 | `deployment_awaiting_replacement` | Earlier deployment ended; successor evidence is awaited. |
-| `deployment_blocked`, `deployment_parked`, `deployment_failed` | Current deployment needs customer review/action. |
-| `deployment_review_required` | Human review is explicitly required. |
+| `deployment_platform_uncertainty` | Label **Liskov checking deployment**. A deployment stopped without a customer Hold; Liskov owns it. `in_progress`, not actionable. |
+| `execution_launching`, `execution_submitted` | The current execution's launch is being prepared or awaits a processor. |
+| `execution_reconcile_required` | Label **Liskov checking launch**. Liskov has not yet confirmed a provider launch and reconciles it on its own. `in_progress`, not actionable, and possibly `degraded`. Do not resubmit. |
+| `execution_running` | The current execution is running. |
+| `execution_settling` | The current execution is closing out or settling. |
+| `execution_complete` | The run finished and settled; `inactive`. |
+| `customer_funds_hold` | Label **Add funds**. A current `funds` Hold needs a decision. |
+| `customer_app_fault_hold` | Label **Review application failure**. A current `app_fault` Hold needs a decision. |
 | `application_draft`, `application_paused` | Inactive authored/lifecycle state. |
+| `application_retiring`, `application_retired` | Retirement lifecycle; never actionable. |
 
 Unknown active detail maps to `in_progress`/`unknown_active_state`, not `ready`.
 
@@ -57,6 +84,10 @@ the exact hold ID to the hold-release route. `pause_application` and
 `resume_application` post to the lifecycle status route and never imply a hold
 release. `holdCount` counts held slots; `applicationCount` counts distinct
 Applications.
+
+`pendingRelease: true` means the release was received and Liskov applies it on
+its next pass. The Console counts it under **Release requested**, not
+**Decisions owed**, and it does not make the Application `needs_action`.
 
 Each Hold names one cause. Its server-owned controls distinguish releasing one
 held slot from pausing or resuming the whole Application. Per-code next-action
