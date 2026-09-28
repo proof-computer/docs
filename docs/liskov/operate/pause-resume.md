@@ -45,6 +45,29 @@ Resume allows Liskov to evaluate desired state again. It can create a new
 successor and reserve new Service Credits; it does not revive an ended job.
 Resolve organization Action Plan blockers before repeating resume.
 
+### When a resume is refused
+
+In the Console, **Resume application** asks for confirmation first. If Liskov
+refuses the resume, the confirmation stays open and says why. Nothing is
+changed:
+
+- **Over the plan cap.** Your organization has more active Applications than
+  its plan allows. Resuming is refused until it is back within the cap. Nothing
+  running is stopped. Retiring an Application frees a slot; pausing one does
+  not.
+- **Caps unreadable.** Liskov could not read your plan's caps at that moment,
+  so it refused rather than guess. This usually clears by itself; choose
+  **Try again** in a minute.
+- **Being retired.** An Application that is being retired cannot be resumed.
+  Its jobs stop at the end of their windows.
+- **A held replacement.** A replacement job for the Application is held, and
+  resuming would let it start. To go ahead, choose **Resume anyway**. It
+  requires a reason, which is recorded in Activity with the resume. Otherwise
+  choose **Cancel**, and the Application stays paused.
+
+The codes behind these refusals are in
+[Statuses, actions, and errors](../reference/statuses-actions-errors.md#action-plan-vocabulary).
+
 Fixed-interval execution is release-gated; see
 [Capabilities and limits](../reference/capabilities.md). Its accepted pause
 behavior is that a paused interval Application starts no new occurrence, and
