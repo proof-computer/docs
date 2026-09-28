@@ -430,6 +430,37 @@ check(serviceCreditsPage.includes('Reserved, not charged')
   && serviceCreditsPage.includes('a missing or failed read is')
   && serviceCreditsPage.includes('unavailable, not zero'),
   'Service Credit guide must distinguish missing reserve and charge reads from measured zero');
+// BKLG-20260927-fytq — the retired Applications archive, released with
+// liskov-rs bfaefc11 (oqn7 requester, yz6y spentLifetimeMicros) and liskov-ui
+// f6b44c2 (r05a five-column archive). The supported path is the archive under
+// Applications; it must not advertise the unreleased Billing Spend guide.
+for (const [token, meaning] of [
+  ['`/applications?view=retired`', 'the archive route'],
+  ['| **Retired** |', 'the Retired column'],
+  ['| **By** |', 'the By column'],
+  ['| **Lifetime spend** |', 'the Lifetime spend column'],
+  ['| **Receipt** |', 'the Receipt column'],
+  ['not the Liskov worker that completed it', 'By is the requester, not the completing worker'],
+  ['does not release,\nsettle, or refund anything', 'opening the archive is read-only'],
+  ['**$0.00** means the ledger recorded this Application', 'recorded zero'],
+  ['It is not zero, and it is\n  not an estimate', 'unattributed spend is not zero'],
+  ['Open reserves, review holds, released reserves, and\norganization charges that name no Application are not part of it', 'reserves and unattributed charges are excluded'],
+  ['still not proof\nof a zero gate', 'a legacy tombstone in the archive is not a safe retirement'],
+]) {
+  check(retirementPage.includes(token), `retirement page omits ${meaning}`);
+}
+check(/\*\*Spend 30d\*\*[\s\S]{0,200}trailing 30 days/.test(serviceCreditsPage)
+  && /\*\*Lifetime spend\*\*[\s\S]{0,200}whole retained history/.test(serviceCreditsPage)
+  && /Neither figure includes \*\*Held\*\* value/.test(serviceCreditsPage)
+  && /\*\*Not reported\*\* means the ledger has no record[\s\S]{0,80}It is not zero/.test(serviceCreditsPage),
+  'Service Credit guide must separate Lifetime spend from Spend 30d and Held, and Not reported from zero');
+check(serviceCreditsPage.includes('](../operate/retire.md#find-a-retired-application)')
+  && retirementPage.includes('](../organizations/service-credits.md#spend-on-the-applications-pages)'),
+  'retirement archive and Service Credit spend sections must link each other');
+check(!/spend-analysis|Billing Spend/.test(retirementPage + serviceCreditsPage),
+  'archive spend docs must not advertise the unreleased Billing Spend guide');
+check(capabilitiesPage.includes("retired archive's Lifetime spend"),
+  'capabilities omit the released retired-archive Lifetime spend read');
 // BKLG-20260903-ytrn — the Team page and the seat allowance.
 //
 // The seat rule is the launch decision of 2026-09-03: refuse beyond the

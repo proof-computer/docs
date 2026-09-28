@@ -82,6 +82,30 @@ Liskov uses its treasury to settle Acurast reward and network fees. You do not
 deposit ACU or USDC, manage an Acurast wallet, perform a swap, or withdraw the
 underlying settlement assets.
 
+## Spend on the Applications pages
+
+The Console's **Applications** pages show settled spend per Application. Both
+figures count the same settled ledger rows that name the Application:
+compute (`deploy_spend`), deployment fees (`deployment_fee`), and platform
+usage (`usage_charge`). They differ only in the period they cover:
+
+- **Spend 30d**, on the list of current and retiring Applications, covers the
+  trailing 30 days.
+- **Lifetime spend**, in the
+  [retired Applications archive](../operate/retire.md#find-a-retired-application),
+  covers the retired Application's whole retained history.
+
+Neither figure includes **Held** value. Open reserves and review holds are set
+aside, not charged, and a released reserve was never charged. Organization
+charges that name no Application are counted in the organization's balance and
+ledger but in no Application's spend. Each column appears only when your role
+can read the organization's billing.
+
+**$0.00** means the ledger recorded the Application and settled nothing for it
+in that period. **Not reported** means the ledger has no record that names the
+Application, or the read failed. It is not zero. Opening either page is
+read-only and does not move Service Credits.
+
 ## Verify
 
 Confirm the organization ID, available/reserved/used amounts, transaction

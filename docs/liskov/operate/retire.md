@@ -106,3 +106,50 @@ There is no public force-delete or force-stop bypass. If a phase remains
 blocked beyond its stated boundary, follow
 [Billing, settlement, and retirement](../troubleshooting/billing-retirement.md)
 and escalate with non-secret evidence.
+
+## Find a retired Application
+
+A retired Application leaves the Console's **Applications** list and is not
+counted in its totals. At the foot of the list, follow **Retired applications**
+(shown with a count when the Console knows how many there are). It opens the
+retired archive at `/applications?view=retired`. The archive has its own search
+and loads more rows as you page. Its history and ledger rows remain.
+
+Opening, searching, or paging the archive is read-only. It does not release,
+settle, or refund anything, and it does not restart the Application.
+
+Each archived row shows:
+
+| Column | What it means |
+| --- | --- |
+| **Application** | The Application's name and source repository. |
+| **Retired** | The date the Application was retired, taken from its canonical deletion record. |
+| **By** | The person who requested the retirement, as recorded on the deletion receipt. This is not the Liskov worker that completed it. |
+| **Lifetime spend** | Settled Service Credit spend attributed to this Application over its whole retained history. The column appears only when your role can read the organization's billing. |
+| **Receipt** | A **Deletion receipt** link and its kind: **Safe retirement** or **Legacy tombstone**. |
+
+Select a row or its receipt link to open the retired Application's settings and
+its deletion receipt. A **Legacy tombstone** in the archive is still not proof
+of a zero gate, as described above.
+
+**Lifetime spend** counts the settled compute (`deploy_spend`), deployment fee
+(`deployment_fee`), and platform usage (`usage_charge`) ledger rows that name
+this Application. Open reserves, review holds, released reserves, and
+organization charges that name no Application are not part of it. For the
+difference from the list's 30-day figure, see
+[Read USD Service Credits](../organizations/service-credits.md#spend-on-the-applications-pages).
+
+**Not reported** is different from zero:
+
+- **$0.00** means the ledger recorded this Application and settled no spend for
+  it.
+- **Not reported** under **Lifetime spend** means the ledger has no record that
+  names this Application, or the spend read failed. It is not zero, and it is
+  not an estimate. The row's other columns are still correct.
+- **Not reported** under **By** means the receipt did not record who asked for
+  the retirement, as with some historical deletions. Liskov does not substitute
+  the worker that completed the deletion or another name.
+- **Not reported** under **Retired** means the row did not include a deletion
+  time.
+
+While the spend read is in progress, the **Lifetime spend** cell is empty.
