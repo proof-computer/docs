@@ -521,6 +521,53 @@ for (const code of [
 ]) {
   check(statusesActionsErrorsPage.includes(`\`${code}\``), `error reference omits ${code}`);
 }
+// BKLG-20260926-nbxn: Needs action means a current customer Hold on the
+// organization Action Plan (liskov-rs 2i82/375q). A provider launch Liskov is
+// still reconciling is In progress, possibly degraded, and owes no retry; the
+// Console lists the current open execution beside Last finished (liskov-ui cnnz).
+const statusActionPlanPage = readFileSync(join(docsRoot, 'operate', 'status-action-plan.md'), 'utf8');
+const deploymentTroubleshootingPage = readFileSync(join(docsRoot, 'troubleshooting', 'deployment.md'), 'utf8');
+for (const code of [
+  'execution_reconcile_required',
+  'deployment_platform_uncertainty',
+  'customer_funds_hold',
+  'customer_app_fault_hold',
+]) {
+  check(statusesActionsErrorsPage.includes(`\`${code}\``), `status reference omits posture reason ${code}`);
+}
+check(
+  /\| `execution_reconcile_required` \| Label \*\*Liskov checking launch\*\*[^\n]*`in_progress`, not actionable/.test(statusesActionsErrorsPage),
+  'status reference does not classify execution_reconcile_required as non-actionable Liskov work',
+);
+check(
+  !/deployment_blocked`[^\n]*needs customer/i.test(statusesActionsErrorsPage) &&
+    !/blocked\/parked\/failed\/review deployment exposes customer action/.test(statusesActionsErrorsPage),
+  'status reference still calls every blocked/parked/failed deployment a customer action',
+);
+check(
+  /`state`[^\n]*`active`, `waiting`, `degraded`, `paused`, or `complete`/.test(statusesActionsErrorsPage),
+  'status reference omits the served coarse state values',
+);
+check(
+  /\*\*Needs action\*\* \| The Application has a current Hold on the organization Action Plan/.test(statusActionPlanPage),
+  'status task does not tie Needs action to a current Action Plan Hold',
+);
+for (const token of ['Liskov checking launch', 'Degraded', 'Last finished', 'Current #N · slot', 'Release requested', 'Decisions owed']) {
+  check(statusActionPlanPage.includes(token), `status task omits "${token}"`);
+}
+check(
+  /A release\s+requested is not another decision owed/.test(statusActionPlanPage),
+  'status task counts a requested release as another decision',
+);
+check(
+  /## Degraded, but nothing is on the Action Plan/.test(deploymentTroubleshootingPage) &&
+    /Do not submit, retry, release, pause, or resume to hurry/.test(deploymentTroubleshootingPage),
+  'deployment troubleshooting omits the platform-owned reconciliation route',
+);
+check(
+  !/retry now/i.test(statusActionPlanPage + deploymentTroubleshootingPage),
+  'status or troubleshooting page invents a retry-now control',
+);
 for (const [surface, content] of [['setup', setupPage], ['processor task', processorsPage]]) {
   check(content.includes('https://console.liskov.proof.computer'), `${surface} omits the permanent console link`);
   check(!content.includes('https://liskov.proof.computer'), `${surface} still recommends the retired apex`);

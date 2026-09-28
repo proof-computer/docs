@@ -5,13 +5,17 @@ description: Distinguish expected registration, processor, bootstrap, and runtim
 
 # Deployment waiting or needs action
 
-Start with posture and the organization Action Plan:
+Start with posture. In the Console, open **Action Plan** in the organization
+rail to see every decision you owe. From the CLI, read one Application:
 
 ```bash
 proof liskov application status APPLICATION_ID
 proof liskov application action-plan APPLICATION_ID --json
 proof liskov application deployment status APPLICATION_ID --json
 ```
+
+The CLI `action-plan` command returns that one Application's plan items. It is
+not the organization Action Plan page.
 
 ## Normal waiting
 
@@ -25,6 +29,33 @@ proof liskov application deployment status APPLICATION_ID --json
 
 Use the displayed stage timestamps and expected boundaries. Do not resubmit a
 normal wait.
+
+## Degraded, but nothing is on the Action Plan
+
+If an Application says **Liskov checking launch** or **Liskov checking
+deployment**, it is **In progress** and Liskov owns the next step. It can also
+show as **Degraded** because required capacity is not running. The Action
+Plan stays empty for it because there is no decision for you to make.
+
+1. Confirm the Application is **In progress**, not **Needs action**.
+2. In **Applications**, open the **Current #N · slot** link under the State
+   column. Compare it with **Last finished**: a closed #103 there does not
+   mean the open #104 is finished.
+3. On that execution, read its current state and next step. When it says
+   reconciliation runs on Liskov's next pass, there is no customer step.
+4. Check again later. Do not submit, retry, release, pause, or resume to hurry
+   it, and do not publish the same artifact again. None of these confirms the
+   earlier launch, and a new submission can reserve more Service Credits.
+
+If the same current execution stays unchanged, go to [Escalate](#escalate).
+
+## A release you already requested
+
+On the Action Plan, a row showing **Release requested** and “Liskov applies it
+on its next pass” means your release was received. It counts under **Release
+requested**, not **Decisions owed**. Do not release it again. To verify
+progress, open the job's execution and look for the next generation. If the
+row stays unchanged, go to [Escalate](#escalate).
 
 ## Job identity or execution evidence is unavailable
 
@@ -40,10 +71,18 @@ successful observation and use the support bundle if the read remains unavailabl
 
 ## Needs action
 
-Read `conditionClass`, `disposition`, `nextAction`, decision ID, and scoped
-identifiers. Correct the named prerequisite. Examples include insufficient
-credits, missing configuration, unsupported policy, no affordable processor,
-stale handoff, or ambiguous evidence.
+**Needs action** means the organization Action Plan holds a job for this
+Application and is waiting for your decision. Open the Action Plan and find
+that Hold. The Application's label names its cause: **Add funds** when Liskov
+stopped at the authorised spend cap, or **Review application failure** for
+signed runtime/application or delivery evidence. See
+[Service Credits](../organizations/service-credits.md) for how funding works
+today.
+
+For the CLI plan item, read `conditionClass`, `disposition`, `nextAction`,
+decision ID, and scoped identifiers. Correct the named prerequisite. Examples
+include insufficient credits, missing configuration, unsupported policy, no
+affordable processor, or stale handoff.
 
 Only use Action Plan retry when it is explicitly offered:
 
