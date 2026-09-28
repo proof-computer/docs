@@ -90,8 +90,33 @@ its next pass. The Console counts it under **Release requested**, not
 **Decisions owed**, and it does not make the Application `needs_action`.
 
 Each Hold names one cause. Its server-owned controls distinguish releasing one
-held slot from pausing or resuming the whole Application. Per-code next-action
-prose stays on the execution detail.
+held slot from pausing or resuming the whole Application. The Console groups
+Holds under their Application and adds one line of static guidance per cause;
+the full per-code next action stays on the execution detail.
+
+The read also serves these optional fields:
+
+| Field | Meaning |
+| --- | --- |
+| `stoppedAtMs` | On each Hold: when the job stopped, in Unix milliseconds. Absent on V4 rows, which have no time. The Console shows it as **Held since** or **Stopped since**. |
+| `releaseRequestedAtMs` | On each Hold: when its release was requested. Present exactly when `pendingRelease` is `true`. |
+| `truncated` | On the response: `true` when the read stopped at 100 stopped jobs and more may exist. The Console then shows **100+** decisions owed. |
+
+A resume through the lifecycle status route can be refused with these
+`error` codes. None of them changes anything:
+
+| Code | Meaning / response |
+| --- | --- |
+| `organization_over_plan_caps` | The organization is over its plan's cap; `used` and `limit` say by how much. Retiring an Application frees a slot; pausing one does not. |
+| `organization_plan_caps_unavailable` | Liskov could not read the plan's caps and refused rather than guess. Try again. |
+| `application_retirement_active` | The Application is being retired and cannot be resumed. |
+| `application_resume_blocked_by_replacement_hold` | A held replacement would start. The response carries `replacementHold`, `overrideRequired: true`, and `overrideAction`. |
+
+`overrideAction` is a server-owned action like the others:
+`kind: "resume_application_override"`, `label: "Resume anyway"`, `method`,
+`href`, `body`, `expectedPostcondition`, and `reasonRequired: true`. Send its
+`body` exactly as served, plus a non-empty `reason`, to its `href`. Activity
+records the resume with its actor, the reason, and `overrideReplacementHold`.
 
 The CLI `proof liskov application action-plan` still returns one Application's
 plan items. Use those tokens for a bounded retry; do not treat `wait` or

@@ -599,6 +599,42 @@ check(
   !/retry now/i.test(statusActionPlanPage + deploymentTroubleshootingPage),
   'status or troubleshooting page invents a retry-now control',
 );
+// BKLG-20260923-mlx0: the redrawn organization Action Plan is live (liskov-ui
+// 7xx1 1db5cf4, over liskov-rs bvzp 624b2aa). Jobs sit under their
+// Application, every action confirms with an optional reason, a paused and
+// held Application shows both gates, and each row carries its guidance.
+for (const token of [
+  'Jobs sit under their Application',
+  'Every action asks first',
+  'publish a new policy version',
+  'two-step checklist',
+  'The Application runs again when both are done',
+  'Showing the first 100',
+  'That is not an empty queue',
+]) {
+  check(statusActionPlanPage.includes(token), `status task omits the redrawn Action Plan's "${token}"`);
+}
+check(
+  !/Each held slot is listed separately/.test(statusActionPlanPage) &&
+    !/next-action prose stays on the execution detail, not in this queue/.test(statusActionPlanPage),
+  'status task still describes the pre-redraw Action Plan',
+);
+const pauseResumePage = readFileSync(join(docsRoot, 'operate', 'pause-resume.md'), 'utf8');
+for (const token of ['Resume anyway', 'Retiring an Application frees a slot', 'being retired', 'Try again']) {
+  check(pauseResumePage.includes(token), `pause task omits the Console resume refusal "${token}"`);
+}
+for (const token of [
+  '`stoppedAtMs`',
+  '`releaseRequestedAtMs`',
+  '`truncated`',
+  '`overrideAction`',
+  '`organization_over_plan_caps`',
+  '`organization_plan_caps_unavailable`',
+  '`application_retirement_active`',
+  '`application_resume_blocked_by_replacement_hold`',
+]) {
+  check(statusesActionsErrorsPage.includes(token), `Action Plan reference omits ${token}`);
+}
 for (const [surface, content] of [['setup', setupPage], ['processor task', processorsPage]]) {
   check(content.includes('https://console.liskov.proof.computer'), `${surface} omits the permanent console link`);
   check(!content.includes('https://liskov.proof.computer'), `${surface} still recommends the retired apex`);

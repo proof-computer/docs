@@ -78,26 +78,76 @@ only what Liskov has served and does not guess from the last finished one.
 ## Organization Action Plan
 
 Open **Action Plan** in the organization rail. It lists only jobs Liskov has
-**stopped** on. Each held slot is listed separately, even when several belong
-to one Application. Retryable work remains off the page while Liskov is still
+**stopped** on. Retryable work remains off the page while Liskov is still
 handling it.
 
-The page serves actions rather than naming links as actions:
+Jobs sit under their Application, because the actions work at two levels:
 
-- **Release hold** applies to one exact held slot. It can launch a later
-  generation and spend Service Credits.
-- **Pause application** stops planning new work for the whole Application.
-- **Resume application** restarts planning for a paused Application. It does
-  not release a held slot.
+- **Release hold** is on each held job's row. It applies to that one exact
+  held slot, can launch a later generation, and can spend Service Credits.
+- **Pause application** or **Resume application** is on the Application's
+  header, once per Application. Pause stops planning new work for the whole
+  Application. Resume restarts planning for a paused Application. It does not
+  release a held slot.
 
-The release and lifecycle actions are independent. A two-slot Application gets
-one release control for each held slot and one lifecycle control.
+The release and lifecycle actions are independent. An Application with two
+held slots shows two rows, each with its own **Release hold**, under one header
+with one lifecycle action.
+
+Each row shows the cause, one line of guidance, and links to the job's
+**Execution**, **Logs**, **Secrets**, or **Policy**, whichever that cause
+needs. It also shows when the job stopped: **Held since** a UTC time for a held
+job, or **Stopped since** for any other stopped job. Rows under a V4 policy
+have no time. The exact per-code next action is still on the execution detail.
+
+### Every action asks first
+
+Choosing an action opens a confirmation in the Console. Nothing is sent until
+you confirm it there. The confirmation shows:
+
+- for **Release hold**: what failed, when it was held, and what else is held on
+  the same Application, each released on its own;
+- for **Pause application** or **Resume application**: the Application's held
+  jobs, which stay held.
+
+It takes an optional **Reason**. The reason is recorded with the action and
+shown in [Activity](./logs-activity.md#read-activity). **Cancel** changes
+nothing. If Liskov refuses the action, the confirmation says why in a sentence
+and stays open.
+
+### How a hold is released
+
+A held job stays held until one of these releases it:
+
+- you choose **Release hold**;
+- you publish a new policy version for the Application; or
+- for an eligible setup (bootstrap) hold, the same job later reports that it
+  started cleanly.
+
+A new bootstrap hold can clear automatically when the same stable member under
+the same exact policy later supplies signed Ready evidence. Application-stage
+fatals and explicit `debug.holdOnFailure` holds never clear by themselves:
+release them, or publish a new policy version.
+
+After you release a hold, the row shows **Release requested** and “Liskov
+applies it on its next pass,” with the time you requested it. When the release
+takes effect, the job leaves the page. Activity records the release.
+
+### A paused Application with a held job
+
+A pause and a hold are two separate gates. When an Application is paused and
+one of its jobs is held, the Action Plan shows both as a two-step checklist:
+release the held job, then resume the Application. Either step can go first.
+
+Releasing a hold does not resume a paused Application, and resuming does not
+release a hold. The Application runs again when both are done.
+
+### Totals
 
 The page's totals count held jobs, not Applications:
 
 - **Decisions owed** — Holds still waiting for you.
-- **Release requested** — Holds you have already released. The row shows
-  **Release requested** and “Liskov applies it on its next pass.” Liskov has
+- **Release requested** — Holds you have already released. Liskov has
   received your decision, and you do not need to make it again. A release
   requested is not another decision owed.
 - **Applications** — distinct Applications with at least one Hold.
@@ -106,6 +156,17 @@ The Applications summary counts Applications, so its **Needs action** number
 does not have to equal **Decisions owed**. To confirm a requested release is
 progressing, open the job's execution and wait for a later generation to
 appear. Do not release it a second time.
+
+The page shows at most 100 stopped jobs. When there may be more,
+**Decisions owed** reads **100+** and the page says “Showing the first 100
+stopped jobs. There may be more.” Each Application's Deployments page lists
+all of its own.
+
+If the Action Plan cannot be read, the page says so and offers **Try again**. That is not an empty queue, and it
+does not mean nothing is waiting on you. An empty queue says **Nothing needs a
+decision**.
+
+### Causes
 
 Causes include:
 
@@ -116,12 +177,7 @@ Causes include:
   workload, artifact, or policy changed.
 
 Platform uncertainty (including first-contact silence, register silence, and a
-launch Liskov is still checking) is never a customer decision. Per-code
-next-action prose stays on the execution detail, not in this queue.
-
-A new bootstrap hold can clear automatically when the same stable member under
-the same exact policy later supplies signed Ready evidence. Application-stage
-fatals and explicit `debug.holdOnFailure` holds remain explicit-release only.
+launch Liskov is still checking) is never a customer decision.
 
 ## Read from Console or CLI
 
