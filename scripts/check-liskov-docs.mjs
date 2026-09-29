@@ -1616,6 +1616,54 @@ for (const fileId of [
   check(page.includes(WAITLIST_FORM_HREF), `invitation-only boundary: ${fileId} omits the wait-list form`);
 }
 
+// BKLG-20260926-7mtu: Activity event detail, its canonical link, the
+// originating-feed pager, Range, and the context column are merged in owner
+// source but not accepted on the deployed Console. The capability row pins the
+// merged owner revisions and stays release-gated until the launch acceptance
+// (BKLG-20260926-d8pf) records the deployed check; only that record may promote it.
+const ACTIVITY_DETAIL_CONSOLE_SOURCE = 'd51724df1c83846ebdf391d88cd930bc33bbd1cd';
+const ACTIVITY_EVENT_READ_API_SOURCE = 'adedc6dff4bba0ea6f4f52ec97f8783010e2b3d9';
+const activityDetailRow = capabilitiesPage.split('\n')
+  .find((line) => line.startsWith('| Console Activity event detail, shareable event link, previous/next, Range picker, and event context |'));
+check(
+  activityDetailRow?.includes('| Release-gated v1;')
+    && activityDetailRow.includes(ACTIVITY_DETAIL_CONSOLE_SOURCE)
+    && activityDetailRow.includes(ACTIVITY_EVENT_READ_API_SOURCE),
+  'capability matrix must keep Activity event detail release-gated with its pinned owner revisions',
+);
+const logsActivityPage = readFileSync(join(docsRoot, 'operate', 'logs-activity.md'), 'utf8');
+check(
+  /:::danger\[Release-gated\][\s\S]*event detail[\s\S]*release-gated v1[\s\S]*\.\.\/reference\/capabilities\.md[\s\S]*?:::/i.test(logsActivityPage),
+  'logs-activity page must keep the Activity event detail path under a release-gated notice',
+);
+for (const token of [
+  '/activity/EVENT_ID?org=ORGANIZATION_ID',
+  '**Copy link**',
+  '**Copied** only after',
+  '**Previous** (`k`) and **Next** (`j`)',
+  'substitutes a different feed',
+  '**Last 7 days** (the default)',
+  '**All time**',
+  'It is not complete history.',
+  'A zero balance shows as zero.',
+  'changes nothing and spends nothing',
+]) {
+  check(logsActivityPage.includes(token), `logs-activity Activity detail path omits "${token}"`);
+}
+// The released CLI read keeps its existing recipe beside the new Console path.
+check(
+  logsActivityPage.includes('proof liskov application activity APPLICATION_ID \\\n  --limit 50 \\\n  --json'),
+  'logs-activity page lost the bounded CLI activity recipe',
+);
+// A release-gated path stays out of every first-use promise.
+for (const file of readdirSync(join(docsRoot, 'get-started')).filter((name) => name.endsWith('.md'))) {
+  const page = readFileSync(join(docsRoot, 'get-started', file), 'utf8');
+  check(
+    !page.includes('/activity/EVENT_ID') && !/\*\*Copy link\*\*/.test(page),
+    `get-started/${file} promises the release-gated Activity event detail path`,
+  );
+}
+
 const policySkillPage = readFileSync(join(docsRoot, 'build', 'policy-skill.md'), 'utf8');
 check(
   policySkillPage.includes('git tag `v1.0.0`')

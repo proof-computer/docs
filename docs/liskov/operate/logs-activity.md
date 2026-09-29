@@ -95,6 +95,86 @@ billed — no report filed**: zero charged, full reserve release, closed financi
 state, and no customer action. It is a settled activity, not a missing-report
 review. Application logs and signed runtime evidence remain separate facts.
 
+## Open, share, and step through events
+
+:::danger[Release-gated]
+
+Event detail, shareable event links, previous and next navigation, the
+**Range** picker, and the event context column are release-gated v1. They are
+not yet accepted on the deployed Console, so do not rely on them until
+[Capabilities and limits](../reference/capabilities.md) lists them as v1. The
+feed and the CLI read above are unchanged.
+
+:::
+
+Everything in this section only reads. Opening, copying, or paging through
+events changes nothing and spends nothing.
+
+### Open an event
+
+Select a row in organization **Activity** or in an application's **Activity**
+tab. Its detail opens in a dialog over the feed; press Escape or close it to
+return to the same place in the list. The dialog's headline links to the
+event's own page.
+
+### Share an event
+
+Every event has one canonical address:
+
+```text
+/activity/EVENT_ID?org=ORGANIZATION_ID
+```
+
+The address names the organization. The event page reads that single event
+only when the organization in the address is your active organization; it
+never shows data from another organization. Anyone you share it with needs
+access to that organization.
+
+On the event page, **Copy link** copies the full address. The button shows
+**Copied** only after your browser accepts the copy. If the browser refuses
+clipboard access, the page says it could not copy the link; copy the address
+bar instead.
+
+To verify a shared link, open it while signed in with that organization
+active. The page is titled **Event detail** and shows the event you copied. An
+address that names a different organization shows **Activity unavailable**, and
+an id that organization does not have shows **Event not found**.
+
+### Step through the feed you came from
+
+**Previous** (`k`) and **Next** (`j`) follow the list you opened the event
+from, newest first, with its category chip, Range, and search kept. Search
+matches only rows already loaded. When you reach the oldest loaded row,
+**Next** loads one older page with the same filters. **Back to Activity**
+returns to that feed.
+
+An event opened from a shared link, or after a page refresh, has no
+originating list, so **Previous** and **Next** are disabled. The page never
+substitutes a different feed. The `j` and `k` keys are ignored while you type
+in a field or with a modifier key held.
+
+### Choose a Range
+
+On organization **Activity**, the **Range** picker sits beside the
+**Timeline** heading: **Last 7 days** (the default), **Last 30 days**, **Last
+90 days**, or **All time** for every event the organization keeps. Changing
+Range or the category chip reloads the feed from the newest event. A live
+update adds new events without resetting your filters or the older rows you
+have loaded.
+
+### Read the event context
+
+The event page shows context beside the event. Each section reads only what
+the event itself names, and each can be unavailable on its own without hiding
+the others:
+
+| Section | Shown when | What it reads |
+| --- | --- | --- |
+| **This deployment** | The event names an application and a deployment | That deployment's events among the application's latest 50 Activity events, plus this event. It is not complete history. |
+| **Now** | Always | The application's current state and the deployment's current outcome. An event that names no application says so. A past event does not mean the deployment is healthy now. |
+| **Needs you** | A hold, parked, or platform-alert event that exactly matches a current Action Plan item | A link to the Action Plan. A hold that has since been resolved shows nothing. |
+| **Money** | A spend event | The exact Ledger transaction the event names, from the latest 50 Ledger rows: its amount and the balance after it. A zero balance shows as zero. Without an exact match, the section says exact Ledger context is unavailable and links to the Ledger. |
+
 ## Verify a monitoring view
 
 Check the organization and Application UID first. Then confirm the policy,
