@@ -187,6 +187,10 @@ const unlistedIds = new Set([
   'build/encrypted-javascript',
   // The V6 manifest contract, drafted ahead of the release (BKLG-20260907-fgtk); BKLG-20260907-ie6x promotes it.
   'reference/manifest-v6',
+  // The V6 private-ingress journey, prepared from the merged CLI and Console (BKLG-20260907-fgtk, BKLG-20260922-uohg); BKLG-20260907-ie6x promotes it.
+  'operate/private-ingress-v6',
+  // The V6 private-ingress troubleshooting page, prepared with the journey (BKLG-20260907-fgtk, BKLG-20260922-uohg); BKLG-20260907-ie6x promotes it.
+  'troubleshooting/private-ingress-v6',
   // The V7 public-HTTP manifest contract, prepared from the merged grammar (BKLG-20260926-2r3t, per BKLG-20260906-5w4m); promotion is a later release gate, not this page.
   'reference/manifest-v7',
   // The Billing Spend guide, prepared from the served spendHistory contract (BKLG-20260922-kmc0); BKLG-20260922-j7nu promotes it.
