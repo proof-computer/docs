@@ -142,7 +142,8 @@ difference from the list's 30-day figure, see
 **Not reported** is different from zero:
 
 - **$0.00** means the ledger recorded this Application and settled no spend for
-  it.
+  it. Spend of less than a cent is written exactly, never as $0.00; see
+  [How amounts are written](../organizations/service-credits.md#how-amounts-are-written).
 - **Not reported** under **Lifetime spend** means the ledger has no record that
   names this Application, or the spend read failed. It is not zero, and it is
   not an estimate. The row's other columns are still correct.

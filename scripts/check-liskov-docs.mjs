@@ -1698,8 +1698,33 @@ for (const command of [
   check(combined.includes(command), `public command audit: missing ${command}`);
 }
 
-for (const token of ['?order=stable', '?order=time', '?order=job', '#slot-1:g3', 'Job identity not reported', 'Load more', 'Show loaded history', 'Evidence unavailable', '$0.0008', 'stale']) {
+for (const token of ['?order=stable', '?order=time', '?order=job', '#slot-1:g3', 'Job identity not reported', 'Load more', 'Show loaded history', 'Evidence unavailable', '$0.000902', 'stale']) {
   check(deploymentsPage.includes(token), `Deployments operating guide omits released contract: ${token}`);
+}
+
+// BKLG-20261002-rwpj — the Console writes Service Credits by the Money rule
+// (liskov-ui PRs 238, 239, 240): stored to the micro-dollar; a summary to the
+// cent, or exactly when it is under a cent; one execution, ledger row, hold or
+// per-job price exactly, to six decimals; never a non-zero amount as $0.00. The
+// four-decimal example is retired and must not return.
+const amountsAnchor = 'service-credits.md#how-amounts-are-written';
+check(serviceCreditsPage.includes('## How amounts are written')
+  && serviceCreditsPage.includes('to the micro-dollar')
+  && /written\s+exactly,\s+to\s+six\s+decimals/.test(serviceCreditsPage)
+  && serviceCreditsPage.includes('A column of amounts in a table takes one precision')
+  && serviceCreditsPage.includes('A non-zero amount is never written as $0.00')
+  && serviceCreditsPage.includes('](#how-amounts-are-written)'),
+  'Service Credits page must state how amounts are written (BKLG-20261002-rwpj)');
+for (const [label, page] of [
+  ['Deployments operating guide', deploymentsPage],
+  ['Spend guide', readFileSync(join(docsRoot, 'organizations', 'spend-analysis.md'), 'utf8')],
+  ['Retire guide', readFileSync(join(docsRoot, 'operate', 'retire.md'), 'utf8')],
+]) {
+  check(page.includes(amountsAnchor), `${label} must link to How amounts are written (BKLG-20261002-rwpj)`);
+}
+for (const file of files) {
+  check(!readFileSync(file, 'utf8').includes('$0.0008'),
+    `${idFor(file)}: the retired four-decimal amount $0.0008 must not return (BKLG-20261002-rwpj)`);
 }
 
 // BKLG-20260922-kmc0 — the unlisted Billing Spend guide, prepared from the

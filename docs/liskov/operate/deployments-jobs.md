@@ -142,7 +142,8 @@ recorded deregistration evidence. Read the amounts separately: **reserved**
 credits remain committed, **charged** credits have settled, **in review**
 credits await resolution, and **released** credits are available again.
 A recorded zero charge is shown as zero; missing settlement is not a zero
-charge. Small charges retain their precision, such as `$0.0008`.
+charge. Small charges keep their full precision, such as `$0.000902`; see
+[How amounts are written](../organizations/service-credits.md#how-amounts-are-written).
 
 ## Expand history
 
