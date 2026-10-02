@@ -8,85 +8,76 @@ import { fileURLToPath } from "node:url";
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const manifestPath = path.resolve(rootDir, stringFlag("--manifest") ?? ".slipway/dist/proof-docs-acurast-manifest.json");
 const authoredManifestPath = path.resolve(rootDir, ".slipway/application-policy.json");
-const audience = nonEmptyEnv("SLIPWAY_ARTIFACT_PIN_AUDIENCE") ?? "slipway-artifact-pin";
-const urlTemplate = nonEmptyEnv("SLIPWAY_ARTIFACT_PIN_URL") ?? "https://console.liskov.proof.computer/api/applications/{applicationId}/artifact-pins/github";
-const applicationIds = (nonEmptyEnv("SLIPWAY_APPLICATION_IDS") ?? "proof-docs")
-  .split(",")
-  .map((item) => item.trim())
-  .filter(Boolean);
+const audience = "slipway-artifact-pin";
+const urlTemplate = nonEmptyEnv("LISKOV_ARTIFACT_PIN_URL") ?? "https://console.liskov.proof.computer/api/applications/{applicationId}/artifact-pins/github";
 const json = process.argv.includes("--json");
-
-if (applicationIds.length === 0) throw new Error("SLIPWAY_APPLICATION_IDS must include at least one Application id");
 
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
 const authoredManifest = JSON.parse(await readFile(authoredManifestPath, "utf8"));
+const applicationId = stringField(authoredManifest, "applicationId");
+if (!applicationId) throw new Error(`Authored manifest ${authoredManifestPath} is missing applicationId`);
+const applicationIds = [applicationId];
 const scriptCid = stringField(manifest, "scriptIpfs") ?? stringField(manifest, "scriptCid");
 const bundleDigest = stringField(manifest, "scriptHash") ?? prefixedSha256(stringField(manifest, "bundleSha256"));
 if (!scriptCid) throw new Error(`Manifest ${manifestPath} is missing scriptIpfs`);
 if (!bundleDigest) throw new Error(`Manifest ${manifestPath} is missing scriptHash or bundleSha256`);
 
 const token = await githubOidcToken(audience);
-const results = [];
-for (const applicationId of applicationIds) {
-  if (authoredManifest.applicationId !== applicationId) {
-    throw new Error(`Authored manifest applicationId does not match ${applicationId}`);
+const release = objectField(authoredManifest, "release");
+if (release?.mode !== "build") throw new Error("Docs artifact evidence requires a build release");
+const builder = objectField(release, "builder");
+if (!Array.isArray(builder?.allowedRefs)) throw new Error("GitHub builder allowedRefs must be an array");
+const normalizedRelease = structuredClone(release);
+objectField(normalizedRelease, "builder").allowedRefs = [...builder.allowedRefs].sort();
+const authoredDigest = canonicalDigest(authoredManifest);
+const releaseIntentDigest = canonicalDigest({
+  schema: "proof.liskov.release-intent",
+  schemaVersion: 4,
+  applicationId,
+  release: normalizedRelease
+});
+const url = urlTemplate.replaceAll("{applicationId}", encodeURIComponent(applicationId));
+const body = {
+  domain: "proof.slipway.github-artifact-pin.v1",
+  applicationId,
+  scriptCid,
+  bundleDigest,
+  authoredDigest,
+  releaseIntentDigest,
+  generatedAt: stringField(manifest, "generatedAt") ?? new Date().toISOString(),
+  encryption: {
+    mode: "none"
+  },
+  provenance: {
+    repository: requiredEnv("GITHUB_REPOSITORY"),
+    ref: requiredEnv("GITHUB_REF"),
+    sha: requiredEnv("GITHUB_SHA"),
+    workflow: process.env.GITHUB_WORKFLOW,
+    workflow_ref: process.env.GITHUB_WORKFLOW_REF,
+    run_id: process.env.GITHUB_RUN_ID,
+    run_attempt: process.env.GITHUB_RUN_ATTEMPT,
+    actor: process.env.GITHUB_ACTOR,
+    event_name: process.env.GITHUB_EVENT_NAME
   }
-  const release = objectField(authoredManifest, "release");
-  if (release?.mode !== "build") throw new Error("Docs artifact evidence requires a build release");
-  const builder = objectField(release, "builder");
-  if (!Array.isArray(builder?.allowedRefs)) throw new Error("GitHub builder allowedRefs must be an array");
-  const normalizedRelease = structuredClone(release);
-  objectField(normalizedRelease, "builder").allowedRefs = [...builder.allowedRefs].sort();
-  const authoredDigest = canonicalDigest(authoredManifest);
-  const releaseIntentDigest = canonicalDigest({
-    schema: "proof.liskov.release-intent",
-    schemaVersion: 4,
-    applicationId,
-    release: normalizedRelease
-  });
-  const url = urlTemplate.replaceAll("{applicationId}", encodeURIComponent(applicationId));
-  const body = {
-    domain: "proof.slipway.github-artifact-pin.v1",
-    applicationId,
-    scriptCid,
-    bundleDigest,
-    authoredDigest,
-    releaseIntentDigest,
-    generatedAt: stringField(manifest, "generatedAt") ?? new Date().toISOString(),
-    encryption: {
-      mode: "none"
-    },
-    provenance: {
-      repository: requiredEnv("GITHUB_REPOSITORY"),
-      ref: requiredEnv("GITHUB_REF"),
-      sha: requiredEnv("GITHUB_SHA"),
-      workflow: process.env.GITHUB_WORKFLOW,
-      workflow_ref: process.env.GITHUB_WORKFLOW_REF,
-      run_id: process.env.GITHUB_RUN_ID,
-      run_attempt: process.env.GITHUB_RUN_ATTEMPT,
-      actor: process.env.GITHUB_ACTOR,
-      event_name: process.env.GITHUB_EVENT_NAME
-    }
-  };
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      authorization: `Bearer ${token}`,
-      accept: "application/json",
-      "content-type": "application/json"
-    },
-    body: JSON.stringify(body)
-  });
-  const responseText = await response.text();
-  if (!response.ok) {
-    throw new Error(`Slipway artifact pin post failed for ${applicationId}: ${response.status} ${redactResponse(responseText)}`);
-  }
-  const result = JSON.parse(responseText);
-  if (!stringField(result, "artifactVersionId")) {
-    throw new Error(`Liskov artifact pin response for ${applicationId} omitted artifactVersionId`);
-  }
-  results.push(summarizePinResult(result, applicationId));
+};
+const response = await fetch(url, {
+  method: "POST",
+  headers: {
+    authorization: `Bearer ${token}`,
+    accept: "application/json",
+    "content-type": "application/json"
+  },
+  body: JSON.stringify(body)
+});
+const responseText = await response.text();
+if (!response.ok) {
+  throw new Error(`Slipway artifact pin post failed for ${applicationId}: ${response.status} ${redactResponse(responseText)}`);
 }
+const result = JSON.parse(responseText);
+if (!stringField(result, "artifactVersionId")) {
+  throw new Error(`Liskov artifact pin response for ${applicationId} omitted artifactVersionId`);
+}
+const results = [summarizePinResult(result, applicationId)];
 
 const output = {
   ok: true,

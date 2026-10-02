@@ -7,7 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const buildDir = path.resolve(process.env.PROOF_DOCS_BUILD_DIR ?? path.join(rootDir, "build"));
+const buildDir = path.resolve(process.env.LISKOV_DOCS_BUILD_DIR ?? path.join(rootDir, "build"));
 const port = positiveInteger(process.env.PORT) ?? 3000;
 const host = process.env.HOST ?? "0.0.0.0";
 
