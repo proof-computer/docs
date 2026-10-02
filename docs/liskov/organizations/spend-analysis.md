@@ -72,7 +72,11 @@ the same charges on the **Ledger** page.
 
 A day's total is the sum of its three kinds, and a range's total is the sum of
 its days. All amounts are USD Service Credits, held by Liskov to the
-micro-dollar (one millionth of a US dollar).
+micro-dollar (one millionth of a US dollar). A table column takes one
+precision, so an Application charged less than a cent in the period is written
+to six decimals and the rest of the column with it, while the total row is
+written to the cent; see
+[How amounts are written](service-credits.md#how-amounts-are-written).
 
 ## What Spend counts, and what it leaves out
 

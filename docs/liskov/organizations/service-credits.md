@@ -28,7 +28,10 @@ The Console **Billing & funding** page shows the balance as an equation:
 
 The **Ledger** page is the line-by-line audit trail, including the running
 balance after each counted row. A reserve, review hold, or released reserve
-does not move that running balance.
+does not move that running balance. Each row's amount is written exactly, to
+six decimals, so a charge smaller than a cent can leave the running balance,
+written to the cent, unchanged; see
+[How amounts are written](#how-amounts-are-written).
 
 On an Application's **Executions** detail page, **This spend window** shows
 **Charged so far** for that Application over the rolling last 30 days. The
@@ -37,7 +40,9 @@ Application, so it may include other executions; use **Service credits** on
 the page for this execution's own amounts. **Reserved, not charged** and
 **Headroom** show a dash when the ledger does not report a period reserve total
 or a cap. A measured zero charge is shown as $0.00; a missing or failed read is
-unavailable, not zero. Opening the page does not move Service Credits.
+unavailable, not zero. This execution's own amounts are written exactly, to six
+decimals; see [How amounts are written](#how-amounts-are-written). Opening the
+page does not move Service Credits.
 
 The release-gated refund flow sets aside purchased credit when a refund is
 accepted. That value cannot also pay for a deployment or platform usage, or fund
@@ -105,6 +110,31 @@ can read the organization's billing.
 in that period. **Not reported** means the ledger has no record that names the
 Application, or the read failed. It is not zero. Opening either page is
 read-only and does not move Service Credits.
+
+## How amounts are written
+
+Liskov holds every Service Credit amount to the micro-dollar, one millionth of
+a US dollar. The Console writes an amount in one of two ways, depending on what
+it is, not on how large it is:
+
+- **A balance, grant, purchase, or total** — such as **Available**, a period's
+  spend, or an Application's **Spend 30d** — is written to the cent, rounded to
+  the nearest cent: `$26.80`. When it is not zero but under one cent, it is
+  written exactly instead: `$0.000612`.
+- **One execution, one ledger row, one hold, or a per-job price** is written
+  exactly, to six decimals: `$0.000902` or `$1.250000`. The digits past the
+  cents are in a lighter colour, so the dollars and cents still read first.
+
+A column of amounts in a table takes one precision. If any non-zero amount in
+the column is under a cent, the whole column is written to six decimals, so the
+figures line up.
+
+Zero and missing figures are never confused:
+
+- **$0.00** is a measured zero: the figure was read and it is zero.
+- A non-zero amount is never written as $0.00, however small it is.
+- **Not reported**, or a dash, means there is no figure: nothing was recorded,
+  or the read failed. It is not zero.
 
 ## Verify
 
