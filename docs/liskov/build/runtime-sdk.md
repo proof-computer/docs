@@ -10,12 +10,12 @@ the correct Liskov Application, policy, deployment, job, processor, and runtime
 instance; loads managed values and secrets; and provides logging and signed
 diagnostics. It is not a deployment or payment client.
 
-The supported v1 release is `v0.3.26`:
+The supported v1 release is `v0.3.33`:
 
 ```json title="package.json (excerpt)"
 {
   "dependencies": {
-    "@proof-computer/liskov-runtime": "github:proof-computer/liskov-runtime-js#v0.3.26"
+    "@proof-computer/liskov-runtime": "github:proof-computer/liskov-runtime-js#v0.3.33"
   }
 }
 ```
