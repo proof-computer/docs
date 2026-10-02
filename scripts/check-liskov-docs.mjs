@@ -408,6 +408,7 @@ check(!existsSync(join(root, 'static', 'examples', 'liskov')), 'superseded downl
 const retirementPage = readFileSync(join(docsRoot, 'operate', 'retire.md'), 'utf8');
 const capabilitiesPage = readFileSync(join(docsRoot, 'reference', 'capabilities.md'), 'utf8');
 const githubActionsPage = readFileSync(join(docsRoot, 'build', 'github-actions.md'), 'utf8');
+const buildRuntimeSdkPage = readFileSync(join(docsRoot, 'build', 'runtime-sdk.md'), 'utf8');
 check(capabilitiesPage.includes('| Encrypted JavaScript payload delivery | Release-gated v1;'),
   'encrypted JavaScript must preserve the separate registered V5 public-release gate');
 check(capabilitiesPage.includes('| Private customer code inside Cargo images | Not v1;'),
@@ -1997,7 +1998,9 @@ for (const [pattern, claim] of [
   check(!pattern.test(consoleAppGuidePage), `Console New application guide makes ${claim}: ${pattern}`);
 }
 
-check(combined.includes('v0.3.26'), 'runtime reference omits the supported SDK version');
+check(!/(?:liskov-runtime-js#v|\bSDK `?v?)0\.3\.(?:1?[0-9]|2[0-7])\b/.test(combined),
+  'public docs name a runtime SDK release that cannot read the current bootstrap');
+check(buildRuntimeSdkPage.includes('liskov-runtime-js#v0.3.33'), 'runtime SDK build page omits the supported SDK pin');
 check(combined.includes('v0.3.33') && combined.includes('signed runtime-env fallback'),
   'runtime reference omits the released JavaScript signed fallback');
 check(combined.includes('QmQCpRJ593xRyKko9smvtFixzfAGwDuG6gXBemRtUeSe4U'), 'Uptime Prober CID differs from descriptor');

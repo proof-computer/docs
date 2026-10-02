@@ -15,8 +15,9 @@ github:proof-computer/liskov-runtime-js#v0.3.33
 The main export keeps the compatibility name `bootstrapSlipwayRuntime`.
 `bootstrapLiskovRuntime` is an alias in this release. Use the documented
 high-level handle rather than low-level protocol modules.
-Version `v0.3.26` remains the public bootstrap baseline. Use `v0.3.33` for
-the V5 JavaScript signed runtime-env fallback and current secret installation.
+Use `v0.3.33`. It includes the V5 JavaScript signed runtime-env fallback and
+current secret installation. Releases before `v0.3.28` cannot bootstrap against
+the current platform and are not supported.
 
 ## Minimal call
 
