@@ -47,7 +47,9 @@ sign-in page addressed to you.
 Otherwise open the [Liskov Console](https://console.liskov.proof.computer).
 
 Either way, choose **Continue with GitHub**, or ask for an email sign-in link.
-Review the GitHub authorization and return to Liskov.
+Review the GitHub authorization and return to Liskov. If you asked for an email
+link, open it and choose **Sign in**. Each link works once, so ask for a new one
+if it says it can't be used.
 
 If you do not already have an account and have not been invited, Liskov tells
 you it is invitation-only and links the wait-list form. Your sign-in itself
