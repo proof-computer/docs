@@ -9,7 +9,7 @@ const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const manifestPath = path.join(rootDir, ".slipway", "dist", "proof-docs-acurast-manifest.json");
 const defaultAcurastIpfsEndpoint = "https://ipfs-proxy.acurast.prod.gke.papers.tech";
 const json = process.argv.includes("--json");
-const explicitScriptIpfs = stringFlag("--script-ipfs") ?? nonEmptyString(process.env.ACURAST_SCRIPT_IPFS);
+const explicitScriptIpfs = stringFlag("--script-ipfs") ?? nonEmptyString(process.env.LISKOV_SCRIPT_IPFS);
 
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
 const bundlePath = path.resolve(rootDir, requiredString(manifest.bundlePath, "manifest.bundlePath"));

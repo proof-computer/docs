@@ -49,14 +49,10 @@ jobs:
 
       - name: Upload bundle to IPFS
         env:
-          ACURAST_SCRIPT_IPFS: ${{ inputs.script_ipfs || '' }}
-          ACURAST_IPFS_URL: ${{ secrets.ACURAST_IPFS_URL }}
-          ACURAST_IPFS_API_KEY: ${{ secrets.ACURAST_IPFS_API_KEY }}
+          LISKOV_SCRIPT_IPFS: ${{ inputs.script_ipfs || '' }}
         run: pnpm --silent slipway:upload
 
       - name: Post Slipway artifact pin
         env:
-          SLIPWAY_ARTIFACT_PIN_URL: ${{ vars.SLIPWAY_ARTIFACT_PIN_URL }}
-          SLIPWAY_APPLICATION_IDS: proof-docs
           GITHUB_WORKFLOW_REF: ${{ github.workflow_ref }}
         run: pnpm --silent slipway:post-pin
