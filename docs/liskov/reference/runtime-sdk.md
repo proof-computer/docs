@@ -17,7 +17,9 @@ The main export keeps the compatibility name `bootstrapSlipwayRuntime`.
 high-level handle rather than low-level protocol modules.
 Use `v0.3.33`. It includes the V5 JavaScript signed runtime-env fallback and
 current secret installation. Releases before `v0.3.28` cannot bootstrap against
-the current platform and are not supported.
+the current platform and are not supported. `v0.3.34` is the first release
+that decrypts a secret grant on a processor with a secp256k1 encryption key
+(see [Processor key kinds](../configure/secrets.md#processor-key-kinds)).
 
 ## Minimal call
 

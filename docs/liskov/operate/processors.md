@@ -62,7 +62,9 @@ deployments.
 - your organization's deployments on the processor, across its Applications;
 - each returned deployment's Acurast job and first/latest runtime contact;
 - placement eligibility, attestation, and geography needed to reason about
-  your own deployment;
+  your own deployment (for an Application that declares secrets, a processor
+  is eligible when it has published a usable encryption key of either kind,
+  p256 or secp256k1);
 - chain-published status, manager, platform, and build; and
 - the four chain-published hardware values: single-core score, multi-core
   score, memory bytes, and storage bytes.
