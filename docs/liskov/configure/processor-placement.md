@@ -10,6 +10,11 @@ The processor is a phone that accepts the job and runs it in a trusted execution
 environment (TEE). Its exact identity and market terms are launch-time facts,
 not values you should hard-code.
 
+If your Application declares [secrets](secrets.md), a processor is eligible
+when it has published a usable encryption key of either kind, p256 or
+secp256k1. Which runtime versions decrypt each kind is described under
+[Processor key kinds](secrets.md#processor-key-kinds).
+
 ## Supported declaration
 
 ```json

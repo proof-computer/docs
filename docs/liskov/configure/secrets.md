@@ -55,6 +55,22 @@ need an artifact built with runtime-contact **0.10.40 or newer**. JavaScript
 file installation needs runtime SDK **0.3.32 or newer**. Rebuild and publish a
 successor artifact to upgrade an existing job's immutable helper or SDK.
 
+### Processor key kinds
+
+A secret grant is encrypted to the processor's own encryption key. A processor
+publishes a key of one of two kinds, p256 or secp256k1. Placement does not set
+a runtime version floor for either kind.
+
+- **JavaScript applications:** either key kind can serve secrets. Runtime SDK
+  (`@proof-computer/liskov-runtime`) **0.3.34** is the first release that
+  decrypts a grant on a secp256k1 processor. An application built on runtime
+  SDK **0.3.33 or older** and placed on a processor whose only key is
+  secp256k1 faults once, and Liskov recovers it onto another processor through
+  the normal [launch recovery](../operate/diagnose-retry.md). Rebuilding on
+  0.3.34 or newer stops that fault.
+- **Native images:** runtime-contact decrypts secrets on processors with a
+  p256 key only. Support for secp256k1 keys in native images is coming.
+
 The manifest contains identifiers and destinations only. Never add plaintext,
 a ciphertext copied from another system, or a secret in a variable `default`.
 

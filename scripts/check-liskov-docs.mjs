@@ -1543,7 +1543,7 @@ for (const [fileId, required] of Object.entries({
     'put credentials',
     '497899feccd466ae10a819c4c86f55303d9bfe88',
   ],
-  'configure/secrets': ['"kind": "environment"', '"kind": "file"', '0.10.40', '0.3.32', '0600', 'independently'],
+  'configure/secrets': ['"kind": "environment"', '"kind": "file"', '0.10.40', '0.3.32', '0.3.34', '0600', 'independently'],
   'troubleshooting/config-bootstrap': ['runtime_bootstrap_customer_secrets_runtime_incompatible', 'runtime_secrets_file_installation'],
   'reference/configuration-precedence': ['Application-managed value', 'process.env', 'Signed runtime bootstrap', 'LISKOV_ORGANIZATION', 'persistent organization'],
   'operate/pause-resume': ['does not force-stop', 'scheduled end'],
@@ -2003,6 +2003,25 @@ check(!/(?:liskov-runtime-js#v|\bSDK `?v?)0\.3\.(?:1?[0-9]|2[0-7])\b/.test(combi
 check(buildRuntimeSdkPage.includes('liskov-runtime-js#v0.3.33'), 'runtime SDK build page omits the supported SDK pin');
 check(combined.includes('v0.3.33') && combined.includes('signed runtime-env fallback'),
   'runtime reference omits the released JavaScript signed fallback');
+
+// Secrets on either processor key kind: JavaScript from runtime SDK 0.3.34;
+// native images stay p256-only until a runtime-contact release decrypts
+// secp256k1, and the admin-only processor readback stays off public pages.
+const secretsPage = readFileSync(join(docsRoot, 'configure/secrets.md'), 'utf8').replace(/\s+/g, ' ');
+check(/\*\*JavaScript applications:\*\* either key kind can serve secrets\./.test(secretsPage),
+  'secrets page omits that either key kind serves JavaScript secrets');
+check(/Runtime SDK[^.]*\*\*0\.3\.34\*\* is the first release that decrypts a grant on a secp256k1 processor/.test(secretsPage),
+  'secrets page omits runtime SDK 0.3.34 as the first release that decrypts a secp256k1 grant');
+check(/\*\*0\.3\.33 or older\*\*[^.]*faults once, and Liskov recovers it/.test(secretsPage),
+  'secrets page omits that an older JavaScript runtime faults once and is recovered');
+check(/\*\*Native images:\*\* runtime-contact decrypts secrets on processors with a p256 key only\./.test(secretsPage),
+  'secrets page no longer says native images decrypt on p256 processors only');
+check(!/native[^.]*(?:either key kind|secp256k1 processor)[^.]*(?:recover|serve)/i.test(secretsPage),
+  'secrets page claims secp256k1 secrets or recovery for native images before runtime-contact ships it');
+check(/`v0\.3\.34` is the first release that decrypts a secret grant on a processor with a secp256k1 encryption key/
+  .test(readFileSync(join(docsRoot, 'reference/runtime-sdk.md'), 'utf8').replace(/\s+/g, ' ')),
+  'runtime SDK reference omits v0.3.34 as the first secp256k1-decrypting release');
+check(!/lockboxCapable/.test(combined), 'public docs name the admin-only lockboxCapable processor field');
 check(combined.includes('QmQCpRJ593xRyKko9smvtFixzfAGwDuG6gXBemRtUeSe4U'), 'Uptime Prober CID differs from descriptor');
 check(combined.includes('7545ffe44288c548ff4dea09ef0c0dc318a8dd490c5dc822becec3ff0d307d57'), 'Uptime Prober digest differs from descriptor');
 check(combined.includes('UPTIME_PROBER_TG_BOT_TOKEN'), 'Uptime Prober secret destination differs from descriptor');
