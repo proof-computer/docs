@@ -181,6 +181,7 @@ const baranFiles = walk(baranRoot).filter((file) => extname(file) === '.md').sor
 // capability no customer can reach, and `reference/capabilities.md` stays the
 // availability owner. Same treatment as the private-alpha Baran pages: kept out
 // of the sidebar, out of the sitemap, and out of the inventory.
+const candidateDraftIds = new Set(['reference/service-discovery-v6']);
 const unlistedIds = new Set([
   ...(!v5PagesPromoted ? v5PromotedIds : []),
   'configure/clustering',
@@ -205,12 +206,19 @@ const unlistedIds = new Set([
 
 const ids = files
   .map(idFor)
-  .filter((id) => !unlistedIds.has(id) && !legalReviewDraftIds.includes(id))
+  .filter((id) => !unlistedIds.has(id) && !candidateDraftIds.has(id) && !legalReviewDraftIds.includes(id))
   .sort();
 check(
   JSON.stringify(ids) === JSON.stringify([...expectedIds].sort()),
   `page inventory differs\nexpected: ${[...expectedIds].sort().join(', ')}\nactual: ${ids.join(', ')}`,
 );
+
+for (const id of candidateDraftIds) {
+  const content = readFileSync(join(docsRoot, `${id}.md`), 'utf8');
+  check(/^draft: true$/mu.test(content.split('---')[1] ?? ''), `${id}: candidate must remain a draft`);
+  check(content.includes(':::danger[Not released]'), `${id}: candidate needs its release notice`);
+  check(!readFileSync(sidebarPath, 'utf8').includes(`'${id}'`), `${id}: candidate must stay out of navigation`);
+}
 
 for (const id of unlistedIds) {
   const file = join(docsRoot, `${id}.md`);
