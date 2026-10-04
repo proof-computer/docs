@@ -55,6 +55,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Simultaneous jobs | Manifest V4 is v1 at exactly `1`; retained V5 is v1 at one or two jobs; higher schema ceilings are not availability |
 | Organization job-slot pool | v1; enforced at publish, resume, run, and new scheduled starts. See [Job slots](../operate/pause-resume.md#job-slots) |
 | Open-market processor selection | v1 |
+| Exact processor selection during Acurast warmup | v1 for an authored processor ID. Direct assignment can target a newly registered processor while its chain status is `WarmupUntil`; open-market selection still requires `Active`. All other placement, funding, and runtime gates apply. |
 | Manager/static selection, placement groups, topology constraints | Internal |
 | Job schedule | v1; `durationMs >= 60000`, `maxStartDelayMs <= 3600000`, and a supplied start cannot be more than 24 hours ahead |
 | Renewal after scheduled end | v1 |

@@ -370,6 +370,16 @@ storage is available space. Missing current evidence fails closed. Country,
 region, WAN-IP, allow/exclude, spread, distribution, and authored evidence
 profiles are not V5 fields.
 
+If you recently registered a processor, put its Acurast address in
+`processorSelection.processorIds` to target it directly. Acurast lets a direct
+`Single.instantMatch` assignment use that processor during its `WarmupUntil`
+period; open-market selection waits until the processor is Active. A direct
+pin still needs current attestation, a compatible processor version and
+runtime, a recent heartbeat, an available schedule, and enough funds. Publish
+once, then check the deployment's processor assignment and runtime contact.
+If Liskov reports a placement blocker, correct the named prerequisite before
+trying again; repeating publication can reserve more Service Credits.
+
 ## Renewal and updates
 
 Lifecycle defaults to immediate update with the predecessor stopping when the
