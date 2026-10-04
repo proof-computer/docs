@@ -135,6 +135,17 @@ Enterprise page says register data was not reported, treat that as missing data
 rather than an entitlement failure. See
 [Inspect a processor your organization used](../operate/processors.md).
 
+## A newly registered processor is not selected
+
+Acurast's warmup period keeps a new processor out of public matching. To use
+one you know, author its exact Acurast address in
+`placement.processorSelection.processorIds`; direct assignment can work
+during `WarmupUntil`. Check the Application's deployment status and the named
+placement reason if it still waits. A direct pin does not bypass attestation,
+version, heartbeat, schedule, runtime compatibility, or funding checks. The
+Console processor record appears only after your organization has deployed to
+that processor, so a missing processor page is not a registration diagnostic.
+
 ## Intended capacity is not running
 
 Coverage can show pending launch, unknown submission, or overdue required work

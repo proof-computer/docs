@@ -813,6 +813,14 @@ const v5GuidePage = readFileSync(join(docsRoot, 'build', 'manifest-v5.md'), 'utf
 const v5ReferencePage = readFileSync(join(docsRoot, 'reference', 'manifest-v5.md'), 'utf8');
 const v5SshPage = readFileSync(join(docsRoot, 'operate', 'runtime-ssh-v5.md'), 'utf8');
 
+check(
+  capabilitiesPage.includes('Exact processor selection during Acurast warmup')
+    && v5GuidePage.includes('`WarmupUntil`')
+    && v5ReferencePage.includes('`WarmupUntil`')
+    && deploymentTroubleshootingPage.includes('direct assignment can work'),
+  'V5 exact warmup support boundary must appear in capabilities, first use, reference and troubleshooting',
+);
+
 check(v5DocumentationModes.includes(v5Mode), `V5 release contract: invalid documentationMode ${String(v5Mode)}`);
 check(
   v5ReleaseContract.schema === 'proof.liskov.docs-v5-release-contract.v1',

@@ -190,6 +190,10 @@ must divide it exactly. `simultaneous` accepts no `jobsPerPhase`.
 `processorSelection` has `mode: exact` and 1–64 `processorIds`. Omitting it
 uses open-market selection. Authored evidence profiles, allow/exclude rules,
 spread, distribution, topology, and manager/static selectors are absent.
+An exact processor ID can be assigned directly while Acurast reports
+`WarmupUntil`; this does not make it eligible for open-market selection.
+Liskov still checks the pinned processor's attestation, version, modules,
+heartbeat, schedule, consumer access, and price before registration.
 
 ### `lifecycle`
 
