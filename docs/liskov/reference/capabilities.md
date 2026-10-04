@@ -53,6 +53,7 @@ This page is the availability owner. Guides contain only supported recipes.
 | Retained V5 managed Runtime SSH policy path | Preview on Developer and above; native-image-only `access.ssh.provider.kind: liskov_managed`, with organization operator keys snapshotted into each exact-job attachment (register at least one key before the Application's first launch); the relay's single-machine blast radius, the sandbox-relaunch reconnect, the helper/sidecar blast radius and metered relay traffic apply as on the row above |
 | Runtime SSH into your own running job, your own Tailscale network | Preview on Pro and above; listed as Roadmap in Integrations until a live policy version can name it; requires a Tailscale account you own |
 | Simultaneous jobs | Manifest V4 is v1 at exactly `1`; retained V5 is v1 at one or two jobs; higher schema ceilings are not availability |
+| Organization job-slot pool | v1; enforced at publish, resume, run, and new scheduled starts. See [Job slots](../operate/pause-resume.md#job-slots) |
 | Open-market processor selection | v1 |
 | Manager/static selection, placement groups, topology constraints | Internal |
 | Job schedule | v1; `durationMs >= 60000`, `maxStartDelayMs <= 3600000`, and a supplied start cannot be more than 24 hours ahead |

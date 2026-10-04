@@ -51,10 +51,11 @@ In the Console, **Resume application** asks for confirmation first. If Liskov
 refuses the resume, the confirmation stays open and says why. Nothing is
 changed:
 
-- **Over the plan cap.** Your organization has more active Applications than
-  its plan allows. Resuming is refused until it is back within the cap. Nothing
-  running is stopped. Retiring an Application frees a slot; pausing one does
-  not.
+- **Over the plan cap.** Resuming is refused when the organization would still
+  be over a plan cap. Nothing running is stopped. Too many Applications:
+  Retiring an Application frees a slot; pausing one does not. Too many
+  [job slots](#job-slots): pausing another Application frees the job slots it
+  holds.
 - **Caps unreadable.** Liskov could not read your plan's caps at that moment,
   so it refused rather than guess. This usually clears by itself; choose
   **Try again** in a minute.
@@ -73,6 +74,48 @@ Fixed-interval execution is release-gated; see
 behavior is that a paused interval Application starts no new occurrence, and
 resume continues at the next future boundary: boundaries that passed while it
 was paused are not run afterwards.
+
+## Job slots
+
+Each plan gives the organization a pool of job slots:
+
+| Plan | Job slots |
+| --- | --- |
+| Free | 2 |
+| Developer | 10 |
+| Pro | 50 |
+| Business | 250 |
+| Scale | 1,000 |
+| Enterprise | By contract |
+
+The plan catalog is available to read, but paid-plan activation remains
+release-gated; a visible plan does not by itself change an organization's
+current allowance.
+
+An organization's usage is the sum of `deployment.jobs` over its active
+Applications. Retries, replacement jobs, and the overlap while one job hands
+over to the next do not count.
+
+Pausing or retiring an Application releases its job slots. A paused
+Application still holds its [Application slot](./retire.md#application-slots).
+
+Liskov refuses the change when it would leave the organization over that pool:
+
+- **Publish** and **resume** are refused when usage after the change would
+  exceed the pool. A publish that lowers `deployment.jobs` enough is admitted
+  even while the organization is over its pool.
+- A **run** request, and a new scheduled start — an interval boundary, a
+  `once` run, or an Application's first job — are refused while the
+  organization is over its pool. A continuous job that is already running
+  keeps renewing, and nothing running is stopped.
+
+The refusal is `organization_over_plan_caps` with `feature` set to
+`organization_job_slots`, plus `used` and `limit`. The same code with
+`feature` set to `max_applications` is the Application cap. If the caps cannot
+be read, the answer is `organization_plan_caps_unavailable`.
+
+To get back inside the pool, lower `deployment.jobs` and publish, pause or
+retire Applications, or move to a plan with a larger pool.
 
 ## Verify
 
