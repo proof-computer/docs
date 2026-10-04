@@ -1073,6 +1073,18 @@ const encryptedContract = JSON.parse(readFileSync(join(root, 'fixtures/liskov-en
 const encryptedRecipe = readFileSync(join(docsRoot, 'build/encrypted-javascript.md'), 'utf8');
 check(encryptedContract.mode === 'aes-256-gcm-payload-v1', 'encrypted code fixture: wrong delivery mode');
 check(encryptedContract.runtimeVersion === '0.3.30' && encryptedContract.cliVersion === '0.13.0', 'encrypted code fixture: wrong released owners');
+// Preserve the dated production acceptance above; bind the newly released
+// loader independently so a package update cannot rewrite that evidence.
+check(encryptedContract.loaderRelease?.actionVersion === '2.1.0' &&
+  encryptedContract.loaderRelease?.actionCommit === '6e5f75a556677dabd1964ddaae4f03f4925de0e8' &&
+  encryptedContract.loaderRelease?.runtimeVersion === '0.3.35' &&
+  encryptedContract.loaderRelease?.runtimeCommit === 'c25fea688d77b78cccaa01a00d4f9fd124c8693f',
+  'encrypted code: pin Actions 2.1.0 and its released runtime SDK');
+check(encryptedRecipe.includes('Actions `v2.1.0` includes runtime SDK `0.3.35`') &&
+  encryptedRecipe.includes('acurast-app.yml@v2.1.0') &&
+  encryptedRecipe.includes('Previously uploaded artifacts') &&
+  !encryptedRecipe.includes('acurast-app.yml@v1'),
+  'encrypted code: recipe must use the released loader and explain artifact immutability');
 check(encryptedContract.productionAccepted === true, 'encrypted code: preserve accepted production execution');
 check(encryptedContract.actionVersion === '1.3.2' && encryptedContract.actionCommit === 'c15b4b52d53bb7b7d631c2446151d994b93d2693',
   'encrypted code: the released action must include the job-directory bootstrap');

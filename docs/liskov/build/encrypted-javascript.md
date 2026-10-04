@@ -24,10 +24,14 @@ does not establish [Cargo image or cache confidentiality](../concepts/trust-boun
 
 ## Prepare the module and key
 
-Use Actions `v1.3.2` or a compatible later `@v1`; its public loader includes
-runtime SDK `0.3.30`. Use CLI `0.13.0` or later for the paused publication
-flags below. The server must support registered publication previews and
-atomic setup holds.
+Actions `v2.1.0` includes runtime SDK `0.3.35` in its public loader. Pin
+`@v2.1.0` for the recipe below. This loader reads `LISKOV_BOOTSTRAP`,
+`LISKOV_LOCKBOX_BOOTSTRAP`, `LISKOV_CORE_URL` and `LISKOV_HOME`; legacy
+job-side environment names are no longer read. Previously uploaded artifacts
+keep their embedded loader; rebuild to use this version.
+
+Use CLI `0.13.0` or later for the paused publication flags below. The server
+must support registered publication previews and atomic setup holds.
 
 Your build produces a self-contained CommonJS module at `dist/encrypted.cjs`
 with an exported `start(runtime)` function. Use the supplied, already
@@ -91,7 +95,7 @@ permissions:
   id-token: write
 jobs:
   artifact:
-    uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v1
+    uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v2.1.0
     with:
       app-id: encrypted-worker
       authored-manifest-path: .liskov/encrypted-worker.json

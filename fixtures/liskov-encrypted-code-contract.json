@@ -29,5 +29,11 @@
     "verification": "runtime-signature-v2",
     "plaintextDigest": "sha256:09eac269387ef35766bacd1899414794be6253ff8ea22a007ab76e43b81495d4",
     "ciphertextDigest": "sha256:eddfc5cd9ddb51cebfcfda4fd634601f9c2dff599b7c200ee6c8b4806fa12aee"
+  },
+  "loaderRelease": {
+    "actionVersion": "2.1.0",
+    "actionCommit": "6e5f75a556677dabd1964ddaae4f03f4925de0e8",
+    "runtimeVersion": "0.3.35",
+    "runtimeCommit": "c25fea688d77b78cccaa01a00d4f9fd124c8693f"
   }
 }
