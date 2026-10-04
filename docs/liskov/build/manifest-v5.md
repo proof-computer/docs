@@ -289,7 +289,7 @@ Choose one execution arm:
 
 A `once` Application runs one job and settles. It does not run again on its own.
 To run the same document again today, create a new Application, which counts
-against your organization's job slots. An explicit re-arm of the same
+against your organization's [job slots](../operate/pause-resume.md#job-slots). An explicit re-arm of the same
 Application is release-gated, and
 [Capabilities and limits](../reference/capabilities.md) owns its current
 boundary.

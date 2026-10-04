@@ -25,6 +25,9 @@ creating an Application is refused with `application_quota_exceeded`, the
 response says how many slots are in use and what the limit is — retire an
 Application you have finished with, rather than pausing it, to free one.
 
+Job slots are a separate allowance, released by pausing as well as by retiring;
+see [Job slots](./pause-resume.md#job-slots).
+
 ## Preview
 
 Read current retirement state and blockers without mutating:

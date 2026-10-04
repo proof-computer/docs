@@ -636,6 +636,17 @@ const pauseResumePage = readFileSync(join(docsRoot, 'operate', 'pause-resume.md'
 for (const token of ['Resume anyway', 'Retiring an Application frees a slot', 'being retired', 'Try again']) {
   check(pauseResumePage.includes(token), `pause task omits the Console resume refusal "${token}"`);
 }
+// BKLG-20261002-11xy: one job-slot section, and the shared over-cap code names
+// which cap it is. Neither page may mention a 256 job ceiling.
+for (const token of ['## Job slots', '1,000', 'organization_job_slots']) {
+  check(pauseResumePage.includes(token), `pause task omits the job-slot pool "${token}"`);
+}
+check(!pauseResumePage.includes('256'), 'pause task mentions 256');
+check(
+  statusesActionsErrorsPage.includes('`organization_job_slots`'),
+  'Action Plan reference omits `organization_job_slots`',
+);
+check(!statusesActionsErrorsPage.includes('256'), 'Action Plan reference mentions 256');
 for (const token of [
   '`stoppedAtMs`',
   '`releaseRequestedAtMs`',

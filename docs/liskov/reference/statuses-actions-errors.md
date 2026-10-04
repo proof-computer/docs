@@ -107,7 +107,7 @@ A resume through the lifecycle status route can be refused with these
 
 | Code | Meaning / response |
 | --- | --- |
-| `organization_over_plan_caps` | The organization is over its plan's cap; `used` and `limit` say by how much. Retiring an Application frees a slot; pausing one does not. |
+| `organization_over_plan_caps` | The code carries `feature`, `used`, and `limit`. `max_applications` means too many Applications: retire one to free a slot; pausing one does not. `organization_job_slots` means too many [job slots](../operate/pause-resume.md#job-slots): lower `deployment.jobs` and publish, pause or retire Applications, or move to a plan with a larger pool. |
 | `organization_plan_caps_unavailable` | Liskov could not read the plan's caps and refused rather than guess. Try again. |
 | `application_retirement_active` | The Application is being retired and cannot be resumed. |
 | `application_resume_blocked_by_replacement_hold` | A held replacement would start. The response carries `replacementHold`, `overrideRequired: true`, and `overrideAction`. |
