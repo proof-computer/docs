@@ -1562,7 +1562,7 @@ for (const [fileId, required] of Object.entries({
     'put credentials',
     '497899feccd466ae10a819c4c86f55303d9bfe88',
   ],
-  'configure/secrets': ['"kind": "environment"', '"kind": "file"', '0.10.40', '0.3.32', '0.3.34', '0600', 'independently'],
+  'configure/secrets': ['"kind": "environment"', '"kind": "file"', '0.10.40', '0.3.32', '0.3.34', '0.11.1', '0600', 'independently'],
   'troubleshooting/config-bootstrap': ['runtime_bootstrap_customer_secrets_runtime_incompatible', 'runtime_secrets_file_installation'],
   'reference/configuration-precedence': ['Application-managed value', 'process.env', 'Signed runtime bootstrap', 'LISKOV_ORGANIZATION', 'persistent organization'],
   'operate/pause-resume': ['does not force-stop', 'scheduled end'],
@@ -2023,9 +2023,11 @@ check(buildRuntimeSdkPage.includes('liskov-runtime-js#v0.3.33'), 'runtime SDK bu
 check(combined.includes('v0.3.33') && combined.includes('signed runtime-env fallback'),
   'runtime reference omits the released JavaScript signed fallback');
 
-// Secrets on either processor key kind: JavaScript from runtime SDK 0.3.34;
-// native images stay p256-only until a runtime-contact release decrypts
-// secp256k1, and the admin-only processor readback stays off public pages.
+// Secrets on either processor key kind. JavaScript from runtime SDK 0.3.34.
+// Native images from runtime-contact 0.11.1 (BKLG-20261003-yvjo): an older
+// native artifact stops before its command starts, and the page makes no
+// recovery claim for native images. The admin-only processor readback stays
+// off public pages.
 const secretsPage = readFileSync(join(docsRoot, 'configure/secrets.md'), 'utf8').replace(/\s+/g, ' ');
 check(/\*\*JavaScript applications:\*\* either key kind can serve secrets\./.test(secretsPage),
   'secrets page omits that either key kind serves JavaScript secrets');
@@ -2033,10 +2035,21 @@ check(/Runtime SDK[^.]*\*\*0\.3\.34\*\* is the first release that decrypts a gra
   'secrets page omits runtime SDK 0.3.34 as the first release that decrypts a secp256k1 grant');
 check(/\*\*0\.3\.33 or older\*\*[^.]*faults once, and Liskov recovers it/.test(secretsPage),
   'secrets page omits that an older JavaScript runtime faults once and is recovered');
-check(/\*\*Native images:\*\* runtime-contact decrypts secrets on processors with a p256 key only\./.test(secretsPage),
-  'secrets page no longer says native images decrypt on p256 processors only');
-check(!/native[^.]*(?:either key kind|secp256k1 processor)[^.]*(?:recover|serve)/i.test(secretsPage),
-  'secrets page claims secp256k1 secrets or recovery for native images before runtime-contact ships it');
+check(/\*\*Native images:\*\* like JavaScript applications, either key kind can serve secrets\./.test(secretsPage),
+  'secrets page omits that either key kind serves native-image secrets');
+check(/Runtime-contact[^.]*\*\*0\.11\.1\*\* is the first release that decrypts a grant on a secp256k1 processor/.test(secretsPage),
+  'secrets page omits runtime-contact 0.11.1 as the first release that decrypts a secp256k1 grant');
+check(/artifact built with an older runtime-contact[^.]*stops before its command starts/.test(secretsPage),
+  'secrets page omits that an older native runtime-contact stops before its command starts');
+check(/Rebuild and publish a successor artifact to pick up the new helper/.test(secretsPage),
+  'secrets page omits that rebuilding a native artifact picks up the new helper');
+check(!/decrypts secrets on processors with a p256 key only/.test(secretsPage),
+  'secrets page still says native images decrypt on p256 processors only');
+check(!/Support for secp256k1 keys in native images is coming/.test(secretsPage),
+  'secrets page still says secp256k1 support for native images is coming');
+check(!/(?:^|[.])[^.]*\bnative\b[^.]*\b(?:faults once|recover(?:s|ed|y)?)\b/i.test(secretsPage)
+  && !/(?:^|[.])[^.]*\b(?:faults once|recover(?:s|ed|y)?)\b[^.]*\bnative\b/i.test(secretsPage),
+  'secrets page claims recovery for native images');
 check(/`v0\.3\.34` is the first release that decrypts a secret grant on a processor with a secp256k1 encryption key/
   .test(readFileSync(join(docsRoot, 'reference/runtime-sdk.md'), 'utf8').replace(/\s+/g, ' ')),
   'runtime SDK reference omits v0.3.34 as the first secp256k1-decrypting release');

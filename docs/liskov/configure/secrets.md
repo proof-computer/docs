@@ -68,8 +68,12 @@ a runtime version floor for either kind.
   secp256k1 faults once, and Liskov recovers it onto another processor through
   the normal [launch recovery](../operate/diagnose-retry.md). Rebuilding on
   0.3.34 or newer stops that fault.
-- **Native images:** runtime-contact decrypts secrets on processors with a
-  p256 key only. Support for secp256k1 keys in native images is coming.
+- **Native images:** like JavaScript applications, either key kind can serve
+  secrets. Runtime-contact **0.11.1** is the first release that decrypts a
+  grant on a secp256k1 processor. An artifact built with an older
+  runtime-contact and placed on a processor whose only key is secp256k1 stops
+  before its command starts. Rebuild and publish a successor artifact to pick
+  up the new helper.
 
 The manifest contains identifiers and destinations only. Never add plaintext,
 a ciphertext copied from another system, or a secret in a variable `default`.
