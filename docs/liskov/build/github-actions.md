@@ -10,10 +10,10 @@ evidence. GitHub OpenID Connect (OIDC) gives Liskov a short-lived statement of
 repository, ref, commit, and workflow identity. You do not store a Liskov
 bearer token or spend-capable credential in GitHub.
 
-The moving `v1` release is live. The production acceptance recorded for this
-contract used `v1.2.2`; callers should use `@v1` to receive compatible v1 fixes.
-Security-sensitive callers may instead pin the reviewed commit
-`cbca2cde077df0cfd6be894519c6f8e4915e386a` and update it deliberately.
+The moving `v2` release is live. The production acceptance recorded for the
+`v1` contract used `v1.2.2`. Callers should use `@v2` to receive compatible
+fixes. Security-sensitive callers may instead pin the reviewed commit
+`2745f48e6c2619f4d431fb80d20d0e8c75068832` (`v2.0.0`) and update it deliberately.
 
 ## Add the caller workflow
 
@@ -31,7 +31,7 @@ permissions:
 
 jobs:
   artifact:
-    uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v1
+    uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v2
     with:
       app-id: status-worker
       working-directory: .
@@ -43,9 +43,10 @@ Use the same Application ID, repository, ref, workflow path, and manifest path
 as the manifest's builder block. In a monorepo, set `working-directory` to the
 directory containing `package.json` and `pnpm-lock.yaml`.
 
-The default IPFS proxy requires no repository secret. A custom proxy may use
-`ACURAST_IPFS_URL` and `ACURAST_IPFS_API_KEY`; those authorize upload to that
-proxy, not Acurast spend or Liskov policy publication.
+The default IPFS proxy requires no repository secret. A custom IPFS endpoint is
+the `ipfs-endpoint` input; it is not a secret. If that endpoint needs a key,
+pass it as the `LISKOV_IPFS_API_KEY` secret. Neither authorizes Acurast spend or
+Liskov policy publication.
 
 ## What runs
 

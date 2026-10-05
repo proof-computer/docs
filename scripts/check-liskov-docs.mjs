@@ -545,6 +545,10 @@ check(
   'capability matrix does not classify released retirement as v1',
 );
 check(githubActionsPage.includes('v1.2.2'), 'GitHub Actions page omits the verified v1 release');
+check(githubActionsPage.includes('ipfs-endpoint'), 'GitHub Actions page omits the ipfs-endpoint input');
+check(githubActionsPage.includes('LISKOV_IPFS_API_KEY'), 'GitHub Actions page omits the LISKOV_IPFS_API_KEY secret');
+check(!combined.includes('ACURAST_IPFS_'), 'public Liskov docs reintroduce ACURAST_IPFS_');
+check(!combined.includes('acurast-app.yml@v1'), 'public Liskov docs reintroduce acurast-app.yml@v1');
 check(
   !/v1[^\n]{0,80}(?:not yet published|does not yet publish)/i.test(githubActionsPage),
   'GitHub Actions page retains the removed v1 release gate',
@@ -941,7 +945,7 @@ if (firstV5SourceBlock !== null) {
 }
 const createCommandIndex = v5GuidePage.indexOf('proof liskov application create hello-liskov');
 const bindingCommandIndex = v5GuidePage.indexOf('proof liskov application source-binding set hello-liskov');
-const workflowIndex = v5GuidePage.indexOf('uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v1');
+const workflowIndex = v5GuidePage.indexOf('uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v2');
 check(
   createCommandIndex >= 0 && createCommandIndex < bindingCommandIndex && bindingCommandIndex < workflowIndex,
   'V5 guide: Application create and source binding must precede the first dependent workflow build',
@@ -985,7 +989,7 @@ for (const token of [
         'proof liskov application source-binding set',
         'proof liskov application policy publish',
         '--expected-pointer-version',
-        'acurast-app.yml@v1',
+        'acurast-app.yml@v2',
         'v1.2.4',
         'does not run again on its own',
       ]
@@ -1440,7 +1444,7 @@ for (const retired of cliContract.retiredCommands ?? []) {
 }
 
 const workflow = readFileSync(workflowPath, 'utf8');
-check(workflow.includes('acurast-app.yml@v1'), 'workflow fixture: missing released @v1 reference');
+check(workflow.includes('acurast-app.yml@v2'), 'workflow fixture: missing released @v2 reference');
 check(workflow.includes('id-token: write'), 'workflow fixture: missing OIDC permission');
 check(workflow.includes('contents: read'), 'workflow fixture: missing contents permission');
 check(workflow.includes('authored-manifest-path:'), 'workflow fixture: missing manifest input');
@@ -1448,7 +1452,7 @@ check(!/yes-spend|bearer|LISKOV_TOKEN/i.test(workflow), 'workflow fixture: conta
 
 const v5StarterWorkflow = readFileSync(v5StarterWorkflowPath, 'utf8');
 for (const token of [
-  'acurast-app.yml@v1',
+  'acurast-app.yml@v2',
   'id-token: write',
   'contents: read',
   'app-id: hello-liskov',
@@ -1529,8 +1533,8 @@ check(
   }
 }
 check(
-  entryRouteGithubPage.includes('uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v1'),
-  'entry route: the GitHub journey does not call the reusable workflow at @v1',
+  entryRouteGithubPage.includes('uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v2'),
+  'entry route: the GitHub journey does not call the reusable workflow at @v2',
 );
 check(
   entryRouteGithubPage.includes(v5StarterManifest.deployment.schedule.duration) &&
