@@ -151,11 +151,11 @@ git push origin main
 The workflow calls:
 
 ```yaml
-uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v1
+uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v2
 ```
 
-The moving `v1` tag is verified at `v1.2.4`, which contains the retained V5
-source binding. The called workflow installs, typechecks, tests, and builds;
+The moving `v2` tag contains the retained V5 source binding, first released in
+`v1.2.4`. The called workflow installs, typechecks, tests, and builds;
 uploads the bundle without a spend-capable credential; and attests the
 artifact digest, source commit and ref, and workflow identity to Liskov. It
 publishes nothing and deploys nothing.

@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   artifact:
-    uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v1
+    uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v2
     with:
       app-id: builder-iteration
       working-directory: .

@@ -40,8 +40,8 @@ if (json) {
 }
 
 async function uploadDirectIpfs(bundle) {
-  const endpoint = (nonEmptyString(process.env.ACURAST_IPFS_URL) ?? defaultAcurastIpfsEndpoint).replace(/\/+$/u, "");
-  const apiKey = nonEmptyString(process.env.ACURAST_IPFS_API_KEY);
+  const endpoint = defaultAcurastIpfsEndpoint.replace(/\/+$/u, "");
+  const apiKey = nonEmptyString(process.env.LISKOV_IPFS_API_KEY);
   const body = new FormData();
   body.append("file", new Blob([bundle], { type: "text/javascript" }), "proof-docs-acurast.mjs");
   body.append("pinataOptions", JSON.stringify({ cidVersion: 0 }));

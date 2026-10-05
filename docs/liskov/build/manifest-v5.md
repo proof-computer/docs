@@ -214,8 +214,8 @@ existing binding; a successful local build does not create one.
 
 Then let the reusable workflow build, pin, and attest the document on every
 push to the bound ref. Its `app-id`, repository, workflow path, and
-`authored-manifest-path` must be the bound values. The moving `v1` tag is
-verified at `v1.2.4`, which contains the retained V5 source binding
+`authored-manifest-path` must be the bound values. The moving `v2` tag
+contains the retained V5 source binding, first released in `v1.2.4`
 (`aa1b83f0fd4b08ac33a6c9970d2077885922d79c`):
 
 ```yaml title=".github/workflows/liskov.yml"
@@ -232,7 +232,7 @@ permissions:
 
 jobs:
   artifact:
-    uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v1
+    uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v2
     with:
       app-id: hello-liskov
       working-directory: .
