@@ -13,6 +13,9 @@ The Console no longer has an Application-scoped Action Plan page. Per-Applicatio
 “what is wrong right now” lives on that Application’s Deployments index. “What
 do I owe a decision on, across everything” is the organization Action Plan.
 
+If nothing is moving and the Console header shows **Running behind** or
+**Changes on hold**, see [When Liskov is running behind](./diagnose-retry.md#when-liskov-is-running-behind).
+
 ## Customer posture
 
 | Posture | Meaning | Default response |
