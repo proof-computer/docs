@@ -462,6 +462,16 @@ for (const [token, meaning] of [
 ]) {
   check(retirementPage.includes(token), `retirement page omits ${meaning}`);
 }
+// BKLG-20261005-lxvw — a safe-retirement receipt written after liskov-rs
+// f7145bf3 declares application-deletion-receipt.v2 and carries the initial
+// assessment as a digest and counts. A safe-retirement receipt written before
+// that stays v1 and keeps the full initial assessment. Dropping either domain
+// from operate/retire must fail this check.
+check(
+  retirementPage.includes('proof.liskov.application-deletion-receipt.v2') &&
+    retirementPage.includes('proof.liskov.application-deletion-receipt.v1'),
+  'retirement page must name both deletion-receipt contract versions',
+);
 check(/\*\*Spend 30d\*\*[\s\S]{0,200}trailing 30 days/.test(serviceCreditsPage)
   && /\*\*Lifetime spend\*\*[\s\S]{0,200}whole retained history/.test(serviceCreditsPage)
   && /Neither figure includes \*\*Held\*\* value/.test(serviceCreditsPage)
