@@ -10,6 +10,24 @@ Retrying can create new work or spend and cannot correct a missing secret,
 invalid policy, or insufficient balance. The Application-scoped Action Plan
 page is withdrawn; per-Application attention lives on Deployments.
 
+## When Liskov is running behind
+
+The Console header shows **Running behind · changes may be late** when
+Liskov's newest full pass over Applications finished more than five and at
+most fifteen minutes ago. Launches, stops, renewals and settlements are still
+being applied, but may arrive later than usual. Jobs already running are
+unaffected.
+
+It shows **Changes on hold · running jobs continue** when no full pass has
+finished for more than fifteen minutes, or no finished pass has been recorded.
+Jobs already running continue to their scheduled end. Changes you ask for are
+kept until Liskov resumes; a renewal due meanwhile waits. Open either chip's
+note to see the finish time of the newest full pass in UTC, or that no
+finished pass has been recorded.
+
+Neither chip asks you to retry or resubmit anything. It clears on its own when
+Liskov catches up. You do not need to take action.
+
 ## 1. Identify the blocked decision
 
 ```bash
