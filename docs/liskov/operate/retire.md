@@ -95,9 +95,22 @@ to cancel.
 ## Verify the receipt
 
 The final receipt binds the organization and Application UID, requester,
-reason, request and deletion times, initial and final assessments, retirement
-event-stream head, and receipt digest. Keep it with your own operational
-records.
+reason, request and deletion times, retirement event-stream head, and receipt
+digest. Keep it with your own operational records.
+
+Each receipt names its version in `domain`, and its digest is computed under
+that version.
+
+A `safe_retirement` receipt whose `domain` is
+`proof.liskov.application-deletion-receipt.v2` carries the initial assessment
+as its digest, its total blocker count, and its counts by execution, financial,
+and ambiguity. It carries the final assessment in full. The full initial
+assessment stays with Liskov's retirement record, which the receipt names by
+its retirement id.
+
+A `safe_retirement` receipt written before this change uses
+`proof.liskov.application-deletion-receipt.v1` and carries the full initial
+assessment. Both versions remain valid, and neither is rewritten.
 
 The receipt records which kind of ending it was. A `safe_retirement` receipt
 proves a zero gate at completion. A `legacy_immediate_tombstone` records a
