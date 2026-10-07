@@ -140,6 +140,50 @@ alongside you.
 Pick an exact target with `--deployment` or `--job` when an Application has more
 than one running job.
 
+### Forward traffic through the managed session
+
+With `proof-cli-liskov` `0.17.0` or later, `proof liskov ssh` accepts local
+forwarding (`-L`) and dynamic forwarding (`-D`) through the Liskov-managed
+session. Both flags are repeatable. The client accepts any destination host,
+with no destination allowlist; the job must still be able to reach that host
+and port.
+
+For a service listening on port `8080` inside the job, open a port on your
+machine that forwards to it:
+
+```bash
+proof liskov ssh APP_REF --identity ~/.ssh/liskov-runtime \
+  -L 127.0.0.1:18080:127.0.0.1:8080 -N
+```
+
+The syntax is `-L [bind:]port:host:hostport`: `bind` and `port` name the
+listener on your machine; `host` and `hostport` name the destination reached
+from the job. Here the destination `127.0.0.1` is the job's loopback address.
+While the command is running, open `http://127.0.0.1:18080` on your machine to
+verify that it returns your service's response.
+
+For a local SOCKS proxy whose connections go out from the job:
+
+```bash
+proof liskov ssh APP_REF --identity ~/.ssh/liskov-runtime \
+  -D 127.0.0.1:1080 -N
+```
+
+The syntax is `-D [bind:]port`. Configure your local client to use the SOCKS
+proxy at `127.0.0.1:1080`, then request a destination the job can reach to
+verify it. These examples bind only on your machine's loopback address.
+
+`-N` requests no remote command, so the connection carries forwards without
+opening a shell. Omit it if you also want an interactive shell. Stop the
+connection with Ctrl-C when finished. Remote forwarding (`-R`) is refused.
+Forwarded bytes count against the same log allowance and Service Credit
+overage rate as other traffic through the relay.
+
+A job keeps the helper it started with. An older helper that still disables
+local forwarding with Dropbear `-j` refuses both `-L` and `-D` until that job
+starts again on a helper that allows forwarding. Upgrading your CLI does not
+change the helper in a running job.
+
 ## Verify it worked
 
 Inside the session:
@@ -339,6 +383,15 @@ the time.
 **Your session ends by itself** — sessions last at most two hours, and a
 connection that stops answering the relay's heartbeat is closed after 60
 seconds. Reconnecting is normal and safe; it issues a fresh one-time ticket.
+
+**A forward fails** — if the CLI rejects `-L`, `-D`, or `-N` as an unknown
+flag, upgrade to `proof-cli-liskov` `0.17.0` or later. If the local port is
+already in use, choose another local port. If SSH refuses the forwarding
+channel, the job may still be running an older helper that disables local
+forwarding; it needs its next run on a helper that allows it. If the channel
+opens but the destination cannot be reached, check that the service is
+listening at the host and port you named, as reached from the job. A successful
+SSH connection alone does not verify the forwarded service.
 
 ## What this does not do
 

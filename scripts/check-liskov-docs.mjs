@@ -1315,6 +1315,25 @@ const operatePage = readFileSync(join(docsRoot, 'operate', 'runtime-ssh.md'), 'u
 check(operatePage.includes('operator-key add'), 'operate/runtime-ssh omits the operator-key add command');
 check(/does not\s+grant access/.test(operatePage), 'operate/runtime-ssh omits the non-grant statement');
 check(!/does not revoke access/.test(operatePage), 'operate/runtime-ssh repeats the retracted non-revocation claim');
+// BKLG-20261007-8g0w / ADR-0045: forwarding changes the managed-session
+// contract without changing Preview availability or upgrading existing jobs.
+for (const token of [
+  '`proof-cli-liskov` `0.17.0` or later',
+  '-L 127.0.0.1:18080:127.0.0.1:8080 -N',
+  '-D 127.0.0.1:1080 -N',
+  'Both flags are repeatable',
+  'client accepts any destination host',
+  '`-N` requests no remote command',
+  'Remote forwarding (`-R`) is refused',
+  'A job keeps the helper it started with',
+  'Dropbear `-j` refuses both `-L` and `-D` until that job',
+  'starts again on a helper that allows forwarding',
+  'Forwarded bytes count against the same log allowance and Service Credit',
+]) {
+  check(operatePage.includes(token), `operate/runtime-ssh omits managed forwarding contract: ${token}`);
+}
+check(/It does not publish a port or serve traffic to\s+anyone/.test(operatePage), 'operate/runtime-ssh lost the non-ingress boundary');
+check(/:::info Preview\s+Runtime SSH through the Liskov relay is available on Developer and above/.test(operatePage), 'operate/runtime-ssh forwarding changed Preview or plan availability');
 for (const token of [
   'withdrawn-key add',
   'withdrawn-key remove',
