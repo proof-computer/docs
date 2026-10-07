@@ -105,6 +105,11 @@ registry that the next job will snapshot.
 
 ## 3. Inspect without consuming a ticket
 
+The next CLI release will support `proof liskov ssh APP_REF --key NAME`, using
+the name registered in step 1, and automatic selection when one authorized
+local key matches. This is not yet in the published CLI; use `--identity` in
+the examples below until that release. See [named keys and automatic selection](../reference/cli.md#named-keys-and-automatic-selection-next-cli-release).
+
 ```bash
 proof liskov ssh APP_REF \
   --identity ~/.ssh/liskov-runtime \
