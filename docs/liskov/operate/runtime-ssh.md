@@ -95,6 +95,13 @@ access, everywhere in your organization, whether or not a manifest still lists
 it; see [Take someone's access away](#take-someones-access-away). Full command
 reference: [CLI reference](../reference/cli.md#runtime-ssh).
 
+The next CLI release will let you connect with `proof liskov ssh APP_REF --key
+work-laptop`, or omit the key flag when exactly one authorized local key matches.
+This is not yet in the published CLI: continue using `--identity` below until
+that release. The name selects your organization's registered public key, and
+the CLI finds its matching private key directly in `~/.ssh`. A public-key file
+alone cannot open a session. See [selection and missing-key errors](../reference/cli.md#named-keys-and-automatic-selection-next-cli-release).
+
 ## 2. Check the connection before you use it
 
 `--print-command` resolves and verifies everything without opening a session or

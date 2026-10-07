@@ -232,6 +232,42 @@ recognize, and the set of codes is not guaranteed to be append-only.
 | `runtime-ssh attachment revoke ATTACHMENT_ID` | Cut access to one attachment on purpose, without ending the job. No new connection request, ticket or relay registration is granted for it and its unused tickets are revoked; the response carries `revokedTicketCount`, `newlyRevoked`, and a `note`. A session already open drains. Repeating a revocation is safe: it reports `newlyRevoked: false` and changes nothing. Compare with `withdrawn-key add`, which denies one person across every attachment rather than ending one job's access for everyone. |
 
 `--identity` names the private key file; it is read locally and never sent.
+
+### Named keys and automatic selection (next CLI release)
+
+These additions are prepared for the next CLI release and are not included in
+the published version described above. Until that release, use `--identity FILE`.
+
+Managed `ssh APP` will match the control plane's attachment-authorized SHA256
+fingerprints to Ed25519 private-key files directly in `~/.ssh`. `ssh APP --key
+NAME` will select the exact operator-key name registered in the effective
+organization with `runtime-ssh operator-key add --name NAME`. The named key must
+also be authorized by the selected attachment. `--identity FILE` will select an
+explicit path, or supply a named key stored outside `~/.ssh` when combined with
+`--key NAME`.
+
+Discovery uses the actual private file's public key, including the public
+envelope of passphrase-protected OpenSSH keys. OpenSSH asks for the passphrase
+when connecting. A `.pub` file alone is insufficient. SSH config aliases,
+subdirectories, and agent-only keys are not searched. Encrypted keys in other
+formats should be converted to OpenSSH format first. Multiple distinct matches
+require `--key` or `--identity`; copies of one key use the first sorted path.
+
+`--print-command --json` will include `selectedIdentity` (the local path),
+`selectedIdentityFingerprint`, and `selectedKeyName` when `--key` was used.
+Discovery failures happen before a ticket is issued:
+
+| Error | Action |
+| --- | --- |
+| `RUNTIME_SSH_IDENTITY_MISSING` | Restore a private key matching a listed fingerprint, or provide its path with `--identity FILE`. |
+| `RUNTIME_SSH_IDENTITY_AMBIGUOUS` | Select one match with `--key NAME` or `--identity FILE`. |
+| `RUNTIME_SSH_KEY_NOT_FOUND` | Check `runtime-ssh operator-key list` in the effective organization. |
+| `RUNTIME_SSH_IDENTITY_NOT_AUTHORIZED` | Select a key authorized by this attachment. A newly registered key is included in new attachments. |
+
+`--key` applies to managed Runtime SSH. Tailscale SSH uses the Tailscale identity.
+
+### Target and host verification
+
 `--deployment` and `--job` select an exact target when an Application has more
 than one running job. `--accept-host-key` trusts a job's key on first use
 without prompting, for automation; a **mismatch** on a job you already trusted
