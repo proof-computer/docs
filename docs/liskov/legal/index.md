@@ -13,6 +13,8 @@ Notice, Cookie Notice and Subprocessor Schedule state their later version and
 effective date on the page. Liskov is a business service and is not available
 for consumer use.
 
+The licence for each component you run is on the [component licences](../reference/component-licences.md) page.
+
 ## The documents
 
 - [Master Business Terms](./master-terms) — the contract between PROOF and a business customer for access to and use of Liskov.

@@ -1,6 +1,7 @@
 {
   "name": "@proof-computer/docs",
   "version": "0.1.0",
+  "license": "SEE LICENSE IN LICENSE",
   "private": true,
   "packageManager": "pnpm@10.33.0",
   "scripts": {

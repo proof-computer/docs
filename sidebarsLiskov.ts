@@ -110,6 +110,7 @@ const sidebars: SidebarsConfig = {
         'reference/configuration-precedence',
         'reference/schema-endpoints',
         'reference/glossary',
+        'reference/component-licences',
         'reference/contributor-licence-agreement',
       ],
     },

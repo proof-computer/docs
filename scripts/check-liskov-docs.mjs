@@ -80,6 +80,7 @@ const baseExpectedIds = [
   'reference/configuration-precedence',
   'reference/schema-endpoints',
   'reference/glossary',
+  'reference/component-licences',
   // Draft, not in force; published for counsel ahead of any outside pull request (ADR-0170 §4, BKLG-20260925-is9m).
   'reference/contributor-licence-agreement',
   'troubleshooting/index',
