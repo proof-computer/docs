@@ -1,0 +1,13 @@
+Documentation prose in this repository is licensed under the Creative Commons
+Attribution 4.0 International License (CC BY 4.0):
+
+https://creativecommons.org/licenses/by/4.0/
+
+The pages under docs/liskov/legal/ are all rights reserved. They are contractual
+text, not documentation.
+
+Code samples in the documentation, and the files under examples/, are licensed
+under the Functional Source License, Version 1.1, Apache 2.0 future licence
+(FSL-1.1-Apache-2.0). The licensor is Moose Labs Ltd.
+
+https://fsl.software
