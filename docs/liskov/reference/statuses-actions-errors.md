@@ -107,7 +107,7 @@ A resume through the lifecycle status route can be refused with these
 
 | Code | Meaning / response |
 | --- | --- |
-| `organization_over_plan_caps` | The code carries `feature`, `used`, and `limit`. `max_applications` means too many Applications: retire one to free a slot; pausing one does not. `organization_job_slots` means too many [job slots](../operate/pause-resume.md#job-slots): lower `deployment.jobs` and publish, pause or retire Applications, or move to a plan with a larger pool. |
+| `organization_over_plan_caps` | The code carries `feature`, `used`, and `limit`. `max_applications` means too many Applications: [retire enough Applications](../troubleshooting/billing-retirement.md#organization-is-over-its-application-cap) to bring `used` within `limit`; pausing one does not free an Application slot. `organization_job_slots` means too many [job slots](../operate/pause-resume.md#job-slots): lower `deployment.jobs` and publish, pause or retire Applications, or move to a plan with a larger pool. |
 | `organization_plan_caps_unavailable` | Liskov could not read the plan's caps and refused rather than guess. Try again. |
 | `application_retirement_active` | The Application is being retired and cannot be resumed. |
 | `application_resume_blocked_by_replacement_hold` | A held replacement would start. The response carries `replacementHold`, `overrideRequired: true`, and `overrideAction`. |
@@ -140,6 +140,59 @@ reported manifest pointer and publish again. The schedule-bound reason tokens
 are `acurast_job_registration_duration_below_minimum`,
 `acurast_job_registration_start_too_far_in_future`, and
 `acurast_job_registration_max_start_delay_exceeded`.
+
+## Application cap refusals
+
+`organization_over_plan_caps` with `feature: max_applications` means the
+organization holds more Application slots than its resolved plan permits.
+`used` is the current slot-holding Application count; `limit` is the resolved
+Application allowance. Exactly at the cap (`used <= limit`) passes this check,
+although other admission checks still apply. Creation has a separate
+`application_quota_exceeded` refusal: it needs room for one additional slot.
+
+While `used > limit`, Liskov refuses **all customer-initiated publish/deploy,
+Run, and resume starts** in the organization, before publication, run
+authorization, or spend. New scheduled `once` occurrences, due `interval`
+occurrences, and a continuous Application's first job are also refused before
+spend. [Run again and fixed-interval execution](./capabilities.md) remain
+release-gated.
+
+Already-running continuous work keeps renewing. Recovery and replacement of
+existing execution continue through their usual safety and funding checks.
+Trial lapse itself stops no running job. Liskov does not automatically choose
+excess Applications to pause or retire.
+
+Publish/deploy and resume return HTTP `403` with `error`, `feature`, `used`,
+and `limit` at the top level, for example:
+
+```json
+{
+  "ok": false,
+  "error": "organization_over_plan_caps",
+  "reason": "This organization holds 3 application slots and its plan allows 2, so it cannot start new work. Retire applications to release slots or restore a plan that allows them; paused applications keep their slot. Running work is not affected.",
+  "feature": "max_applications",
+  "used": 3,
+  "limit": 2
+}
+```
+
+Run retains its HTTP `200` response envelope with `ok: false`,
+`authorized: false`, and the same fields inside `refusal`, where the code is
+`refusal.code`. A scheduled refusal appears in the execution result as
+`reason: organization_over_plan_caps`, alongside `feature`, `used`, and
+`limit`. Do not decide success from HTTP status alone.
+
+CLI `0.17.0` renders the refusal and exits nonzero; `--json` preserves the
+received envelope and exact numeric fields. See the [CLI version requirement](./cli.md#over-cap-refusal-output).
+If the cap cannot be read, Liskov refuses with
+`organization_plan_caps_unavailable`; that is not evidence that usage exceeds
+the cap. Try again shortly.
+
+Retire enough Applications to bring `used` within `limit`, or restore a
+plan/payment state with an adequate resolved allowance in an enabled billing
+environment. **Pausing does not release an Application slot.** Customer
+paid-plan activation remains [release-gated](./capabilities.md). Follow the
+[verification and safe next steps](../troubleshooting/billing-retirement.md#organization-is-over-its-application-cap).
 
 ## Organization business-eligibility errors
 

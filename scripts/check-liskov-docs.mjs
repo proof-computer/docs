@@ -651,6 +651,54 @@ const pauseResumePage = readFileSync(join(docsRoot, 'operate', 'pause-resume.md'
 for (const token of ['Resume anyway', 'Retiring an Application frees a slot', 'being retired', 'Try again']) {
   check(pauseResumePage.includes(token), `pause task omits the Console resume refusal "${token}"`);
 }
+// BKLG-20260921-bcag: the released Application cap is distinct from the
+// job-slot pool; preserve Option B and the independent schedule/billing gates.
+const applicationCapContract = JSON.parse(readFileSync(join(root, 'fixtures', 'liskov-application-cap-contract.json'), 'utf8'));
+const capReference = statusesActionsErrorsPage.split('## Application cap refusals')[1]?.split('\n## ')[0] ?? '';
+const capTroubleshooting = billingRetirementPage.split('## Organization is over its Application cap')[1]?.split('\n## ')[0] ?? '';
+const normalizedCapText = (content) => content.replace(/\s+/g, ' ');
+const capExample = capReference.match(/```json\n([\s\S]*?)\n```/);
+check(capExample !== null && JSON.stringify(JSON.parse(capExample[1])) === JSON.stringify(applicationCapContract.applicationCap.publishResumeExample),
+  'Application cap reference differs from the deployed owner response fixture');
+check(applicationCapContract.applicationCap.withinCap === 'used <= limit' &&
+  applicationCapContract.applicationCap.pauseReleasesSlot === false &&
+  applicationCapContract.applicationCap.retiringReleasesSlot === false &&
+  applicationCapContract.applicationCap.retiredReleasesSlot === true,
+  'Application cap fixture changed the at-cap or slot-release boundary');
+for (const [page, content] of [['reference', capReference], ['troubleshooting', capTroubleshooting]]) {
+  const normalized = normalizedCapText(content);
+  for (const token of ['organization_over_plan_caps', 'max_applications', 'used', 'limit',
+    'publish/deploy', 'Run', 'resume', 'once', 'interval', 'continuous',
+    'renew', 'recovery', 'replacement', 'before', 'spend', 'release-gated',
+    'organization_plan_caps_unavailable', 'Pausing does not release an Application slot',
+    'used <= limit', '0.17.0']) {
+    check(normalized.toLowerCase().includes(token.toLowerCase()), `Application cap ${page} omits ${token}`);
+  }
+  check(/trial lapse itself stops no running job/i.test(normalized), `Application cap ${page} implies trial lapse stops a job`);
+  check(/does not automatically (?:choose|select) excess Applications to pause or retire/i.test(normalized),
+    `Application cap ${page} omits the absence of automatic retirement or pause`);
+}
+check(capReference.includes('HTTP `403`') && capReference.includes('HTTP `200`') &&
+  capReference.includes('`refusal.code`') && capReference.includes('`authorized: false`') &&
+  capReference.includes('`reason: organization_over_plan_caps`'),
+  'Application cap reference collapses the publish/resume, Run, or scheduled envelope');
+for (const token of [applicationCapContract.applicationCap.billingCountPath, applicationCapContract.applicationCap.billingLimitPath,
+  'used - limit', 'used: 3', 'limit: 2', 'A Retiring Application still holds its slot', 'contact support']) {
+  check(normalizedCapText(capTroubleshooting).includes(token), `Application cap troubleshooting omits ${token}`);
+}
+for (const [page, content] of [['pause/resume', pauseResumePage], ['retirement', retirementPage]]) {
+  for (const token of ['organization_over_plan_caps', 'max_applications', 'used', 'limit',
+    'Pausing does not release an Application slot', 'Retired', 'release-gated']) {
+    check(normalizedCapText(content).includes(token), `Application cap ${page} omits ${token}`);
+  }
+}
+check(capabilitiesPage.includes('| Organization Application cap on new starts | v1;') &&
+  capabilitiesPage.includes('CLI typed refusal output requires `0.17.0`'),
+  'Capabilities omit the released Application cap or its packaged CLI prerequisite');
+const capCliReference = readFileSync(join(docsRoot, 'reference', 'cli.md'), 'utf8');
+check(capCliReference.includes(`proof plugins install ${applicationCapContract.cli.package}@${applicationCapContract.cli.version}`) &&
+  normalizedCapText(capCliReference).includes('`0.14.0` does not preserve this typed refusal envelope'),
+  'CLI reference omits the released version needed for typed cap refusal output');
 // BKLG-20261002-11xy: one job-slot section, and the shared over-cap code names
 // which cap it is. Neither page may mention a 256 job ceiling.
 for (const token of ['## Job slots', '1,000', 'organization_job_slots']) {
