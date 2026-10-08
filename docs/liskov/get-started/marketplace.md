@@ -38,8 +38,9 @@ acceptance does not authorize a customer to repeat the journey.
 
 ## Safe customer path today
 
-Use [Deploy from GitHub](./github.md) only if Manifest V4 publication is enabled
-for your organization and it already has enough available Service Credits.
+Use [Deploy from GitHub](./github.md), which publishes a retained Manifest V5
+Application from your own repository, and make sure the organization has enough
+available Service Credits.
 You can review the [Uptime Prober contract](../marketplace/uptime-prober.md) and
 [Marketplace evidence model](../marketplace/verify.md) as release-boundary
 reference, not as launch instructions.
