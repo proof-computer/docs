@@ -16,6 +16,24 @@ proof plugins install @proof-computer/proof-cli-liskov@0.14.0
 proof liskov --help
 ```
 
+## Over-cap refusal output
+
+The typed `organization_over_plan_caps` explanation described in
+[Application cap refusals](./statuses-actions-errors.md#application-cap-refusals)
+is verified in released plugin `0.17.0`. Install that version for the feature,
+including `--json` output that preserves the received `feature`, `used`, and
+`limit` fields:
+
+```bash
+proof plugins install @proof-computer/proof-cli-liskov@0.17.0
+```
+
+A refused publish, Run, or resume exits nonzero. Earlier documented plugin
+`0.14.0` does not preserve this typed refusal envelope. Updating the plugin
+does not enable release-gated Run again, fixed-interval execution, or paid
+billing paths. Use [the cap troubleshooting steps](../troubleshooting/billing-retirement.md#organization-is-over-its-application-cap)
+to reduce usage and verify it before retrying.
+
 ## Session
 
 | Command | Effect |

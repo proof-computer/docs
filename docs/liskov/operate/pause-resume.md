@@ -75,6 +75,33 @@ behavior is that a paused interval Application starts no new occurrence, and
 resume continues at the next future boundary: boundaries that passed while it
 was paused are not run afterwards.
 
+## Application caps and new starts
+
+When `organization_over_plan_caps` names `max_applications`, the refusal's
+`used` is the current Application slot count and `limit` is the resolved plan
+allowance. Liskov refuses all customer publish/deploy, Run, and resume starts
+while the organization is over that cap, before any spend. New scheduled
+`once` and `interval` occurrences and a continuous Application's first job
+are also refused; [Run again and fixed-interval execution](../reference/capabilities.md)
+retain their release gates.
+
+An already-running continuous Application keeps renewing, and recovery or
+replacement of existing execution continues through the usual safety and
+funding checks. Trial lapse itself stops no running job. Liskov does not
+select Applications to pause or retire automatically.
+
+**Pausing does not release an Application slot.** Current and Retiring
+Applications still count. [Retire enough Applications](./retire.md#application-slots)
+to bring `used` within `limit`, then check the count again. Exactly at the cap
+(`used <= limit`) passes this check. Starting retirement alone does not free
+capacity: wait until it completes and the Application is Retired.
+
+An adequate resolved plan/payment state can also clear the refusal in an
+enabled billing environment; customer paid-plan activation remains
+[release-gated](../reference/capabilities.md). If you cannot retire enough
+Applications, contact support before retrying. The [troubleshooting steps](../troubleshooting/billing-retirement.md#organization-is-over-its-application-cap)
+explain how to read and verify the count.
+
 ## Job slots
 
 Each plan gives the organization a pool of job slots:

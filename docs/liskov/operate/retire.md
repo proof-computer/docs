@@ -25,6 +25,24 @@ creating an Application is refused with `application_quota_exceeded`, the
 response says how many slots are in use and what the limit is — retire an
 Application you have finished with, rather than pausing it, to free one.
 
+If new starts are refused with `organization_over_plan_caps` and
+`feature: max_applications`, retire enough Applications to bring the current
+`used` count within the resolved `limit`. For example, `used: 3` and `limit: 2`
+requires at least one completed retirement. Starting retirement keeps the
+Application slot occupied until finalization; verify **Retired** and retain
+the receipt before checking the count again. Pausing does not release an
+Application slot. Neither the refusal nor trial lapse stops already-running
+continuous work or its renewals; recovery and replacement remain subject to
+the usual safety and funding checks.
+
+Retirement is a permanent change, and existing jobs and charges still have to
+close. Preview each Application you no longer need before confirming below.
+If an adequate plan/payment state is available in an enabled billing
+environment, restoring it can also clear the cap refusal; customer paid-plan
+activation remains [release-gated](../reference/capabilities.md). See
+[the cap-refusal troubleshooting steps](../troubleshooting/billing-retirement.md#organization-is-over-its-application-cap)
+for the count and verification path.
+
 Job slots are a separate allowance, released by pausing as well as by retiring;
 see [Job slots](./pause-resume.md#job-slots).
 

@@ -1,0 +1,52 @@
+{
+  "packet": "BKLG-20260921-bcag",
+  "productAuthority": "Q-20260920-my73 Option B; ADR-0116",
+  "readbackDate": "2026-10-08",
+  "owner": {
+    "repository": "proof-computer/liskov-rs",
+    "deployedCommit": "b51113d33b3b4069b8ad6e43c838fba9b675ff26",
+    "apiImageDigest": "sha256:5eada0d1797f76a51af6f0b0007f1d74ff0f14bc62ad22851bead8a86054a845",
+    "workerImageDigest": "sha256:d81d04dac501d493754bd110958510f74690c33c013c551dbe822f109e514e39",
+    "apiSource": "crates/slipway/src/application_admission.rs",
+    "runSource": "crates/liskov-api-runtime/src/application_run.rs",
+    "workerSource": "crates/liskov-worker-composition/src/executor_run/v5_launch/start_cap.rs",
+    "billingVector": "crates/slipway-billing/vectors/billing_view.json"
+  },
+  "cli": {
+    "package": "@proof-computer/proof-cli-liskov",
+    "version": "0.17.0",
+    "gitHead": "1a0673a323d3a4f4f89ef7244cff1debca81f3c4",
+    "integrity": "sha512-4APiBB8h+s+HJD9qYWRi1EAiWwe8LfVm39GajbIsA4YGtgn0QFa7wzMdUCtNlPU8I3huh4t73bkBvnteQtjzWg==",
+    "refusedExitCode": 1
+  },
+  "console": {
+    "deployedCommit": "2b3187a1bf2c638acfdff1b01608607f63547bb2",
+    "productionDeploymentId": 6938057807,
+    "deploymentState": "success"
+  },
+  "applicationCap": {
+    "publishResumeHttpStatus": 403,
+    "publishResumeExample": {
+      "ok": false,
+      "error": "organization_over_plan_caps",
+      "reason": "This organization holds 3 application slots and its plan allows 2, so it cannot start new work. Retire applications to release slots or restore a plan that allows them; paused applications keep their slot. Running work is not affected.",
+      "feature": "max_applications",
+      "used": 3,
+      "limit": 2
+    },
+    "runHttpStatus": 200,
+    "runCodePath": "refusal.code",
+    "workerCodePath": "reason",
+    "billingCountPath": "allowances.applications.used",
+    "billingLimitPath": "allowances.applications.limit",
+    "withinCap": "used <= limit",
+    "pauseReleasesSlot": false,
+    "retiringReleasesSlot": false,
+    "retiredReleasesSlot": true
+  },
+  "scheduledModesRemainGated": [
+    "interval",
+    "Run again"
+  ],
+  "deploymentHandoff": "BKLG-20260903-hdsy owns final docs deployment and production-route verification"
+}
