@@ -10,7 +10,8 @@ description: Prepare the retained V5 source, runtime, schedule, spend, configura
 This guide covers RC
 `sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10`.
 [Capabilities and limits](../reference/capabilities.md) owns the supported
-surface; [Application Manifest V4](./manifest-v4.md) remains supported.
+surface. Existing [Application Manifest V4](./manifest-v4.md) Applications
+keep running until they are retired; new publication is V5.
 
 :::
 

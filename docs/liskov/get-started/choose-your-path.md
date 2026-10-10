@@ -23,8 +23,9 @@ Choose GitHub when you need to change the code, build configuration, runtime
 resources, schedule, or release authority. You will validate a strict Manifest
 V5 document, bind your repository to the Application, and publish only a build
 that GitHub attested from that exact source.
-[Manifest V4](../build/manifest-v4.md) remains supported for existing
-Applications; its own-repository publication is rollout-gated by organization.
+Existing [Manifest V4](../build/manifest-v4.md) Applications keep running
+until they are retired; a V4 manifest can no longer be published, so new
+publication is V5.
 
 ## Shared prerequisites
 

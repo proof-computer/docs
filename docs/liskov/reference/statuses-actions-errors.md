@@ -237,6 +237,7 @@ See [Intended capacity versus remaining charges](../troubleshooting/execution-co
 
 | Code | Meaning / response |
 | --- | --- |
+| `v4_publication_disabled` | Manifest V4 publication is closed. Author a retained Manifest V5 and publish it with `application policy publish`. |
 | `invalid_policy` | Required value, type, enum, bound, or cross-field invariant is invalid. Correct the manifest. |
 | `unknown_field` | A strict object contains an unrecognized property. Remove or correct it. |
 | `unsupported_policy_feature` | Valid V4 syntax is not enabled. Choose a v1-supported value. |

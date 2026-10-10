@@ -30,7 +30,8 @@ This page is the availability owner. Guides contain only supported recipes.
 | Uptime Prober | Release-gated v1; an internal first-party acceptance fixture, not a supported customer offering |
 | OpenClaw offering | Release-gated v1; no versioned descriptor was present at the reviewed release |
 | Third-party Marketplace publishing/payouts | Not v1 |
-| Manifest V4 repository import/publication | Release-gated v1 |
+| Manifest V4 publication | Closed: a V4 manifest cannot be published; existing V4 Applications keep running until they are retired. Author retained Manifest V5. |
+| Manifest V4 draft import | Release-gated v1 |
 | Retained Manifest V5 / Policy V5 exact pair | v1; exact RC `sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10`, with one or two jobs and the retained source/runtime/schedule/spend/configuration/logging surface |
 | Local V5 manifest drafting with the liskov-policy skill | v1 authoring aid at skill release `1.0.0` (git tag `v1.0.0`). It writes a local `proof.liskov.application-manifest` version 5 file and runs `proof liskov application manifest validate`. It does not publish, deploy, reserve, or charge. Manifest V4 and schema version 6 are outside the skill. |
 | Retained V5 GitHub source import | v1; repository, allowed refs, workflow identity, and manifest path are bound to the Application by an organization admin before publication, and every build attests them; `liskov-github-actions` `v1.2.4` contains the exact-bound import (`aa1b83f`) |
