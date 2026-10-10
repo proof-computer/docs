@@ -46,21 +46,17 @@ deployments.
 
 ## How to read a count
 
-Every figure is one of four states. They never stand in for each other:
+Every figure is one of two states. They never stand in for each other:
 
 | You see | State | What it means |
 | --- | --- | --- |
-| A number | `exact` | The count. It is either **zero** or **20 or more**. |
-| **Fewer than 20** | `suppressed` | Between 1 and 19. No number and no share are shown. |
-| Hidden | `withheld` | Held back so that a fewer-than-20 count elsewhere on the page cannot be worked out by subtraction. |
-| **Unavailable** | `unavailable` | The source could not measure it. This is not zero and not fewer than 20. |
+| A number | `exact` | The exact count, from **zero** up. |
+| **Unavailable** | `unavailable` | The source could not measure it. This is not zero. |
 
 **Zero is shown as zero.** "Nothing meets this" is a measured answer, and it
 names no processor.
 
-Because small counts are suppressed and some totals are withheld, figures on
-the page do not always add up to their totals. Do not subtract one figure from
-another to recover a hidden one.
+Every figure is exact, so figures that partition a total add up to it.
 
 ## How fresh a figure is
 
@@ -102,8 +98,8 @@ For each of the four V5 placement minimums — **memory**, **storage**,
   did not (**unknown**); an unknown figure is not a low one;
 - a series of **at least** thresholds, each counting the processors that meet
   it; and
-- the **median** of the known values, shown only when at least 20 processors
-  reported one.
+- the **median** of the known values, whenever at least one processor reported
+  one.
 
 Each threshold applies the same headroom placement applies to a minimum. A
 processor counts toward a memory or storage threshold only with at least 10%
@@ -113,6 +109,18 @@ report exactly this much".
 
 These are figures the processors report. They are **upper bounds** on what is
 placeable, not measurements Liskov guarantees.
+
+### What devices they are
+
+Every maker, chip family and model is named with its count, however few
+processors report it. Makers and chip families use the normalized readings
+Liskov holds; models use the name the device reports.
+
+Long maker and model lists lead with the largest few values. **Show all**
+reveals the rest of the names returned by the read, each with its count.
+Each device panel returns at most its 300 largest named values. Values past
+that size limit, or values the read cannot name, are counted in **other**.
+This is a limit on the list's size, not on how small a count can be.
 
 ### What processors can run
 
@@ -150,9 +158,19 @@ leads with how many are **unlocated**. Region and country counts are shares
 **of the located**, never of the whole network, and Liskov never extrapolates
 from the located to the rest.
 
+Every country is named with its count. Long country lists lead with the
+largest few; **Show all** reveals the rest.
+
 Compute does not let you choose where your jobs run. Country and manager
 controls belong to a later manifest version, and they are not enabled by these
 V5 pages.
+
+### Internet providers
+
+Every internet provider in Liskov's reviewed catalogue is named with its
+count, at any count, along with each country where its located processors
+are counted. A network not in Liskov's catalogue is counted by size in a
+band, with an exact count, and is not named.
 
 ### Available now
 
@@ -217,14 +235,14 @@ The answer shows:
   **alone** and meeting it **together with every earlier criterion**;
 - **Meeting all** — the processors meeting every criterion, counted directly
   rather than taken as the smallest of the others;
-- the **tightest criterion**, the one that removes the most processors, when
-  Liskov can name it without revealing a hidden count; and
+- the **tightest criterion**, the one that removes the most processors,
+  whenever any criterion removes a processor; and
 - **Available now** — of the processors meeting every criterion, those with a
   free schedule slot, with its own freshness.
 
-The counting rules above apply: zero is zero, **fewer than 20** has no number,
-and an unavailable figure is not zero. If you ask for secrets, the secrets
-criterion is **unavailable** for the reason given under
+The counting rules above apply: every measured count is exact, including one
+or zero, and an unavailable figure is not zero. If you ask for secrets, the
+secrets criterion is **unavailable** for the reason given under
 [What processors can run](#what-processors-can-run), and so is **Meeting all**.
 
 The count does not change with `deployment.jobs`. It counts processors, and
@@ -246,8 +264,8 @@ The check does not look at everything final placement does. It does not check:
 - how many jobs one processor may take; or
 - for secrets, whether a processor has a secret response key.
 
-So a processor counted here can still be passed over at launch. A result of 20
-or more is not a promise that your jobs will be placed, and a result of zero is
+So a processor counted here can still be passed over at launch. A positive
+result is not a promise that your jobs will be placed, and a result of zero is
 a strong sign that, with these requirements, they will not be.
 
 ### What the check refuses
@@ -274,7 +292,6 @@ A request larger than 2,048 bytes is refused as too large.
 Compute keeps these situations apart, and never shows one as another:
 
 - **Zero.** Liskov measured, and nothing meets it.
-- **Fewer than 20.** Something meets it; the exact number is withheld.
 - **Unavailable.** The source could not measure it. There may be many.
 - **Stale.** The figure is real but old; read its age.
 - **An empty network.** Every panel is current and every count is zero: the
@@ -304,9 +321,8 @@ client interface.
   `availability`.
 
 Neither route takes query parameters. A count is written as
-`{"state":"exact","count":N}` or as a bare `{"state":"suppressed"}`,
-`{"state":"withheld"}`, or `{"state":"unavailable"}`. Each panel has a
-`source` block:
+`{"state":"exact","count":N}` for any count from zero up, or as a bare
+`{"state":"unavailable"}`. Each panel has a `source` block:
 
 | Field | Meaning |
 | --- | --- |

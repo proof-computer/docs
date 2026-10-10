@@ -1907,6 +1907,9 @@ for (const [pattern, claim] of [
 // served by PR 1077, BKLG-20260923-7t1d). It stays Not released (the unlisted
 // loop above pins the notice and the sidebar) until BKLG-20260922-j7nu verifies
 // the deployed path; nothing public may link to it or classify it first.
+// BKLG-20261008-70dd / ADR-0211 updates counts and naming to the released
+// liskov-rs PRs 1534/1555 and liskov-ui PRs 273/276. The separate release gate
+// above remains in place.
 const computeGuideId = 'organizations/compute';
 const computeGuidePage = readFileSync(join(docsRoot, `${computeGuideId}.md`), 'utf8');
 for (const file of files) {
@@ -1920,13 +1923,21 @@ for (const [token, meaning] of [
   ['open **Compute** in the navigation', 'the Console path'],
   ['`/compute`, and the placement check at `/compute/placement`', 'the Console routes'],
   ['every\norganization sees the same counts', 'counts describe the network, not the organization'],
-  // Counts, never inventory, with the suppression floor and zero kept apart.
+  // Counts, never inventory: every measured count is exact, unavailable is not zero.
   ['never shows a\nprocessor or manager identifier', 'no inventory'],
-  ['It is either **zero** or **20 or more**.', 'the suppression floor'],
-  ['| **Fewer than 20** | `suppressed` |', 'the suppressed state'],
-  ['| Hidden | `withheld` |', 'the withheld state'],
-  ['This is not zero and not fewer than 20.', 'unavailable is not zero'],
+  ['Every figure is one of two states.', 'the two count states'],
+  ['| A number | `exact` | The exact count, from **zero** up. |', 'exact counts at any size'],
+  ['| **Unavailable** | `unavailable` | The source could not measure it. This is not zero. |', 'unavailable is not zero'],
   ['**Zero is shown as zero.**', 'zero stays zero'],
+  ['Every figure is exact, so figures that partition a total add up to it.', 'exact partitions add up'],
+  ['the **median** of the known values, whenever at least one processor reported', 'medians at any measured count'],
+  ['Every maker, chip family and model is named with its count, however few', 'named device values at any count'],
+  ['Each device panel returns at most its 300 largest named values.', 'the device list size bound'],
+  ['Values past\nthat size limit, or values the read cannot name, are counted in **other**.', 'the counted device remainder'],
+  ['**Show all**\nreveals the rest of the names returned by the read, each with its count.', 'the named long tail'],
+  ['Every country is named with its count.', 'named countries at any count'],
+  ["Every internet provider in Liskov's reviewed catalogue is named with its\ncount, at any count", 'catalogued provider naming at any count'],
+  ["A network not in Liskov's catalogue is counted by size in a\nband, with an exact count, and is not named.", 'uncatalogued networks counted by size'],
   // Upper bounds with placement headroom, and only the supported V5 fields.
   ['They are **upper bounds** on what is\nplaceable', 'reported capability as an upper bound'],
   ['at least 10%\nmore than it', 'memory and storage headroom'],
@@ -1967,13 +1978,18 @@ for (const [token, meaning] of [
   // Final JIT stays the allocation authority.
   ['The answer is **advisory**. It is an upper bound', 'feasibility is advisory'],
   ['**final placement at launch** is what assigns a processor', 'final JIT authority'],
-  ['A result of 20\nor more is not a promise', 'no placement promise'],
+  ['whenever any criterion removes a processor', 'the tightest criterion is named'],
+  ['every measured count is exact, including one\nor zero', 'exact placement counts at any size'],
+  ['A positive\nresult is not a promise', 'no placement promise'],
+  ['`{"state":"exact","count":N}` for any count from zero up, or as a bare\n`{"state":"unavailable"}`', 'the two served count wire shapes'],
   ['`compute_summary_v1`', 'the summary schema'],
   ['`compute_feasibility_v1`', 'the feasibility schema'],
 ]) {
   check(computeGuidePage.includes(token), `Compute guide omits ${meaning}: ${token}`);
 }
 for (const [pattern, claim] of [
+  [/fewer[ -]than[ -]20|20 or more|at least 20|\bsuppressed\b|\bwithheld\b|hidden count/i, 'a retired count or naming restriction'],
+  [/do not subtract|worked out by subtraction/i, 'the withdrawn subtraction rule'],
   [/\b(?:Compute|placement check)\b(?:\*\*)?(?: page)? (?:is|are) (?:now )?(?:available|released|live)\b/i, 'a production availability claim'],
   [/processor(?:Id)?s?\s*[:=]\s*["'`]?0x|\b[1-9]\d{2,}\s+(?:processors|devices|phones)\b/i, 'a processor inventory or sample count'],
   [/\b(?:t4g|EC2|equivalent to)\b/i, 'a cloud-instance speed equivalence'],
