@@ -5,10 +5,13 @@ description: Diagnose GitHub workflow, OIDC, artifact evidence, Manifest V4, cap
 
 # Build, attestation, import, and publication
 
-:::note Release boundary
-`liskov-github-actions@v2` is released. The complete repository path remains
-gated until Manifest V4 publication is enabled for your organization. A
-publication eligibility failure is not a repository build bug.
+:::note Manifest V4 publication is closed
+`liskov-github-actions@v2` is released. Publication preflight and publish
+are refused for a Manifest V4 with `v4_publication_disabled`; that refusal
+is not a repository build bug. Existing V4 Applications keep running until
+they are retired. To publish, author a
+[retained Application Manifest V5](../build/manifest-v5.md) and follow the
+[GitHub path](../get-started/github.md).
 :::
 
 ## Build or test fails
@@ -68,6 +71,9 @@ Do not copy a typed internal field into a recipe to “test” availability.
 
 ## Import or publication fails
 
+- `v4_publication_disabled`: the draft is a Manifest V4, and V4 publication
+  is closed. Author a retained Manifest V5 and publish it with
+  `application policy publish`; the V4 draft itself is not broken.
 - `application_identity_mismatch`: stop; verify organization, ID, and
   server-issued UID.
 - `application_already_exists`: inspect the existing Application; do not

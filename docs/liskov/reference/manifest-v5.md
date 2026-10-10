@@ -9,8 +9,9 @@ description: Exact retained V5 fields, defaults, bounds, cross-field rules, rele
 
 This reference covers RC
 `sha256:549272988045e9357c4945850706569ed8dc7f0c6f419b7cf5c57d54b294bb10`.
-[Capabilities and limits](./capabilities.md) owns current availability, and
-[Application Manifest V4](./manifest-v4.md) remains supported.
+[Capabilities and limits](./capabilities.md) owns current availability.
+Existing [Application Manifest V4](./manifest-v4.md) Applications keep
+running until they are retired; new publication is V5.
 
 :::
 

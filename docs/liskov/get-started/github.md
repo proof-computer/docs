@@ -237,8 +237,8 @@ If the build, attestation, source binding, or publication fails, use
 
 ## Manifest V4
 
-[Application Manifest V4](../build/manifest-v4.md) remains supported for
-existing Applications. Own-repository V4 publication is rollout-gated by
-organization; its draft import and publication commands are in
-[Validate, import, and publish](../build/validate-import-publish.md). The
-recommended first-use path is the V5 path above.
+Existing [Manifest V4](../build/manifest-v4.md) Applications keep running
+until they are retired, but a V4 manifest can no longer be published: new
+publication is the V5 path above. A V4 draft can still be imported; its
+commands are in
+[Validate, import, and publish](../build/validate-import-publish.md).

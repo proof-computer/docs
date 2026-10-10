@@ -9,8 +9,11 @@ The manifest is the strict document you keep in the repository. It describes
 what Liskov may build and run. Liskov resolves server-owned facts—such as the
 exact artifact version and launch evidence—into an immutable effective policy.
 
-V4 is the only public authoring version. Unknown fields and unsupported
-capabilities fail closed.
+A Manifest V4 can no longer be published. Existing V4 Applications keep
+running until they are retired, and this page stays for the readers who
+operate one. To author a new Application, or to republish an existing one,
+write a [retained Application Manifest V5](./manifest-v5.md) instead.
+Unknown fields and unsupported capabilities fail closed.
 
 ## Supported starter manifest
 

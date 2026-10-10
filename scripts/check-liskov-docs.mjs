@@ -1728,6 +1728,36 @@ for (const [pattern, message] of [
   check(pattern.test(capabilitiesPage), message);
 }
 
+// BKLG-20261008-k3fe (ADR-0062, BKLG-20260907-3xu0): Manifest V4 publication
+// is withdrawn. The capability row must say so, the refusal code must be in
+// the error table, and no page may still present V4 as the authoring version
+// or call its publication rollout-gated. V4 draft import is not withdrawn and
+// keeps its own row; nothing here asserts that import is closed.
+check(
+  capabilitiesPage.includes('| Manifest V4 publication | Closed'),
+  'capability matrix does not close Manifest V4 publication',
+);
+check(
+  /\| Manifest V4 draft import \| Release-gated v1 \|/.test(capabilitiesPage),
+  'capability matrix lost the Manifest V4 draft import row (import is not withdrawn)',
+);
+check(
+  statusesActionsErrorsPage.includes('v4_publication_disabled'),
+  'error reference omits the v4_publication_disabled refusal code',
+);
+// These phrases were only ever written about V4 publication (its "only public
+// authoring version" and "rollout-gated by organization" sentences), so a
+// literal match anywhere under docs/liskov is the regression.
+for (const file of files) {
+  const page = readFileSync(file, 'utf8');
+  for (const phrase of ['only public authoring version', 'rollout-gated by organization', 'remains rollout-gated']) {
+    check(
+      !page.includes(phrase),
+      `${idFor(file)} still presents Manifest V4 publication as the authoring version or as rollout-gated ("${phrase}")`,
+    );
+  }
+}
+
 // BKLG-20260918-83o6: the invitation-only boundary is only actionable if the
 // wait-list form is on the pages a turned-away visitor and a first-time reader
 // actually open, and the URL is exact.

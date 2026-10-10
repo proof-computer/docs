@@ -108,4 +108,5 @@ account and not ACU or another cryptoasset.
 an environment value.
 
 **V4** — Version 4 of the public Application manifest and effective-policy
-contracts. It is the only public authoring version.
+contracts. A V4 manifest can no longer be published; existing V4 Applications
+keep running until they are retired, and new publication is V5.
