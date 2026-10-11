@@ -1835,6 +1835,36 @@ check(
   statusesActionsErrorsPage.includes('v4_publication_disabled'),
   'error reference omits the v4_publication_disabled refusal code',
 );
+// Q-20261011-a4vv (answer A; liskov-rs #1635): a confirmed repository repoint
+// republishes the manifest, so it is a fourth refused V4 publication surface.
+// The withdrawal notice, the error row and the command's own reference row
+// must each name it; the preview is not refused and must not be described so.
+const flatPage = (...segments) => readFileSync(join(docsRoot, ...segments), 'utf8').replace(/\s+/g, ' ');
+const v4RepointNotice = flatPage('build', 'validate-import-publish.md');
+check(
+  v4RepointNotice.includes('A confirmed `proof liskov application set-repository APP_REF OWNER/REPO --yes` is refused with the same code') &&
+    v4RepointNotice.includes('and changes nothing'),
+  'V4 publication notice does not say a confirmed set-repository is refused for a Manifest V4 Application',
+);
+check(
+  v4RepointNotice.includes('the preview without `--yes` still answers'),
+  'V4 publication notice no longer says the set-repository preview still answers',
+);
+check(
+  /\| `v4_publication_disabled` \|[^\n]*`application set-repository --yes`[^\n]*changes nothing/.test(statusesActionsErrorsPage),
+  'error reference: v4_publication_disabled omits the refused confirmed repository change',
+);
+check(
+  /\| `application set-repository APP_REF OWNER\/REPO` \| Preview by default;[^\n]*refused with `v4_publication_disabled`/.test(
+    readFileSync(join(docsRoot, 'reference', 'cli.md'), 'utf8'),
+  ),
+  'CLI reference: set-repository row omits the Manifest V4 refusal',
+);
+check(
+  flatPage('troubleshooting', 'build-publish.md')
+    .includes('confirmed `application set-repository --yes` on such an Application returns the same code'),
+  'troubleshooting: v4_publication_disabled omits the refused confirmed repository change',
+);
 // These phrases were only ever written about V4 publication (its "only public
 // authoring version" and "rollout-gated by organization" sentences), so a
 // literal match anywhere under docs/liskov is the regression.

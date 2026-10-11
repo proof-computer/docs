@@ -73,7 +73,9 @@ Do not copy a typed internal field into a recipe to “test” availability.
 
 - `v4_publication_disabled`: the draft is a Manifest V4, and V4 publication
   is closed. Author a retained Manifest V5 and publish it with
-  `application policy publish`; the V4 draft itself is not broken.
+  `application policy publish`; the V4 draft itself is not broken. A
+  confirmed `application set-repository --yes` on such an Application returns
+  the same code and leaves its repository unchanged.
 - `application_identity_mismatch`: stop; verify organization, ID, and
   server-issued UID.
 - `application_already_exists`: inspect the existing Application; do not
