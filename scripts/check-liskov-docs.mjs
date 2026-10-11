@@ -431,8 +431,15 @@ const nativePeerGuide = readFileSync(join(docsRoot, 'guides', 'native-peer-disco
 const nativePeerTrouble = readFileSync(join(docsRoot, 'troubleshooting', 'peer-connectivity.md'), 'utf8');
 const v6DiscoveryPage = readFileSync(join(docsRoot, 'reference', 'service-discovery-v6.md'), 'utf8');
 const peerWireSource = '417ea4103a9353e6920d8e834cee4f403c228548';
-check(nativePeerPage.includes(peerWireSource), 'native peer reference lost the owner wire source commit');
+const peerWireErrorSource = '6add59728348fc548712441fd3474cce20e83482';
+const peerWireErrorMain = '8a6341913589a35aaa69a9890a427030aab0ee38';
+const peerHelperErrorSource = '99b71fe6a58a719f687a451c3c527916fb969524';
+const peerHelperErrorMain = '7ea72c085495ead23831648540c2f8b1bd64ea0c';
+check([peerWireSource, peerWireErrorSource, peerWireErrorMain].every((id) => nativePeerPage.includes(id)),
+  'native peer reference lost the owner wire source or merged amendment');
 check(nativePeerPage.includes('fdd25375193aa147eb8548cfabef6a9b52569a50')
+  && nativePeerPage.includes(peerHelperErrorSource)
+  && nativePeerPage.includes(peerHelperErrorMain)
   && nativePeerPage.includes('44578e88e213856772b2976dbd35ca649f62f851'),
   'native peer reference lost helper or application source identity');
 check(/\| Native direct IPv6 peer discovery on retained V5 jobs \| Internal, release-gated pilot/.test(capabilitiesPage),
@@ -447,6 +454,8 @@ for (const [label, digest] of Object.entries({
   directory: 'f1b51194ba9564e98ae035879598a33d3fe80a2389b5f75888e9a465ec012685',
   'complete-empty': 'b1cfb303e7869e7dfcfc930afc73daa4d61bc3682c9b5052c44878dad3d3be1e',
   unavailable: '2e751fae689173e15828648c6b54dbd04f08cb94731696ce78671b2a93f1e8d0',
+  'signed-error-health-request': '776f442927f3c951f2e134dba19e84a9dbb4ecbe22377645c7052001c4086ac4',
+  'signed-error-health-canonical': '59d39043c6c982c3ba4d176451e9fddcd3d942df41df5358219f31654069f0d2',
 })) {
   const marker = `<!-- owner-fixture:${label} -->\n\`\`\`json\n`;
   const start = nativePeerPage.indexOf(marker);
@@ -458,6 +467,23 @@ for (const [label, digest] of Object.entries({
       `native peer ${label} vector differs from owner fixture`);
   }
 }
+const ownerFixture = (label) => {
+  const marker = `<!-- owner-fixture:${label} -->\n\`\`\`json\n`;
+  const start = nativePeerPage.indexOf(marker) + marker.length;
+  const end = nativePeerPage.indexOf('\n\`\`\`', start);
+  return JSON.parse(nativePeerPage.slice(start, end));
+};
+const errorHealthRequest = ownerFixture('signed-error-health-request');
+const errorHealthCanonical = ownerFixture('signed-error-health-canonical');
+const {signature: errorFixtureSignature, ...errorHealthUnsigned} = errorHealthRequest;
+check(errorFixtureSignature === '00'
+  && JSON.stringify(errorHealthUnsigned) === JSON.stringify(errorHealthCanonical)
+  && JSON.stringify(Object.keys(errorHealthRequest.attrs).sort()) === JSON.stringify([
+    'discoveryVersion', 'peerAdvertisementError', 'processAttempt', 'restartCount',
+  ])
+  && errorHealthRequest.attrs.discoveryVersion === 2
+  && errorHealthRequest.attrs.peerAdvertisementError === 'invalid',
+  'error-only signed health fixture lost its four-scalar v2 canonical shape');
 check(nativePeerPage.includes('LISKOV_PEER_ADVERTISEMENT_FILE')
   && nativePeerPage.includes('LISKOV_PEER_DIRECTORY_FILE')
   && nativePeerPage.includes('discoveryVersion: 2')
@@ -468,11 +494,17 @@ check(nativePeerGuide.includes('GET /api/v4/status')
   && nativePeerGuide.includes('POST /api/v4/actions')
   && nativePeerGuide.includes('GET /api/v4/research/{id}')
   && nativePeerGuide.includes('last_success_ms')
-  && nativePeerGuide.includes('BKLG-20261010-7rez'),
+  && nativePeerGuide.includes('BKLG-20261010-7rez')
+  && nativePeerGuide.includes('error-only v2 beat')
+  && nativePeerGuide.includes('original expiry'),
   'native peer pilot guide lost its two-way verification or release gate');
 for (const code of ['unsupported', 'no_ipv6', 'connect', 'tls', 'auth', 'identity', 'exchange']) {
   check(nativePeerTrouble.includes(code), `native peer troubleshooting omits ${code}`);
 }
+check(nativePeerTrouble.includes('error-only v2 health beat')
+  && nativePeerTrouble.includes('not `complete_empty`')
+  && nativePeerTrouble.includes('tracks `unsupported` inside the helper'),
+  'native peer troubleshooting lost local error-only and old-server boundaries');
 const githubActionsPage = readFileSync(join(docsRoot, 'build', 'github-actions.md'), 'utf8');
 const buildRuntimeSdkPage = readFileSync(join(docsRoot, 'build', 'runtime-sdk.md'), 'utf8');
 check(capabilitiesPage.includes('| Encrypted JavaScript payload delivery | Release-gated v1;'),

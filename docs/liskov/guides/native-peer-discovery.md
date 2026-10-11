@@ -62,6 +62,11 @@ and ephemeral TLS identity are ready. The helper then reads the private
 no `direct_peer.advertisement_error` or
 `direct_peer.rotation_error`. A model may still be loading while the
 listener is ready; do not infer peer failure from pending inference startup.
+If the helper reports `peerAdvertisementError: invalid`, `oversized` or
+`symlink`, repair the local file before treating either peer as discovered.
+That signed error-only v2 beat publishes no endpoint and cannot produce a
+complete directory. A missing file is still no opt-in; a Tailscale v1
+`conflict` remains a different path.
 
 ## 2. Check both complete directories
 
@@ -79,6 +84,11 @@ peer ID and expiry. `complete_empty` is a valid directory with no peers;
 `unavailable`, `absent` and `expired` are different outcomes. An IPv6
 address in a directory is an observation, not proof of a TCP connection.
 Inspect both jobs: one-sided discovery is not a two-peer result.
+An error-only v2 beat can return `unavailable` while older directory bytes
+remain on disk; they keep their original expiry and are not evidence of a
+fresh peer set. An older server that omits v2 is `unsupported`, not
+`complete_empty`. Require a new complete response after the local file is
+valid again.
 
 ## 3. Prove authenticated exchange in both directions
 
