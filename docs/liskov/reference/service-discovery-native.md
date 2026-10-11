@@ -67,8 +67,8 @@ original, at-most-90-second lease; the old process's file cannot renew it.
 
 ## Signed health and server authority
 
-On the existing 30-second health cadence, the helper reads the local record
-and signs a normal diagnostic-v4 `runtime.health` request with
+On the existing 30-second health cadence, the helper reads a valid local
+record and signs a normal diagnostic-v4 `runtime.health` request with
 `discoveryVersion: 2`, `peerService`, `peerPort`,
 `peerTlsFingerprint` and `peerReady`. It may add the two application sync
 summary fields. Existing freshness attributes include
@@ -76,6 +76,35 @@ summary fields. Existing freshness attributes include
 before the first success) and `discoveryRefreshFailed`. Bounded
 `peerAdvertisementError` and `discoveryFailureCode` identify local and
 response failures; `discoveryValidUntilMs` reports a still-valid snapshot.
+
+If the local file is invalid, oversized or a symlink, the helper instead
+signs an **error-only v2** health beat: `discoveryVersion: 2` and the bounded
+`peerAdvertisementError` (`invalid`, `oversized` or `symlink`), with no
+endpoint, sync or response-freshness fields. The two process ordinals remain
+in the ordinary health attrs; existing bounded memory and thermal summaries
+may also be present. This exact four-attr owner request vector uses a dummy
+`signature` value; a real beat is signed by the runtime bridge:
+
+<!-- owner-fixture:signed-error-health-request -->
+```json
+{"applicationUid":"app-0123456789abcdef0123456789abcdef","attrs":{"discoveryVersion":2,"peerAdvertisementError":"invalid","processAttempt":1,"restartCount":0},"code":null,"component":"runtime-cargo-supervisor","domain":"proof.liskov.runtime-diagnostic.v4","jobId":"job-a","message":null,"processorId":"processor-a","runtimeInstanceId":"instance-a","sequence":7,"signature":"00","stage":"runtime.health","status":"info","timestampMs":1790000000000}
+```
+
+The canonical signing bytes are the same object without `signature`:
+
+<!-- owner-fixture:signed-error-health-canonical -->
+```json
+{"applicationUid":"app-0123456789abcdef0123456789abcdef","attrs":{"discoveryVersion":2,"peerAdvertisementError":"invalid","processAttempt":1,"restartCount":0},"code":null,"component":"runtime-cargo-supervisor","domain":"proof.liskov.runtime-diagnostic.v4","jobId":"job-a","message":null,"processorId":"processor-a","runtimeInstanceId":"instance-a","sequence":7,"stage":"runtime.health","status":"info","timestampMs":1790000000000}
+```
+
+Liskov records the bounded refusal without publishing an endpoint and returns
+typed v2 `unavailable`, normally with `reason: invalid`. The helper cannot
+write a complete directory from that beat, even if a server sends one by
+mistake. Earlier last-good bytes keep only their original expiry. An older
+server that omits v2 yields an internal `unsupported` outcome; the local
+error-only beat stays narrow. Once the file is valid again, a normal direct
+beat can report `discoveryFailureCode: unsupported`. A missing file remains
+no opt-in, and a Tailscale conflict keeps the separate v1 form.
 
 Liskov binds the request to the verified org, Application, job and runtime
 instance. Only Liskov's trusted ingress-observed **global-unicast IPv6**
@@ -134,8 +163,10 @@ keep using only still-valid endpoints from that earlier file.
 
 ## Source and promotion boundary
 
-These exact UTF-8 vectors come from `proof-computer/liskov-rs` commit
-`417ea4103a9353e6920d8e834cee4f403c228548`. SHA-256 including the
+The base UTF-8 vectors come from `proof-computer/liskov-rs` commit
+`417ea4103a9353e6920d8e834cee4f403c228548`. The error-only signed vectors
+come from its amendment `6add59728348fc548712441fd3474cce20e83482`,
+merged at `8a6341913589a35aaa69a9890a427030aab0ee38`. SHA-256 including the
 trailing newline: advertisement
 `f17b77e8c56512859aaaec8a6684b4e05dbd7d4fedbd83d945bb1d485fe7ce74`,
 directory
@@ -144,11 +175,17 @@ complete empty
 `b1cfb303e7869e7dfcfc930afc73daa4d61bc3682c9b5052c44878dad3d3be1e`,
 and unavailable
 `2e751fae689173e15828648c6b54dbd04f08cb94731696ce78671b2a93f1e8d0`.
+The signed error-only request is
+`776f442927f3c951f2e134dba19e84a9dbb4ecbe22377645c7052001c4086ac4`;
+its canonical bytes are
+`59d39043c6c982c3ba4d176451e9fddcd3d942df41df5358219f31654069f0d2`.
 The application listener and sync implementation is
 `proof-computer/liskov-planetarium` commit
 `44578e88e213856772b2976dbd35ca649f62f851`; the helper source is
 `proof-computer/liskov-runtime-cargo` commit
-`fdd25375193aa147eb8548cfabef6a9b52569a50`.
+`fdd25375193aa147eb8548cfabef6a9b52569a50`, amended by
+`99b71fe6a58a719f687a451c3c527916fb969524` and merged at
+`7ea72c085495ead23831648540c2f8b1bd64ea0c`.
 
 Release gate BKLG-20261010-7rez must pin the immutable helper, runtime image,
 application payload and serving producer identities, then record successful
