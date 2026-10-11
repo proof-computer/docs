@@ -10,8 +10,11 @@ description: The gated native workload contract for a signed direct IPv6 peer di
 
 This is a candidate contract for upgraded native/Cargo jobs on a retained
 `schemaVersion: 5` Application. It is not an available customer capability.
-The server producer, immutable helper and application payloads, operator
-readback, and live two-peer IPv6 proof must be accepted before release.
+The immutable helper, runtime image/payload, serving producer and operator
+readback are delivered to the internal Planetarium pilot. Live two-peer IPv6
+and replacement/expiry acceptance remain pending. Customer promotion requires
+a separate supported audience and complete customer path; these pages stay
+draft and unlisted for the internal pilot.
 [Capabilities and limits](./capabilities.md) owns the support boundary.
 JavaScript jobs and older helper images do not have this file integration.
 
@@ -179,16 +182,34 @@ The signed error-only request is
 `776f442927f3c951f2e134dba19e84a9dbb4ecbe22377645c7052001c4086ac4`;
 its canonical bytes are
 `59d39043c6c982c3ba4d176451e9fddcd3d942df41df5358219f31654069f0d2`.
-The application listener and sync implementation is
+The original application listener and sync source is
 `proof-computer/liskov-planetarium` commit
-`44578e88e213856772b2976dbd35ca649f62f851`; the helper source is
+`44578e88e213856772b2976dbd35ca649f62f851`; the original helper source is
 `proof-computer/liskov-runtime-cargo` commit
 `fdd25375193aa147eb8548cfabef6a9b52569a50`, amended by
 `99b71fe6a58a719f687a451c3c527916fb969524` and merged at
 `7ea72c085495ead23831648540c2f8b1bd64ea0c`.
 
-Release gate BKLG-20261010-7rez must pin the immutable helper, runtime image,
-application payload and serving producer identities, then record successful
-two-way IPv6 exchange and the chosen support boundary. Until that gate
-promotes these pages, no public availability follows from these source
-commits.
+## Internal pilot release check
+
+The owner chose an **internal Planetarium pilot** on 2026-10-11. The dated
+release receipts identify the following delivered artifacts and server; they
+do not establish which bytes each running job uses or successful peer exchange.
+
+| Release identity | Recorded value |
+| --- | --- |
+| Native helper | Immutable [v0.12.0](https://github.com/proof-computer/liskov-runtime-cargo/releases/tag/v0.12.0), source `cd2fb5dee887ded5af90b7ab6f5928bd34f64145`, AArch64 binary SHA-256 `9a71f5f82ceafddd62baff00a8f0f1593712d5e39eb4b0098a78d2ef47173010` |
+| Application payload | Planetarium source `9e0db74cd48d24745905698909366b54991e6a10`, SHA-256 `90f8771d41c29fb66430d9bb5672851b2cb9ae88e08b926cd620ab13d6ed0e30` |
+| Runtime image | Digest `sha256:788394a26e5020252dda1fd9004727327507c4d45708d6de0ea8a44fa94a26cd` |
+| Pinned runtime artifact/bootstrap | Digest `sha256:d92648c2aa62a96e7c52bce9c2667ce8647a8073ca7cefde0bf17260f1c7b507`; independent archive extraction matches the immutable helper binary above |
+| Internal publication | `planetarium-v7`, schemaVersion 5, pointer 8, published at 22:43:42 UTC; pinned-document source `2744ed39945b5132188076388163f3b14c52d7ed` |
+| Serving API read | HTTP 200 and ready true at 22:48:32 UTC, then-serving build `6fad047c835a911fa8b03fb562551e1aceb44cd1` |
+
+The server's composed signed-health/PostgreSQL proof is offline evidence.
+Actual two-way authenticated IPv6 record exchange, matching imported record
+IDs and replacement/expiry refusal remain the live acceptance owned by
+BKLG-20261010-7rez. Existing jobs can still use an earlier helper or payload;
+check both jobs' exact identities rather than inferring them from the active
+policy pointer. The internal support choice keeps these pages draft and
+unlisted even after internal live acceptance. No public availability follows
+from source, artifact delivery or internal publication.

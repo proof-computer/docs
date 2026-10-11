@@ -9,8 +9,10 @@ description: Gated, evidence-first checks for the native direct IPv6 directory a
 :::danger[Not released]
 
 This page describes a native/Cargo V5 pilot contract, not a supported
-customer feature. The released helper, application payload, serving API and
-live IPv6 proof are still owned by BKLG-20261010-7rez. Do not use this draft
+customer feature. Its immutable helper, image/payload and serving API are
+delivered to the internal Planetarium pilot. Live two-peer and
+replacement/expiry acceptance remain owned by BKLG-20261010-7rez.
+Do not use this draft
 to start or retry a paid job. See
 [Capabilities and limits](../reference/capabilities.md) for availability.
 
@@ -51,7 +53,9 @@ four record reads needed for a successful pilot. A ready listener, signed
 health beat, IPv6 observation or one-sided last-success time alone does not
 prove two-way sync.
 
-The operator readback planned under BKLG-20261011-hllu will expose absent,
+The operator readback delivered under BKLG-20261011-hllu exposes absent,
 not-ready, no-IPv6, refused and expired observations without presenting them
 as verified reachability. The owner release session must capture that read
-alongside the application receipts before these pages can be promoted.
+alongside the application receipts for internal acceptance. Public promotion
+also requires an explicit customer support boundary; the internal pilot does
+not remove these pages' draft or unlisted gates.
