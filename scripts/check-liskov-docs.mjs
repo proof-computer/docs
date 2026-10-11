@@ -564,6 +564,68 @@ check(
   !/v1[^\n]{0,80}(?:not yet published|does not yet publish)/i.test(githubActionsPage),
   'GitHub Actions page retains the removed v1 release gate',
 );
+// BKLG-20261008-mmzr: liskov-github-actions v2.2.0 moved the runtime-image
+// workflows to a V5 source document. The release is recorded, the path stays
+// Internal, and no page may turn the contract note into a caller recipe until
+// a customer-path run is observed in production.
+const runtimeImageContract = JSON.parse(
+  readFileSync(join(root, 'fixtures', 'liskov-runtime-image-workflow-contract.json'), 'utf8'),
+);
+check(
+  runtimeImageContract.release?.tag === 'v2.2.0' &&
+    runtimeImageContract.release?.commit === '2eef49238a02a0a17824abf9c697935aa73f5734' &&
+    runtimeImageContract.release?.movingTag === 'v2',
+  'runtime-image fixture: pin liskov-github-actions v2.2.0 and its release commit',
+);
+check(
+  runtimeImageContract.frozenV4Line?.tag === 'v1.3.2' &&
+    runtimeImageContract.frozenV4Line?.commit === 'c15b4b52d53bb7b7d631c2446151d994b93d2693',
+  'runtime-image fixture: the V4 import line is frozen at v1.3.2',
+);
+check(
+  runtimeImageContract.sourceDocument?.releaseMode === 'source' &&
+    runtimeImageContract.sourceDocument?.runtimeKind === 'native_image' &&
+    runtimeImageContract.sourceDocument?.importsManifest === false,
+  'runtime-image fixture: @v2 takes a V5 native-image source document and imports nothing',
+);
+check(
+  runtimeImageContract.availability === 'internal' &&
+    runtimeImageContract.productionCustomerPathObserved === false,
+  'runtime-image fixture: promotion needs a recorded production customer-path run and a capability-matrix change in the same release',
+);
+check(
+  /\| General customer-authored Cargo\/runtime image \| Internal(?:;[^\n]*)? \|/.test(capabilitiesPage),
+  'capability matrix no longer classifies the customer-authored Cargo/runtime image as Internal',
+);
+check(
+  capabilitiesPage.includes('no `@v2` runtime-image run has been observed in production'),
+  'capability matrix drops the missing production readback from the Cargo/runtime image row',
+);
+// Compared with line wrapping collapsed, so reflowing the prose is not a failure.
+const runtimeImageSection = (githubActionsPage.split('\n## Runtime-image workflows are internal\n')[1] ?? '')
+  .replace(/\s+/g, ' ');
+check(runtimeImageSection !== '', 'GitHub Actions page omits the internal runtime-image workflow contract');
+for (const token of [
+  runtimeImageContract.release.tag,
+  runtimeImageContract.frozenV4Line.tag,
+  ...runtimeImageContract.workflows,
+  runtimeImageContract.sourceDocument.input,
+  '`release.mode` is `source`',
+  '`runtime.kind` is `native_image`',
+  ...runtimeImageContract.publicationEvidenceOutputs,
+  runtimeImageContract.cargoSourceAssurance.input,
+  ...runtimeImageContract.cargoSourceAssurance.outputs,
+  ...runtimeImageContract.cargoSourceAssurance.lockfiles,
+  '**Internal**',
+  'not a supported recipe',
+  'No `@v2` runtime-image run has been observed in production',
+]) {
+  check(runtimeImageSection.includes(token), `GitHub Actions page: internal runtime-image contract omits "${token}"`);
+}
+check(
+  !/runtime-image\.yml@v\d/.test(combined) && !/actions\/(?:runtime-image-upload|source-assurance)@v\d/.test(combined),
+  'public Liskov docs carry a runtime-image caller recipe while the path is Internal',
+);
 check(!liskovIndexPage.includes('./get-started/marketplace.md'), 'Liskov landing page recommends release-gated Marketplace launch');
 check(!/Choose \*\*Add funds\*\*/i.test(setupPage), 'setup page contains a release-gated add-funds recipe');
 check(setupPage.includes('Business use only'), 'setup page omits the business-only creation gate');
