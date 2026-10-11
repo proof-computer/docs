@@ -798,6 +798,34 @@ for (const token of ['"unit": "service_credit_micros"', '"perJob":', '"rate":', 
   check(spendLimitsPage.includes(token), `spend limits page omits the V5 deployment.spend contract: ${token}`);
 }
 check(!/planck/i.test(spendLimitsPage), 'spend limits page teaches a planck amount instead of V5 Service Credit micros');
+
+// BKLG-20261004-0be1 / ADR-0189: prepare the per-member guard explanation
+// without promoting availability before the owner's complete release readback.
+const fundsStopGuidance = readFileSync(join(docsRoot, 'operate', 'diagnose-retry.md'), 'utf8');
+check(
+  /V5 organization Max spend per deploy and its funds stop \| Release-gated v1;/.test(capabilitiesPage),
+  'V5 organization per-deploy guard lacks its canonical release gate',
+);
+check(
+  /:::caution Release-gated v1[\s\S]*?Do not\s+assume the guard protects a V5 launch yet\.[\s\S]*?:::/.test(spendLimitsPage),
+  'spend limits promotes the V5 organization guard before release verification',
+);
+for (const token of ['maxSpendPerDeploy', 'custody amount plus fees', 'greater than', 'Equality passes', 'Zero is a real limit', 'absent limit', 'empty or malformed', 'stops its next renewal', 'takes no new reserve', 'v5_max_spend_per_deploy_exceeded']) {
+  check(spendLimitsPage.includes(token), `spend limits omits an organization guard boundary: ${token}`);
+}
+check(
+  /Two members each reserving `600000` micros[\s\S]*?combined reserve is USD 1\.20/.test(spendLimitsPage),
+  'organization guard explanation does not distinguish per-member reserves from the run total',
+);
+for (const [surface, content] of [['spend limits', spendLimitsPage], ['funds-stop diagnosis', fundsStopGuidance]]) {
+  check(/Liskov's own chain funding is a platform condition,\s*not a customer\s+funds stop/.test(content), `${surface} confuses platform funding with customer funds stops`);
+  check(/adding credit alone does not/i.test(content), `${surface} implies credit overrides a cap`);
+  check(/fresh\s+admissible attempt[\s\S]*?clears[\s\S]*?matching[\s\S]*?stop/.test(content), `${surface} omits the matching stop's admission-based recovery`);
+}
+check(
+  /funds-stop readback\s+are \[release-gated\]/.test(fundsStopGuidance),
+  'funds-stop diagnosis omits the V5 guard release gate',
+);
 check(
   /C\[Policy caps\] --> R\[Service Credit reserve\]/.test(chargesPage),
   'charge lifecycle flowchart does not run from policy caps straight to the Service Credit reserve',

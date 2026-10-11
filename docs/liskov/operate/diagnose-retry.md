@@ -57,6 +57,34 @@ zero charge and full reserve release are terminal, and no customer action is
 required. A stronger signed-fatal or disagreement condition may still name a
 different action; follow that typed condition instead.
 
+### Diagnose a funds stop
+
+The V5 organization **Max spend per deploy** refusal and funds-stop readback
+are [release-gated](../configure/spend-limits.md#organization-max-spend-per-deploy).
+Once released, `v5_max_spend_per_deploy_exceeded` means one member attempt's
+custody-plus-fee reserve exceeds the organization's USD limit. Read the actual
+reserve, limit, and unit on the current Action Plan. Equality is allowed; a
+zero limit still refuses a positive reserve. Lowering the limit can stop the
+next renewal while the current job runs to its scheduled end.
+
+Check which customer constraint needs attention: available Service Credit,
+an authored per-job or recurring cap, or an organization limit. For the
+per-deploy refusal, adding credit alone does not change the cap. Ask an
+authorized administrator to review the intended limit, or publish a policy
+with a lower supported reserve. Leave the job stopped if the spend is not
+intended. Do not use the application-failure hold-release command below to
+bypass a money limit.
+
+The refused attempt reserves nothing and submits no chain effect. A fresh
+admissible attempt clears its matching funds stop through normal launch
+checks; verify the refreshed Action Plan and a later job generation. Use a
+retry only if the current plan offers it.
+
+A failure of Liskov's own chain funding is a platform condition, not a customer
+funds stop. It does not ask you to add credit or raise a limit. If progress
+remains blocked, collect the non-secret evidence in
+[Get support](../troubleshooting/support.md).
+
 ## 3. Use the bounded retry
 
 Only when retry is offered:

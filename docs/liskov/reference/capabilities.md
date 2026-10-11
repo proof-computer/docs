@@ -74,6 +74,7 @@ This page is the availability owner. Guides contain only supported recipes.
 
 | Capability | Availability |
 | --- | --- |
+| V5 organization Max spend per deploy and its funds stop | Release-gated v1; the accepted guard compares each member attempt's custody-plus-fee reserve with the USD `maxSpendPerDeploy` limit at launch, including renewal. Equality passes; lowering the limit can stop the next renewal. Serving enforcement, the funds-stop readback, and the complete customer path still require release verification. See [Spend limits](../configure/spend-limits.md#organization-max-spend-per-deploy) |
 | Canonical posture, Action Plan, deployment/job timeline | v1 |
 | Console Activity event detail, shareable event link, previous/next, Range picker, and event context | Release-gated v1; merged in Console source `d51724df1c83846ebdf391d88cd930bc33bbd1cd` with the one-event read in API source `adedc6dff4bba0ea6f4f52ec97f8783010e2b3d9`, but not yet accepted on the deployed Console. The Activity feed and the bounded CLI read are unchanged |
 | Console Coverage and Executions convergence strip | v1; `proof.liskov.execution-convergence.v1` on production Console `96e3f0638d948b24b516ed7713761784ad62c80f` against API `2db522130b314a044f7c50ee530c610d32868b4e`. Intended capacity is distinct from remaining charges. Quiet is not stalled. |
