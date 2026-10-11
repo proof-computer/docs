@@ -1,3 +1,4 @@
+import {createHash} from 'node:crypto';
 import {existsSync, readFileSync, readdirSync} from 'node:fs';
 import {dirname, extname, join, relative, resolve, sep} from 'node:path';
 
@@ -182,7 +183,12 @@ const baranFiles = walk(baranRoot).filter((file) => extname(file) === '.md').sor
 // capability no customer can reach, and `reference/capabilities.md` stays the
 // availability owner. Same treatment as the private-alpha Baran pages: kept out
 // of the sidebar, out of the sitemap, and out of the inventory.
-const candidateDraftIds = new Set(['reference/service-discovery-v6']);
+const candidateDraftIds = new Set([
+  'reference/service-discovery-v6',
+  'reference/service-discovery-native',
+  'guides/native-peer-discovery',
+  'troubleshooting/peer-connectivity',
+]);
 const unlistedIds = new Set([
   ...(!v5PagesPromoted ? v5PromotedIds : []),
   'configure/clustering',
@@ -407,15 +413,66 @@ for (const [pattern, explanation] of [
   check(!pattern.test(combined), `public content contains ${explanation}: ${pattern}`);
 }
 
-for (const oldDirectory of ['quickstart', 'policy', 'guides']) {
+for (const oldDirectory of ['quickstart', 'policy']) {
   check(!existsSync(join(docsRoot, oldDirectory)), `legacy directory remains: ${oldDirectory}`);
 }
+const candidateGuideDir = join(docsRoot, 'guides');
+check(existsSync(candidateGuideDir)
+  && JSON.stringify(readdirSync(candidateGuideDir).sort()) === JSON.stringify(['native-peer-discovery.md']),
+  'guides contains an unlisted page beyond the gated native peer candidate');
 check(!existsSync(join(docsRoot, 'preview')), 'Preview navigation exists without confirmed availability');
 check(!existsSync(join(docsRoot, 'marketplace', 'openclaw.md')), 'OpenClaw page exists without a versioned descriptor');
 check(!existsSync(join(root, 'static', 'examples', 'liskov')), 'superseded downloadable Liskov examples remain public');
 
 const retirementPage = readFileSync(join(docsRoot, 'operate', 'retire.md'), 'utf8');
 const capabilitiesPage = readFileSync(join(docsRoot, 'reference', 'capabilities.md'), 'utf8');
+const nativePeerPage = readFileSync(join(docsRoot, 'reference', 'service-discovery-native.md'), 'utf8');
+const nativePeerGuide = readFileSync(join(docsRoot, 'guides', 'native-peer-discovery.md'), 'utf8');
+const nativePeerTrouble = readFileSync(join(docsRoot, 'troubleshooting', 'peer-connectivity.md'), 'utf8');
+const v6DiscoveryPage = readFileSync(join(docsRoot, 'reference', 'service-discovery-v6.md'), 'utf8');
+const peerWireSource = '417ea4103a9353e6920d8e834cee4f403c228548';
+check(nativePeerPage.includes(peerWireSource), 'native peer reference lost the owner wire source commit');
+check(nativePeerPage.includes('fdd25375193aa147eb8548cfabef6a9b52569a50')
+  && nativePeerPage.includes('44578e88e213856772b2976dbd35ca649f62f851'),
+  'native peer reference lost helper or application source identity');
+check(/\| Native direct IPv6 peer discovery on retained V5 jobs \| Internal, release-gated pilot/.test(capabilitiesPage),
+  'native peer candidate was promoted or omitted in capabilities');
+check(v6DiscoveryPage.includes('liskov.discovery.v1')
+  && v6DiscoveryPage.includes('LISKOV_DISCOVERY_FILE')
+  && v6DiscoveryPage.includes('Tailscale')
+  && v6DiscoveryPage.includes('service-discovery-native.md'),
+  'V6 Tailscale reference lost its distinct v1 boundary');
+for (const [label, digest] of Object.entries({
+  advertisement: 'f17b77e8c56512859aaaec8a6684b4e05dbd7d4fedbd83d945bb1d485fe7ce74',
+  directory: 'f1b51194ba9564e98ae035879598a33d3fe80a2389b5f75888e9a465ec012685',
+  'complete-empty': 'b1cfb303e7869e7dfcfc930afc73daa4d61bc3682c9b5052c44878dad3d3be1e',
+  unavailable: '2e751fae689173e15828648c6b54dbd04f08cb94731696ce78671b2a93f1e8d0',
+})) {
+  const marker = `<!-- owner-fixture:${label} -->\n\`\`\`json\n`;
+  const start = nativePeerPage.indexOf(marker);
+  const end = start < 0 ? -1 : nativePeerPage.indexOf('\n\`\`\`', start + marker.length);
+  check(start >= 0 && end > start, `native peer ${label} vector missing`);
+  if (start >= 0 && end > start) {
+    const vector = nativePeerPage.slice(start + marker.length, end) + '\n';
+    check(createHash('sha256').update(vector).digest('hex') === digest,
+      `native peer ${label} vector differs from owner fixture`);
+  }
+}
+check(nativePeerPage.includes('LISKOV_PEER_ADVERTISEMENT_FILE')
+  && nativePeerPage.includes('LISKOV_PEER_DIRECTORY_FILE')
+  && nativePeerPage.includes('discoveryVersion: 2')
+  && nativePeerPage.includes('validUntilMs')
+  && nativePeerPage.includes('peerSyncFailureCode'),
+  'native peer reference lost literal helper/wire fields');
+check(nativePeerGuide.includes('GET /api/v4/status')
+  && nativePeerGuide.includes('POST /api/v4/actions')
+  && nativePeerGuide.includes('GET /api/v4/research/{id}')
+  && nativePeerGuide.includes('last_success_ms')
+  && nativePeerGuide.includes('BKLG-20261010-7rez'),
+  'native peer pilot guide lost its two-way verification or release gate');
+for (const code of ['unsupported', 'no_ipv6', 'connect', 'tls', 'auth', 'identity', 'exchange']) {
+  check(nativePeerTrouble.includes(code), `native peer troubleshooting omits ${code}`);
+}
 const githubActionsPage = readFileSync(join(docsRoot, 'build', 'github-actions.md'), 'utf8');
 const buildRuntimeSdkPage = readFileSync(join(docsRoot, 'build', 'runtime-sdk.md'), 'utf8');
 check(capabilitiesPage.includes('| Encrypted JavaScript payload delivery | Release-gated v1;'),

@@ -11,6 +11,8 @@ description: Candidate job-scoped discovery of declared private HTTP services, w
 This reference describes a release candidate. It is not an available customer
 capability. It requires the V6 private endpoint release and a compatible Cargo
 runtime helper. JavaScript does not receive the local file/proxy integration.
+The separate [native V5 direct-peer candidate](./service-discovery-native.md)
+uses `liskov.discovery.v2` and does not change this Tailscale v1 contract.
 
 :::
 
