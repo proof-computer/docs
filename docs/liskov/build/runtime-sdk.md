@@ -10,12 +10,12 @@ the correct Liskov Application, policy, deployment, job, processor, and runtime
 instance; loads managed values and secrets; and provides logging and signed
 diagnostics. It is not a deployment or payment client.
 
-The supported v1 release is `v0.3.33`:
+The supported v1 release is `v0.3.38`:
 
 ```json title="package.json (excerpt)"
 {
   "dependencies": {
-    "@proof-computer/liskov-runtime": "github:proof-computer/liskov-runtime-js#v0.3.33"
+    "@proof-computer/liskov-runtime": "github:proof-computer/liskov-runtime-js#v0.3.38"
   }
 }
 ```
@@ -75,6 +75,79 @@ const databaseUrl = runtime.env.require("DATABASE_URL");
 ```
 
 Do not log a secret, include it in a diagnostic, or return it in an error.
+
+## Read what Liskov knows about this job
+
+:::caution Release-gated v1
+The context API is included in SDK `v0.3.38`. Public availability waits for
+the diagnostic readback; see [Capabilities and limits](../reference/capabilities.md).
+Do not depend on it for a customer deployment yet.
+:::
+
+After signed bootstrap, `runtime.context` is a read-only cached snapshot about
+this job. It can be `undefined` when bootstrap supplied no valid context. An
+absent context does not mean the job has no identity.
+
+```ts
+const context = runtime.context;
+if (context !== undefined) {
+  const applicationKey = context.application.uid;
+  const jobKey = context.job.id;
+  const geo = context.network.geolocation;
+  const currentCountry = geo.status === "ready" ? geo.countryCode : null;
+  // Use these values in your own logic; do not log the whole context.
+}
+```
+
+`application.uid` is the stable key; `application.name` and
+`application.displayName` are labels that may change. Do not key durable logic
+on a label. The snapshot also identifies the Liskov and Acurast deployments,
+job, processor, bound policy digest/version and artifact CID/digest. The
+`capabilities` flags describe runtime configuration, secrets, logging and
+ingress for this launch; they do not replace `runtime.status()` readiness
+checks or grant a capability. `ingress` is currently `false`.
+
+`network.observedWanIp` is the public IP Liskov observed on the job's request.
+The country, region and city are approximate and derived from that IP. Check
+`network.geolocation.status` before using them:
+
+| State | Meaning |
+| --- | --- |
+| `ready` | The recorded geography matches the observed IP and is current; individual place fields may still be `null`. |
+| `pending` | Geography is not yet resolved for this IP; older values may remain, so do not treat them as current. |
+| `stale` | Cached geography needs refreshing; any retained place values are not current. |
+| `disabled` | The geography provider is switched off. |
+| `unavailable` | Liskov could not read the geography observation. |
+| `not_observed` | No WAN IP was observed for this request. |
+
+VPNs, carrier NAT, mobile gateways and IPv6 privacy addresses can change or
+obscure what the IP describes. This is introspection, not a portable
+attestation: it is not GPS, residency evidence or a compliance proof. A missing
+network or geography value does not fail bootstrap or configuration delivery.
+
+When you need another snapshot, make one explicit request:
+
+```ts
+const refreshed = await runtime.refreshRuntimeContext();
+// On success, runtime.context is now the same snapshot as refreshed.
+```
+
+Call it when you need it; the SDK never polls for runtime context and never
+logs the context automatically. A replayed or too-frequent refresh is refused.
+A refresh sends one signed `POST /api/jobs/runtime-context`, updates the cached
+snapshot only on success, and does not redeploy, reserve or charge Service
+Credits. It may record a changed WAN IP; unchanged observations are debounced.
+It reads cached geography rather than calling a provider synchronously, so a
+successful refresh does not guarantee a `ready` geography state.
+
+To verify your code, typecheck against the pinned SDK and check the returned
+job and Application keys and geography state. If context is absent, continue
+without optional introspection or handle that absence explicitly. If refresh
+is refused, keep the previous snapshot and inspect the
+[refresh error](../reference/runtime-sdk.md#runtime-context-refresh-errors).
+Do not loop on a replay refusal; after a rate limit, wait before making a new
+explicit call. Next, use the [field reference](../reference/runtime-sdk.md#job-runtime-context)
+to choose only the values your job needs.
 
 ## Choose capability modes deliberately
 

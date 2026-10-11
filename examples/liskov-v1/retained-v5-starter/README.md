@@ -6,7 +6,7 @@ contents to a repository root, moving `liskov.yml` to
 
 It pins:
 
-- `@proof-computer/liskov-runtime` `v0.3.33`;
+- `@proof-computer/liskov-runtime` `v0.3.38`;
 - pnpm `10.33.0`; and
 - the `liskov-github-actions` `v1` interface verified at `v1.2.4`.
 

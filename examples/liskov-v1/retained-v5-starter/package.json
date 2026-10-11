@@ -10,7 +10,7 @@
     "build": "esbuild src/index.ts --bundle --platform=node --format=cjs --target=node22 --outfile=dist/bundle.js && node scripts/smoke-bundle.mjs"
   },
   "dependencies": {
-    "@proof-computer/liskov-runtime": "github:proof-computer/liskov-runtime-js#v0.3.33"
+    "@proof-computer/liskov-runtime": "github:proof-computer/liskov-runtime-js#v0.3.38"
   },
   "devDependencies": {
     "@types/node": "24.10.1",

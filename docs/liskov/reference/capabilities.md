@@ -45,7 +45,8 @@ This page is the availability owner. Guides contain only supported recipes.
 
 | Capability | Availability / limit |
 | --- | --- |
-| Node.js background bundle and runtime SDK `0.3.33` | v1 |
+| Node.js background bundle and runtime SDK `0.3.38` | v1 |
+| Job runtime context — `runtime.context` from bootstrap and `POST /api/jobs/runtime-context` | Release-gated v1; SDK `v0.3.38`; public availability waits for the diagnostic readback (BKLG-20260714-9xxm) |
 | Managed variables and managed secrets | v1. SDK-enabled V5 JavaScript can fetch declared public variables through signed runtime-env when Acurast delivery is late; raw bundles still use Acurast. V5 customer-secret installation uses runtime-contact `0.10.40` or SDK `0.3.32`; existing artifacts must be rebuilt. |
 | Managed Application logging through Console and `proof liskov application logs`, including live follow and full-history pagination through the CLI; signed diagnostics | v1 |
 | Outbound networking and declared quota | v1 |
