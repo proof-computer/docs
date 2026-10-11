@@ -2383,6 +2383,11 @@ check(combined.includes('QmQCpRJ593xRyKko9smvtFixzfAGwDuG6gXBemRtUeSe4U'), 'Upti
 check(combined.includes('7545ffe44288c548ff4dea09ef0c0dc318a8dd490c5dc822becec3ff0d307d57'), 'Uptime Prober digest differs from descriptor');
 check(combined.includes('UPTIME_PROBER_TG_BOT_TOKEN'), 'Uptime Prober secret destination differs from descriptor');
 
+// Bounded first-contact recovery keeps its release gate and exact-pin boundary.
+const firstContactRecoveryPage = readFileSync(join(docsRoot, 'concepts/replacement-custody.md'), 'utf8');
+check(firstContactRecoveryPage.includes('no implicit fallback'), 'first-contact recovery omits exact-pin refusal');
+check(firstContactRecoveryPage.includes('verify output from the successor workload'), 'first-contact recovery confuses submission with workload success');
+
 if (errors.length > 0) {
   console.error(`Liskov docs checks failed (${errors.length}):`);
   for (const error of errors) console.error(`- ${error}`);
