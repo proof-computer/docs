@@ -9,10 +9,12 @@ description: A gated two-job check for direct IPv6 discovery, pinned TLS and aut
 :::danger[Not released]
 
 This is a reviewable pilot procedure, not a supported customer launch path.
-Source merges alone do not identify the immutable helper, runtime image or
-Planetarium payload that a job runs. BKLG-20261010-7rez owns their release,
-the exact eligible Application, any paid launch or resume, and the live IPv6
-readback. Do not start a paid job from this draft.
+The internal Planetarium pilot has verified immutable helper, runtime image
+and payload identities and a published V5 policy; see the
+[dated internal release check](../reference/service-discovery-native.md#internal-pilot-release-check).
+BKLG-20261010-7rez still owns the live two-peer IPv6 and replacement/expiry
+acceptance, the eligible Application and any paid launch or resume.
+Do not start a paid job from this draft.
 [Capabilities and limits](../reference/capabilities.md) remains the public
 availability owner.
 
@@ -148,11 +150,15 @@ change spend, or add a proxy to hide a missing IPv6 path.
 
 ## Promotion handoff for BKLG-20261010-7rez
 
-The owner release session must fill in the immutable helper/runtime image and
-payload digests, serving API revision, eligible Application and support
-audience, authorized spend, actual IPv6 reachability for each pair, the four
-record readbacks, and expiry/replacement refusal. Only then remove the
-`draft` and **Not released** notices, change the
+The owner release session must preserve the recorded immutable artifact and
+serving API identities, eligible Application and authorized spend, then capture
+actual IPv6 reachability for each pair, the four record readbacks and
+expiry/replacement refusal. The chosen support audience is the **internal
+Planetarium pilot**. Internal acceptance keeps these pages draft and unlisted.
+
+A later customer promotion also needs an explicit supported audience and a
+complete customer path. Only after that promotion is accepted may the owner
+remove the `draft` and **Not released** notices, change the
 [capability row](../reference/capabilities.md), add normal navigation, and
 deploy/read back these exact routes:
 
