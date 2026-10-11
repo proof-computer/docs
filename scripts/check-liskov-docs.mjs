@@ -1152,15 +1152,15 @@ for (const fixture of ['retained-v5-starter', 'builder-iteration']) {
 }
 
 check(
-  v5StarterPackage.dependencies?.['@proof-computer/liskov-runtime'] === 'github:proof-computer/liskov-runtime-js#v0.3.33',
-  'V5 starter: runtime SDK is not pinned to released v0.3.33',
+  v5StarterPackage.dependencies?.['@proof-computer/liskov-runtime'] === 'github:proof-computer/liskov-runtime-js#v0.3.38',
+  'V5 starter: runtime SDK is not pinned to released v0.3.38',
 );
 for (const script of ['typecheck', 'test', 'build']) {
   check(typeof v5StarterPackage.scripts?.[script] === 'string', `V5 starter: missing ${script} script`);
 }
 for (const token of [
-  'e13d3651052110e177d6460657e08e1a6ea47e06',
-  "specifier: github:proof-computer/liskov-runtime-js#v0.3.33",
+  'f3cd9d4748900ed570f76d2d25cea1676a4b3464',
+  "specifier: github:proof-computer/liskov-runtime-js#v0.3.38",
 ]) {
   check(v5StarterLock.includes(token), `V5 starter: lock file omits ${token}`);
 }
@@ -1849,7 +1849,9 @@ for (const [fileId, required] of Object.entries({
   'operate/pause-resume': ['does not force-stop', 'scheduled end'],
   'operate/update': ['successor', 'without mutating'],
   'operate/retire': ['does not stop existing jobs', 'receipt'],
-  'reference/capabilities': ['Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Encrypted JavaScript payload delivery', 'Private customer code inside Cargo images'],
+  'build/runtime-sdk': ['Read what Liskov knows about this job', 'application.uid', 'not a portable', 'refreshRuntimeContext'],
+  'reference/runtime-sdk': ['LiskovRuntimeContext', 'network.geolocation.status', 'runtime_context_nonce_replayed', 'runtime_context_rate_limited'],
+  'reference/capabilities': ['Job runtime context', 'diagnostic readback', 'Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Encrypted JavaScript payload delivery', 'Private customer code inside Cargo images'],
   'reference/cli': ['0.13.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key', 'withdrawn-key',
     'application vars list APP_REF', 'application vars set APP_REF NAME VALUE', 'application vars unset APP_REF NAME',
     '497899feccd466ae10a819c4c86f55303d9bfe88'],
@@ -2376,9 +2378,125 @@ for (const [pattern, claim] of [
 
 check(!/(?:liskov-runtime-js#v|\bSDK `?v?)0\.3\.(?:1?[0-9]|2[0-7])\b/.test(combined),
   'public docs name a runtime SDK release that cannot read the current bootstrap');
-check(buildRuntimeSdkPage.includes('liskov-runtime-js#v0.3.33'), 'runtime SDK build page omits the supported SDK pin');
-check(combined.includes('v0.3.33') && combined.includes('signed runtime-env fallback'),
+check(buildRuntimeSdkPage.includes('liskov-runtime-js#v0.3.38'), 'runtime SDK build page omits the supported SDK pin');
+check(combined.includes('v0.3.38') && combined.includes('signed runtime-env fallback'),
   'runtime reference omits the released JavaScript signed fallback');
+
+// BKLG-20261006-hlgm / ADR-0183. Released SDK v0.3.38 is not
+// production diagnostic acceptance: context remains release-gated until 9xxm.
+const runtimeContextSdkPin = 'github:proof-computer/liskov-runtime-js#v0.3.38';
+const runtimeContextSdkCommit = 'f3cd9d4748900ed570f76d2d25cea1676a4b3464';
+const runtimeSdkReferencePage = readFileSync(join(docsRoot, 'reference/runtime-sdk.md'), 'utf8');
+const runtimeBuildText = buildRuntimeSdkPage.replace(/\s+/g, ' ');
+const runtimeReferenceText = runtimeSdkReferencePage.replace(/\s+/g, ' ');
+for (const [page, content] of [
+  ['build/runtime-sdk', buildRuntimeSdkPage],
+  ['reference/runtime-sdk', runtimeSdkReferencePage],
+]) {
+  check(content.includes(runtimeContextSdkPin), `${page}: omits released context SDK pin`);
+  check(content.includes('Release-gated v1') && /public availability waits for the diagnostic readback/i.test(content.replace(/\s+/g, ' ')),
+    `${page}: runtime context omits its diagnostic release gate`);
+}
+check(capabilitiesPage.includes('| Job runtime context — `runtime.context` from bootstrap and `POST /api/jobs/runtime-context` | Release-gated v1; SDK `v0.3.38`; public availability waits for the diagnostic readback (BKLG-20260714-9xxm) |'),
+  'runtime context: canonical capability row must keep its diagnostic release gate');
+check(capabilitiesPage.includes('| Node.js background bundle and runtime SDK `0.3.38` | v1 |'),
+  'runtime SDK: baseline capability version differs from supported pin');
+for (const [token, meaning] of [
+  ['## Read what Liskov knows about this job', 'task section'],
+  ['`application.uid` is the stable key', 'stable identity'],
+  ['labels that may change', 'mutable labels'],
+  ['Do not key durable logic on a label.', 'label non-key rule'],
+  ['VPNs, carrier NAT, mobile gateways and IPv6 privacy addresses', 'IP caveats'],
+  ['introspection, not a portable attestation', 'trust boundary'],
+  ['it is not GPS, residency evidence or a compliance proof', 'no location proof'],
+  ['Call it when you need it; the SDK never polls for runtime context', 'explicit refresh only'],
+  ['never logs the context automatically', 'no automatic context logging'],
+  ['A replayed or too-frequent refresh is refused.', 'refresh refusal'],
+  ['does not redeploy, reserve or charge Service Credits.', 'refresh spend boundary'],
+  ['snapshot only on success', 'cache replacement boundary'],
+  ['does not guarantee a `ready` geography state', 'refresh cannot force current geo'],
+  ['It can be `undefined`', 'optional block'],
+]) {
+  check(runtimeBuildText.includes(token), `runtime context guide omits ${meaning}`);
+}
+check(buildRuntimeSdkPage.indexOf('## Read what Liskov knows about this job')
+    > buildRuntimeSdkPage.indexOf('## Read configuration after bootstrap')
+    && buildRuntimeSdkPage.indexOf('## Read what Liskov knows about this job')
+    < buildRuntimeSdkPage.indexOf('## Choose capability modes deliberately'),
+  'runtime context task must follow configuration reads');
+for (const status of ['ready', 'pending', 'stale', 'disabled', 'unavailable', 'not_observed']) {
+  check(buildRuntimeSdkPage.includes(`| \`${status}\` |`), `runtime context guide omits geography state ${status}`);
+}
+check(runtimeBuildText.includes('older values may remain') && runtimeBuildText.includes('not current')
+    && runtimeBuildText.includes('provider is switched off'),
+  'runtime context guide omits cached/noncurrent/disabled geography semantics');
+check(runtimeReferenceText.includes('preserves legitimate empty strings and zero timestamps')
+    && runtimeReferenceText.includes('milliseconds since the Unix epoch')
+    && runtimeReferenceText.includes('`refreshNow()` refreshes configuration, secrets and logging, not runtime context.'),
+  'runtime context reference omits null/zero/units or refresh separation');
+check(runtimeSdkReferencePage.includes('| `context` |') && runtimeSdkReferencePage.includes('| `refreshRuntimeContext()` |'),
+  'runtime SDK handle omits context accessor or explicit refresh');
+
+// Verbatim owner schema, copied in SDK v0.3.38 from liskov-rs d313102.
+const runtimeContextSchemaBytes = readFileSync(join(root, 'examples/liskov-v1/runtime-context.schema.json'));
+check(createHash('sha256').update(runtimeContextSchemaBytes).digest('hex')
+    === '006df5281972874dab8a6ebe34517d235af3c2e66baaecc4b7ba79b4a309f97a',
+  'runtime context fixture differs from released owner schema');
+const runtimeContextSchema = JSON.parse(runtimeContextSchemaBytes.toString('utf8'));
+function checkRuntimeContextFields(schema, prefix = '') {
+  if (schema.$ref) schema = runtimeContextSchema.$defs[schema.$ref.split('/').at(-1)];
+  if (schema.properties) {
+    for (const [name, field] of Object.entries(schema.properties)) {
+      checkRuntimeContextFields(field, prefix ? `${prefix}.${name}` : name);
+    }
+    return;
+  }
+  const types = schema.enum
+    ? schema.enum.map(value => `"${value}"`)
+    : (Array.isArray(schema.type) ? schema.type : [schema.type]).map(type => type === 'integer' ? 'number' : type);
+  if (prefix === 'schema') types[0] = '"proof.liskov.runtime-context.v1"';
+  check(runtimeSdkReferencePage.includes(`| \`${prefix}\` | \`${types.join(' \\| ')}\` |`),
+    `runtime context reference: field/type differs from released schema: ${prefix}`);
+}
+checkRuntimeContextFields(runtimeContextSchema);
+for (const [code, status] of [
+  ['runtime_context_request_invalid', '400'],
+  ['runtime_context_job_unbound', '409'],
+  ['runtime_context_expiry_invalid', '400'],
+  ['runtime_context_request_stale', '403'],
+  ['runtime_context_signature_invalid', '403'],
+  ['runtime_context_nonce_replayed', '409'],
+  ['runtime_context_rate_limited', '429'],
+  ['runtime_context_store_unavailable', '503'],
+]) {
+  check(runtimeSdkReferencePage.includes(`| \`${code}\` | \`${status}\` |`),
+    `runtime context reference omits refusal ${status} ${code}`);
+}
+for (const token of ['LiskovRuntimeContextRefusedError', 'runtime_context_request_refused',
+  'SlipwayRuntimeNotReadyError', 'only HTTP 429 and 503 retryable',
+  'a failure leaves the previous snapshot intact', 'never retry that signed request']) {
+  check(runtimeReferenceText.includes(token), `runtime context reference omits error contract ${token}`);
+}
+const docsPackage = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+check(docsPackage.devDependencies?.['@proof-computer/liskov-runtime'] === runtimeContextSdkPin,
+  'docs example typechecking must use the released context SDK');
+for (const fixture of ['', 'examples/liskov-v1/retained-v5-starter', 'examples/liskov-v1/builder-iteration']) {
+  const lock = readFileSync(join(root, fixture, 'pnpm-lock.yaml'), 'utf8');
+  check(lock.includes(`specifier: ${runtimeContextSdkPin}`) && lock.includes(runtimeContextSdkCommit),
+    `${fixture || 'docs root'}: context SDK lock differs from released pin/commit`);
+  if (fixture) {
+    const pkg = JSON.parse(readFileSync(join(root, fixture, 'package.json'), 'utf8'));
+    check(pkg.dependencies?.['@proof-computer/liskov-runtime'] === runtimeContextSdkPin,
+      `${fixture}: SDK dependency differs from released context pin`);
+  }
+}
+const runtimeContextExample = readFileSync(join(root, 'examples/liskov-v1/runtime-context.mts'), 'utf8');
+const exampleTsconfig = JSON.parse(readFileSync(join(root, 'examples/liskov-v1/tsconfig.json'), 'utf8'));
+check(exampleTsconfig.include.includes('runtime-context.mts'), 'runtime context example is not covered by typecheck');
+for (const token of ['runtime.context', 'await runtime.refreshRuntimeContext()', 'LiskovRuntimeContext',
+  'LiskovRuntimeContextRefusedError', 'snapshot?.application.uid', "geo?.status === 'ready'"]) {
+  check(runtimeContextExample.includes(token), `runtime context example omits ${token}`);
+}
 
 // Secrets on either processor key kind. JavaScript from runtime SDK 0.3.34.
 // Native images from runtime-contact 0.11.1 (BKLG-20261003-yvjo): an older
