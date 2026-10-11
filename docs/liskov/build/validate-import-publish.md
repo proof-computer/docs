@@ -1,6 +1,6 @@
 ---
 title: Validate, import, and publish
-description: Move a Manifest V4 from a local check to a draft and then an immutable effective policy without conflating the steps.
+description: Validate and import a Manifest V4 draft without conflating the steps; V4 publication is closed, so publish a retained Manifest V5 through the GitHub path.
 ---
 
 # Validate, import, and publish
@@ -8,10 +8,13 @@ description: Move a Manifest V4 from a local check to a draft and then an immuta
 Validation, import, artifact attestation, and publication are intentionally
 separate. Each produces evidence you can inspect before the next mutation.
 
-:::caution Release gate
-Manifest V4 publication is accepted for v1 but remains rollout-gated. The
-commands describe the final customer path; do not expect a production publish
-to succeed until your account and the v1 release are enabled.
+:::caution Manifest V4 publication is closed
+Steps 4 and 5 (preflight and publish) are refused for a Manifest V4 with
+`v4_publication_disabled`, in every organization. Existing V4 Applications
+keep running until they are retired. To publish, author a
+[retained Application Manifest V5](./manifest-v5.md) and follow the
+[GitHub path](../get-started/github.md). Steps 1 to 3 still apply to a V4
+draft.
 :::
 
 ## 1. Validate locally
