@@ -15,6 +15,10 @@ The moving `v2` release is live. The production acceptance recorded for the
 fixes. Security-sensitive callers may instead pin the reviewed commit
 `2745f48e6c2619f4d431fb80d20d0e8c75068832` (`v2.0.0`) and update it deliberately.
 
+`v2` moved to `v2.2.0` on 11 October 2026. That release changes only the
+[internal runtime-image workflows](#runtime-image-workflows-are-internal);
+`acurast-app.yml` and the actions it calls are unchanged from `v2.1.0`.
+
 ## Add the caller workflow
 
 ```yaml title=".github/workflows/liskov.yml"
@@ -98,3 +102,42 @@ existing managed secrets boundary and does not grant a build workflow publicatio
 or spending authority. See [Trust and data boundaries](../concepts/trust-boundaries.md)
 before making a private-code claim; Cargo image and cache confidentiality remains
 separate.
+
+## Runtime-image workflows are internal
+
+The same repository also releases `runtime-image.yml` and
+`cargo-runtime-image.yml`, which upload or build a native runtime image. A
+customer-authored Cargo or runtime image is **Internal** in the
+[capability matrix](../reference/capabilities.md). This section records the
+released contract so the version boundary is exact; it is not a supported
+recipe.
+
+From `v2.2.0`, both workflows at `@v2` read the `manifest-path` input as a
+retained [Manifest V5](../reference/manifest-v5.md) source document and import
+nothing:
+
+- the file is JSON at a repository-relative path, with no leading `/` and no
+  empty, `.`, or `..` segment;
+- its `applicationId` equals the `application-id` input, `release.mode` is
+  `source`, and `runtime.kind` is `native_image`; and
+- the Application already carries a source binding for the calling
+  repository, ref, workflow, and manifest path.
+
+A Manifest V4 at that path is refused before anything is uploaded. A caller
+that still builds from a Manifest V4 stays on `@v1`, which is frozen at
+`v1.3.2` and keeps the V4 import step, and moves to `@v2` together with a V5
+document. Manifest V4 publication is closed on both.
+
+Finalizing an upload does not publish a policy version. Both workflows return
+the build evidence a `release.mode: source` publication names, in the outputs
+`artifact-digest`, `source-repository`, `source-ref`, `source-commit`,
+`source-workflow-identity`, `binding-revision`, and `revocation-epoch`.
+
+`cargo-runtime-image.yml` also takes the optional `source-assurance` input,
+default `false`. When it is `true` the workflow verifies the committed
+CycloneDX SBOM, generated from `pnpm-lock.yaml` when one is present and
+otherwise from `Cargo.lock`, and returns `source-digest` and `sbom-path`. Both
+outputs are empty when the input is omitted or `false`.
+
+No `@v2` runtime-image run has been observed in production, so this contract
+is released but not accepted on a customer path.

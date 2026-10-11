@@ -1,0 +1,63 @@
+{
+  "schema": "proof.liskov.docs-runtime-image-workflow-contract.v1",
+  "verifiedAt": "2026-10-11",
+  "documentationMode": "public",
+  "availability": "internal",
+  "productionCustomerPathObserved": false,
+  "release": {
+    "repository": "proof-computer/liskov-github-actions",
+    "tag": "v2.2.0",
+    "commit": "2eef49238a02a0a17824abf9c697935aa73f5734",
+    "publishedAt": "2026-10-11T11:45:51Z",
+    "movingTag": "v2",
+    "url": "https://github.com/proof-computer/liskov-github-actions/releases/tag/v2.2.0",
+    "previousTag": "v2.1.0",
+    "previousCommit": "6e5f75a556677dabd1964ddaae4f03f4925de0e8",
+    "acurastAppUnchangedSincePreviousTag": true
+  },
+  "frozenV4Line": {
+    "movingTag": "v1",
+    "tag": "v1.3.2",
+    "commit": "c15b4b52d53bb7b7d631c2446151d994b93d2693"
+  },
+  "workflows": [
+    "runtime-image.yml",
+    "cargo-runtime-image.yml"
+  ],
+  "sourceDocument": {
+    "input": "manifest-path",
+    "format": "json",
+    "releaseMode": "source",
+    "runtimeKind": "native_image",
+    "applicationIdMatchesInput": "application-id",
+    "importsManifest": false,
+    "removedStep": "policy-import"
+  },
+  "publicationEvidenceOutputs": [
+    "artifact-digest",
+    "source-repository",
+    "source-ref",
+    "source-commit",
+    "source-workflow-identity",
+    "binding-revision",
+    "revocation-epoch"
+  ],
+  "cargoSourceAssurance": {
+    "workflow": "cargo-runtime-image.yml",
+    "input": "source-assurance",
+    "default": false,
+    "outputs": [
+      "source-digest",
+      "sbom-path"
+    ],
+    "lockfiles": [
+      "pnpm-lock.yaml",
+      "Cargo.lock"
+    ]
+  },
+  "promotionRequires": [
+    "a customer-path runtime-image run through @v2 is observed in production and recorded",
+    "the capability matrix reclassifies the customer-authored Cargo/runtime image row"
+  ],
+  "backlogItem": "BKLG-20261008-mmzr"
+}

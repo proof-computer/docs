@@ -14,7 +14,11 @@ Steps 4 and 5 (preflight and publish) are refused for a Manifest V4 with
 keep running until they are retired. To publish, author a
 [retained Application Manifest V5](./manifest-v5.md) and follow the
 [GitHub path](../get-started/github.md). Steps 1 to 3 still apply to a V4
-draft.
+draft. A confirmed
+`proof liskov application set-repository APP_REF OWNER/REPO --yes` is refused
+with the same code for an Application whose draft is still a Manifest V4, and
+changes nothing, because confirming a repository change republishes the
+manifest; the preview without `--yes` still answers.
 :::
 
 ## 1. Validate locally

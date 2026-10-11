@@ -179,7 +179,7 @@ nonzero.
 | `application import --github OWNER/REPO:PATH@REF --server-fetch` | Ask Liskov to fetch and import the GitHub draft. |
 | `application publish APP_REF --artifact-version ID --dry-run` | Read-only publication preflight for a build release. |
 | `application publish APP_REF --artifact-version ID --yes` | Publish after fresh preflight and authored-digest race check. |
-| `application set-repository APP_REF OWNER/REPO` | Preview by default; `--yes` confirms. |
+| `application set-repository APP_REF OWNER/REPO` | Preview by default; `--yes` confirms. A confirmed change is refused with `v4_publication_disabled`, and nothing changes, for an Application whose draft is still a Manifest V4. |
 | `application rename APP_REF DISPLAY_NAME` | Preview by default; `--yes` confirms. |
 
 Pinned releases do not require `--artifact-version`. `--paused --reason TEXT`
