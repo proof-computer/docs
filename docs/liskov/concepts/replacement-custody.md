@@ -61,14 +61,23 @@ assigned start allowance, and five more minutes. Liskov first requires a
 verified contact elsewhere in its fleet within the previous two minutes. If
 that ingest check is unproven, recovery waits without another reserve.
 
-The replacement still uses the existing spend limits and placement checks. A
-late valid contact withdraws the trigger before a replacement is reserved.
+The replacement still uses the existing spend limits and placement checks.
+An exact processor pin has no implicit fallback: when that processor is
+excluded and no allowed alternative remains, Liskov waits without another
+reserve. A late valid contact withdraws the trigger before a replacement is reserved.
 The original job keeps its own scheduled window and financial closeout; an
 inferred lack of contact does not prove that your code failed or globally
 exclude the processor. When released, Activity and Coverage will identify
 the reason and show when Liskov is waiting for contact ingest. This behavior
 remains [release-gated](../reference/capabilities.md); do not rely on it for a
 customer Application yet.
+
+When investigating a silent registration, compare its scheduled start and
+assigned start allowance before treating it as late. A submitted registration
+alone does not prove that the workload started. Check Activity and Coverage
+for the recovery reason, then verify output from the successor workload. A
+fleet-ingest deferral means Liskov cannot yet prove contact collection is
+healthy; repeatedly republishing the Application does not establish that proof.
 
 The core distinction is simple: policy describes allowed intent; evidence
 describes what actually happened.
