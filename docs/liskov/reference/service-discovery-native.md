@@ -192,23 +192,46 @@ The original application listener and sync source is
 
 ## Internal pilot release check
 
-The owner chose an **internal Planetarium pilot** on 2026-10-11. The dated
-release receipts identify the following delivered artifacts and server; they
-do not establish which bytes each running job uses or successful peer exchange.
+The owner chose an **internal Planetarium pilot** on 2026-10-11. This
+2026-10-12 check separates verified artifacts, guarded publication and the
+partial physical pilot result. Artifact verification alone does not establish
+which bytes each running job uses or successful peer exchange.
 
 | Release identity | Recorded value |
 | --- | --- |
-| Native helper | Immutable [v0.12.0](https://github.com/proof-computer/liskov-runtime-cargo/releases/tag/v0.12.0), source `cd2fb5dee887ded5af90b7ab6f5928bd34f64145`, AArch64 binary SHA-256 `9a71f5f82ceafddd62baff00a8f0f1593712d5e39eb4b0098a78d2ef47173010` |
-| Application payload | Planetarium source `9e0db74cd48d24745905698909366b54991e6a10`, SHA-256 `90f8771d41c29fb66430d9bb5672851b2cb9ae88e08b926cd620ab13d6ed0e30` |
-| Runtime image | Digest `sha256:788394a26e5020252dda1fd9004727327507c4d45708d6de0ea8a44fa94a26cd` |
-| Pinned runtime artifact/bootstrap | Digest `sha256:d92648c2aa62a96e7c52bce9c2667ce8647a8073ca7cefde0bf17260f1c7b507`; independent archive extraction matches the immutable helper binary above |
-| Internal publication | `planetarium-v7`, schemaVersion 5, pointer 8, published at 22:43:42 UTC; pinned-document source `2744ed39945b5132188076388163f3b14c52d7ed` |
-| Serving API read | HTTP 200 and ready true at 22:48:32 UTC, then-serving build `6fad047c835a911fa8b03fb562551e1aceb44cd1` |
+| Native helper | Immutable [v0.12.2](https://github.com/proof-computer/liskov-runtime-cargo/releases/tag/v0.12.2), source `e2d1e2d8ce1321b18a2cc27c12da0580cdbd8e9a`, published AArch64 binary SHA-256 `bfb3a7d0274d9560d39154d11b9f3c1ea4b4a925c96c99167b43597f9299f6ba`, 5,443,080 bytes; release schema version 2 / contract epoch 1 |
+| Application payload | [Payload workflow](https://github.com/proof-computer/liskov-planetarium/actions/runs/38230575462), Planetarium source `e91f955b55aee9f8f487a373922fc68df50743ce`, SHA-256 `58f868535961f3c3cb3c236c8093f3b17d28d472c6a539fd3f2828ce0b412cfc`; all 42,869,398 bytes and 11 gateway parts independently verified |
+| Runtime image | [Image workflow](https://github.com/proof-computer/liskov-planetarium/actions/runs/38230579937), digest `sha256:081b64aa28048938475f70962ffa8a9d08ad4276a6cbfef63f7679cb2c9184e7`; downloaded bytes match the workflow, canonical artifact, captured upload session and bootstrap descriptor |
+| Pinned runtime artifact/bootstrap | Digest `sha256:e53fd78968d02b2e97245d9108a2522051d2d60b9f08e29fab800ea774a82427`; independent archive extraction matches the actual published helper binary above and the captured source/toolchain tuple |
+| Guarded internal publication | `planetarium-v12`, schemaVersion 5, pointer 12 → 13 at 10:48:05 UTC, policy digest `d37fda1a9bb41fcaaba8a275478e4316b9f846dce33647f3670809869501c49f`; pinned-document source [9d9e1d0248fb9d3e8eda61a77849b973940944ff](https://github.com/proof-computer/liskov-planetarium/commit/9d9e1d0248fb9d3e8eda61a77849b973940944ff). The 10:48:30 UTC read confirmed active pointer 13 and artifact `e53fd789…` |
+| Latest dated policy | At 12:18:23 UTC, owner pin-list edits had advanced the policy to pointer 15 / `planetarium-v14`, digest `d753e0c15ac98b5e22a7f7e18a8a70ed9a6a303c0b9f89736d3af04c8f24396f`, with the same artifact, 45-minute windows, two evenly phased slots and five processor pins after removal of the Warsaw pin. No four-hour change was made |
 
-The server's composed signed-health/PostgreSQL proof is offline evidence.
+The captured upload session records helper version, target, binary digest,
+source commit and toolchain. Its exact tuple matches the verified immutable
+release; schema version 2 / contract epoch 1 come from that release manifest,
+rather than additional fields inferred in the session.
+
+The initial physical collector ran from 10:48:52 to 12:18:52 UTC and ended
+without a proven peer pair, advancing reciprocal success or replacement.
+Slot 0's London job `281455`, registered at 12:00:39 UTC, had a ready TLS
+listener on port 8841 and a valid `complete_empty` v2 directory at 12:14 UTC.
+That proves listener/directory readiness for one slot, not authenticated record
+exchange between two slots.
+
+Slot 1's FRX job `281445` retained a signed nonzero process exit (`exitCode: 1`)
+and ordered application output reporting insufficient available memory after
+input/model download and before the inference/peer children started. The
+[published artifact's admission guard](https://github.com/proof-computer/liskov-planetarium/blob/e91f955b55aee9f8f487a373922fc68df50743ce/src/deployment.rs#L370-L383)
+compares `/proc/meminfo` `MemAvailable` with the payload floor of 7,168 MiB;
+the placement minimum is 10 GiB of total memory. Those are different checks.
+The exact available-memory value and model peak RSS were not recorded, so this
+readback does not establish model fit or the amount of additional headroom
+required.
+
+The server's composed signed-health/PostgreSQL proof remains offline evidence.
 Actual two-way authenticated IPv6 record exchange, matching imported record
-IDs and replacement/expiry refusal remain the live acceptance owned by
-BKLG-20261010-7rez. Existing jobs can still use an earlier helper or payload;
+IDs and replacement/expiry refusal remain pending under BKLG-20261010-7rez.
+Existing jobs can still use an earlier helper or payload;
 check both jobs' exact identities rather than inferring them from the active
 policy pointer. The internal support choice keeps these pages draft and
 unlisted even after internal live acceptance. No public availability follows
