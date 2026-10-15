@@ -349,8 +349,8 @@ topology, state replication, or public-service routing contract.
 
 ## Sizing and processor selection
 
-Omit placement for the open market, select exact processors, or state measured
-minimums:
+Omit placement for the open market, name an exact allowed pool, or state
+measured minimums:
 
 ```json
 {
@@ -371,11 +371,44 @@ storage is available space. Missing current evidence fails closed. Country,
 region, WAN-IP, allow/exclude, spread, distribution, and authored evidence
 profiles are not V5 fields.
 
+The exact list is the allowed pool for each job. `deployment.jobs` does not
+decide how many ids you may write, and the list does not have to be the same
+length as the job count. One job can allow several processors:
+
+```json
+{
+  "jobs": 1,
+  "processorSelection": {
+    "mode": "exact",
+    "processorIds": ["processor-a", "processor-b", "processor-c"]
+  }
+}
+```
+
+:::caution Release-gated
+
+Choosing an eligible processor from that whole pool is release-gated. The
+manifest accepts the list. Do not rely on a later id being selected when an
+earlier one is unavailable until that serving behavior is released.
+[Capabilities and limits](../reference/capabilities.md) records the exact
+selection you can use today, including warmup.
+
+:::
+
+When that selection is released, the order of `processorIds` is not placement
+priority. In the example above, a stale heartbeat on `processor-a` and a hard
+gate failure on `processor-b` can still admit `processor-c` when it is
+eligible. A failed capacity minimum removes that processor and leaves the
+other ids available. If none of the three is eligible, Liskov does not leave
+the list for the open market. After the job is admitted, that processor stays
+selected until a renewal or a permitted recovery admits a new occurrence. A
+cheaper processor that shows up later does not move the admitted job.
+
 If you recently registered a processor, put its Acurast address in
-`processorSelection.processorIds` to target it directly. Acurast lets a direct
+`processorSelection.processorIds`. Acurast lets a direct
 `Single.instantMatch` assignment use that processor during its `WarmupUntil`
-period; open-market selection waits until the processor is Active. A direct
-pin still needs current attestation, a compatible processor version and
+period; open-market selection waits until the processor is Active. The named
+processor still needs current attestation, a compatible processor version and
 runtime, a recent heartbeat, an available schedule, and enough funds. Publish
 once, then check the deployment's processor assignment and runtime contact.
 If Liskov reports a placement blocker, correct the named prerequisite before

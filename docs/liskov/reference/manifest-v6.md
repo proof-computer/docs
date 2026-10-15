@@ -175,10 +175,26 @@ refused at its own pointer rather than accepted and left inert.
 
 ## `deployment.placement`
 
-`processorSelection` is V5's, unchanged. V6 adds two Android floors to
-`minimums` and two optional eligibility lists, `allow` and `exclude`, over three
-dimensions: the processor's manager, its processor type, and exact Android
-Processor builds to avoid.
+`processorSelection` is the retained V5 allowed pool. An exact `processorIds`
+list is the set of processors a job may use. The list length is independent
+of `deployment.jobs`, the order of the ids is not placement priority, and an
+exact list does not fall back to the open market. A job that has been
+admitted keeps its selected processor until a new occurrence is admitted.
+V6 inherits that pool. It does not assign one list position to each job.
+
+:::caution Release-gated
+
+Choosing a later eligible processor from that pool when an earlier one is
+unavailable is release-gated, as on V5. Do not rely on it until the serving
+behavior is released. See
+[Manifest V5 placement](./manifest-v5.md#placement).
+
+:::
+
+V6 adds two Android floors to `minimums` and two optional eligibility lists,
+`allow` and `exclude`, over three dimensions: the processor's manager, its
+processor type, and exact Android Processor builds to avoid. Those lists
+narrow who may be chosen. They do not turn `processorIds` into ordered slots.
 
 ### `minimums`
 
@@ -373,6 +389,8 @@ before the job is authorized to run and before any spend.
 - **Every selection mode.** The same rule judges open-market candidates,
   manager-filtered candidates, and processors listed in `processorSelection`.
   A listed processor that fails is refused before spend, never reserved.
+  Other ids in an exact allowed pool remain candidates. List position does
+  not choose the processor.
 - **Unknown fails closed.** A version the check cannot read never satisfies a
   build floor. An attestation without a readable Android version fails an
   authored `androidMajor`; a missing or malformed Android version matters only

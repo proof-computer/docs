@@ -141,10 +141,42 @@ Acurast's warmup period keeps a new processor out of public matching. To use
 one you know, author its exact Acurast address in
 `placement.processorSelection.processorIds`; direct assignment can work
 during `WarmupUntil`. Check the Application's deployment status and the named
-placement reason if it still waits. A direct pin does not bypass attestation,
-version, heartbeat, schedule, runtime compatibility, or funding checks. The
-Console processor record appears only after your organization has deployed to
-that processor, so a missing processor page is not a registration diagnostic.
+placement reason if it still waits. Naming that processor does not bypass
+attestation, version, heartbeat, schedule, runtime compatibility, or funding
+checks. The Console processor record appears only after your organization has
+deployed to that processor, so a missing processor page is not a registration
+diagnostic.
+
+## The exact list has no eligible processor
+
+`processorIds` is an allowed pool. How many ids you list is separate from
+`deployment.jobs`. One job may name several processors, and a longer list
+stays valid. Putting an id first, or reordering the list, does not tell
+Liskov which processor to prefer.
+
+:::caution Release-gated
+
+Using a later eligible processor when an earlier one fails is release-gated.
+Do not rely on that recovery until it is released. The
+[Manifest V5 reference](../reference/manifest-v5.md#placement) states the
+accepted pool behavior.
+
+:::
+
+When it is released, freshness and the other hard gates still apply to every
+id. A stale heartbeat, missing evidence, or a failed capacity minimum removes
+that processor and leaves the later ids available. With one job and three
+allowed processors, a stale first processor and a second processor that fails
+attestation, version, schedule, or price can still place the job on the third
+when the third is eligible. If no listed processor is eligible, Liskov does
+not fall back to the open market and does not admit a job on a processor
+outside the list. Correct the named gate, or add an eligible processor to the
+list, then publish the change you intend. Reordering the same ids does not
+repair a pool that has no eligible processor.
+
+A job that has already been admitted keeps its selected processor. Changing
+the list order, or adding a cheaper id, does not move that job. The next
+choice is made when a renewal or a permitted recovery admits a new occurrence.
 
 ## Intended capacity is not running
 
