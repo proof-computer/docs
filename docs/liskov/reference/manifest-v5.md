@@ -170,7 +170,7 @@ not part of V5.
 | `jobs` | no | integer 1–256, default 1; first-public admission maximum 2 |
 | `schedule.duration` | yes | duration of one paid job window |
 | `schedule.phasing` | no | `simultaneous` or `evenly_spaced`; default behavior is simultaneous |
-| `placement` | no | capability minimums and/or exact processor selection |
+| `placement` | no | capability minimums and/or an exact processor pool |
 | `lifecycle` | no | renewal and update policy |
 | `spend` | yes | managed Service Credit authority |
 
@@ -191,9 +191,41 @@ must divide it exactly. `simultaneous` accepts no `jobsPerPhase`.
 `processorSelection` has `mode: exact` and 1–64 `processorIds`. Omitting it
 uses open-market selection. Authored evidence profiles, allow/exclude rules,
 spread, distribution, topology, and manager/static selectors are absent.
+
+An exact `processorIds` list is the allowed pool for each job. The length of
+the list is independent of `deployment.jobs`: one job may name several
+processors, and a list longer than the job count stays valid. The list and
+the job count do not have to match, and the order of the ids is not placement
+priority. Extra ids are further candidates. They are not discarded, and they
+are not a separate placement mode.
+
+:::caution Release-gated
+
+Choosing an eligible processor from that whole pool is release-gated. The
+manifest accepts the list. Do not rely on a later id being selected when an
+earlier one is unavailable until that serving behavior is released.
+[Capabilities and limits](./capabilities.md) records the exact selection you
+can use today, including warmup.
+
+:::
+
+When that selection is released, Liskov chooses one eligible processor from
+the complete list for each initial launch, renewal, and permitted recovery.
+One job can allow three processors. If the first has a stale heartbeat and
+the second fails a hard gate, such as attestation, version, schedule, or
+price, Liskov can select the third when that processor is eligible. A
+processor that fails a capacity minimum is skipped the same way. Missing
+current evidence fails closed. When no listed processor is eligible, Liskov
+does not fall back to the open market and does not admit the job on a
+processor outside the list.
+
+Once a job has been admitted, that selection stays fixed for the occurrence.
+A cheaper processor that becomes eligible later does not replace it. The next
+choice is made when the job's normal lifecycle admits a new occurrence.
+
 An exact processor ID can be assigned directly while Acurast reports
 `WarmupUntil`; this does not make it eligible for open-market selection.
-Liskov still checks the pinned processor's attestation, version, modules,
+Liskov still checks the selected processor's attestation, version, modules,
 heartbeat, schedule, consumer access, and price before registration.
 
 ### `lifecycle`
