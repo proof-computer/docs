@@ -11,6 +11,8 @@ jobs under an explicit lifecycle policy.
 
 ## Choose a duration
 
+This example is Manifest V4.
+
 ```json
 {
   "deployment": {
@@ -31,8 +33,8 @@ jobs under an explicit lifecycle policy.
 }
 ```
 
-The example requests a one-hour job. `after_scheduled_end` begins successor
-work after the predecessor's scheduled boundary. A fixed
+Manifest V4. The example requests a one-hour job. `after_scheduled_end` begins
+successor work after the predecessor's scheduled boundary. A fixed
 `before_scheduled_end` lead can request bounded overlap, but it does not
 guarantee readiness before the old job ends: market assignment and startup are
 external facts.
@@ -80,22 +82,49 @@ neither shows a job's renewal deadline as the next run.
 
 ## Updates
 
-`next_scheduled_renewal` waits for the next planned successor boundary.
-`immediate` asks Liskov to begin a successor promptly after the new effective
-policy exists. In v1, `run_until_scheduled_end` leaves predecessor jobs running
-to their chain-owned end. Updating does not edit registered Acurast code,
-schedule, environment, or secrets in place.
+For a continuous Manifest V5 Application, every publish takes effect now.
+A new policy version, including one that changes only the artifact, starts
+its successor at the next executor pass. An executor pass is the next time
+Liskov checks the Application and starts work that is due. From that moment,
+every job in the deployment starts at once on a fresh renewal grid. A renewal
+grid is the repeating schedule of windows that an unchanged Application keeps.
+With `evenly_spaced` phasing, a later phase's first window ends on its own
+place in that grid, so the first window can be shorter than the duration you
+wrote.
 
-This means a configuration change can temporarily have an old and new job, or
-a gap if the successor is delayed. Use external stores and operations that are
-safe under that reality. The timeline records actual overlap and gap evidence.
+`update.timing: immediate` is the default, and it means now. `next_renewal`
+is the explicit choice to wait. The successor then starts one renewal lead
+before the running job's scheduled end. The renewal lead is how long before
+that scheduled end Liskov starts the next job when you choose to wait. The
+scheduled end is the end time registered for the current job's window.
+
+Only `update.existingJobs.mode` decides what happens to the old job.
+`stop_when_successor_ready`, the default, stops the old job once the new
+runtime is ready. `run_until_scheduled_end` lets the old job run until its
+scheduled end. A job that has failed, or that Liskov has lost contact with,
+is not waited for in either mode.
+
+Overlap is paid. With `run_until_scheduled_end`, and until the new runtime is
+ready under `stop_when_successor_ready`, the old job and its successor are
+reserved at once. The overlap lasts no longer than the rest of the old job's
+window. The Service Credit reserve for that shorter time is in proportion to
+the time reserved, as for any window. Use idempotency and external
+coordination where duplicate work matters.
+
+Updating does not edit registered Acurast code, schedule, environment, or
+secrets in place. The timeline records actual overlap and gap evidence. See
+[Update an Application](../operate/update.md).
 
 ## Failure behavior
 
 `launch.maxRetries` is a bounded budget for launch-stage failure; zero disables
-those retries. The supported runtime-failure mode waits until scheduled end.
-Automatic fresh registration after runtime contact loss is typed in V4 but not
-enabled in the first public capability set.
+those retries. In Manifest V4, the supported runtime-failure mode waits until
+scheduled end. Automatic fresh registration after runtime contact loss is typed
+in V4 but not enabled in the first public capability set.
+
+A job that has failed or lost contact is not waited for by a publish. With
+`update.timing: immediate`, the successor starts at the next executor pass
+under either `existingJobs` mode.
 
 ## Verify
 

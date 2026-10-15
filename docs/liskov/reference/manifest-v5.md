@@ -201,8 +201,15 @@ heartbeat, schedule, consumer access, and price before registration.
 | Field | Values and default |
 | --- | --- |
 | `renewal.leadTime` | `automatic` (default) or `fixed` with required `duration` |
-| `update.timing` | `immediate` (default) or `next_renewal` |
-| `update.existingJobs.mode` | `stop_when_successor_ready` (default) or `run_until_scheduled_end` |
+| `update.timing` | `immediate` (default): the successor starts at the next executor pass; `next_renewal`: one renewal lead before the running job's scheduled end |
+| `update.existingJobs.mode` | `stop_when_successor_ready` (default) stops the old job once the new runtime is ready; `run_until_scheduled_end` lets it run until its scheduled end |
+
+An executor pass is the next time Liskov checks the Application and starts
+work that is due. A renewal lead is how long before the scheduled end Liskov
+starts the successor when timing is `next_renewal`. The scheduled end is the
+end time registered for the current job's window. A job that has failed, or
+that Liskov has lost contact with, is not waited for in either mode when
+timing is `immediate`.
 
 Renewal is valid only for continuous execution. If `existingJobs` is present,
 its `mode` is required; an empty object fails.

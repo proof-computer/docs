@@ -398,6 +398,16 @@ successor is ready. Use `run_until_scheduled_end` when overlap would be unsafe:
 }
 ```
 
+`immediate`, the default, starts the successor at the next executor pass,
+including when only the artifact changed, and `next_renewal` starts it one
+renewal lead before the running job's scheduled end. `stop_when_successor_ready`,
+the default, stops the old job once the new runtime is ready, and
+`run_until_scheduled_end` lets the old job run until its scheduled end. An
+executor pass is the next time Liskov checks the Application and starts work
+that is due. The renewal lead is how long before a job's scheduled end Liskov
+starts the next job when you choose to wait. The scheduled end is the end
+time registered for the current job's window.
+
 Renewal is valid only for continuous execution. Lead time is `automatic` or
 `fixed`; update timing is `immediate` or `next_renewal`.
 
