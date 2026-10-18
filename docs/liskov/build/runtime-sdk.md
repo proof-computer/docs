@@ -108,8 +108,10 @@ ingress for this launch; they do not replace `runtime.status()` readiness
 checks or grant a capability. `ingress` is currently `false`.
 
 `network.observedWanIp` is the public IP Liskov observed on the job's request.
-The country, region and city are approximate and derived from that IP. Check
-`network.geolocation.status` before using them:
+The country, region and city are approximate and derived from that IP.
+Geolocation is cached for seven days by default for an unchanged IP, and a
+change of observed IP schedules a new background lookup. Check
+`network.geolocation.status` and `asOfMs` before using the result:
 
 | State | Meaning |
 | --- | --- |
