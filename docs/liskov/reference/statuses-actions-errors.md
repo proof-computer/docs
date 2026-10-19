@@ -70,13 +70,14 @@ Unknown active detail maps to `in_progress`/`unknown_active_state`, not `ready`.
 
 ## Action Plan vocabulary
 
-The Console **organization Action Plan** lists only Holds: work Liskov has
-stopped on. Causes are `intent` (you stopped it), `funds` (authorised cap), and
-`app_fault` (signed runtime/application or delivery evidence). `app_fault` does
+The Console **organization Action Plan** stopped-job buckets list Holds: work
+Liskov has stopped on. Causes are `intent` (you stopped it), `funds` (authorised
+cap), and `app_fault` (signed runtime/application or delivery evidence). `app_fault` does
 not assert that the workload, artifact, or policy changed: inspect
 `failureStage` and `failureCode`. `platform` never appears as a customer
-decision. Work Liskov is still retrying is withheld. An eligible new bootstrap
-hold can disappear after stronger signed Ready evidence arrives.
+decision. Work Liskov is still retrying is withheld from those buckets. An
+eligible new bootstrap hold can disappear after stronger signed Ready evidence
+arrives.
 
 Each V5 hold carries `holdId`, `stateRevision`, stable slot/generation, failure
 stage/code, `pendingRelease`, and server-owned `actions`. `release_hold` posts
@@ -101,6 +102,49 @@ The read also serves these optional fields:
 | `stoppedAtMs` | On each Hold: when the job stopped, in Unix milliseconds. Absent on V4 rows, which have no time. The Console shows it as **Held since** or **Stopped since**. |
 | `releaseRequestedAtMs` | On each Hold: when its release was requested. Present exactly when `pendingRelease` is `true`. |
 | `truncated` | On the response: `true` when the read stopped at 100 stopped jobs and more may exist. The Console then shows **100+** decisions owed. |
+
+### Processor pin advice
+
+When supplied, `placementAdvice` on the organization Action Plan read supplies the
+separate **Processor pin** section. It is optional advice about an authored
+exact pin under the active policy. It does not create a Hold, alter
+`holdCount` or `applicationCount`, add to **Decisions owed** or the rail badge,
+or make posture actionable. Automatic retries continue.
+
+| Reason | Recorded check |
+| --- | --- |
+| `schedule_conflict` | The exact pin failed the scheduling check for the recorded window. |
+| `heartbeat_expired` | The processor has not reported a heartbeat within the age the policy allows. |
+| `heartbeat_unavailable` | The processor has no heartbeat recorded by Liskov. |
+| `heartbeat_in_future` | The processor reported its last heartbeat ahead of the chain clock. |
+
+These reasons do not prove the processor is offline, permanently unusable, or
+the application is at fault. `reasons` can name several checks on one row;
+`reason` is the first. `reasonsCut: true` means more reasons were recorded than
+are listed. A refused `schedule` window is supplied only for a scheduling
+conflict; otherwise it is null.
+
+The section has its own `count`, `truncated`, `available`, and `items`, with at
+most 50 items after permission filtering. Its count and truncation are separate
+from the Hold totals and cursor. `available: false` means advice could not be
+read; it is not an empty successful result and leaves readable Holds intact.
+An older response without the section supplies no advice, not a count of zero.
+Neither an empty section nor a truncated list proves every pin is unavailable.
+
+`observedAtMs` and `expiresAtMs` are Unix milliseconds. Advice expires one hour
+after observation, or clears sooner after a later proved admission for the
+same pin and policy. Expiry alone is not proof of a successful launch.
+`stableJobId`, `stableSlotId`, and `executionHref` may be null: the Console
+shows **Job not identified** without inventing a job or Execution link.
+
+**Review processor pin** follows `policyHref` to the existing Policy placement
+setting. Opening it changes nothing and does not change the pin automatically.
+Leaving the pin unchanged and waiting is supported. Applying a changed policy
+uses the existing publish workflow and its admission and spend checks; advice
+is not a release, retry, or policy mutation. See
+[Optional processor-pin advice](../operate/status-action-plan.md#optional-processor-pin-advice).
+
+### Resume refusals
 
 A resume through the lifecycle status route can be refused with these
 `error` codes. None of them changes anything:

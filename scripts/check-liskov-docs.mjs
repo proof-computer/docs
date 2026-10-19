@@ -798,6 +798,67 @@ check(
     !/next-action prose stays on the execution detail, not in this queue/.test(statusActionPlanPage),
   'status task still describes the pre-redraw Action Plan',
 );
+// BKLG-20261005-0z5i: conditional guidance, not a rollout claim. Compared with
+// liskov-rs docs/contracts/org-action-plan-placement-advice.md (4f1v + y3rc,
+// 8d557305e) and liskov-ui's exact backend fixture and coexistence/unavailable
+// tests in test/orgActionPlanPlacementAdvice.test.ts (r79r, 591e60b).
+// The owner agreed the pa* states and served Policy link on 2026-10-09 (8bhz).
+const pinAdviceTask = (statusActionPlanPage.split('### Optional processor-pin advice\n')[1] ?? '').split('\n## ')[0].replace(/\s+/g, ' ');
+const pinAdviceReference = (statusesActionsErrorsPage.split('### Processor pin advice\n')[1] ?? '').split('\n### ')[0].replace(/\s+/g, ' ');
+const diagnoseRetryPage = readFileSync(join(docsRoot, 'operate', 'diagnose-retry.md'), 'utf8');
+const pinAdviceDiagnosis = (diagnoseRetryPage.split('## Advice and launch reconciliation\n')[1] ?? '').split('\n## ')[0].replace(/\s+/g, ' ');
+const processorPlacementPage = readFileSync(join(docsRoot, 'configure', 'processor-placement.md'), 'utf8');
+const pinAdvicePlacement = (processorPlacementPage.split('## When processor-pin advice is shown\n')[1] ?? '').split('\n## ')[0].replace(/\s+/g, ' ');
+for (const [name, section] of [
+  ['task', pinAdviceTask], ['reference', pinAdviceReference],
+]) {
+  for (const token of [
+    'does not create a Hold', 'does not change the pin automatically',
+    'Automatic retries continue', 'Decisions owed', 'rail badge',
+    'Review processor pin', 'Opening', 'changes nothing',
+    'unchanged and wait', 'admission', 'spend checks',
+    'Job not identified', 'one hour',
+  ]) {
+    check(section.includes(token), `processor-pin advice ${name} loses its optional/read-only boundary: ${token}`);
+  }
+  check(/When (?:the \*\*Processor pin\*\* section is shown|supplied)/.test(section),
+    `processor-pin advice ${name} makes an unconditional availability claim`);
+}
+for (const [reason, meaning] of [
+  ['schedule_conflict', 'failed the scheduling check for the recorded window'],
+  ['heartbeat_expired', 'has not reported a heartbeat within the age the policy allows'],
+  ['heartbeat_unavailable', 'has no heartbeat recorded by Liskov'],
+  ['heartbeat_in_future', 'reported its last heartbeat ahead of the chain clock'],
+]) {
+  check(pinAdviceReference.includes(`\`${reason}\``) && pinAdviceReference.includes(meaning),
+    `processor-pin advice reference loses the owner-backed check: ${reason}`);
+}
+check(
+  pinAdviceTask.includes('Advice has its own count') &&
+    pinAdviceReference.includes('`holdCount` or `applicationCount`') &&
+    pinAdviceReference.includes('`available: false`') &&
+    pinAdviceReference.includes('not an empty successful result'),
+  'processor-pin advice must keep separate counts and distinguish an unavailable read from empty advice',
+);
+check(
+  !/Action Plan[^.]*lists only (?:Holds|jobs)/s.test(statusActionPlanPage + statusesActionsErrorsPage) &&
+    !/Retryable work remains off the page/.test(statusActionPlanPage),
+  'Action Plan still describes the whole page as stopped jobs only',
+);
+check(
+  pinAdvicePlacement.includes('Opening the suggestion changes nothing') &&
+    pinAdvicePlacement.includes('does not enable placement controls outside') &&
+    pinAdvicePlacement.includes('leave the pin unchanged and wait') &&
+    pinAdvicePlacement.includes('admission and spend checks'),
+  'processor placement must preserve the existing support/publish boundary and the option to wait',
+);
+check(
+  pinAdviceDiagnosis.includes('Do not retry, release a reserve, or broadcast again to fix a missing receipt') &&
+    pinAdviceDiagnosis.includes('owns reconciliation') &&
+    pinAdviceDiagnosis.includes('support bundle') &&
+    pinAdviceDiagnosis.includes('does not supply a recovery action'),
+  'diagnosis must leave a missing launch receipt with Liskov and retain safe support escalation',
+);
 const pauseResumePage = readFileSync(join(docsRoot, 'operate', 'pause-resume.md'), 'utf8');
 for (const token of ['Resume anyway', 'Retiring an Application frees a slot', 'being retired', 'Try again']) {
   check(pauseResumePage.includes(token), `pause task omits the Console resume refusal "${token}"`);

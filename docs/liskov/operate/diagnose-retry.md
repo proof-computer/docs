@@ -28,6 +28,24 @@ finished pass has been recorded.
 Neither chip asks you to retry or resubmit anything. It clears on its own when
 Liskov catches up. You do not need to take action.
 
+## Advice and launch reconciliation
+
+When **Processor pin** advice is shown on the organization Action Plan, it is
+optional: review the existing Policy placement setting through **Review
+processor pin**, or leave the pin unchanged and wait. It does not create a
+Hold, stop automatic retries, or change the pin automatically. A recorded
+scheduling or heartbeat check is not proof of an application failure. See
+[Optional processor-pin advice](./status-action-plan.md#optional-processor-pin-advice)
+before considering a policy publication and its spend effects.
+
+**Liskov checking launch** is different: Liskov has not yet confirmed the
+provider launch and owns reconciliation. Do not retry, release a reserve, or
+broadcast again to fix a missing receipt. Another submission cannot settle the
+earlier launch and can reserve more Service Credits. If the same execution
+shows no progress for a prolonged period, collect the non-secret
+[support bundle](../troubleshooting/support.md) and contact support. An optional
+pin suggestion does not supply a recovery action for that launch.
+
 ## 1. Identify the blocked decision
 
 ```bash

@@ -1,13 +1,14 @@
 ---
 title: Application status and Action Plan
-description: Read customer posture on an Application, then take only the organization Action Plan decisions Liskov has stopped on.
+description: Read customer posture, distinguish stopped-job decisions from optional processor-pin advice, and leave launch reconciliation to Liskov.
 ---
 
 # Application status and Action Plan
 
 An Application collects many detailed events into one customer posture. Start
-there for *this* Application. The **Action Plan** is the organization queue of
-work Liskov has stopped on and will not resolve without you.
+there for *this* Application. The **Action Plan** groups stopped work that needs
+your decision across the organization. When processor-pin advice is shown,
+it is a separate, optional suggestion, not another stopped job.
 
 The Console no longer has an Application-scoped Action Plan page. Per-Application
 “what is wrong right now” lives on that Application’s Deployments index. “What
@@ -53,7 +54,7 @@ mean you are responsible. Read the posture label.
 **Liskov checking launch** means Liskov asked the provider to start a job and
 has not yet confirmed what happened. Confirming it is Liskov's work: it checks
 again on its own, and while it does, the Application stays **In progress** and
-does not appear on the Action Plan. The Application may also be **Degraded** if
+does not create a customer Hold. The Application may also be **Degraded** if
 the launch was meant to replace capacity that is not running.
 
 Do not submit, retry, or release anything to hurry it along. Nothing in the
@@ -80,9 +81,10 @@ only what Liskov has served and does not guess from the last finished one.
 
 ## Organization Action Plan
 
-Open **Action Plan** in the organization rail. It lists only jobs Liskov has
-**stopped** on. Retryable work remains off the page while Liskov is still
-handling it.
+Open **Action Plan** in the organization rail. Its stopped-job buckets list
+work Liskov has **stopped** on. Retryable work is not placed in those buckets
+while Liskov is still handling it. Optional processor-pin advice, when shown,
+has its own section below them.
 
 Jobs sit under their Application, because the actions work at two levels:
 
@@ -105,8 +107,9 @@ have no time. The exact per-code next action is still on the execution detail.
 
 ### Every action asks first
 
-Choosing an action opens a confirmation in the Console. Nothing is sent until
-you confirm it there. The confirmation shows:
+Choosing **Release hold**, **Pause application**, or **Resume application**
+opens a confirmation in the Console. Nothing is sent until you confirm it
+there. The confirmation shows:
 
 - for **Release hold**: what failed, when it was held, and what else is held on
   the same Application, each released on its own;
@@ -147,7 +150,7 @@ release a hold. The Application runs again when both are done.
 
 ### Totals
 
-The page's totals count held jobs, not Applications:
+The Hold totals count held jobs, not optional advice:
 
 - **Decisions owed** — Holds still waiting for you.
 - **Release requested** — Holds you have already released. Liskov has
@@ -167,7 +170,7 @@ all of its own.
 
 If the Action Plan cannot be read, the page says so and offers **Try again**. That is not an empty queue, and it
 does not mean nothing is waiting on you. An empty queue says **Nothing needs a
-decision**.
+decision**; optional advice can still be shown separately.
 
 ### Causes
 
@@ -181,6 +184,40 @@ Causes include:
 
 Platform uncertainty (including first-contact silence, register silence, and a
 launch Liskov is still checking) is never a customer decision.
+
+### Optional processor-pin advice
+
+When the **Processor pin** section is shown, it offers advice about a named
+exact pin: a processor the policy explicitly selected. Advice has its own
+count and adds nothing to **Decisions owed** or the organization rail badge.
+It does not create a Hold or make the Application **Needs action**. Automatic
+retries continue; the suggestion does not pause the Application.
+
+The recorded check may have found a scheduling conflict for the stated window,
+no heartbeat within the age the policy allows, no heartbeat recorded by Liskov,
+or a last heartbeat ahead of the chain clock. A row can name several reasons
+for the same pin. These observations do not prove the processor is offline or
+permanently unusable, or that the application failed.
+
+Choose **Review processor pin** to follow the served link to the Application's
+existing **Policy** placement setting. Opening the suggestion changes nothing
+and does not change the pin automatically. You can leave the pin unchanged and
+wait for capacity in the window or for the processor to report. To apply a
+changed policy, follow the existing [publish workflow](../build/validate-import-publish.md)
+and its capability, admission, and spend checks. Publication can start new work
+and reserve Service Credits; advice itself authorizes no spend.
+
+Read **Observed** and **current until**, and the refused window when supplied.
+Advice is current for one hour after observation unless a later proved
+admission for the same pin and policy clears it sooner. **Job not identified**
+means no job was bound to that observation; there is no Execution link to
+follow. An **Execution** link appears only when the server supplies one.
+
+If the section says more pins or reasons were recorded, the visible rows are
+incomplete; do not conclude that every pin is unavailable. If advice could not
+be read, that is an unavailable read, not an empty result; the readable Holds
+remain unchanged. Advice disappearing after expiry is not proof that a launch
+succeeded. Verify the current execution and signed runtime evidence instead.
 
 ## Read from Console or CLI
 
