@@ -50,6 +50,23 @@ selection controls. Those features are not enabled for the first public
 capability set. A structurally valid field may still fail publication with
 `unsupported_policy_feature` or `entitlement_exceeded`.
 
+## When processor-pin advice is shown
+
+For an existing exact pin, the Action Plan may show **Review processor pin**
+after a recorded scheduling or heartbeat check. Follow that link to the
+existing **Policy** placement setting, or leave the pin unchanged and wait.
+Opening the suggestion changes nothing; it does not change the pin
+automatically, create a Hold, or stop automatic retries.
+
+Advice does not enable placement controls outside the
+[supported capability set](../reference/capabilities.md). Apply any supported
+policy change through the existing [publish workflow](../build/validate-import-publish.md),
+with its admission and spend checks. Publication can start new work and reserve
+Service Credits. Verify the resulting policy digest, processor assignment, and
+signed runtime contact; opening the link or advice expiring proves none of
+those. See [Optional processor-pin advice](../operate/status-action-plan.md#optional-processor-pin-advice)
+for the recorded checks and unavailable or incomplete advice.
+
 ## Verify
 
 After submission, wait for processor assignment, then verify the processor and
