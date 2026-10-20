@@ -6,8 +6,8 @@ description: Configure runtime values, secrets, resources, schedules, placement,
 # Configure
 
 Configuration tells Liskov what your Application needs. Some configuration is
-authored in Manifest V4; managed values and secrets can be supplied through
-the Console without committing them to your repository.
+authored in retained Manifest V5; managed values and secrets can be supplied
+through the Console without committing them to your repository.
 
 - [Variables](./variables.md) for non-secret values.
 - [Secrets](./secrets.md) for credentials and sensitive configuration.

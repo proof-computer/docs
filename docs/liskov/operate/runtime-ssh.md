@@ -33,6 +33,12 @@ It is listed as Roadmap in [Integrations](./integrations.md) today — see
 
 ## Before you start
 
+This page explains access to existing V4 jobs and their stored key lists.
+New V4 imports and publications are refused with `v4_publication_disabled`;
+you cannot add a key or change provider by publishing another V4 manifest.
+For new setup or policy changes, use the
+[retained V5 Managed Runtime SSH path](./runtime-ssh-v5.md).
+
 You need:
 
 - a job that is currently running — check with
@@ -52,9 +58,9 @@ from your manifest.
 
 ## 1. Declare who may connect
 
-Add the public key to your Application manifest and publish it. Access is bound
-to the manifest, so changing who may connect is a publish, not a console
-toggle.
+For an existing V4 job, read the public keys in its stored manifest. Access is
+bound to that published manifest, not a console toggle. The historical shape
+is:
 
 ```json
 {
@@ -76,8 +82,9 @@ toggle.
 beyond the key. To use your own Tailscale network instead, see
 [Bring your own Tailscale network](#bring-your-own-tailscale-network).
 
-Publish as usual. The next job launched from this manifest accepts that key;
-jobs already running were launched under the previous manifest and do not.
+Only a key already authorized by the job's published manifest can connect.
+Registering another key does not change that list. New authorization uses the
+[V5 path](./runtime-ssh-v5.md); V4 publication is closed.
 
 ### Name the key in your organization (optional)
 
@@ -220,7 +227,8 @@ for p in /proc/[0-9]*; do pid=${p#/proc/}; printf "%-6s %s\n" "$pid" \
 
 Do not install packages. The runtime's contents are digest-verified, and
 installing at runtime breaks that guarantee for the rest of the job's life. If
-you need a tool permanently, add it to your image and publish.
+you need a tool permanently, review the [V5 path](./runtime-ssh-v5.md) and its
+supported runtime-image boundary before preparing a new release.
 
 ## Take someone's access away
 
@@ -260,9 +268,9 @@ proof liskov runtime-ssh withdrawn-key list --json
 ```
 
 The withdrawal is listed with its ID, and the activity feed records it with
-the number of tickets revoked. Remove the key from `authorizedKeys` at your
-next publish so the manifest says what you intend; the withdrawal keeps
-working either way, and stays in force for jobs launched later.
+the number of tickets revoked. A stored V4 `authorizedKeys` list is unchanged:
+V4 cannot be republished to edit it. The withdrawal keeps working even when
+the stored manifest lists the key, and stays in force for jobs launched later.
 
 To let the key back in, lift the withdrawal with
 `proof liskov runtime-ssh withdrawn-key remove WITHDRAWAL_ID`. That only lifts
@@ -303,8 +311,9 @@ instead of using the Liskov relay. Traffic then goes directly between your
 machine and the job over your network, and Liskov is not in the path, so
 none of it counts against your log volume.
 
-This needs a Tailscale integration on your organization first, then a manifest
-that names it:
+The stored V4 shape names an organization Tailscale integration as follows.
+It is historical syntax, not a new setup path: V4 import and publication are
+closed, and Tailscale remains Roadmap until a live policy version can name it.
 
 ```json
 {
@@ -345,8 +354,9 @@ that does not include Runtime SSH.
 
 **`runtime_ssh_provider_plan_required`** — the organization's plan includes
 the Liskov relay but not the provider the manifest names. Today that means a
-manifest with `"kind": "tailscale"` on Developer: switch the provider to
-`"liskov"` and publish, or move to Pro or above.
+manifest with `"kind": "tailscale"` on Developer. A stored V4 manifest cannot
+be republished to change provider. For a new supported setup, review the
+[V5 managed path](./runtime-ssh-v5.md) and its plan requirements.
 
 **`runtime_ssh_operator_key_withdrawn`** — this key's access was withdrawn
 for your organization. Ask an administrator of the organization to lift the

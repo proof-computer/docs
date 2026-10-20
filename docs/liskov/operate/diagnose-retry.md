@@ -63,7 +63,9 @@ Examples:
 - when funding is insufficient, verify the existing balance and stop; customer
   Stripe checkout and new Service Credit issuance remain release-gated;
 - provide a required managed variable or secret;
-- import and publish a corrected manifest after a validation failure; or
+- validate and publish a corrected retained Manifest V5 through the
+  [bound source path](../build/validate-import-publish.md) after a validation
+  failure; or
 - wait when the condition says an external schedule or settlement boundary has
   not arrived.
 

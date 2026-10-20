@@ -23,7 +23,7 @@ It does not support “the code is secure” without source and dependency revie
 ## Policy identity
 
 Publication resolves an exact artifact version and server-owned facts into an
-immutable effective policy V4. Its digest and version bind the execution
+immutable effective policy. Its digest and version bind the execution
 contract. The authored and release-intent digests preserve the connection to
 customer input.
 

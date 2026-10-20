@@ -1970,23 +1970,28 @@ for (const [pattern, message] of [
   check(pattern.test(capabilitiesPage), message);
 }
 
-// BKLG-20261008-k3fe (ADR-0062, BKLG-20260907-3xu0): Manifest V4 publication
-// is withdrawn. The capability row must say so, the refusal code must be in
-// the error table, and no page may still present V4 as the authoring version
-// or call its publication rollout-gated. V4 draft import is not withdrawn and
-// keeps its own row; nothing here asserts that import is closed.
+// BKLG-20261013-usew extends k3fe (ADR-0062): both new V4 imports and
+// publications are withdrawn. Keep the capability rows and the reused
+// refusal code explicit, and preserve the stored-record references.
 check(
   capabilitiesPage.includes('| Manifest V4 publication | Closed'),
   'capability matrix does not close Manifest V4 publication',
 );
 check(
-  /\| Manifest V4 draft import \| Release-gated v1 \|/.test(capabilitiesPage),
-  'capability matrix lost the Manifest V4 draft import row (import is not withdrawn)',
+  /\| Manifest V4 draft import \| Closed\b/.test(capabilitiesPage),
+  'capability matrix does not close Manifest V4 draft import',
 );
 check(
-  statusesActionsErrorsPage.includes('v4_publication_disabled'),
-  'error reference omits the v4_publication_disabled refusal code',
+  /\| `v4_publication_disabled` \|[^\n]*imports[^\n]*publications[^\n]*refused/.test(statusesActionsErrorsPage),
+  'error reference must name refused V4 imports and publications in the v4_publication_disabled row',
 );
+for (const fileId of ['build/manifest-v4', 'reference/manifest-v4']) {
+  const opening = readFileSync(join(docsRoot, `${fileId}.md`), 'utf8').split('\n## ')[0];
+  check(/V4 import(?:s| or publication)/.test(opening) && opening.includes('refused') && opening.includes('v4_publication_disabled'),
+    `${fileId} must open with the V4 import and publication refusal`);
+}
+check(!existsSync(join(root, '.github/workflows/liskov-runtime-image-smoke.yml')),
+  'the retired V4 runtime-image upload smoke workflow must stay deleted');
 // Q-20261011-a4vv (answer A; liskov-rs #1635): a confirmed repository repoint
 // republishes the manifest, so it is a fourth refused V4 publication surface.
 // The withdrawal notice, the error row and the command's own reference row
@@ -2017,16 +2022,21 @@ check(
     .includes('confirmed `application set-repository --yes` on such an Application returns the same code'),
   'troubleshooting: v4_publication_disabled omits the refused confirmed repository change',
 );
-// These phrases were only ever written about V4 publication (its "only public
-// authoring version" and "rollout-gated by organization" sentences), so a
-// literal match anywhere under docs/liskov is the regression.
+// Prevent the withdrawn authoring/import recipes from returning anywhere in
+// the public docs; the two historical V4 reference pages stay readable.
 for (const file of files) {
   const page = readFileSync(file, 'utf8');
-  for (const phrase of ['only public authoring version', 'rollout-gated by organization', 'remains rollout-gated']) {
+  for (const phrase of ['only public authoring version', 'rollout-gated by organization', 'remains rollout-gated',
+    'author manifest v4', 'keeps the v4 import', 'can still be imported']) {
     check(
-      !page.includes(phrase),
-      `${idFor(file)} still presents Manifest V4 publication as the authoring version or as rollout-gated ("${phrase}")`,
+      !page.toLowerCase().includes(phrase),
+      `${idFor(file)} still offers a withdrawn Manifest V4 authoring path ("${phrase}")`,
     );
+  }
+  if (!['build/manifest-v4', 'reference/manifest-v4'].includes(idFor(file))) {
+    const snippets = [...page.matchAll(/```[^\n]*\n([\s\S]*?)```/g)].map((match) => match[1]);
+    check(!snippets.some((snippet) => /^\s*proof liskov application (?:import|publish)\b/m.test(snippet)),
+      `${idFor(file)} still teaches a withdrawn V4 import/publication command`);
   }
 }
 
@@ -2110,8 +2120,9 @@ for (const command of [
   'proof liskov whoami',
   'proof liskov organization use',
   'proof liskov application manifest validate',
-  'proof liskov application import',
-  'proof liskov application publish',
+  'proof liskov application create',
+  'proof liskov application source-binding set',
+  'proof liskov application policy publish',
   'proof liskov application status',
   'proof liskov application action-plan',
   'proof liskov application logs',

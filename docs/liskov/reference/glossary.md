@@ -20,7 +20,7 @@ should wait or contact support rather than use an internal recovery command.
 configuration, artifact and policy history, deployments, logs, billing
 correlation, and lifecycle.
 
-**Application ID** — The readable identifier authored in Manifest V4. It is
+**Application ID** — The readable identifier authored in the manifest. It is
 useful in familiar references but is not the immutable database identity.
 
 **Application UID** — The server-issued immutable Application identity. It
@@ -46,7 +46,7 @@ not missing capacity.
 effective policy. A deployment can create one or more external facts over its
 lifetime; v1 supports one stable job slot.
 
-**effective policy** — The immutable, normalized V4 execution contract Liskov
+**effective policy** — The immutable, normalized execution contract Liskov
 publishes after resolving server-owned facts. It is distinct from the manifest
 in your repository.
 
@@ -65,8 +65,9 @@ The job is not the long-lived Liskov Application.
 treasury authority to submit and settle Acurast work within customer-approved
 limits. It does not create a customer ACU wallet.
 
-**manifest** — The strict Application Manifest V4 document a developer authors
-in a repository or imports as a draft.
+**manifest** — The strict Application document a developer authors in a
+repository. New publications use retained Manifest V5, bound to an Application's
+source; V4 draft import and publication are closed.
 
 **planck** — The smallest integer unit of ACU used by Acurast contracts. Liskov
 shows it in exact advanced limits while customer billing remains in USD Service
@@ -108,5 +109,5 @@ account and not ACU or another cryptoasset.
 an environment value.
 
 **V4** — Version 4 of the public Application manifest and effective-policy
-contracts. A V4 manifest can no longer be published; existing V4 Applications
+contracts. New V4 imports and publications are refused; existing V4 Applications
 keep running until they are retired, and new publication is V5.

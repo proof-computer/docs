@@ -1,13 +1,13 @@
 ---
 title: Build, attestation, import, and publication
-description: Diagnose GitHub workflow, OIDC, artifact evidence, Manifest V4, capability, entitlement, and stale-digest failures.
+description: Diagnose GitHub workflow, OIDC, retained Manifest V5 source evidence, V4 refusal, capability, entitlement, and stale-publication failures.
 ---
 
 # Build, attestation, import, and publication
 
-:::note Manifest V4 publication is closed
-`liskov-github-actions@v2` is released. Publication preflight and publish
-are refused for a Manifest V4 with `v4_publication_disabled`; that refusal
+:::note Manifest V4 import and publication are closed
+`liskov-github-actions@v2` is released. New imports, publication preflight, and
+publish are refused for a Manifest V4 with `v4_publication_disabled`; that refusal
 is not a repository build bug. Existing V4 Applications keep running until
 they are retired. To publish, author a
 [retained Application Manifest V5](../build/manifest-v5.md) and follow the
@@ -47,8 +47,9 @@ Compare exact values—not display names:
 - OIDC audience expected by the action.
 
 A workflow from a pull-request ref or renamed repository may be correctly
-outside authority. Update, validate, import, and review the manifest rather
-than broadening authority casually.
+outside authority. Review the retained V5 manifest and source binding with an
+organization admin rather than broadening authority casually. Validate the
+corrected document, rebuild from the bound source, then review publication.
 
 ## Artifact version is missing
 
@@ -63,16 +64,18 @@ Match commit, CID, digest, authored digest, and release-intent digest.
 
 ## Manifest validation fails
 
-- `unknown_field`: remove or correct the property; V4 is strict.
+- `unknown_field`: remove or correct the property; manifests are strict.
 - `invalid_policy`: inspect the field path, type/bound, and cross-field rule.
-- wrong schema/version: use `proof.liskov.application-manifest` and `4`.
+- wrong schema/version: use `proof.liskov.application-manifest` and `5` for
+  new publications.
 
 Do not copy a typed internal field into a recipe to “test” availability.
 
 ## Import or publication fails
 
-- `v4_publication_disabled`: the draft is a Manifest V4, and V4 publication
-  is closed. Author a retained Manifest V5 and publish it with
+- `v4_publication_disabled`: the input or stored draft is a Manifest V4, and
+  new V4 imports and publications are refused. Author a retained Manifest V5,
+  create the Application and bind its source, then publish it with
   `application policy publish`; the V4 draft itself is not broken. A
   confirmed `application set-repository --yes` on such an Application returns
   the same code and leaves its repository unchanged.
@@ -83,11 +86,12 @@ Do not copy a typed internal field into a recipe to “test” availability.
 - `unsupported_policy_feature`: select a value marked v1.
 - `entitlement_exceeded`: reduce authority or change the organization's
   entitlement.
-- stale authored digest/race fence: read the current draft, rerun preflight, and
-  review the new diff.
+- stale source evidence or pointer version: read the current source binding
+  and publication state, rerun preflight, and review the new diff.
 
-Preflight is read-only. Run it after the last draft/artifact change and publish
-once with the exact reviewed artifact-version ID.
+Retained V5 preflight (`application policy publish --dry-run`) is read-only.
+Run it after the last document or artifact change and publish once with the
+exact reviewed artifact digest, source evidence, and expected pointer version.
 
 ## Encrypted payload cannot start
 

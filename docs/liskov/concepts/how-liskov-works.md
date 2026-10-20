@@ -20,9 +20,10 @@ sequenceDiagram
   participant A as Acurast network
   participant P as Processor secure runtime
 
-  U->>L: Import Manifest V4
+  U->>L: Create Application and bind Manifest V5 source
   G->>L: Attest exact artifact provenance
   U->>L: Review policy, per-job cap, and reserve
+  U->>L: Confirm retained V5 policy publication
   L->>A: Register bounded job
   A-->>L: Job and processor evidence
   P->>L: Signed bootstrap identity
@@ -31,9 +32,11 @@ sequenceDiagram
   L-->>U: Posture, Action Plan, proof, logs, charges
 ```
 
-The GitHub path starts from a V4 manifest and an allowed workflow that builds,
-pins, and attests an artifact before it converges on an immutable effective
-policy. Marketplace is intended to start from a curated pinned artifact and
+The GitHub path starts from a retained V5 manifest, an Application identity,
+and an admin-approved source binding. The allowed workflow builds, pins, and
+attests an artifact; the customer then publishes the exact document and source
+evidence as an immutable effective policy. New V4 imports and publications are
+refused. Marketplace is intended to start from a curated pinned artifact and
 option schema, but customer launch remains release-gated and is not part of
 this sequence yet.
 

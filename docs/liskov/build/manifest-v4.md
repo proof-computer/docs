@@ -1,6 +1,6 @@
 ---
 title: Author an Application Manifest V4
-description: Describe a supported build, runtime, schedule, lifecycle, configuration, and spend boundary in the public v1 contract.
+description: Historical Manifest V4 syntax for stored records; new V4 imports and publications are refused.
 ---
 
 # Author an Application Manifest V4
@@ -9,13 +9,14 @@ The manifest is the strict document you keep in the repository. It describes
 what Liskov may build and run. Liskov resolves server-owned facts—such as the
 exact artifact version and launch evidence—into an immutable effective policy.
 
-A Manifest V4 can no longer be published. Existing V4 Applications keep
-running until they are retired, and this page stays for the readers who
-operate one. To author a new Application, or to republish an existing one,
+A new Manifest V4 import or publication is refused with
+`v4_publication_disabled`. Existing V4 Applications keep running until they
+are retired, and this page is a historical reference for stored V4 records.
+To author a new Application, or to republish an existing one,
 write a [retained Application Manifest V5](./manifest-v5.md) instead.
 Unknown fields and unsupported capabilities fail closed.
 
-## Supported starter manifest
+## Historical starter manifest
 
 ```json title=".liskov/application-manifest.json"
 {
@@ -95,9 +96,9 @@ Unknown fields and unsupported capabilities fail closed.
 }
 ```
 
-Replace both `OWNER/REPOSITORY` values. The example uses the supported v1
-capability set: one open-market job, a fixed duration, renewal after scheduled
-end, immediate successor updates while old jobs run to end, bounded launch
+The stored example uses the former V4 capability set: one open-market job,
+a fixed duration, renewal after scheduled end, immediate successor updates
+while old jobs run to end, bounded launch
 retries, and no runtime replacement before scheduled end.
 
 `maxServiceCreditMicrosPerGeneration` is a maximum authority of 5,000,000
@@ -111,15 +112,15 @@ proof liskov application manifest validate \
   --file .liskov/application-manifest.json
 ```
 
-Validation returns an `authoredDigest` for the exact authored content and a
-`releaseIntentDigest` for normalized builder/release authority. Later,
-publication creates a `policyDigest` for the immutable effective policy. A
-change in any of these is a review event; do not copy one value into another.
+Local validation can still return an `authoredDigest` for the exact authored
+content and a `releaseIntentDigest` for normalized builder/release authority.
+Stored publications have a separate `policyDigest` for the immutable effective
+policy. These values have different meanings; do not copy one into another.
 
 Validation proves the document is structurally and semantically acceptable.
 It does not prove your organization is entitled to every valid field, that an
-artifact exists, or that enough Service Credits are available. Publication
-preflight checks those contextual facts.
+artifact exists, or that enough Service Credits are available. Validating a V4
+document does not reopen import, publication preflight, or publication.
 
 ## Avoid gated fields in recipes
 

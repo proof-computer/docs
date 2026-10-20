@@ -5,8 +5,12 @@ description: Exact authored manifest and effective-policy V4 fields, defaults, b
 
 # Application Manifest V4
 
-Repositories author `proof.liskov.application-manifest` version `4`. Liskov
-resolves release and server-owned facts into
+New Manifest V4 imports and publications are refused with
+`v4_publication_disabled`. This page is a historical reference for stored V4
+records. For new publications, use [retained Manifest V5](../build/manifest-v5.md).
+
+Stored `proof.liskov.application-manifest` version `4` records describe
+authored intent. Liskov resolved release and server-owned facts into
 `proof.liskov.application-policy` version `4`. Objects are strict: unknown
 fields are errors.
 
@@ -167,8 +171,8 @@ provider-native replicas.
 | `maxStartDelayMs` | Optional | Unsigned integer, at most `3600000` (one hour). |
 
 These bounds come from the current compiled Acurast runtime. `proof liskov`
-reports the exact field pointer and refuses an invalid local manifest before
-sending an import request.
+reports the exact field pointer for an invalid local manifest. Local validation
+does not permit a new V4 import or publication.
 
 ### `deployment.spend`
 

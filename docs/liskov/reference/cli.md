@@ -175,16 +175,13 @@ nonzero.
 | `application source-binding show APP_REF --json`, `application source-binding revoke APP_REF --expected-revision N --reason TEXT --yes` | Read the current binding, revision, and revocation epoch; withdraw it. Available in `0.12.0` and later. |
 | `application policy publish APP_REF --file PATH --artifact-digest DIGEST --source-commit SHA --source-ref REF --workflow-identity IDENTITY --binding-revision N --revocation-epoch N --expected-pointer-version N --yes` | Publish one retained V5 document through the registered policy-version writer, checked against the binding and the attested build; nothing is sent without `--yes`. |
 | `application policy explain APP_REF` | Read the canonical retained V5 publication, execution, spend-closeout, and managed-SSH explanation. |
-| `application import --file PATH` | Import/update a local draft; never publishes. |
-| `application import --github OWNER/REPO:PATH@REF --server-fetch` | Ask Liskov to fetch and import the GitHub draft. |
-| `application publish APP_REF --artifact-version ID --dry-run` | Read-only publication preflight for a build release. |
-| `application publish APP_REF --artifact-version ID --yes` | Publish after fresh preflight and authored-digest race check. |
+| `application import --file PATH` | Closed for Manifest V4: the server refuses new imports with `v4_publication_disabled`. Use Application creation and retained V5 source binding instead. |
+| `application import --github OWNER/REPO:PATH@REF --server-fetch` | Closed for Manifest V4 with the same refusal; fetching from GitHub does not bypass it. |
 | `application set-repository APP_REF OWNER/REPO` | Preview by default; `--yes` confirms. A confirmed change is refused with `v4_publication_disabled`, and nothing changes, for an Application whose draft is still a Manifest V4. |
 | `application rename APP_REF DISPLAY_NAME` | Preview by default; `--yes` confirms. |
 
-Pinned releases do not require `--artifact-version`. `--paused --reason TEXT`
-can atomically leave a newly published policy paused when that deliberate
-workflow is needed.
+The older `application publish` route is closed for Manifest V4, including
+its preflight. Use `application policy publish` for retained V5.
 
 For the retained registered source path, `application policy publish` accepts
 `--dry-run` without `--yes`, or `--paused --reason TEXT --yes` to publish with an

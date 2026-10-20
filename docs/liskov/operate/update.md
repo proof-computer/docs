@@ -11,18 +11,21 @@ timing.
 
 ## Repository release
 
-1. Change and test source, Manifest V4, or both.
+1. Change and test source, retained Manifest V5, or both; validate the document.
 2. Commit to an allowed ref and let the approved workflow build and attest.
-3. Verify the new commit, CID, digest, manifest digests, and artifact-version
-   ID.
-4. Import the new manifest draft.
-5. Run publication preflight with the exact new artifact version.
+3. Verify the new commit, artifact digest, source ref, and workflow identity.
+4. Read the Application's source binding, revision, revocation epoch, and
+   current publication pointer version.
+5. Run `application policy publish --dry-run` with the exact V5 document,
+   attested artifact digest, source evidence, and expected pointer version.
 6. Review the policy diff, spend bounds, and diagnostics.
-7. Publish with explicit confirmation.
+7. Publish with the same evidence and `--yes` in place of `--dry-run`.
 
 Use [Validate, import, and publish](../build/validate-import-publish.md) for the
-commands. Do not publish an artifact from one commit against a manifest draft
-from another.
+commands and spend effects. Create the Application and set its source binding
+before its first build; updates reuse the verified identity and binding. New
+V4 imports and publications are refused. Do not publish an artifact from one
+commit against a manifest from another.
 
 ## Managed configuration change
 
