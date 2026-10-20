@@ -185,6 +185,29 @@ Causes include:
 Platform uncertainty (including first-contact silence, register silence, and a
 launch Liskov is still checking) is never a customer decision.
 
+### Chain failure is not a customer Hold
+
+A finalized Acurast execution failure is placement evidence. Chain failure
+alone does not prove an application fault and creates no customer Hold. Signed
+runtime failures, never-contacted deployments, bootstrap stalls and serving
+silence remain separate signals with their own policy rules. Read the evidence
+and the decision actually served; a failure observation does not itself mean
+you owe a release or retry.
+
+Native chain-failure recovery remains internal and release-gated. Continuous
+recovery is the first delivery scope; once/interval recovery separately awaits
+implementation and release with the original remaining run window. The
+default **observe** behavior records evidence but buys nothing, and a canary
+binds the exact Application, policy, stable job member, occurrence, and failed
+deploy operation. No global activation is promised.
+
+Inspect the **Action Plan** first. When recovery is available, verify output
+from the successor workload; a submitted successor is not proof that your
+workload is working. Existing intent, pacing, spend, debug and Hold controls
+still apply. Otherwise wait, or [contact support](../troubleshooting/support.md)
+if the stated boundary passes without progress. Do not repeatedly publish or
+retry to turn an observation into a recovery action.
+
 ### Optional processor-pin advice
 
 When the **Processor pin** section is shown, it offers advice about a named

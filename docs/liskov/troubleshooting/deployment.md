@@ -109,6 +109,37 @@ registering a fresh job on runtime failure. Check signed fatal/contact evidence,
 external Acurast execution evidence, and scheduled end. A failure can remain
 **In progress** and non-actionable while Liskov waits for honest terminal facts.
 
+### Finalized chain failure and recovery availability
+
+Native chain-failure recovery remains internal and release-gated. Continuous
+recovery is the first delivery scope; once/interval recovery separately awaits
+implementation and release under the original remaining run window design.
+
+A finalized Acurast failure is placement evidence for the reported registration
+and processor. Chain failure alone does not prove an application fault and
+creates no customer Hold. Keep it distinct from a signed runtime failure,
+never-contacted deployment, bootstrap stall, or serving silence after Ready.
+Silence alone is not a finalized failure. An unavailable evidence read is not
+proof of either success or absence.
+
+The default **observe** behavior records evidence but buys nothing. An
+authorized **canary** is limited to the exact Application, policy, stable job
+member, occurrence, and failed deploy operation; an unmatched canary authorizes
+no additional spend. No global activation is promised. Existing intent,
+pacing, spend, placement, debug and application-failure Hold controls still
+apply; an exact processor pin has no implicit fallback. See
+[replacement custody](../concepts/replacement-custody.md#finalized-chain-failure-internal-release-gated)
+for the accepted mode boundaries.
+
+1. Inspect the current execution's evidence and the organization **Action
+   Plan**. Act only on a decision it actually asks you to make.
+2. When recovery is available and a successor is shown, verify output from the
+   successor workload. Registration or a recovery label alone is not proof of
+   a working application. A replacement can reserve more Service Credits.
+3. Otherwise wait for the stated boundary, or collect the
+   [support bundle](./support.md) and contact support if progress stays blocked.
+   Repeated publishing, Run, or retry does not prove recovery.
+
 ## Execution report was not filed
 
 If a managed row says **Not billed — no report filed**, the strict report
