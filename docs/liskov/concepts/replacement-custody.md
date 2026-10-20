@@ -53,6 +53,52 @@ Runtime replace-after-failure is not enabled in the first public capability
 set; v1 waits for scheduled end. This avoids hiding repeated spend or creating
 unbounded replacement loops.
 
+### Finalized chain failure (internal, release-gated)
+
+Native chain-failure recovery is an accepted design, not a released customer
+capability. Continuous recovery is the first delivery scope; its implementation
+and release evidence must be verified before customers can rely on it.
+
+A finalized Acurast execution failure is **placement evidence** for the exact
+registration and processor. Chain failure alone does not prove an application
+fault and creates no customer Hold. It is distinct from a signed runtime
+failure, a deployment that never made signed contact, a bootstrap stall, and
+silence after the runtime was Ready. Those signals retain their own evidence
+and policy rules; serving silence alone does not trigger replacement.
+
+The default **observe** behavior records evidence but buys nothing: it
+authorizes no additional reserve or registration. A **canary** must bind the
+exact Application identity, policy digest, stable job member, occurrence, and
+failed deploy operation. An unmatched canary also buys nothing. Neither
+observation nor an unmatched canary blocks ordinary renewal or existing
+signed-failure and first-contact recovery. No global activation is promised.
+
+When released and authorized for an eligible continuous job, the accepted
+design recovers the current phase while its renewal runway and legal remaining
+window allow it; otherwise it advances to the next phase. It reuses an already
+progressing successor, so repeated evidence cannot buy another successor for
+the same failed source. Existing intent, pacing, spend, placement, pause,
+retirement, debug and application-failure Hold controls still apply. An exact
+processor pin has no implicit fallback; excluding that processor can leave
+Liskov waiting without another reserve.
+
+#### Once and interval: a separate pending design
+
+Once/interval recovery separately awaits implementation and release;
+continuous delivery does not establish parity. The accepted design keeps the
+same logical run and its original end. A replacement uses a fresh attempt and
+only the original remaining run window, shortened further by any stricter
+lifecycle bound. It never buys a new full-duration window or consumes another
+manual Run authorization. Each admitted replacement still needs its own
+reserve and passes the existing pacing and spend checks. Repeated evidence for
+one failed attempt reuses its next attempt.
+
+An expired or illegally short remainder admits no replacement. Interval
+recovery keeps the original schedule grid and non-overlap rule; a competing
+boundary is skipped, not shifted or caught up later. A failed attempt's
+financial closeout does not by itself finish a run that still has recovering
+members. This is a release-gated design, not a customer retry recipe.
+
 ### Never-contacted retained V5 jobs (release-gated)
 
 The accepted retained V5 behavior permits one early replacement when a paid

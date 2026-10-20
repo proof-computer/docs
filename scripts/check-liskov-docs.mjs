@@ -2610,6 +2610,97 @@ const firstContactRecoveryPage = readFileSync(join(docsRoot, 'concepts/replaceme
 check(firstContactRecoveryPage.includes('no implicit fallback'), 'first-contact recovery omits exact-pin refusal');
 check(firstContactRecoveryPage.includes('verify output from the successor workload'), 'first-contact recovery confuses submission with workload success');
 
+// BKLG-20261020-fhse: ADR-0241/0242 prepare a contract, not a live capability.
+// The researched owner SHA is evidence of the source boundary only. Promotion
+// belongs to a separate release review with production evidence for each mode.
+const chainRecovery = JSON.parse(readFileSync(join(root, 'fixtures', 'liskov-chain-failure-recovery-contract.json'), 'utf8'));
+check(chainRecovery.schema === 'proof.liskov.docs-chain-failure-recovery-contract.v1'
+  && JSON.stringify(chainRecovery.acceptedAdrs) === JSON.stringify(['ADR-0241', 'ADR-0242'])
+  && chainRecovery.researchedAt === '2026-10-20'
+  && chainRecovery.researchedOwner?.repo === 'liskov-rs'
+  && chainRecovery.researchedOwner?.commit === '3ee88d84f51b66335dd1b78dbd829be9b796f3bd',
+  'chain recovery fixture lost its accepted decisions or researched owner SHA');
+check(JSON.stringify(chainRecovery.researchedOwner?.sourcePaths) === JSON.stringify([
+  'crates/slipway-execution-store/src/chain_execution/report_finality.rs',
+  'crates/liskov-worker-composition/src/executor_run/v5_launch/failure_hold.rs',
+  'crates/liskov-worker-composition/src/executor_run/v5_launch/occurrence_lifecycle.rs',
+  'crates/liskov-worker-composition/src/chain_recovery.rs',
+]), 'chain recovery fixture lost its evidence, recovery, mode or rollout source boundary');
+check(chainRecovery.availability === 'release-gated' && chainRecovery.rolloutEvidence === null
+  && chainRecovery.supportBoundary?.customerAvailable === false,
+  'chain recovery availability promotion requires separately verified production evidence; this preparation must stay release-gated with rolloutEvidence null');
+check(chainRecovery.supportBoundary?.continuous === 'first-delivery-scope-awaits-release-verification'
+  && chainRecovery.supportBoundary?.once === 'accepted-design-awaits-implementation-and-release'
+  && chainRecovery.supportBoundary?.interval === 'accepted-design-awaits-implementation-and-release'
+  && chainRecovery.supportBoundary?.publicRuntimeFailureMode === 'wait_until_scheduled_end',
+  'chain recovery fixture promotes a mode or changes the public runtime-failure default');
+check(chainRecovery.rollout?.default === 'observe'
+  && chainRecovery.rollout?.observeBuysAdditionalExecution === false
+  && chainRecovery.rollout?.unmatchedCanaryBuysAdditionalExecution === false
+  && chainRecovery.rollout?.globalActivationPromised === false
+  && JSON.stringify(chainRecovery.rollout?.canaryBinding) === JSON.stringify([
+    'applicationUid', 'policyDigest', 'stableMember', 'occurrence', 'failedDeployOperation',
+  ]), 'chain recovery fixture loses observation non-spend or exact canary binding');
+check(chainRecovery.evidence?.finalizedChainFailure === 'placement-evidence'
+  && chainRecovery.evidence?.chainFailureAloneProvesApplicationFault === false
+  && chainRecovery.evidence?.chainFailureAloneCreatesCustomerHold === false
+  && chainRecovery.evidence?.servingSilenceTriggersReplacement === false,
+  'chain recovery fixture conflates placement evidence, application fault, Holds or silence');
+check(chainRecovery.nonrenewingDesign?.window === 'original-remaining-run-window'
+  && chainRecovery.nonrenewingDesign?.replacement === 'fresh-attempt-same-logical-run'
+  && chainRecovery.nonrenewingDesign?.newFullDurationWindow === false
+  && chainRecovery.nonrenewingDesign?.additionalManualRunAuthorization === false
+  && chainRecovery.nonrenewingDesign?.expiredOrIllegallyShortRemainder === 'no-replacement'
+  && chainRecovery.nonrenewingDesign?.intervalGridChanges === false
+  && chainRecovery.nonrenewingDesign?.intervalOverlapAllowed === false,
+  'chain recovery fixture loses the accepted fixed-window once/interval boundary');
+const chainCapability = capabilitiesPage.split('\n').find(line => line.startsWith('| Native finalized chain-failure recovery |')) ?? '';
+check(capabilitiesPage.includes('| Runtime replace-after-failure | Internal; v1 waits for scheduled end |')
+  && chainCapability.startsWith('| Native finalized chain-failure recovery | Internal; release-gated.')
+  && chainCapability.includes('Continuous recovery is the first delivery scope, not a released customer capability')
+  && chainCapability.includes('once/interval design uses only the original remaining run window')
+  && chainCapability.includes('separately awaits implementation and release')
+  && chainCapability.includes('authorizes no additional spend')
+  && chainCapability.includes('no global activation is promised'),
+  'chain recovery capabilities wording promotes availability or loses mode/spend boundaries');
+const chainConcept = firstContactRecoveryPage.split('### Finalized chain failure (internal, release-gated)\n')[1]?.split('\n### Never-contacted')[0] ?? '';
+const chainTroubleshooting = readFileSync(join(docsRoot, 'troubleshooting/deployment.md'), 'utf8')
+  .split('### Finalized chain failure and recovery availability\n')[1]?.split('\n## ')[0] ?? '';
+const chainActionPlan = statusActionPlanPage.split('### Chain failure is not a customer Hold\n')[1]?.split('\n### ')[0] ?? '';
+check(chainConcept.replace(/\s+/g, ' ').includes('not a released customer capability')
+  && chainTroubleshooting.trimStart().startsWith('Native chain-failure recovery remains internal and release-gated.')
+  && chainActionPlan.includes('Native chain-failure recovery remains internal and release-gated.'),
+  'chain recovery narrative conflicts with the internal/release-gated capability classification');
+for (const [surface, content] of [
+  ['concept', chainConcept], ['troubleshooting', chainTroubleshooting], ['Action Plan', chainActionPlan],
+]) {
+  const normalized = content.replace(/\*\*/g, '').replace(/\s+/g, ' ');
+  for (const token of ['release-gated', 'Continuous recovery is the first delivery scope',
+    'placement evidence', 'does not prove an application fault and creates no customer Hold',
+    'signed runtime failure', 'never', 'bootstrap stall', 'silence',
+    'default observe behavior records evidence but buys nothing', 'canary',
+    'Application', 'policy', 'stable job member', 'occurrence', 'failed deploy operation',
+    'No global activation is promised', 'intent', 'pacing', 'spend', 'debug',
+    'original remaining run window']) {
+    check(normalized.toLowerCase().includes(token.toLowerCase()), `chain recovery ${surface} wording loses the gated evidence contract: ${token}`);
+  }
+}
+const normalizedChainConcept = chainConcept.replace(/\*\*/g, '').replace(/\s+/g, ' ');
+for (const token of ['once/interval recovery separately awaits implementation and release',
+  'same logical run and its original end', 'fresh attempt', 'never buys a new full-duration window',
+  'An expired or illegally short remainder admits no replacement', 'non-overlap rule',
+  'no implicit fallback', 'serving silence alone does not trigger replacement',
+  'Neither observation nor an unmatched canary blocks ordinary renewal or existing signed-failure and first-contact recovery']) {
+  check(normalizedChainConcept.toLowerCase().includes(token.toLowerCase()), `chain recovery concept loses its mode/safety boundary: ${token}`);
+}
+const normalizedChainTroubleshooting = chainTroubleshooting.replace(/\*\*/g, '').replace(/\s+/g, ' ');
+for (const token of ['once/interval recovery separately awaits implementation and release',
+  'Inspect', 'Action Plan', 'When recovery is available', 'verify output from the successor workload',
+  'reserve more Service Credits', 'wait', 'contact support', 'no implicit fallback',
+  'An unavailable evidence read is not proof of either success or absence']) {
+  check(normalizedChainTroubleshooting.includes(token), `chain recovery troubleshooting loses its safe customer path: ${token}`);
+}
+
 if (errors.length > 0) {
   console.error(`Liskov docs checks failed (${errors.length}):`);
   for (const error of errors) console.error(`- ${error}`);

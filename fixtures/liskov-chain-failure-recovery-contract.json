@@ -1,0 +1,46 @@
+{
+  "schema": "proof.liskov.docs-chain-failure-recovery-contract.v1",
+  "acceptedAdrs": ["ADR-0241", "ADR-0242"],
+  "researchedAt": "2026-10-20",
+  "researchedOwner": {
+    "repo": "liskov-rs",
+    "commit": "3ee88d84f51b66335dd1b78dbd829be9b796f3bd",
+    "sourcePaths": [
+      "crates/slipway-execution-store/src/chain_execution/report_finality.rs",
+      "crates/liskov-worker-composition/src/executor_run/v5_launch/failure_hold.rs",
+      "crates/liskov-worker-composition/src/executor_run/v5_launch/occurrence_lifecycle.rs",
+      "crates/liskov-worker-composition/src/chain_recovery.rs"
+    ]
+  },
+  "availability": "release-gated",
+  "rolloutEvidence": null,
+  "supportBoundary": {
+    "customerAvailable": false,
+    "continuous": "first-delivery-scope-awaits-release-verification",
+    "once": "accepted-design-awaits-implementation-and-release",
+    "interval": "accepted-design-awaits-implementation-and-release",
+    "publicRuntimeFailureMode": "wait_until_scheduled_end"
+  },
+  "rollout": {
+    "default": "observe",
+    "observeBuysAdditionalExecution": false,
+    "unmatchedCanaryBuysAdditionalExecution": false,
+    "canaryBinding": ["applicationUid", "policyDigest", "stableMember", "occurrence", "failedDeployOperation"],
+    "globalActivationPromised": false
+  },
+  "evidence": {
+    "finalizedChainFailure": "placement-evidence",
+    "chainFailureAloneProvesApplicationFault": false,
+    "chainFailureAloneCreatesCustomerHold": false,
+    "servingSilenceTriggersReplacement": false
+  },
+  "nonrenewingDesign": {
+    "window": "original-remaining-run-window",
+    "replacement": "fresh-attempt-same-logical-run",
+    "newFullDurationWindow": false,
+    "additionalManualRunAuthorization": false,
+    "expiredOrIllegallyShortRemainder": "no-replacement",
+    "intervalGridChanges": false,
+    "intervalOverlapAllowed": false
+  }
+}
