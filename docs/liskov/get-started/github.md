@@ -238,7 +238,6 @@ If the build, attestation, source binding, or publication fails, use
 ## Manifest V4
 
 Existing [Manifest V4](../build/manifest-v4.md) Applications keep running
-until they are retired, but a V4 manifest can no longer be published: new
-publication is the V5 path above. A V4 draft can still be imported; its
-commands are in
-[Validate, import, and publish](../build/validate-import-publish.md).
+until they are retired. New V4 imports and publications are refused with
+`v4_publication_disabled`. Use the V5 creation, source-binding, and publication
+path above.

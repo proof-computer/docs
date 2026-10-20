@@ -12,8 +12,8 @@ and support safer.
 | --- | --- | --- |
 | **Organization** | Long-lived | Isolation, team, plan, Service Credit, and ownership boundary. |
 | **Application** | Long-lived | Owns desired configuration, artifacts, deployments, evidence, and lifecycle. |
-| **Manifest** | Mutable source document | Strict V4 customer-authored intent. |
-| **Effective policy** | Immutable version | Server-normalized V4 execution contract. |
+| **Manifest** | Mutable source document | Strict customer-authored intent; new publications use retained V5. |
+| **Effective policy** | Immutable version | Server-normalized execution contract. |
 | **Artifact version** | Immutable | Exact bundle plus CID/digest and accepted provenance. |
 | **Deployment** | One attempt/generation | Liskov record of realizing an effective policy. |
 | **Job** | Time-boxed | Acurast network registration with schedule and processor. |

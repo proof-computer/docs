@@ -11,7 +11,9 @@ jobs under an explicit lifecycle policy.
 
 ## Choose a duration
 
-This example is Manifest V4.
+This example is historical Manifest V4 syntax for stored records. New V4
+imports and publications are refused. For a new Application, use the
+[retained V5 execution and lifecycle fields](../build/manifest-v5.md#execution-and-spend).
 
 ```json
 {

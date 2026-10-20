@@ -281,14 +281,14 @@ See [Intended capacity versus remaining charges](../troubleshooting/execution-co
 
 | Code | Meaning / response |
 | --- | --- |
-| `v4_publication_disabled` | Manifest V4 publication is closed. Author a retained Manifest V5 and publish it with `application policy publish`. A confirmed `application set-repository --yes` that changes the repository of an Application whose draft is still a Manifest V4 returns this code and changes nothing. |
+| `v4_publication_disabled` | New Manifest V4 imports and publications are refused. Author a retained Manifest V5 and publish it with `application policy publish`. A confirmed `application set-repository --yes` that changes the repository of an Application whose draft is still a Manifest V4 returns this code and changes nothing. |
 | `invalid_policy` | Required value, type, enum, bound, or cross-field invariant is invalid. Correct the manifest. |
 | `unknown_field` | A strict object contains an unrecognized property. Remove or correct it. |
 | `unsupported_policy_feature` | Valid V4 syntax is not enabled. Choose a v1-supported value. |
 | `entitlement_exceeded` | Organization/account limit is below the requested authority. Reduce it or change entitlement. |
 | `application_identity_mismatch` | Application ID/UID does not match the target. Stop and inspect identity. |
 | `application_already_exists` | Import target collides with an existing Application. Resolve organization/repository/UID rather than overwriting. |
-| `invalid_policy_import` | Import source or document is not an accepted Manifest V4 input. |
+| `invalid_policy_import` | Import source or document is invalid. New Manifest V4 imports are closed; use the retained Manifest V5 source path. |
 
 Publication preflight can report several independent diagnostics. Resolve all,
 then run a fresh preflight; do not rely on a stale clean result.

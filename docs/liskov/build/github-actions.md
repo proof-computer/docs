@@ -123,10 +123,11 @@ nothing:
 - the Application already carries a source binding for the calling
   repository, ref, workflow, and manifest path.
 
-A Manifest V4 at that path is refused before anything is uploaded. A caller
-that still builds from a Manifest V4 stays on `@v1`, which is frozen at
-`v1.3.2` and keeps the V4 import step, and moves to `@v2` together with a V5
-document. Manifest V4 publication is closed on both.
+A Manifest V4 at that path is refused before anything is uploaded. The frozen
+`@v1` release (`v1.3.2`) is historical: its V4 import is now refused by Liskov,
+so it is not a fallback. New V4 imports and publications are closed on both
+release lines. The `@v2` internal contract requires a V5 document and its source
+binding.
 
 Finalizing an upload does not publish a policy version. Both workflows return
 the build evidence a `release.mode: source` publication names, in the outputs

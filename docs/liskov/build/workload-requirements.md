@@ -91,5 +91,5 @@ proof liskov application manifest validate \
 A successful local build proves that the repository is packageable. It does
 not pin an artifact, attest GitHub provenance, publish a policy, or deploy.
 
-Next, [author Manifest V4](./manifest-v4.md) and
+Next, [author a retained Manifest V5](./manifest-v5.md) and
 [add the reusable workflow](./github-actions.md).
