@@ -53,9 +53,9 @@ proof liskov whoami
 ```
 
 `whoami` shows the organization your commands act on, as
-`Name (ORGANIZATION_ID, slug, role …)`. Keep the ID: the workflow needs it. If
-you belong to more than one organization, select the intended one with
-`proof liskov organization use`.
+`Name (ORGANIZATION_ID, slug, role …)`. If you belong to more than one
+organization, select the intended one with `proof liskov organization use`.
+Then keep that organization's ID, not its slug: the workflow needs it.
 
 ## 2. Copy the starter into your repository
 
@@ -142,7 +142,9 @@ the manifest's `applicationId`, the workflow's `app-id`, and these commands.
 
 ## 5. Push and let the workflow build
 
-Commit the starter and push it to the bound ref:
+First replace `YOUR_ORGANIZATION_ID` in `.github/workflows/liskov.yml` with
+the organization ID from step 1. Then commit the starter and push it to the
+bound ref:
 
 ```bash
 git add .
@@ -150,8 +152,7 @@ git commit -m "Add the Liskov retained V5 starter"
 git push origin main
 ```
 
-Before you push, replace `YOUR_ORGANIZATION_ID` in `.github/workflows/liskov.yml`
-with the organization ID from step 1. The workflow calls:
+The workflow calls:
 
 ```yaml
 uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v2

@@ -35,8 +35,22 @@ The default Liskov upload needs no repository credential, but it needs
 `organization-id` and `permissions: id-token: write`. `organization-id is
 required for Liskov uploads` means the input is missing; a caller written for
 an earlier `v2` release must add it. `artifact_too_large` means the artifact is
-over 8 MiB. If you set `ipfs-endpoint` to use the Acurast proxy, verify its
-URL/key at that provider without printing the key. Pinning does not spend.
+over 8 MiB.
+
+Liskov checks the Application and its source binding before it issues the
+upload token, so binding problems now stop the pin step with
+`Liskov refused the upload intent (<status> <code>)`:
+
+- `application_not_found`: usually the wrong organization ID, or the slug
+  instead of the ID, or an `app-id` that does not exist in that organization;
+- `source_binding_missing` or `source_binding_revoked`: an organization admin
+  must bind or re-bind the source;
+- `source_repository_mismatch`, `source_ref_not_allowed` or
+  `source_workflow_identity_mismatch`: compare the exact values listed under
+  [OIDC attestation is rejected](#oidc-attestation-is-rejected).
+
+If you set `ipfs-endpoint` to use the Acurast proxy, verify its URL/key at
+that provider without printing the key. Pinning does not spend.
 
 ## OIDC attestation is rejected
 

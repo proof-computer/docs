@@ -669,22 +669,56 @@ for (const [token, meaning] of [
   check(githubActionsPage.includes(token), `GitHub Actions page omits ${meaning}`);
 }
 {
-  const callerPaths = [
-    join(docsRoot, 'build', 'github-actions.md'),
-    join(docsRoot, 'build', 'manifest-v5.md'),
-    workflowPath,
-    v5StarterWorkflowPath,
-    join(root, 'examples', 'liskov-v1', 'builder-iteration', 'liskov.yml'),
-  ];
-  for (const callerPath of callerPaths) {
-    const text = readFileSync(callerPath, 'utf8');
-    const callers = text.split(/\n(?=\s*(?:jobs:|uses:|```))/u)
-      .filter((block) => /acurast-app\.yml@v2\n/u.test(block));
-    check(callers.length > 0, `${callerPath}: expected an acurast-app.yml@v2 caller`);
-    for (const block of callers) {
-      check(/organization-id:\s*\S/u.test(block), `${callerPath}: an acurast-app.yml@v2 caller omits organization-id`);
+  // Every public reusable-workflow caller, found by scanning, not a fixed list.
+  // A caller is the YAML mapping around its `uses:` line: the lines at the same
+  // or deeper indentation, before and after it, inside one fence or file.
+  const callerFiles = [];
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
+      const path = join(dir, entry.name);
+      if (entry.isDirectory()) walk(path);
+      else if (/\.(?:md|mdx|ya?ml)$/u.test(entry.name)) callerFiles.push(path);
     }
+  };
+  walk(join(root, 'docs'));
+  walk(join(root, 'examples'));
+  const indentOf = (line) => line.length - line.trimStart().length;
+  const isBoundary = (line) => /^\s*```/u.test(line);
+  let callerCount = 0;
+  for (const callerPath of callerFiles) {
+    const lines = readFileSync(callerPath, 'utf8').replace(/\r\n?/gu, '\n').split('\n');
+    lines.forEach((line, index) => {
+      const match = /^(\s*)(?:-\s+)?uses:\s*proof-computer\/liskov-github-actions\/\.github\/workflows\/acurast-app\.yml@([^\s#'"]+)/u.exec(line);
+      if (!match) return;
+      const indent = indentOf(line);
+      const block = [line];
+      for (let i = index - 1; i >= 0; i -= 1) {
+        const prev = lines[i];
+        if (isBoundary(prev) || (prev.trim() !== '' && indentOf(prev) < indent)) break;
+        block.unshift(prev);
+      }
+      for (let i = index + 1; i < lines.length; i += 1) {
+        const next = lines[i];
+        if (isBoundary(next) || (next.trim() !== '' && indentOf(next) < indent)) break;
+        block.push(next);
+      }
+      const text = block.join('\n');
+      // A one-line illustration with no `with:` is not a runnable caller.
+      if (!/^\s*with:\s*$/mu.test(text)) return;
+      callerCount += 1;
+      const ref = match[2];
+      const where = `${callerPath}:${index + 1}`;
+      if (ref === 'v2') {
+        check(/^\s*organization-id:\s*\S/mu.test(text), `${where}: an acurast-app.yml@v2 caller omits organization-id`);
+      } else {
+        // A pin to a pre-v2.3.0 tag or a commit still calls the moving v2
+        // actions, which need organization-id the old workflow cannot pass.
+        check(/^\s*ipfs-endpoint:\s*\S/mu.test(text), `${where}: an acurast-app.yml@${ref} caller must set ipfs-endpoint`);
+      }
+    });
   }
+  check(callerCount >= 6, `expected at least six runnable acurast-app.yml callers, found ${callerCount}`);
 }
 check(
   capabilitiesPage.includes('| Artifact upload through the Liskov IPFS service from a GitHub workflow | v1; the default upload of `liskov-github-actions` `v2.3.0`'),

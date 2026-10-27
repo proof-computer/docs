@@ -12,13 +12,15 @@ bearer token or spend-capable credential in GitHub.
 
 The moving `v2` release is live. The production acceptance recorded for the
 `v1` contract used `v1.2.2`. Callers should use `@v2` to receive compatible
-fixes. Security-sensitive callers may instead pin the reviewed commit
-`2745f48e6c2619f4d431fb80d20d0e8c75068832` (`v2.0.0`) and update it deliberately.
+fixes. Pinning a commit or an older `v2.x.y` tag does not freeze the run:
+the workflow calls its actions through the moving `v2` tag.
 
 `v2` moved to `v2.3.0`. From that release, `acurast-app.yml` uploads your
 bundle through the Liskov IPFS service by default and requires the
-`organization-id` input. A caller written for an earlier `v2` release fails
-until it adds that input.
+`organization-id` input. A caller that uses `@v2` without that input fails
+until it adds it. A caller pinned to an earlier release cannot add it: move it
+to `@v2` with `organization-id`, or set `ipfs-endpoint` to the Acurast IPFS
+proxy, `https://ipfs-proxy.acurast.prod.gke.papers.tech`.
 
 ## Add the caller workflow
 
@@ -59,8 +61,8 @@ PROOF's IPFS service, and reads the bytes back through PROOF's gateway before it
 attests them. An artifact may be at most 8 MiB; a larger one is refused with
 `artifact_too_large`.
 
-To use the Acurast IPFS proxy instead, set the `ipfs-endpoint` input; it is not
-a secret. If that endpoint needs a key, pass it as the `LISKOV_IPFS_API_KEY`
+To use the Acurast IPFS proxy instead, set the `ipfs-endpoint` input to
+`https://ipfs-proxy.acurast.prod.gke.papers.tech`; it is not a secret. If that endpoint needs a key, pass it as the `LISKOV_IPFS_API_KEY`
 secret. Neither path authorizes Acurast spend or Liskov policy publication.
 
 ## What runs
