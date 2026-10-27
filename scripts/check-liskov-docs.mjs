@@ -648,6 +648,52 @@ check(githubActionsPage.includes('v1.2.2'), 'GitHub Actions page omits the verif
 check(githubActionsPage.includes('ipfs-endpoint'), 'GitHub Actions page omits the ipfs-endpoint input');
 check(githubActionsPage.includes('LISKOV_IPFS_API_KEY'), 'GitHub Actions page omits the LISKOV_IPFS_API_KEY secret');
 check(!combined.includes('ACURAST_IPFS_'), 'public Liskov docs reintroduce ACURAST_IPFS_');
+// BKLG-20261006-71n0: from liskov-github-actions v2.3.0 the @v2 workflow uploads
+// through Liskov-issued upload intents by default and requires organization-id.
+// Every public @v2 caller must pass it; the Acurast proxy stays the explicit
+// ipfs-endpoint override; the CLI upload stays gated until a CLI-uploaded
+// artifact can be published.
+check(
+  !githubActionsPage.includes('Acurast IPFS proxy without spending'),
+  'GitHub Actions page still describes the Acurast proxy as the default upload',
+);
+for (const [token, meaning] of [
+  ['`v2` moved to `v2.3.0`', 'the v2.3.0 release'],
+  ['organization-id: YOUR_ORGANIZATION_ID', 'the organization-id input in the caller example'],
+  ['`proof liskov whoami`', 'where the organization ID comes from'],
+  ['single-use upload token', 'the Liskov-issued upload token'],
+  ["reads the bytes back through PROOF's gateway", 'gateway readback'],
+  ['`artifact_too_large`', 'the 8 MiB refusal code'],
+  ['To use the Acurast IPFS proxy instead, set the `ipfs-endpoint` input', 'the explicit proxy override'],
+]) {
+  check(githubActionsPage.includes(token), `GitHub Actions page omits ${meaning}`);
+}
+{
+  const callerPaths = [
+    join(docsRoot, 'build', 'github-actions.md'),
+    join(docsRoot, 'build', 'manifest-v5.md'),
+    workflowPath,
+    v5StarterWorkflowPath,
+    join(root, 'examples', 'liskov-v1', 'builder-iteration', 'liskov.yml'),
+  ];
+  for (const callerPath of callerPaths) {
+    const text = readFileSync(callerPath, 'utf8');
+    const callers = text.split(/\n(?=\s*(?:jobs:|uses:|```))/u)
+      .filter((block) => /acurast-app\.yml@v2\n/u.test(block));
+    check(callers.length > 0, `${callerPath}: expected an acurast-app.yml@v2 caller`);
+    for (const block of callers) {
+      check(/organization-id:\s*\S/u.test(block), `${callerPath}: an acurast-app.yml@v2 caller omits organization-id`);
+    }
+  }
+}
+check(
+  capabilitiesPage.includes('| Artifact upload through the Liskov IPFS service from a GitHub workflow | v1; the default upload of `liskov-github-actions` `v2.3.0`'),
+  'capability matrix does not classify the default Liskov workflow upload at v2.3.0',
+);
+check(
+  capabilitiesPage.includes('| Artifact upload through the Liskov IPFS service from the CLI | Release-gated v1; `proof liskov application artifact upload` in CLI `0.18.0`'),
+  'capability matrix must keep the CLI upload release-gated at CLI 0.18.0',
+);
 check(!combined.includes('acurast-app.yml@v1'), 'public Liskov docs reintroduce acurast-app.yml@v1');
 check(
   !/v1[^\n]{0,80}(?:not yet published|does not yet publish)/i.test(githubActionsPage),

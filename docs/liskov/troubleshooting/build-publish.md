@@ -31,9 +31,12 @@ command; later artifact steps have no valid input.
 ## Pin fails
 
 Check that the entrypoint and every `extra-files` item exists under `dist/`.
-The default IPFS proxy needs no repository credential. If you configured a
-custom proxy, verify its URL/key at that provider without printing the key.
-Pinning does not spend.
+The default Liskov upload needs no repository credential, but it needs
+`organization-id` and `permissions: id-token: write`. `organization-id is
+required for Liskov uploads` means the input is missing; a caller written for
+an earlier `v2` release must add it. `artifact_too_large` means the artifact is
+over 8 MiB. If you set `ipfs-endpoint` to use the Acurast proxy, verify its
+URL/key at that provider without printing the key. Pinning does not spend.
 
 ## OIDC attestation is rejected
 

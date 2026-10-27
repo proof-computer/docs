@@ -15,9 +15,10 @@ The moving `v2` release is live. The production acceptance recorded for the
 fixes. Security-sensitive callers may instead pin the reviewed commit
 `2745f48e6c2619f4d431fb80d20d0e8c75068832` (`v2.0.0`) and update it deliberately.
 
-`v2` moved to `v2.2.0` on 11 October 2026. That release changes only the
-[internal runtime-image workflows](#runtime-image-workflows-are-internal);
-`acurast-app.yml` and the actions it calls are unchanged from `v2.1.0`.
+`v2` moved to `v2.3.0`. From that release, `acurast-app.yml` uploads your
+bundle through the Liskov IPFS service by default and requires the
+`organization-id` input. A caller written for an earlier `v2` release fails
+until it adds that input.
 
 ## Add the caller workflow
 
@@ -37,6 +38,7 @@ jobs:
   artifact:
     uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v2
     with:
+      organization-id: YOUR_ORGANIZATION_ID
       app-id: status-worker
       working-directory: .
       entrypoint: app.cjs
@@ -47,10 +49,19 @@ Use the same Application ID, repository, ref, workflow path, and manifest path
 as the manifest's builder block. In a monorepo, set `working-directory` to the
 directory containing `package.json` and `pnpm-lock.yaml`.
 
-The default IPFS proxy requires no repository secret. A custom IPFS endpoint is
-the `ipfs-endpoint` input; it is not a secret. If that endpoint needs a key,
-pass it as the `LISKOV_IPFS_API_KEY` secret. Neither authorizes Acurast spend or
-Liskov policy publication.
+Set `organization-id` to your Liskov organization ID. `proof liskov whoami`
+prints it as `Name (ORGANIZATION_ID, slug, role …)`. The ID is not a secret: it
+selects the organization and grants no permission.
+
+The default upload needs no repository secret. The workflow uses its GitHub
+OIDC identity to ask Liskov for a single-use upload token, uploads the bundle to
+PROOF's IPFS service, and reads the bytes back through PROOF's gateway before it
+attests them. An artifact may be at most 8 MiB; a larger one is refused with
+`artifact_too_large`.
+
+To use the Acurast IPFS proxy instead, set the `ipfs-endpoint` input; it is not
+a secret. If that endpoint needs a key, pass it as the `LISKOV_IPFS_API_KEY`
+secret. Neither path authorizes Acurast spend or Liskov policy publication.
 
 ## What runs
 
@@ -60,7 +71,8 @@ The called workflow:
 2. installs the requested pnpm and Node.js versions;
 3. runs `pnpm install --frozen-lockfile`, `typecheck`, `test`, and `build`;
 4. packages the entrypoint and requested extra files;
-5. uploads the bundle to the Acurast IPFS proxy without spending; and
+5. uploads the bundle through the Liskov IPFS service with a single-use token,
+   without spending, and verifies it through PROOF's gateway; and
 6. attests the CID, SHA-256 digest, manifest digests, and GitHub OIDC identity
    to Liskov.
 
