@@ -651,8 +651,8 @@ check(!combined.includes('ACURAST_IPFS_'), 'public Liskov docs reintroduce ACURA
 // BKLG-20261006-71n0: from liskov-github-actions v2.3.0 the @v2 workflow uploads
 // through Liskov-issued upload intents by default and requires organization-id.
 // Every public @v2 caller must pass it; the Acurast proxy stays the explicit
-// ipfs-endpoint override; the CLI upload stays gated until a CLI-uploaded
-// artifact can be published.
+// ipfs-endpoint override; the CLI upload (published through a pinned release)
+// stays gated until its end-to-end production canary.
 check(
   !githubActionsPage.includes('Acurast IPFS proxy without spending'),
   'GitHub Actions page still describes the Acurast proxy as the default upload',
