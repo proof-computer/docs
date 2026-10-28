@@ -15,7 +15,7 @@ The moving `v2` release is live. The production acceptance recorded for the
 fixes. Pinning a commit or an older `v2.x.y` tag does not freeze the run:
 the workflow calls its actions through the moving `v2` tag.
 
-`v2` moved to `v2.3.0`. From that release, `acurast-app.yml` uploads your
+`v2` moved to `v2.3.1` on 27 October 2026. From `v2.3.0`, `acurast-app.yml` uploads your
 bundle through the Liskov IPFS service by default and requires the
 `organization-id` input. A caller that uses `@v2` without that input fails
 until it adds it. A caller pinned to an earlier release cannot add it: move it

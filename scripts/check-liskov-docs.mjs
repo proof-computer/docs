@@ -658,7 +658,7 @@ check(
   'GitHub Actions page still describes the Acurast proxy as the default upload',
 );
 for (const [token, meaning] of [
-  ['`v2` moved to `v2.3.0`', 'the v2.3.0 release'],
+  ['`v2` moved to `v2.3.1`', 'the v2.3.1 release'],
   ['organization-id: YOUR_ORGANIZATION_ID', 'the organization-id input in the caller example'],
   ['`proof liskov whoami`', 'where the organization ID comes from'],
   ['single-use upload token', 'the Liskov-issued upload token'],
@@ -721,12 +721,12 @@ for (const [token, meaning] of [
   check(callerCount >= 6, `expected at least six runnable acurast-app.yml callers, found ${callerCount}`);
 }
 check(
-  capabilitiesPage.includes('| Artifact upload through the Liskov IPFS service from a GitHub workflow | v1; the default upload of `liskov-github-actions` `v2.3.0`'),
-  'capability matrix does not classify the default Liskov workflow upload at v2.3.0',
+  capabilitiesPage.includes('| Artifact upload through the Liskov IPFS service from a GitHub workflow | v1; the default upload of `liskov-github-actions` `v2.3.1`'),
+  'capability matrix does not classify the default Liskov workflow upload at v2.3.1',
 );
 check(
-  capabilitiesPage.includes('| Artifact upload through the Liskov IPFS service from the CLI | Release-gated v1; `proof liskov application artifact upload` in CLI `0.18.0`'),
-  'capability matrix must keep the CLI upload release-gated at CLI 0.18.0',
+  capabilitiesPage.includes('| Artifact upload through the Liskov IPFS service from the CLI | Release-gated v1; `proof liskov application artifact upload` in CLI `0.18.1`'),
+  'capability matrix must keep the CLI upload release-gated at CLI 0.18.1',
 );
 check(!combined.includes('acurast-app.yml@v1'), 'public Liskov docs reintroduce acurast-app.yml@v1');
 check(
