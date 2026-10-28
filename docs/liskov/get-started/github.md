@@ -52,8 +52,10 @@ proof liskov login
 proof liskov whoami
 ```
 
-`whoami` shows the organization your commands act on. If you belong to more
-than one, select the intended one with `proof liskov organization use`.
+`whoami` shows the organization your commands act on, as
+`Name (ORGANIZATION_ID, slug, role …)`. If you belong to more than one
+organization, select the intended one with `proof liskov organization use`.
+Then keep that organization's ID, not its slug: the workflow needs it.
 
 ## 2. Copy the starter into your repository
 
@@ -140,7 +142,9 @@ the manifest's `applicationId`, the workflow's `app-id`, and these commands.
 
 ## 5. Push and let the workflow build
 
-Commit the starter and push it to the bound ref:
+First replace `YOUR_ORGANIZATION_ID` in `.github/workflows/liskov.yml` with
+the organization ID from step 1. Then commit the starter and push it to the
+bound ref:
 
 ```bash
 git add .
@@ -156,7 +160,8 @@ uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v2
 
 The moving `v2` tag contains the retained V5 source binding, first released in
 `v1.2.4`. The called workflow installs, typechecks, tests, and builds;
-uploads the bundle without a spend-capable credential; and attests the
+uploads the bundle through the Liskov IPFS service without a spend-capable
+credential; and attests the
 artifact digest, source commit and ref, and workflow identity to Liskov. It
 publishes nothing and deploys nothing.
 

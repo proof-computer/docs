@@ -13,6 +13,7 @@ jobs:
   artifact:
     uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v2
     with:
+      organization-id: YOUR_ORGANIZATION_ID
       app-id: hello-liskov
       working-directory: .
       entrypoint: bundle.js

@@ -235,13 +235,15 @@ jobs:
   artifact:
     uses: proof-computer/liskov-github-actions/.github/workflows/acurast-app.yml@v2
     with:
+      organization-id: YOUR_ORGANIZATION_ID
       app-id: hello-liskov
       working-directory: .
       entrypoint: bundle.js
       authored-manifest-path: .liskov/application-manifest.json
 ```
 
-The workflow uploads the bundle to the Acurast IPFS proxy without spending and
+Replace `YOUR_ORGANIZATION_ID` with the ID `proof liskov whoami` prints. The
+workflow uploads the bundle through the Liskov IPFS service without spending and
 attests the artifact digest, the source commit and ref, and the workflow
 identity to Liskov. It publishes nothing. Its run log prints the artifact
 digest as `Artifact sha256:`, and the called workflow exposes it as the

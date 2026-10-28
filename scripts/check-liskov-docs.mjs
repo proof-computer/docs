@@ -648,6 +648,86 @@ check(githubActionsPage.includes('v1.2.2'), 'GitHub Actions page omits the verif
 check(githubActionsPage.includes('ipfs-endpoint'), 'GitHub Actions page omits the ipfs-endpoint input');
 check(githubActionsPage.includes('LISKOV_IPFS_API_KEY'), 'GitHub Actions page omits the LISKOV_IPFS_API_KEY secret');
 check(!combined.includes('ACURAST_IPFS_'), 'public Liskov docs reintroduce ACURAST_IPFS_');
+// BKLG-20261006-71n0: from liskov-github-actions v2.3.0 the @v2 workflow uploads
+// through Liskov-issued upload intents by default and requires organization-id.
+// Every public @v2 caller must pass it; the Acurast proxy stays the explicit
+// ipfs-endpoint override; the CLI upload (published through a pinned release)
+// stays gated until its end-to-end production canary.
+check(
+  !githubActionsPage.includes('Acurast IPFS proxy without spending'),
+  'GitHub Actions page still describes the Acurast proxy as the default upload',
+);
+for (const [token, meaning] of [
+  ['`v2` moved to `v2.3.1`', 'the v2.3.1 release'],
+  ['organization-id: YOUR_ORGANIZATION_ID', 'the organization-id input in the caller example'],
+  ['`proof liskov whoami`', 'where the organization ID comes from'],
+  ['single-use upload token', 'the Liskov-issued upload token'],
+  ["reads the bytes back through PROOF's gateway", 'gateway readback'],
+  ['`artifact_too_large`', 'the 8 MiB refusal code'],
+  ['To use the Acurast IPFS proxy instead, set the `ipfs-endpoint` input', 'the explicit proxy override'],
+]) {
+  check(githubActionsPage.includes(token), `GitHub Actions page omits ${meaning}`);
+}
+{
+  // Every public reusable-workflow caller, found by scanning, not a fixed list.
+  // A caller is the YAML mapping around its `uses:` line: the lines at the same
+  // or deeper indentation, before and after it, inside one fence or file.
+  const callerFiles = [];
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
+      const path = join(dir, entry.name);
+      if (entry.isDirectory()) walk(path);
+      else if (/\.(?:md|mdx|ya?ml)$/u.test(entry.name)) callerFiles.push(path);
+    }
+  };
+  walk(join(root, 'docs'));
+  walk(join(root, 'examples'));
+  const indentOf = (line) => line.length - line.trimStart().length;
+  const isBoundary = (line) => /^\s*```/u.test(line);
+  let callerCount = 0;
+  for (const callerPath of callerFiles) {
+    const lines = readFileSync(callerPath, 'utf8').replace(/\r\n?/gu, '\n').split('\n');
+    lines.forEach((line, index) => {
+      const match = /^(\s*)(?:-\s+)?uses:\s*proof-computer\/liskov-github-actions\/\.github\/workflows\/acurast-app\.yml@([^\s#'"]+)/u.exec(line);
+      if (!match) return;
+      const indent = indentOf(line);
+      const block = [line];
+      for (let i = index - 1; i >= 0; i -= 1) {
+        const prev = lines[i];
+        if (isBoundary(prev) || (prev.trim() !== '' && indentOf(prev) < indent)) break;
+        block.unshift(prev);
+      }
+      for (let i = index + 1; i < lines.length; i += 1) {
+        const next = lines[i];
+        if (isBoundary(next) || (next.trim() !== '' && indentOf(next) < indent)) break;
+        block.push(next);
+      }
+      const text = block.join('\n');
+      // A one-line illustration with no `with:` is not a runnable caller.
+      if (!/^\s*with:\s*$/mu.test(text)) return;
+      callerCount += 1;
+      const ref = match[2];
+      const where = `${callerPath}:${index + 1}`;
+      if (ref === 'v2') {
+        check(/^\s*organization-id:\s*\S/mu.test(text), `${where}: an acurast-app.yml@v2 caller omits organization-id`);
+      } else {
+        // A pin to a pre-v2.3.0 tag or a commit still calls the moving v2
+        // actions, which need organization-id the old workflow cannot pass.
+        check(/^\s*ipfs-endpoint:\s*\S/mu.test(text), `${where}: an acurast-app.yml@${ref} caller must set ipfs-endpoint`);
+      }
+    });
+  }
+  check(callerCount >= 6, `expected at least six runnable acurast-app.yml callers, found ${callerCount}`);
+}
+check(
+  capabilitiesPage.includes('| Artifact upload through the Liskov IPFS service from a GitHub workflow | v1; the default upload of `liskov-github-actions` `v2.3.1`'),
+  'capability matrix does not classify the default Liskov workflow upload at v2.3.1',
+);
+check(
+  capabilitiesPage.includes('| Artifact upload through the Liskov IPFS service from the CLI | Release-gated v1; `proof liskov application artifact upload` in CLI `0.18.1`'),
+  'capability matrix must keep the CLI upload release-gated at CLI 0.18.1',
+);
 check(!combined.includes('acurast-app.yml@v1'), 'public Liskov docs reintroduce acurast-app.yml@v1');
 check(
   !/v1[^\n]{0,80}(?:not yet published|does not yet publish)/i.test(githubActionsPage),

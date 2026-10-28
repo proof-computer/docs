@@ -102,10 +102,16 @@ jobs:
       entrypoint: encrypted.cjs
       encryption-mode: aes-256-gcm-payload-v1
       encryption-secret-id: application-code-key
+      ipfs-endpoint: https://ipfs-proxy.acurast.prod.gke.papers.tech
       ipfs-gateway-url: "https://ipfs-upload.liskov.proof.computer/ipfs/{cid}"
     secrets:
       LISKOV_CODE_ENCRYPTION_KEY: ${{ secrets.APPLICATION_CODE_KEY }}
 ```
+
+`ipfs-endpoint` keeps this pinned recipe on the Acurast IPFS proxy. The
+`v2.1.0` workflow calls the IPFS action through the moving `v2` tag, and from
+`v2.3.0` that action uploads through the Liskov IPFS service unless an endpoint
+is set. The Liskov service does not yet accept encrypted bundles.
 
 The workflow runs the caller's typecheck, tests and build. It encrypts with a
 fresh AES-256-GCM nonce, verifies the uploaded bytes through the specified
