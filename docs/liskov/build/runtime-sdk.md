@@ -116,7 +116,7 @@ change of observed IP schedules a new background lookup. Check
 | State | Meaning |
 | --- | --- |
 | `ready` | The recorded geography matches the observed IP and is current; individual place fields may still be `null`. |
-| `pending` | Geography is not yet resolved for this IP; older values may remain, so do not treat them as current. |
+| `pending` | Geography is not yet resolved for the observed IP; `countryCode`, `countryName`, `region`, `city` and `asOfMs` are `null` until it is resolved. |
 | `stale` | Cached geography needs refreshing; any retained place values are not current. |
 | `disabled` | The geography provider is switched off. |
 | `unavailable` | Liskov could not read the geography observation. |
