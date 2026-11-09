@@ -268,4 +268,4 @@ unknown fields or closed-union arms:
 - `clientAccess` on an endpoint;
 - `acurast_tunnel` as an integration; and
 - every other item V6 defers, including cohort membership, join and drain
-  hooks, durable state, and placement spread.
+  hooks and durable state.

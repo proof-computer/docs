@@ -1,7 +1,7 @@
 ---
 unlisted: true
 title: Application Manifest V6 reference
-description: The exact V6 delta over retained V5 — integrations, private HTTP ingress and health, SSH providers, manager, processor type and Android placement criteria, and self-custody spend.
+description: The exact V6 delta over retained V5 — integrations, private HTTP ingress and health, SSH providers, country and manager filters and spread, processor type and Android placement criteria, and self-custody spend.
 ---
 
 # Application Manifest V6 reference
@@ -28,7 +28,8 @@ V6 is V5 with these authored arms added and nothing removed:
   with liveness and readiness probes;
 - `access.ssh.provider.kind: tailscale`, beside V5's managed provider;
 - `deployment.placement.allow` and `exclude`, over the processor's on-chain
-  manager id, its processor type, and exact Android Processor builds to avoid;
+  manager id, country, processor type, and exact Android Processor builds to avoid;
+- `deployment.placement.spread`, by manager and country;
 - `deployment.placement.minimums.acurastProcessorBuild` and `androidMajor`,
   Android floors beside V5's four capability floors; and
 - `deployment.spend.unit: acu_planck`, beside V5's Service Credits.
@@ -192,9 +193,11 @@ behavior is released. See
 :::
 
 V6 adds two Android floors to `minimums` and two optional eligibility lists,
-`allow` and `exclude`, over three dimensions: the processor's manager, its
-processor type, and exact Android Processor builds to avoid. Those lists
-narrow who may be chosen. They do not turn `processorIds` into ordered slots.
+`allow` and `exclude`, over four dimensions: the processor's manager, country,
+processor type, and exact Android Processor builds to avoid. It also adds
+`spread` by manager and country across jobs. The lists narrow who may be
+chosen; spread constrains or prefers diversity across those choices. Neither
+turns `processorIds` into ordered slots.
 
 ### `minimums`
 
@@ -249,6 +252,7 @@ characters. The dimensions are a closed list:
 | `by` | Values | In `allow` | In `exclude` |
 | --- | --- | --- | --- |
 | `manager` | the processor's on-chain manager id | yes | yes |
+| `country` | exactly two uppercase ASCII letters, in ISO 3166-1 alpha-2 form | yes | yes |
 | `processor_type` | `core` or `lite` | yes | yes |
 | `acurast_processor_build` | one exact Android build number each | refused | yes |
 
@@ -256,7 +260,7 @@ At most one `allow` rule per dimension, so there is no hidden merge precedence.
 One value may not appear in both lists for the same dimension: that is refused
 at `/deployment/placement/exclude`.
 
-`operator`, `country`, and `region` are refused, and filtering by WAN address
+`operator` remains withdrawn and `region` is refused. Filtering by WAN address
 is never authorable — it would require an author to enumerate processor
 addresses, which they must not.
 
@@ -275,6 +279,46 @@ The filters fail closed. Only a **current** manager id satisfies a filter;
 a processor whose manager cannot be established is refused under an `allow`
 and under an `exclude` alike, because an unread, unpaired, or invalidated
 manager is not evidence that a processor sits outside an excluded fleet.
+
+#### `country`
+
+An `allow` rule keeps only processors located in one of its countries; an
+`exclude` rule removes processors located in one of its countries. Each rule
+requires `by: country` and a `values` array of 1–64 strings. Each string is
+exactly two uppercase ASCII letters. There is no case folding or assigned-code
+lookup: `ZZ` is syntactically valid, but does not prove any processor matches.
+Omitting the country rules adds no country restriction.
+
+This valid fragment comes from the owner's country-filter tests:
+
+```yaml
+placement:
+  allow:
+    - by: country
+      values: [DE, CH]
+```
+
+`values: [de]` is refused at `/deployment/placement/allow/0/values/0` with
+`country "de" must be two uppercase letters, ISO 3166-1 alpha-2`. `DEU`, `D1`,
+and an empty string are also refused. A country appearing in both `allow` and
+`exclude` is refused at `/deployment/placement/exclude`.
+
+A processor Liskov has not located has **no country**. It never matches a
+country `allow` rule. A country `exclude` rule alone does not remove it:
+missing location is not evidence of an excluded country. This differs from
+`manager`, whose filters fail closed in both directions. A failed country
+read is an unavailable fact, not an unlocated processor that can pass an
+exclusion.
+
+There is no fleet-coverage threshold that switches these rules on. Read located
+and unlocated counts in the **Location** panel described by the **Read Compute
+and check placement** guide, which is also **Not released**. Counts are exact,
+including small counts; they never identify processors.
+
+A processor's country is where Liskov last observed it from its network
+address. A country rule is not a residency commitment; see the
+[Master Terms](../legal/master-terms.md#44-no-location-or-identity-assurance) and
+[Acceptable Use Policy](../legal/acceptable-use-policy.md#8-sanctions-export-controls-and-restricted-territories).
 
 #### `processor_type`
 
@@ -367,6 +411,110 @@ placement:
       values: ["99"]
 ```
 
+### `spread`
+
+Optional `deployment.placement.spread` is an array of 1–2 rules, with at most
+one rule per dimension. Omitting it requests no spread. An empty array is
+refused at `/deployment/placement/spread`, and any spread rule requires at
+least two `deployment.jobs`, otherwise the refusal points to `/deployment/jobs`.
+
+| Field | Required | Type and bound | When omitted |
+| --- | --- | --- | --- |
+| `by` | yes | string: `manager` or `country` only | refused |
+| `strength` | yes | string: `required` or `preferred` only | refused |
+| `minimumDistinct` | no | integer, at least 2 and at most `deployment.jobs` | the authored job count |
+
+`minimumDistinct` counts distinct manager ids or countries across the jobs,
+not processors in each country. An unlocated processor never counts as a
+distinct country. With both dimensions authored, the same assignment must
+satisfy both required rules; enough values counted separately do not prove
+that such an assignment exists.
+
+`required` is a hard constraint. `preferred` requests diversity that may fall
+short; required rules take precedence. Preferred diversity may choose a more
+expensive eligible processor within the authored per-job spend cap, but never
+raises that cap.
+
+This valid fragment from the owner's spread tests requires distinct managers
+and prefers at least two countries:
+
+```yaml
+deployment:
+  jobs: 2
+  placement:
+    spread:
+      - by: manager
+        strength: required
+      - by: country
+        strength: preferred
+        minimumDistinct: 2
+```
+
+This fragment from the owner's refused fixture asks for more distinct managers
+than jobs:
+
+```yaml
+deployment:
+  jobs: 2
+  placement:
+    spread: [{by: manager, strength: required, minimumDistinct: 3}]
+```
+
+It is refused at `/deployment/placement/spread/0/minimumDistinct` with
+`minimumDistinct must be at least 2 and at most deployment.jobs`. A value of
+`1` is refused at the same pointer. A second row for the same `by` is refused
+at `/deployment/placement/spread`. `by: region` and `strength: optional` are
+refused at their respective `/by` and `/strength` pointers; neither has an
+implicit fallback.
+
+### Country and spread refusals before spend
+
+Before the first job spends, required spread needs a feasible assignment for
+the whole Application. If that plan cannot be established, no member is
+reserved, sent to a signer, or registered. Launching a paid first member and
+then discovering that the remaining members cannot satisfy the initial rule
+is not partial success. Discovery and search are bounded: exhausting them is
+a refusal, not proof that the entire fleet is infeasible.
+
+Once a feasible plan exists, each member still passes its final placement
+check. Later fact changes or chain failures can stop a member through the
+normal refusal and recovery lifecycle; a plan is not atomic execution of all
+jobs on chain. Country filters also apply at the final check, before that
+job's spend and registration.
+
+The Application's authorized placement-refusal read is
+`GET /api/applications/:applicationId/placement/refusals`. Its required query
+parameters are `fromMs` (inclusive) and `toMs` (exclusive), in Unix milliseconds
+for the observation's hourly window start, and `limit` (integer, 1–100).
+`cursor` continues a page within the same Application and time bounds.
+The read reports these country reasons and safe next actions:
+
+| Country `reason` | Meaning | What you can change |
+| --- | --- | --- |
+| `country_not_allowed` | the located country is outside `allow` | widen or remove the country allow list |
+| `country_unlocated_not_allowed` | no country is known for a candidate under `allow` | widen or remove the country allow list; only removing the rule admits an unlocated candidate |
+| `country_excluded` | the located country matches `exclude` | remove that country from the exclusion |
+| `country_unavailable` | the country fact could not be read | retry later |
+
+When country filtering leaves no eligible candidate, the observation's
+`launchReason` is `country_fleet_empty` and its `placementCode` is
+`placement_no_eligible_candidate`. Spread observations distinguish:
+
+| `launchReason` | `placementCode` | Meaning and next step |
+| --- | --- | --- |
+| `required_manager_spread_unsatisfied` | `placement_required_spread_unsatisfied` | the required manager diversity could not be met; review that rule |
+| `required_country_spread_unsatisfied` | `placement_required_spread_unsatisfied` | the required country diversity could not be met; review that rule |
+| `spread_search_budget_exhausted` | `placement_search_budget_exhausted` | bounded discovery or search ran out; retry later |
+| `spread_plan_revalidation_required` | `placement_selection_unreadable` | the plan needs a fresh check; retry later |
+
+The read returns counts and reasons, never candidate ids or their countries.
+It retains the first observation per Application, placement code, and hour,
+so counts describe recorded evidence, not every failed attempt. Follow
+`nextCursor`; `incomplete: true` means more observations exist or some candidate
+or reason evidence was omitted. Empty history does not prove successful
+placement, and `incomplete: false` does not turn this history into a complete
+count of attempts.
+
 ### Android criteria and iOS processors
 
 `acurastProcessorBuild`, `androidMajor`, and `acurast_processor_build` all speak
@@ -377,9 +525,10 @@ not eligible. Without them, an iOS processor, which counts as Lite, may take a
 
 ### How the criteria are enforced
 
-Every authored criterion is a hard rule, judged at the final placement check
-immediately before a job is registered, and a candidate that fails is refused
-before the job is authorized to run and before any spend.
+The processor type, build and Android-version criteria are hard rules, judged
+at the final placement check immediately before a job is registered. A
+candidate that fails is refused before the job is authorized to run and
+before any spend.
 
 - **One pinned view.** The check reads each candidate's facts at one finalized
   chain view: the on-chain version for build rules, and the processor's
@@ -472,6 +621,7 @@ unknown fields or closed-union arms:
 - cohort membership and discovery;
 - join and drain hooks;
 - durable state — `state.mode` still has only `off`;
-- placement spread, distribution, and geography;
+- `region` filtering or spread, spread by network or WAN address, co-location,
+  and counted `distribution`;
 - iOS version criteria — the Android criteria never apply to iOS; and
 - Acurast-tunnel SSH.

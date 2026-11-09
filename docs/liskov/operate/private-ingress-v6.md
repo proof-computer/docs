@@ -217,8 +217,8 @@ The login user is pinned when V6 is released.
 ## What V6 does not add
 
 V6 adds private endpoints on your own tailnet, and nothing public. Public or
-provider-owned ingress, TCP ingress, durable state, cohorts and placement
-spread are not part of V6. For SSH through Liskov's managed relay instead of
+provider-owned ingress, TCP ingress, durable state and cohorts are not part of
+V6. For SSH through Liskov's managed relay instead of
 your tailnet, see [Use retained V5 Managed Runtime SSH](./runtime-ssh-v5.md);
 for the integrations your organization can connect, see
 [Integrations](./integrations.md).
