@@ -2579,7 +2579,9 @@ check(buildRuntimeSdkPage.indexOf('## Read what Liskov knows about this job')
 for (const status of ['ready', 'pending', 'stale', 'disabled', 'unavailable', 'not_observed']) {
   check(buildRuntimeSdkPage.includes(`| \`${status}\` |`), `runtime context guide omits geography state ${status}`);
 }
-check(runtimeBuildText.includes('older values may remain') && runtimeBuildText.includes('not current')
+check(buildRuntimeSdkPage.includes('| `pending` | Geography is not yet resolved for the observed IP; `countryCode`, `countryName`, `region`, `city` and `asOfMs` are `null` until it is resolved. |'),
+  'runtime context guide must keep pending geography and asOfMs null');
+check(runtimeBuildText.includes('not current')
     && runtimeBuildText.includes('provider is switched off'),
   'runtime context guide omits cached/noncurrent/disabled geography semantics');
 check(runtimeReferenceText.includes('preserves legitimate empty strings and zero timestamps')
