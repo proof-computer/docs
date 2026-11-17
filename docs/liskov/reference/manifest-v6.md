@@ -457,7 +457,7 @@ A processor does not match when Liskov has not measured it, when its newest
 measurement is expired or older than 90 days, when it advertised no IPv6
 address, when the result was anything other than reachable, or when the
 measurement itself could not be made. An unmeasured processor never matches
-this `allow` rule, just as an unlocated processor never matches a country
+this `allow` rule, the same way an unlocated processor never matches a country
 `allow` rule. A processor Liskov has not measured, and a processor with no
 IPv6 address, is never a candidate.
 
