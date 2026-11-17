@@ -10,6 +10,7 @@ const manifestPath = join(root, 'examples', 'liskov-v1', 'application-manifest.j
 const workflowPath = join(root, 'examples', 'liskov-v1', 'liskov.yml');
 const cliContractPath = join(root, 'fixtures', 'liskov-cli-contract.json');
 const v5ReleaseContractPath = join(root, 'fixtures', 'liskov-v5-release-contract.json');
+const v6CandidateContractPath = join(root, 'fixtures', 'liskov-v6-candidate-contract.json');
 const executionConvergenceContractPath = join(root, 'fixtures', 'liskov-execution-convergence-contract.json');
 const v5ManifestPath = join(root, 'fixtures', 'liskov-v5-retained-manifest.json');
 const v5StarterRoot = join(root, 'examples', 'liskov-v1', 'retained-v5-starter');
@@ -2781,6 +2782,127 @@ for (const token of ['once/interval recovery separately awaits implementation an
   'reserve more Service Credits', 'wait', 'contact support', 'no implicit fallback',
   'An unavailable evidence read is not proof of either success or absence']) {
   check(normalizedChainTroubleshooting.includes(token), `chain recovery troubleshooting loses its safe customer path: ${token}`);
+}
+
+// BKLG-20261011-xech: candidate identities and the unreleased-page invariants.
+// The fixture holds the values. This check requires the fields, refuses a
+// release switch, and requires the prepared pages to cite the same commits.
+const v6CandidateContract = JSON.parse(readFileSync(v6CandidateContractPath, 'utf8'));
+const v6ManifestPage = readFileSync(join(docsRoot, 'reference', 'manifest-v6.md'), 'utf8');
+const v6IngressPage = readFileSync(join(docsRoot, 'operate', 'private-ingress-v6.md'), 'utf8');
+const v6IngressTroublePage = readFileSync(join(docsRoot, 'troubleshooting', 'private-ingress-v6.md'), 'utf8');
+const v6PreparedPages = {
+  'reference/manifest-v6': v6ManifestPage,
+  'operate/private-ingress-v6': v6IngressPage,
+  'troubleshooting/private-ingress-v6': v6IngressTroublePage,
+  'reference/service-discovery-v6': v6DiscoveryPage,
+};
+check(v6CandidateContract.schema === 'proof.liskov.docs-v6-candidate-contract.v1', 'V6 candidate: wrong schema');
+check(v6CandidateContract.documentationMode === 'candidate', 'V6 candidate: documentationMode must stay candidate');
+check(v6CandidateContract.availability === 'not_released', 'V6 candidate: availability must stay not_released');
+check(v6CandidateContract.releaseToggle === null, 'V6 candidate: releaseToggle must stay null');
+check(/^\d{4}-\d{2}-\d{2}$/u.test(v6CandidateContract.verifiedAt ?? ''), 'V6 candidate: verifiedAt missing');
+const v6IdentityNames = ['cli', 'console', 'runtimeHelper', 'tailscaleProvider', 'signer'];
+check(
+  JSON.stringify(Object.keys(v6CandidateContract.identities ?? {}).sort()) === JSON.stringify([...v6IdentityNames].sort()),
+  'V6 candidate: identity set drifted',
+);
+for (const name of v6IdentityNames) {
+  const identity = v6CandidateContract.identities?.[name];
+  check(identity !== undefined, `V6 candidate: ${name} identity missing`);
+  if (identity === undefined) continue;
+  for (const key of ['repository', 'sourceCommit', 'ownerPath', 'sourceVersion']) {
+    check(typeof identity[key] === 'string' && identity[key].length > 0, `V6 candidate: ${name}.${key} missing`);
+  }
+  check(Object.hasOwn(identity, 'releasedRefContainingCommit'), `V6 candidate: ${name}.releasedRefContainingCommit missing`);
+  check(identity.releasedRefContainingCommit === null, `V6 candidate: ${name} release identity must stay null until ie6x`);
+  check(/^[0-9a-f]{40}$/u.test(identity.sourceCommit ?? ''), `V6 candidate: ${name}.sourceCommit is not a full git commit`);
+  check(v6ManifestPage.includes(identity.sourceCommit), `V6 candidate: manifest-v6 omits the ${name} source commit`);
+}
+const providerArtifact = v6CandidateContract.identities?.tailscaleProvider?.artifact;
+check(providerArtifact?.repository === 'proof-computer/tailscale', 'V6 candidate: provider repository missing');
+check(typeof providerArtifact?.tag === 'string' && providerArtifact.tag.startsWith('v'), 'V6 candidate: provider tag missing');
+check(typeof providerArtifact?.descriptorId === 'string' && providerArtifact.descriptorId.length > 0, 'V6 candidate: provider descriptor missing');
+check(Object.hasOwn(providerArtifact ?? {}, 'archiveSha256') && providerArtifact.archiveSha256 === null, 'V6 candidate: provider archive digest must stay null until ie6x pins it');
+check(v6IngressPage.includes(providerArtifact?.descriptorId ?? 'missing-descriptor'), 'V6 candidate: private-ingress omits the provider descriptor');
+check(
+  v6DiscoveryPage.includes(v6CandidateContract.identities?.runtimeHelper?.sourceCommit ?? 'missing-helper'),
+  'V6 candidate: service-discovery omits the helper source commit',
+);
+check(
+  v6IngressPage.includes(v6CandidateContract.identities?.signer?.sourceCommit ?? 'missing-signer'),
+  'V6 candidate: private-ingress omits the signer source commit',
+);
+for (const [bundleName, bundle] of Object.entries(v6CandidateContract.policyBundles ?? {})) {
+  check(typeof bundle.sourceDigest === 'string' && bundle.sourceDigest.startsWith('sha256:'), `V6 candidate: ${bundleName} source digest missing`);
+  check(/^[0-9a-f]{40}$/u.test(bundle.bundleOwnerCommit ?? ''), `V6 candidate: ${bundleName} bundle owner commit missing`);
+  check(Array.isArray(bundle.supportedManifestSchemaVersions) && bundle.supportedManifestSchemaVersions.includes(6), `V6 candidate: ${bundleName} must support manifest schema 6`);
+  check(
+    JSON.stringify(bundle.publicationPairs) === JSON.stringify([{schema: 'proof.liskov.application-manifest', schemaVersion: 5, releaseMode: 'source'}]),
+    `V6 candidate: ${bundleName} publication pair must stay V5 source`,
+  );
+}
+check(
+  v6CandidateContract.policyBundles?.cli?.sourceDigest !== v6CandidateContract.policyBundles?.examples?.sourceDigest,
+  'V6 candidate: the two policy bundles must stay separate facts',
+);
+check(
+  JSON.stringify(v6CandidateContract.pages?.unlisted) === JSON.stringify(['reference/manifest-v6', 'operate/private-ingress-v6', 'troubleshooting/private-ingress-v6']),
+  'V6 candidate: unlisted page list drifted',
+);
+check(
+  JSON.stringify(v6CandidateContract.pages?.draft) === JSON.stringify(['reference/service-discovery-v6']),
+  'V6 candidate: draft page list drifted',
+);
+for (const id of v6CandidateContract.pages?.unlisted ?? []) {
+  check(unlistedIds.has(id), `V6 candidate: ${id} left the unlisted set`);
+}
+for (const id of v6CandidateContract.pages?.draft ?? []) {
+  check(candidateDraftIds.has(id), `V6 candidate: ${id} left the draft set`);
+}
+const v6EditKeys = ['repository', 'path', 'key', 'change'];
+for (const [listName, edits] of [['promotionEdits', v6CandidateContract.promotionEdits], ['demotionEdits', v6CandidateContract.demotionEdits]]) {
+  check(Array.isArray(edits) && edits.length > 0, `V6 candidate: ${listName} missing`);
+  for (const edit of edits ?? []) {
+    for (const key of v6EditKeys) {
+      check(typeof edit[key] === 'string' && edit[key].length > 0, `V6 candidate: ${listName} entry lacks ${key}`);
+    }
+  }
+}
+const v6PromotionPaths = new Set((v6CandidateContract.promotionEdits ?? []).map((edit) => edit.path));
+for (const path of [
+  'scripts/check-liskov-docs.mjs',
+  'sidebarsLiskov.ts',
+  'docs/liskov/reference/manifest-v6.md',
+  'docs/liskov/operate/private-ingress-v6.md',
+  'docs/liskov/troubleshooting/private-ingress-v6.md',
+  'docs/liskov/reference/service-discovery-v6.md',
+  'docs/liskov/reference/capabilities.md',
+]) {
+  check(v6PromotionPaths.has(path), `V6 candidate: promotion checklist omits ${path}`);
+}
+const v6DemotionPaths = new Set((v6CandidateContract.demotionEdits ?? []).map((edit) => edit.path));
+for (const path of v6PromotionPaths) check(v6DemotionPaths.has(path), `V6 candidate: demotion checklist omits ${path}`);
+for (const fact of v6CandidateContract.releaseOnlyFacts ?? []) {
+  const page = v6PreparedPages[fact.page];
+  check(typeof fact.id === 'string' && page !== undefined, `V6 candidate: release-only fact ${String(fact.id)} has no prepared page`);
+  check(page?.includes('pinned when V6 is released') || page?.includes('Pinned when V6 is released'), `V6 candidate: ${fact.page} lost its release deferral`);
+}
+check((v6CandidateContract.releaseOnlyFacts ?? []).length >= 10, 'V6 candidate: release-only fact list is incomplete');
+const fundingDifference = (v6CandidateContract.clientOwnerDifferences ?? []).find((item) => item.id === 'executed-funding');
+check(fundingDifference?.handoff === 'n44w', 'V6 candidate: executed-funding handoff missing');
+for (const key of ['ownerPath', 'ownerCommit', 'fact', 'cli', 'console']) {
+  check(typeof fundingDifference?.[key] === 'string' && fundingDifference[key].length > 0, `V6 candidate: executed-funding.${key} missing`);
+}
+const fundingSentence = 'this CLI does not render it yet';
+for (const page of [v6IngressPage, v6IngressTroublePage]) {
+  check(page.includes(fundingSentence), 'V6 candidate: prepared funding prose omits the merged CLI sentence');
+  check(!page.includes('v6_custody_execution_not_built'), 'V6 candidate: prepared funding prose still names the withdrawn reason');
+}
+for (const commandId of ['liskov application placement-refusals', 'liskov application placement-plan']) {
+  const command = (v6CandidateContract.commands ?? []).find((item) => item.id === commandId);
+  check(command?.hidden === true, `V6 candidate: ${commandId} must stay hidden`);
+  check(v6ManifestPage.includes(`proof ${commandId}`), `V6 candidate: manifest-v6 omits ${commandId}`);
 }
 
 if (errors.length > 0) {

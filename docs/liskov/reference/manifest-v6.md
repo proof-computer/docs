@@ -18,6 +18,10 @@ the Application manifest.
 This page is written as though final so that the contract can be reviewed
 before the release. Read it as a design, not as a surface you can reach.
 
+`proof liskov application placement-refusals` and
+`proof liskov application placement-plan` are in the CLI but are not yet
+listed in `--help`.
+
 :::
 
 V6 is V5 with these authored arms added and nothing removed:
@@ -43,9 +47,10 @@ strings — applies here in full.
 ## Contract identity
 
 V6 is installed but authorized by no production handler generation, and nothing
-is released or immutable until a generation lists the schema pair. Its
-artifacts are regenerated from the current handler and corpus, so this page
-names no digest.
+is released or immutable until a generation lists the schema pair. The release
+digests below stay unpinned until then. The merged clients, helper, provider
+and signer are a different list: each row is a source that exists now, and
+none of those commits is in a release tag.
 
 | Artifact | Status |
 | --- | --- |
@@ -54,6 +59,32 @@ names no digest.
 | Effective-policy schema digest | Pinned when V6 is released |
 | Corpus pin | Pinned when V6 is released |
 | Production registration | Pinned when V6 is released |
+
+| Piece | Merged source | Released artifact |
+| --- | --- | --- |
+| CLI `@proof-computer/proof-cli-liskov` | `206ed44947435935d74f7128686adb4f43a4fbf8`. `package.json` says `0.18.1`; tag `v0.18.1` does not contain this commit | Pinned when V6 is released |
+| Console `slipway-ui` | `e3688387e42322bcc2fab358079fb1046624144c`. The package version is `0.0.0`, and the repository has no release tag | Pinned when V6 is released |
+| Cargo runtime helper `liskov-runtime-cargo` | `634ffcfab2b6d5dcc751dcbb3edec92cbf682ce5`. `Cargo.toml` says `0.12.2`; tag `v0.12.2` does not contain this commit. `src/discovery.rs` requests Tailscale discovery with `discoveryVersion` 1 | Pinned when V6 is released |
+| Tailscale provider client | Pinned by liskov-rs `4526233012b28c33a849e8f1cb1ddac220ccf179` at `crates/liskov-runtime-ssh/src/provider_clients.rs`: repository `proof-computer/tailscale`, tag `v1.98.10-liskov.1`, descriptor `tailscale-aarch64-1.98.10-liskov.1` | Pinned when V6 is released |
+| Self-custody signer `liskov-self-custody-signer` | `cfdf7fbf9b168c6ba71dc0ba742f0b6835beae4b`. The crate version is `0.3.0`; tag `v0.2.0` does not contain this commit | Pinned when V6 is released |
+
+`proof liskov application manifest validate` evaluates a local file with the
+CLI's vendored owner bundle. That bundle's source digest is
+`sha256:ab54fd3e6359dd0395383cf7c0965293063908c1e4732e8b93bc7e2a6740d743`,
+from liskov-rs `002bcea654adc2922c56485e3fa33ffd10ecdaef`. Its manifest digest
+is `sha256:8aa247f9352995ab15cab1bf5051b2fd98de27ce15c1b6c601cbaf8823de9257`.
+Manifest and policy schema version 6 are supported pairs. The only publication
+pair is still Manifest V5 `source`, which is why
+`proof liskov application policy publish` refuses a V6 document. A schema-valid
+V6 file still prints `firstPublicReady: true`. That line is not a publication
+pair.
+
+`liskov-examples` at `f41afc58f87c457b902f92c70f97349525a42ddf` vendors an
+older bundle, source digest
+`sha256:eb606519f755169179b09b7cdf287799e6b0450d99b412ca0f852600d4b94847`,
+from liskov-rs `13f039d41b8febf36db37844a7a61cc405fcec79`. It also supports
+schema version 6 and publishes only V5 `source`. The two bundles can disagree
+on one fragment. Validate the fragments on this page with the CLI bundle.
 
 ## Root document
 
@@ -467,6 +498,36 @@ at `/deployment/placement/spread`. `by: region` and `strength: optional` are
 refused at their respective `/by` and `/strength` pointers; neither has an
 implicit fallback.
 
+### In the Console
+
+The Compute placement form is where country and spread are decided. The fields
+stay disabled until V6 is enabled. A disabled field says "Available when V6
+ships." **Jobs** is `deployment.jobs`, from 1 to 256, the same authored bound
+as V5. V5's first-public admission maximum of 2 is unchanged.
+
+| Console label | What it writes |
+| --- | --- |
+| Allowed countries | `deployment.placement.allow` with `by: country`. Two-letter codes, separated by commas. |
+| Excluded countries | `deployment.placement.exclude` with `by: country`. |
+| Manager spread | A `spread` row with `by: manager`. **None** writes no row. **Required** and **Preferred** are `strength: required` and `strength: preferred`. |
+| Country spread | The same three choices with `by: country`. |
+| Minimum managers | That row's `minimumDistinct`: at least 2 and at most the job count. Blank means every job. |
+| Minimum countries | The country row's `minimumDistinct`, with the same bound. |
+| Processor type | **Either** writes no `processor_type` rule. **Core** and **Lite** write `allow` values `core` and `lite`. A native image locks the choice to Core. `either` is not a manifest value. |
+| Minimum Processor build | `deployment.placement.minimums.acurastProcessorBuild`. |
+| Excluded Processor builds | `exclude` with `by: acurast_processor_build`. |
+| Minimum Android version | `deployment.placement.minimums.androidMajor`. |
+
+The form states that an unknown country never matches an allow list, and that
+an exclude list alone does not remove unlocated processors. An unknown country
+never counts as a distinct country. **Required** means every job needs a
+feasible placement before the first spend. **Preferred** asks for diversity
+within the per-job cap and may cost more than the cheapest placement.
+
+The manager allow/exclude box on that form stays disabled. Author a manager
+rule in the manifest, and read the fleet with
+`proof liskov placement manager-fleet`.
+
 ### Country and spread refusals before spend
 
 Before the first job spends, required spread needs a feasible assignment for
@@ -487,6 +548,21 @@ The Application's authorized placement-refusal read is
 parameters are `fromMs` (inclusive) and `toMs` (exclusive), in Unix milliseconds
 for the observation's hourly window start, and `limit` (integer, 1–100).
 `cursor` continues a page within the same Application and time bounds.
+
+The same read from the CLI, hidden until V6 is released:
+
+```bash
+proof liskov application placement-refusals APPLICATION_ID \
+  --from-ms FROM_MS \
+  --to-ms TO_MS \
+  --limit LIMIT
+```
+
+`--from-ms`, `--to-ms` and `--limit` are required. There is no default window
+and no automatic paging. `--cursor` repeats the previous page's `nextCursor`
+and works only with the same `--from-ms` and `--to-ms`. `--json` prints the
+server's body unchanged. `--config` selects the session file and
+`--liskov-url` selects the service.
 The read reports these country reasons and safe next actions:
 
 | Country `reason` | Meaning | What you can change |
@@ -514,6 +590,35 @@ so counts describe recorded evidence, not every failed attempt. Follow
 or reason evidence was omitted. Empty history does not prove successful
 placement, and `incomplete: false` does not turn this history into a complete
 count of attempts.
+
+### The initial placement plan
+
+Required spread is judged against one immutable snapshot of the original
+whole-application plan. The snapshot is not current fulfillment: later fact
+changes still go through the refusal read above.
+
+```text
+GET /api/applications/:applicationId/placement/plans/:occurrenceAuthorityDigest
+```
+
+The digest is `sha256:` and 64 lowercase hexadecimal digits, with no
+normalization. Any other spelling is `invalid_occurrence_authority_digest`
+and is refused before the session is read. The response schema is
+`application_placement_plan_v1`. `semantics` is `initial_feasibility_snapshot`.
+`plan` is null when no plan was kept. A plan names
+`seedOccurrenceAuthorityDigest`, `planDigest`, `policyDigest`, `memberCount`
+and `rules`. Each rule has `by` (`manager` or `country`), `strength`,
+`minimumDistinct`, `targetDistinct`, `plannedDistinct` and `preferredDegraded`.
+
+The CLI read is hidden until V6 is released:
+
+```bash
+proof liskov application placement-plan APPLICATION_ID OCCURRENCE_AUTHORITY_DIGEST
+```
+
+`--json` prints the server's body unchanged. `--config` selects the session
+file and `--liskov-url` selects the service. Counts in this body describe the
+original plan.
 
 ### Android criteria and iOS processors
 
@@ -561,8 +666,9 @@ attestation. The six criteria reasons are:
 | `android_major_not_android` | `minimums.androidMajor`, on a processor that is not Android | remove the minimum Android version |
 
 A candidate whose proven type is not one the rule or the runtime admits is
-refused the same way, before spend. Where these reasons appear in the CLI and
-the Console is pinned when V6 is released.
+refused the same way, before spend. Country and spread reasons are the
+placement-refusals read above. Where these six processor-criteria reasons
+appear in the CLI and the Console is pinned when V6 is released.
 
 ## `deployment.spend.unit`
 
@@ -607,6 +713,11 @@ access:
     provider:
       kind: tailscale
 ```
+
+This is a fragment. `runtime.kind: native_image` still needs the V5 `image`
+and `entrypoint`. Pasting the fragment alone into
+`proof liskov application manifest validate` is refused at `/runtime` with
+`missing field image`.
 
 ## Deferred to a future policy version
 
