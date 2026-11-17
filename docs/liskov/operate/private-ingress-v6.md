@@ -114,6 +114,12 @@ The Console shows the same integration on **Integrations → Tailscale**
 Each job uses exactly one resolved Tailscale integration: a manifest whose
 sites resolve to two different integrations is refused.
 
+The provider client the control plane pins is `proof-computer/tailscale` tag
+`v1.98.10-liskov.1`, descriptor `tailscale-aarch64-1.98.10-liskov.1`, from
+liskov-rs `4526233012b28c33a849e8f1cb1ddac220ccf179`
+(`crates/liskov-runtime-ssh/src/provider_clients.rs`). A released customer
+artifact for that descriptor is pinned when V6 is released.
+
 ## 4. Pair your self-custody signer (ACU spend only)
 
 Skip this step when `deployment.spend.unit` is `service_credit_micros`:
@@ -134,14 +140,38 @@ proof liskov application signer APPLICATION_ID
 
 The readback names the policy the signer is paired against, each signer's
 liveness, open sign requests, terminal counts, dispatch lag and the last
-signature. **Standing** is the first of these that applies: `unpaired`,
-offline, an old signer protocol, sent requests with no legible outcome,
-requests waiting for a signer, or `online`.
+signature. **Standing** is the first of these that applies:
 
-Observed funding is **not reported**: the readback prints the server's reason
-(`v6_custody_execution_not_built`), never a figure. Your declared ACU caps are
-on the Application's **Spend** section in the Console (`/apps/<ref>/spend`),
-which also draws the signer's standing.
+- `unpaired`, when no signer is paired;
+- `offline (disconnected)`, when a paired signer is not online and not connected;
+- `offline (connected, heartbeat N ms ago; online after M ms of silence is not assumed)`, when a paired signer is connected but not online;
+- `signer protocol N is below 2`;
+- `N sent request(s) with no legible outcome`;
+- `N request(s) waiting … ms for a signer`;
+- `online`.
+
+The text readback does not print a funding figure. When the server reports
+funding as available, the CLI prints `Observed funding: reported by the
+server; this CLI does not render it yet.` Otherwise it prints
+`Observed funding: not reported (<the server's reason>).` `--json` returns
+the server's body from
+`GET /api/applications/:applicationId/custody/signer`. When funding is
+available that body includes `available`, `source`, `unit`, `admitted`,
+`openReserves`, `settled`, `settledPlanck`, `unresolvedHolds` and
+`oldestUnresolvedHoldAgeMs`. The only unavailable reason the route serves is
+`no_customer_funded_execution`.
+
+The command's help text still says observed funding is reported as unavailable
+with the server's reason, never as a figure. That sentence is older than the
+route. Trust the lines above, and the JSON body, for what a merged CLI does.
+
+The Console's **Spend** section (`/apps/<ref>/spend`) draws the signer's
+standing and, when funding is unavailable, that reason. It does not render a
+funding figure. Your declared ACU caps are on that section.
+
+The merged signer daemon is `liskov-self-custody-signer` `0.3.0` at
+`cfdf7fbf9b168c6ba71dc0ba742f0b6835beae4b`. Tag `v0.2.0` does not contain that
+commit. A released signer artifact is pinned when V6 is released.
 
 ## 5. Write and validate the V6 manifest
 
@@ -164,7 +194,10 @@ proof liskov application manifest validate \
 ```
 
 This reads one local file and returns diagnostics. It creates nothing and
-spends nothing.
+spends nothing. A valid file prints `Application manifest v6 is valid.`
+followed by `authoredDigest`, `releaseIntentDigest`, and
+`firstPublicReady: true`. `firstPublicReady: true` is the local validator's
+schema result. It is not permission to publish.
 
 ## 6. Publish
 

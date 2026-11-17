@@ -121,11 +121,15 @@ The **Counts** line shows `ambiguous` with the number of such requests, and
 **Standing** reads as sent requests with no legible outcome. The Application's
 **Spend** section in the Console (`/apps/<ref>/spend`) shows the same standing.
 
-An ambiguous request is not a charge you can read here. Observed funding is
-not reported (`v6_custody_execution_not_built`), and ACU spend is never shown
-as Service Credits. Check your signer's own records, then collect a [support bundle](./support.md) with
-the Application, the operation id from the readback, and your signer's
-address.
+An ambiguous request is not a charge you can read here. The text readback
+does not print a funding figure. When the server reports funding as available,
+the CLI prints `Observed funding: reported by the server; this CLI does not render it yet.` Otherwise it prints `Observed funding: not reported (<the
+server's reason>).` `--json` returns the server's body. The only unavailable
+reason that route serves is `no_customer_funded_execution`. The Console's
+**Spend** section shows that reason and does not render a figure. ACU spend
+is never shown as Service Credits. Check your signer's own records, then
+collect a [support bundle](./support.md) with the Application, the operation
+id from the readback, and your signer's address.
 
 ## A job restarts or is replaced
 

@@ -37,9 +37,13 @@ ingress:
             kind: tailscale
 ```
 
-The helper publishes the declared port and reports Tailscale's actual assigned
-DNS name. Liskov combines that observation with the service declaration to
-return a base URL such as `http://liskov-abcd.tailtest.ts.net:8840/`.
+The helper that publishes the declared port is `liskov-runtime-cargo` at
+`634ffcfab2b6d5dcc751dcbb3edec92cbf682ce5` (`src/discovery.rs`). `Cargo.toml`
+on that commit says `0.12.2`; tag `v0.12.2` does not contain the commit. A
+released helper artifact is pinned when V6 is released. The helper reports
+Tailscale's actual assigned DNS name. Liskov combines that observation with
+the service declaration to return a base URL such as
+`http://liskov-abcd.tailtest.ts.net:8840/`.
 Do not reconstruct the hostname from a job ID: names can be suffixed or renamed.
 
 ## Read the directory
