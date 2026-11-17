@@ -181,6 +181,7 @@
     {"id": "corpus-pin", "page": "reference/manifest-v6"},
     {"id": "production-registration", "page": "reference/manifest-v6"},
     {"id": "processor-criteria-read-surface", "page": "reference/manifest-v6"},
+    {"id": "inbound-reachability-candidate-reasons", "page": "reference/manifest-v6"},
     {"id": "signer-pairing", "page": "operate/private-ingress-v6"},
     {"id": "ssh-login-user", "page": "operate/private-ingress-v6"},
     {"id": "provider-customer-artifact", "page": "operate/private-ingress-v6"},

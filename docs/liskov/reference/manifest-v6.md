@@ -1,7 +1,7 @@
 ---
 unlisted: true
 title: Application Manifest V6 reference
-description: The exact V6 delta over retained V5 — integrations, private HTTP ingress and health, SSH providers, country and manager filters and spread, processor type and Android placement criteria, and self-custody spend.
+description: The exact V6 delta over retained V5 — integrations, private HTTP ingress and health, SSH providers, country, manager, and inbound IPv6 filters and spread, processor type and Android placement criteria, and self-custody spend.
 ---
 
 # Application Manifest V6 reference
@@ -32,7 +32,8 @@ V6 is V5 with these authored arms added and nothing removed:
   with liveness and readiness probes;
 - `access.ssh.provider.kind: tailscale`, beside V5's managed provider;
 - `deployment.placement.allow` and `exclude`, over the processor's on-chain
-  manager id, country, processor type, and exact Android Processor builds to avoid;
+  manager id, country, inbound IPv6 reachability, processor type, and exact
+  Android Processor builds to avoid;
 - `deployment.placement.spread`, by manager and country;
 - `deployment.placement.minimums.acurastProcessorBuild` and `androidMajor`,
   Android floors beside V5's four capability floors; and
@@ -224,8 +225,8 @@ behavior is released. See
 :::
 
 V6 adds two Android floors to `minimums` and two optional eligibility lists,
-`allow` and `exclude`, over four dimensions: the processor's manager, country,
-processor type, and exact Android Processor builds to avoid. It also adds
+`allow` and `exclude`, over the processor's manager, country, processor type,
+exact Android Processor builds to avoid, and inbound IPv6 reachability. It also adds
 `spread` by manager and country across jobs. The lists narrow who may be
 chosen; spread constrains or prefers diversity across those choices. Neither
 turns `processorIds` into ordered slots.
@@ -286,6 +287,7 @@ characters. The dimensions are a closed list:
 | `country` | exactly two uppercase ASCII letters, in ISO 3166-1 alpha-2 form | yes | yes |
 | `processor_type` | `core` or `lite` | yes | yes |
 | `acurast_processor_build` | one exact Android build number each | refused | yes |
+| `inbound_reachability` | exactly `v6` | yes | refused |
 
 At most one `allow` rule per dimension, so there is no hidden merge precedence.
 One value may not appear in both lists for the same dimension: that is refused
@@ -417,6 +419,67 @@ because it is not an exact Android Processor build; `">=131"`, `"0131"`, and
 with `by: acurast_processor_build` under `allow` is refused at
 `/deployment/placement/allow/0/by`. State a minimum as
 `minimums.acurastProcessorBuild` instead.
+
+#### `inbound_reachability`
+
+Allow-only. The author states that the job listens and must be dialable over
+IPv6. It is a workload requirement, not a quality or reliability tier.
+
+The only value is the exact string `v6`. `v4` is refused because no processor
+on the measured network accepts an inbound IPv4 connection. A later version
+may admit it. There is no case folding and no trimming: `V6`, an empty
+string, ` v6`, and `v6 ` are refused the same way as `v4`.
+
+```yaml
+deployment:
+  placement:
+    allow:
+      - by: inbound_reachability
+        values: [v6]
+```
+
+`allow: [{by: inbound_reachability, values: ["v4"]}]` is refused at
+`/deployment/placement/allow/0/values/0` with
+`inbound_reachability requires the exact value v6`.
+`exclude: [{by: inbound_reachability, values: ["v6"]}]` is refused at
+`/deployment/placement/exclude/0/by` with
+`inbound_reachability is allow-only`. A second `allow` rule for this
+dimension is refused at `/deployment/placement/allow`. The rule composes with
+the other allow and exclude criteria and with an exact `processorSelection`.
+
+At the final placement check Liskov reads its newest measurement of whether
+the processor accepts an inbound connection. The processor matches only when
+that measurement found IPv6 reachable and was taken no more than 90 days
+before the check. Those 90 days are a fixed part of the contract. They do not
+depend on how long Liskov keeps measurements.
+
+A processor does not match when Liskov has not measured it, when its newest
+measurement is expired or older than 90 days, when it advertised no IPv6
+address, when the result was anything other than reachable, or when the
+measurement itself could not be made. An unmeasured processor never matches
+this `allow` rule, the same way an unlocated processor never matches a country
+`allow` rule. A processor Liskov has not measured, and a processor with no
+IPv6 address, is never a candidate.
+
+When no candidate qualifies, launch refuses before any reserve, signer
+request, or registration. On the placement-refusals read, the observation's
+`launchReason` is `inbound_fleet_empty` and its `placementCode` is
+`placement_no_eligible_candidate`. The read does not say how many processors
+would qualify.
+
+A matching processor accepted a connection over IPv6 from one measurement
+point within 90 days. Two matching processors can each be dialed. Liskov
+does not prove that a given pair connected, and it relays nothing. The
+application authenticates its peers with the job keys published on chain.
+Direct transfer is an optimization over a durable copy, never a replacement
+for one.
+
+`by: inbound_reachability` is not a spread key. A `spread` row with
+`by: inbound_reachability` is refused at that row's `/by` pointer, the same
+way as any key other than `manager` or `country`.
+
+The names of the per-candidate refusal reasons are pinned when V6 is
+released.
 
 #### All criteria together
 
@@ -574,7 +637,14 @@ The read reports these country reasons and safe next actions:
 
 When country filtering leaves no eligible candidate, the observation's
 `launchReason` is `country_fleet_empty` and its `placementCode` is
-`placement_no_eligible_candidate`. Spread observations distinguish:
+`placement_no_eligible_candidate`.
+
+When an `inbound_reachability` allow rule leaves no eligible candidate, the
+observation's `launchReason` is `inbound_fleet_empty` and its `placementCode`
+is `placement_no_eligible_candidate`. That observation does not say how many
+processors would qualify.
+
+Spread observations distinguish:
 
 | `launchReason` | `placementCode` | Meaning and next step |
 | --- | --- | --- |
