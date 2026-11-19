@@ -6,7 +6,7 @@
   "releaseToggle": null,
   "ownersReadAt": {
     "docs": "83b2458096574cac1bcbe34faf58b24bb3e0deb3",
-    "proof-cli-liskov": "206ed44947435935d74f7128686adb4f43a4fbf8",
+    "proof-cli-liskov": "fd84019c6a819ca804750434f5c81d28c792f390",
     "liskov-ui": "e3688387e42322bcc2fab358079fb1046624144c",
     "liskov-rs": "4526233012b28c33a849e8f1cb1ddac220ccf179",
     "liskov-examples": "f41afc58f87c457b902f92c70f97349525a42ddf",
@@ -27,7 +27,7 @@
     "cli": {
       "repository": "proof-computer/proof-cli-liskov",
       "package": "@proof-computer/proof-cli-liskov",
-      "sourceCommit": "206ed44947435935d74f7128686adb4f43a4fbf8",
+      "sourceCommit": "fd84019c6a819ca804750434f5c81d28c792f390",
       "sourceVersion": "0.18.1",
       "sourceVersionPath": "package.json",
       "ownerPath": "package.json",
@@ -93,11 +93,11 @@
   "policyBundles": {
     "cli": {
       "repository": "proof-computer/proof-cli-liskov",
-      "sourceCommit": "206ed44947435935d74f7128686adb4f43a4fbf8",
+      "sourceCommit": "fd84019c6a819ca804750434f5c81d28c792f390",
       "ownerPath": "src/policy-client-bundle/source.json",
-      "bundleOwnerCommit": "002bcea654adc2922c56485e3fa33ffd10ecdaef",
-      "sourceDigest": "sha256:ab54fd3e6359dd0395383cf7c0965293063908c1e4732e8b93bc7e2a6740d743",
-      "manifestDigest": "sha256:8aa247f9352995ab15cab1bf5051b2fd98de27ce15c1b6c601cbaf8823de9257",
+      "bundleOwnerCommit": "4473cf26b26f4ed6d2960b086506254fe4d7dea3",
+      "sourceDigest": "sha256:199861f912ffab4e6e12a250248117c11074f42328dd571acccb5c0ac1608c29",
+      "manifestDigest": "sha256:54bd5f14b62fa425915045cb414326bb9cc1b6ea0dbed60d0e6fac30ebd67dc0",
       "manifestPath": "src/policy-client-bundle/policy-client-bundle.json",
       "supportedManifestSchemaVersions": [4, 5, 6, 7, 8],
       "publicationPairs": [
