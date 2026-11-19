@@ -63,7 +63,7 @@ none of those commits is in a release tag.
 
 | Piece | Merged source | Released artifact |
 | --- | --- | --- |
-| CLI `@proof-computer/proof-cli-liskov` | `206ed44947435935d74f7128686adb4f43a4fbf8`. `package.json` says `0.18.1`; tag `v0.18.1` does not contain this commit | Pinned when V6 is released |
+| CLI `@proof-computer/proof-cli-liskov` | `fd84019c6a819ca804750434f5c81d28c792f390`. `package.json` says `0.18.1`; tag `v0.18.1` does not contain this commit | Pinned when V6 is released |
 | Console `slipway-ui` | `e3688387e42322bcc2fab358079fb1046624144c`. The package version is `0.0.0`, and the repository has no release tag | Pinned when V6 is released |
 | Cargo runtime helper `liskov-runtime-cargo` | `634ffcfab2b6d5dcc751dcbb3edec92cbf682ce5`. `Cargo.toml` says `0.12.2`; tag `v0.12.2` does not contain this commit. `src/discovery.rs` requests Tailscale discovery with `discoveryVersion` 1 | Pinned when V6 is released |
 | Tailscale provider client | Pinned by liskov-rs `4526233012b28c33a849e8f1cb1ddac220ccf179` at `crates/liskov-runtime-ssh/src/provider_clients.rs`: repository `proof-computer/tailscale`, tag `v1.98.10-liskov.1`, descriptor `tailscale-aarch64-1.98.10-liskov.1` | Pinned when V6 is released |
@@ -71,9 +71,9 @@ none of those commits is in a release tag.
 
 `proof liskov application manifest validate` evaluates a local file with the
 CLI's vendored owner bundle. That bundle's source digest is
-`sha256:ab54fd3e6359dd0395383cf7c0965293063908c1e4732e8b93bc7e2a6740d743`,
-from liskov-rs `002bcea654adc2922c56485e3fa33ffd10ecdaef`. Its manifest digest
-is `sha256:8aa247f9352995ab15cab1bf5051b2fd98de27ce15c1b6c601cbaf8823de9257`.
+`sha256:199861f912ffab4e6e12a250248117c11074f42328dd571acccb5c0ac1608c29`,
+from liskov-rs `4473cf26b26f4ed6d2960b086506254fe4d7dea3`. Its manifest digest
+is `sha256:54bd5f14b62fa425915045cb414326bb9cc1b6ea0dbed60d0e6fac30ebd67dc0`.
 Manifest and policy schema version 6 are supported pairs. The only publication
 pair is still Manifest V5 `source`, which is why
 `proof liskov application policy publish` refuses a V6 document. A schema-valid
