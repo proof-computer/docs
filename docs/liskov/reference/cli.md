@@ -126,6 +126,12 @@ key its `--json` output adds beside `explanation` and `convergence`, are in
 source `8a930c4`, which is not in npm `0.15.0`. Fixed-interval execution itself
 is release-gated; see [Capabilities and limits](./capabilities.md).
 
+The installed plugin also lists `application workload-revisions` and the
+`--kind native_payload` and `--descriptor` flags of `application artifact
+upload`. They belong to the Internal V8 payload contract. See [Native Cargo
+payload upload, V8 manifest validation and workload revision status (CLI
+0.19.0)](./capabilities.md#account-marketplace-and-release).
+
 ### Application log flags
 
 ```bash
@@ -170,7 +176,7 @@ nonzero.
 
 | Command | Important flags and behavior |
 | --- | --- |
-| `application manifest validate --file PATH` | Strict local V4 or retained V5 validation; read-only. |
+| `application manifest validate --file PATH` | Strict local V4 or retained V5 validation; also accepts a dark V8 document, which cannot be published. `--export PATH` writes the validated document to a new file. Read-only. |
 | `application create APPLICATION_ID --repository OWNER/REPO` | Create an Application from identity alone: no draft, no spend. The retained V5 first step. |
 | `application source-binding set APP_REF --repository OWNER/REPO --allowed-ref REF --workflow-identity IDENTITY --manifest-path PATH --yes` | Bind the exact GitHub source a retained V5 Application may publish from; organization `admin` only; the first binding is revision `1`. Available in `0.12.0` and later. |
 | `application source-binding show APP_REF --json`, `application source-binding revoke APP_REF --expected-revision N --reason TEXT --yes` | Read the current binding, revision, and revocation epoch; withdraw it. Available in `0.12.0` and later. |

@@ -1515,6 +1515,38 @@ check(
 );
 check(cliPage.includes(`\`${cliContract.package}\` \`${cliContract.version}\``), 'CLI page omits the fixture package version');
 
+// BKLG-20261121-zis0: CLI 0.19.0 lists dark V8 payload commands. They stay
+// Internal, named from the CLI reference, and out of every other page.
+check(
+  /\| Native Cargo payload upload, V8 manifest validation and workload revision status \(CLI `0\.19\.0`\) \| Internal;/.test(capabilitiesPage)
+    && capabilitiesPage.includes('`v8_production_registration_not_activated`')
+    && capabilitiesPage.includes('for a retained V5 Application it returns an empty list'),
+  'capability matrix no longer classifies CLI 0.19.0 native payload upload, V8 validation, and workload revisions as Internal',
+);
+const applicationReads = cliPage.split('## Application reads')[1]?.split('\n## ')[0] ?? '';
+check(
+  applicationReads.includes('application workload-revisions')
+    && applicationReads.includes('--kind native_payload')
+    && applicationReads.includes('--descriptor')
+    && applicationReads.includes('](./capabilities.md#account-marketplace-and-release)')
+    && !applicationReads.includes('| `application workload-revisions')
+    && !applicationReads.includes('| `application artifact upload'),
+  'CLI reference must name the Internal V8 payload commands, link the capability row, and give them no table row',
+);
+check(
+  cliPage.includes('also accepts a dark V8 document, which cannot be published')
+    && cliPage.includes('`--export PATH` writes the validated document to a new file'),
+  'CLI reference manifest validate row omits dark V8 or --export',
+);
+for (const file of files) {
+  const id = idFor(file);
+  if (id.startsWith('reference/')) continue;
+  const page = readFileSync(file, 'utf8');
+  for (const token of ['workload-revisions', 'native_payload']) {
+    check(!page.includes(token), `${id} mentions ${token} outside reference/ while the V8 payload commands are Internal`);
+  }
+}
+
 const executionConvergenceContract = JSON.parse(readFileSync(executionConvergenceContractPath, 'utf8'));
 check(
   executionConvergenceContract.schema === 'proof.liskov.docs-execution-convergence-contract.v1',
