@@ -5,14 +5,14 @@ description: Public proof liskov v1 command tree, confirmations, machine-readabl
 
 # CLI
 
-The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.14.0` and
+The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.18.1` and
 requires Node.js 22 or later. All commands begin with `proof liskov`. This
 release includes the retained V5 authoring, policy, and `application
 source-binding` verbs listed below.
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov@0.14.0
+proof plugins install @proof-computer/proof-cli-liskov@0.18.1
 proof liskov --help
 ```
 
@@ -20,7 +20,8 @@ proof liskov --help
 
 The typed `organization_over_plan_caps` explanation described in
 [Application cap refusals](./statuses-actions-errors.md#application-cap-refusals)
-is verified in released plugin `0.17.0`. Install that version for the feature,
+is verified in released plugin `0.17.0`, and the active `0.18.1` includes it.
+If you pinned an earlier plugin, install at least that version for the feature,
 including `--json` output that preserves the received `feature`, `used`, and
 `limit` fields:
 

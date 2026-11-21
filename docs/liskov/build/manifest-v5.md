@@ -164,7 +164,7 @@ proof liskov application manifest validate \
   --json
 ```
 
-Use `@proof-computer/proof-cli-liskov` `0.14.0`. Its released tag contains
+Use `@proof-computer/proof-cli-liskov` `0.18.1`. Its released tag contains
 source commit `e135604ed2f6c59ffc737fce5fe08eaa19d77d0c`; the earlier `v0.7.0` tag does
 not. The `application source-binding` verbs in step 2 are included.
 
@@ -245,9 +245,10 @@ jobs:
 Replace `YOUR_ORGANIZATION_ID` with the ID `proof liskov whoami` prints. The
 workflow uploads the bundle through the Liskov IPFS service without spending and
 attests the artifact digest, the source commit and ref, and the workflow
-identity to Liskov. It publishes nothing. Its run log prints the artifact
-digest as `Artifact sha256:`, and the called workflow exposes it as the
-`digest` output.
+identity to Liskov. It publishes nothing. Its **IPFS pin (no-spend)** step
+prints the artifact digest as `Pinned hello-liskov: ipfs://… (sha256:…)` (the
+whole `sha256:…` value in the parentheses), and the called workflow exposes it
+as the `digest` output.
 
 ## 3. Publish from the attested build
 
