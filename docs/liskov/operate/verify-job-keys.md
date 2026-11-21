@@ -71,12 +71,24 @@ The attested key is the account that signed the acknowledgement in step 1. The a
 | Step | What it proves | What it does not prove |
 | --- | --- | --- |
 | 1. Key | This job's acknowledgement published this Ed25519 key, and the assigned processor signed that acknowledgement. | The policy digest that governed the deployment. It is not on chain. |
-| 2. Artifact | The registered script is the artifact whose digest you were given. | That the launch account belongs to this application. |
+| 2. Artifact | The registered script is the artifact whose digest you were given. | [That the launch account belongs to this application](#pin-the-applications-launch-account). |
 | 3. Processor | The processor account presented a certificate chain at onboarding, and that account signed step 1. | Which of an application's keys are current. |
 
 Those three are Liskov's claims. Liskov serves no public endpoint for them. Whether a key is current is Liskov's view, as of a stated time, on a read Liskov has not published here.
 
 The chain cannot show that the job key was created inside a hardware boundary. For the job in the worked example, the honest statement is: signed by the key that attested processor 5FKoK8FcjEouy12D2LcJWxZU7TM6YYh6BRqQLqU8CkyR4MqX published for this job on chain; the key is held by Acurast's processor app, not hardware-attested.
+
+## Pin the application's launch account
+
+The artifact is public. Step 2 fetches the registration's `ipfs://` script, and anyone can read those bytes. Anyone can register that same artifact from their own Acurast account. Their job then passes steps 1 to 3 with its own key.
+
+The job's origin is its launch account. That account is what ties a key to one application. Each Liskov application has its own launch account.
+
+**For a publisher:** publish the application's launch account where customers read about the application, for example its README or its service card. Publish the SS58 address, or the `0x` account id. A running job reads the account from `job.id` (`origin.source`), as [What you need](#what-you-need) already says.
+
+**For a verifier:** reject any key whose job origin is not the account the publisher published. Run the example script with `--expected-origin` set to that account. You can list more than one account, separated by commas. Each entry is an SS58 address or a `0x` account id.
+
+The chain cannot show whose account a launch account is. Whose account it is stays one of the claims this page already calls Liskov's. The account you pin is the account the publisher publishes. If an application's launch account changes, the publisher announces the new one.
 
 ## One key per application release per processor
 

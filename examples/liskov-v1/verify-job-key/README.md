@@ -32,3 +32,5 @@ node verify-job-key.mjs \
 ```
 
 The default endpoint is `wss://archive.mainnet.acurast.com`. Pass `--endpoint` to use another archive node. The script prints the facts it read as JSON. A pruned or latest-state node returns nothing for a job that has ended.
+
+Pin the launch account the publisher published by adding `--expected-origin` to the live command above. For this worked example the account is `5CqT7rJekrMPvzfkPb9iyV1XmHrYJ4nuFvn3cKo3P7tF438o`. Separate several accounts with commas. Each account is an SS58 address or a `0x` account id. The offline command takes the same flag, and a job from any other launch account fails.
