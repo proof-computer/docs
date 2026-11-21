@@ -31,7 +31,10 @@ customer input.
 
 Acurast registration and assignment identify the time-boxed job, schedule,
 processor, and relevant chain events. Assignment supports that a processor
-accepted the job. It is not runtime readiness.
+accepted the job. It is not runtime readiness. The job's signing key is a
+key the attested processor published for that job on chain. Acurast's processor
+app holds that key, and the key is not hardware-attested. See
+[Verify a job's signing key without Liskov](../operate/verify-job-keys.md).
 
 ## Runtime evidence
 

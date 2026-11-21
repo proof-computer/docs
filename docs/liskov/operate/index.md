@@ -13,6 +13,7 @@ Plan tells you when Liskov needs a decision or new input.
 - [Deployments, jobs, and timelines](./deployments-jobs.md)
 - [Inspect a processor your organization used](./processors.md)
 - [Inspect the proof chain](./proof-chain.md)
+- [Verify a job's signing key without Liskov](./verify-job-keys.md)
 - [Monitor logs and activity](./logs-activity.md)
 - [Integrations](./integrations.md)
 - [Open a shell in a running job](./runtime-ssh.md)

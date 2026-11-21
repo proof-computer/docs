@@ -41,7 +41,9 @@ proof liskov application plans APPLICATION_ID --json
 
 Open the deployment that cites that policy digest. Confirm its Acurast job ID,
 scheduled bounds, processor ID, submission/assignment evidence, and any
-successor relationship.
+successor relationship. To check the job's signing key, the artifact, and the
+processor attestation from public Acurast data, without a Liskov account, follow
+[Verify a job's signing key without Liskov](./verify-job-keys.md).
 
 ## 5. Match runtime contact
 

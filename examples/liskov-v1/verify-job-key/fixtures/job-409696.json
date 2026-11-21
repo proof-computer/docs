@@ -1,0 +1,241 @@
+{
+  "schema": "proof.liskov.docs.job-key-verification-fixture.v1",
+  "recordedFrom": "orchestrator docs/raw/2026-11-21-job-409696-public-chain-verifiability-readback.md (reads 2026-11-21T16:31Z-16:42Z UTC)",
+  "network": {
+    "archiveEndpoint": "wss://archive.mainnet.acurast.com",
+    "genesisHash": "0x4b5f95eefedf0d0fb514339edc24d2d411310520f687b4146145bcedb99885b9",
+    "ss58Prefix": 42,
+    "finalizedAtRead": {
+      "block": 5448918,
+      "hash": "0x292ff9349c30b14970f3be2a338b7463d81f4a2c32c46d605a8a3f3ebb65628d"
+    }
+  },
+  "publisher": {
+    "note": "What the publisher hands a verifier: the provenance record of Liskov's authenticated deployment read, plus the artifact digest.",
+    "jobId": "[{\"Acurast\":\"5CqT7rJekrMPvzfkPb9iyV1XmHrYJ4nuFvn3cKo3P7tF438o\"},\"409696\"]",
+    "origin": "5CqT7rJekrMPvzfkPb9iyV1XmHrYJ4nuFvn3cKo3P7tF438o",
+    "originHex": "22206e0b641ccad620aac0b93807aac923660351f57fa9e9b87a6625fd753068",
+    "sequence": "409696",
+    "processorId": "5FKoK8FcjEouy12D2LcJWxZU7TM6YYh6BRqQLqU8CkyR4MqX",
+    "processorAccountHex": "9037bf9cc25050d991032fe085401dd417f0cf652682d35976f75fd31f19ce8c",
+    "jobPublicKeys": {
+      "ed25519": "81eb8a4001c87f381e100cf7bd1013087e300e9f554c91f090997ad629e585ae"
+    },
+    "acknowledgement": {
+      "block": 5447858,
+      "blockHash": "0x16ffa3b2a0e4dd1bfc7a70b888d56cc3c3fe49ae9e622f544736a58d4cb18810",
+      "blockTimestamp": "2026-11-21T14:43:12.000Z",
+      "extrinsicIndex": 68,
+      "extrinsicHash": "0xda5cb192c10a8db76b12133f1e2ae32a8034bec40f12aad53ce3ef288547ae00"
+    },
+    "artifactDigest": "sha256:6233551c2914e8e20b3894efd52303037caabcf37d6c5a79fbc34fa466b5a245"
+  },
+  "reads": {
+    "registration": {
+      "atBlock": 5447854,
+      "blockHash": "0x413681c7fec276036d3a9d00ff5baf49cbd3fe5eee945879e657029d9de29b6f",
+      "blockTimestamp": "2026-11-21T14:42:48.000Z",
+      "deployExtrinsic": {
+        "index": 331,
+        "hash": "0xb128b9bbff8aa49709ac3d9d45895e27e1fc7751c877ed153e92f322bbcd949c",
+        "signer": "5CqT7rJekrMPvzfkPb9iyV1XmHrYJ4nuFvn3cKo3P7tF438o",
+        "call": "acurastMarketplace.deploy",
+        "events": [
+          "JobRegistrationMatchedV2",
+          "JobRegistrationStoredV2"
+        ]
+      },
+      "script": "ipfs://QmdmouagNWHsxAhVSALYt45Ha3fWuebWmf7H6nwY2hx6f1",
+      "allowedSources": [
+        "5FKoK8FcjEouy12D2LcJWxZU7TM6YYh6BRqQLqU8CkyR4MqX"
+      ],
+      "allowOnlyVerifiedSources": true,
+      "slots": 1,
+      "runtime": "NodeJSWithBundle",
+      "presentUntilBlock": 5448507,
+      "removedAt": {
+        "block": 5448508,
+        "extrinsicIndex": 284,
+        "call": "acurast.deregister"
+      }
+    },
+    "storedMatches": {
+      "atBlock": 5447858,
+      "raw": "0x000000000000000000323cfb2c030000000000000000000000010100000000000000000000000000000010008402a935b49224556fae917aaa6ff5e5928ed973d9559fec970932cc3351eb2f7ad9018403af9e665001e797b18e85450a2d4ca538a2d31f77efede6f0645af86fc2f6c8ba028081eb8a4001c87f381e100cf7bd1013087e300e9f554c91f090997ad629e585ae03840326e51cd028c1be5d073bd7feb2624d80d0c03ffe55d98c621b608fb626c2efeb00",
+      "decoded": {
+        "acknowledged": true,
+        "pubKeys": [
+          {
+            "secp256r1": "0x02a935b49224556fae917aaa6ff5e5928ed973d9559fec970932cc3351eb2f7ad9"
+          },
+          {
+            "secp256k1": "0x03af9e665001e797b18e85450a2d4ca538a2d31f77efede6f0645af86fc2f6c8ba"
+          },
+          {
+            "ed25519": "0x81eb8a4001c87f381e100cf7bd1013087e300e9f554c91f090997ad629e585ae"
+          },
+          {
+            "secp256r1Encryption": "0x0326e51cd028c1be5d073bd7feb2624d80d0c03ffe55d98c621b608fb626c2efeb"
+          }
+        ]
+      },
+      "presentFrom": 5447858,
+      "presentUntil": 5448446,
+      "absentAt": 5448447,
+      "jobId": "[{\"Acurast\":\"5CqT7rJekrMPvzfkPb9iyV1XmHrYJ4nuFvn3cKo3P7tF438o\"},\"409696\"]"
+    },
+    "assignedProcessors": {
+      "atBlock": 5447858,
+      "processors": [
+        "5FKoK8FcjEouy12D2LcJWxZU7TM6YYh6BRqQLqU8CkyR4MqX"
+      ]
+    },
+    "acknowledgementExtrinsic": {
+      "block": 5447858,
+      "index": 68,
+      "hash": "0xda5cb192c10a8db76b12133f1e2ae32a8034bec40f12aad53ce3ef288547ae00",
+      "signer": "5FKoK8FcjEouy12D2LcJWxZU7TM6YYh6BRqQLqU8CkyR4MqX",
+      "call": "acurastMarketplace.acknowledgeMatch",
+      "args": {
+        "job_id": [
+          {
+            "Acurast": "5CqT7rJekrMPvzfkPb9iyV1XmHrYJ4nuFvn3cKo3P7tF438o"
+          },
+          "409,696"
+        ],
+        "pub_keys": [
+          {
+            "SECP256r1": "0x02a935b49224556fae917aaa6ff5e5928ed973d9559fec970932cc3351eb2f7ad9"
+          },
+          {
+            "SECP256k1": "0x03af9e665001e797b18e85450a2d4ca538a2d31f77efede6f0645af86fc2f6c8ba"
+          },
+          {
+            "ED25519": "0x81eb8a4001c87f381e100cf7bd1013087e300e9f554c91f090997ad629e585ae"
+          },
+          {
+            "SECP256r1Encryption": "0x0326e51cd028c1be5d073bd7feb2624d80d0c03ffe55d98c621b608fb626c2efeb"
+          }
+        ]
+      },
+      "event": "JobRegistrationAssignedV2"
+    },
+    "artifact": {
+      "cid": "QmdmouagNWHsxAhVSALYt45Ha3fWuebWmf7H6nwY2hx6f1",
+      "bytes": 42891,
+      "sha256": "6233551c2914e8e20b3894efd52303037caabcf37d6c5a79fbc34fa466b5a245",
+      "fetchedFrom": "https://gateway.pinata.cloud/ipfs/QmdmouagNWHsxAhVSALYt45Ha3fWuebWmf7H6nwY2hx6f1",
+      "gatewaysRefusing": [
+        "https://ipfs.io (429)",
+        "https://dweb.link (429)"
+      ],
+      "cidRecomputedFromBytes": true,
+      "bytesNotRecorded": "the artifact is the application owner's code; only its digest, size and CID are recorded"
+    },
+    "attestation": {
+      "storedAttestationValueFirstPresentAt": {
+        "block": 1202890,
+        "hash": "0xf8d3a2b25ca18fb00c91744288004bb2cb286f1c6ed50bbf0000e620f8b5a418",
+        "timestamp": "2026-01-21T07:11:24.000Z"
+      },
+      "onboardExtrinsic": {
+        "block": 1202890,
+        "index": 19,
+        "hash": "0xa3c0db182d31b259ac0ee325526b6a70db6d3dc2ba312d4f877ffa7fa4dd43cf",
+        "signer": "5FKoK8FcjEouy12D2LcJWxZU7TM6YYh6BRqQLqU8CkyR4MqX",
+        "call": "acurastProcessorManager.onboard",
+        "event": "acurast.AttestationStoredV2",
+        "pairingAccount": "5FfNTsjsxiABb77U79DYV6wwTd6oMNTnkx2RnvkUcxsBDZmS"
+      },
+      "certificateChainRootFirstDerBase64": [
+        "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"
+      ],
+      "certificateSha256": [
+        "1ef1a04b8ba58ab94589ac498c8982a783f24ea7307e0159a0c3a73b377d87cc",
+        "0aceb372720f9c5041cc24c4140468dbab0b7da1ca2bc9bb9d5b4feb2c6a5db3",
+        "b1441f90a3ed90c70f585fa1a6f6053f8fc8a870e50b320f0230d2cb2bbe4298",
+        "8b78bce7f318321f9331c21dd799df374498e471f26b8a5db658c862a9c2c8ac"
+      ],
+      "leafCompressedP256": "03fa87441e4c7b578bdda4145ec926b76456db2485e7ad14d5061b177e39b9e88f",
+      "blake2b256OfLeaf": "9037bf9cc25050d991032fe085401dd417f0cf652682d35976f75fd31f19ce8c",
+      "storedValidity": {
+        "notBeforeMs": 1623871031000,
+        "notAfterMs": 1939231031000
+      },
+      "chainRevokedCertificate": "StoredRevokedCertificate null for all four serials at head (both endpoints)"
+    },
+    "googleRoot": {
+      "url": "https://android.googleapis.com/attestation/root",
+      "fetchedAt": "2026-11-21T16:38:07Z",
+      "jsonSha256": "b79beef96dd68073f1975bab90970ae85d1ae56d451a819ece6bff3d4e253ab4",
+      "root0Pem": "-----BEGIN CERTIFICATE-----\nMIIFHDCCAwSgAwIBAgIJAPHBcqaZ6vUdMA0GCSqGSIb3DQEBCwUAMBsxGTAXBgNV\nBAUTEGY5MjAwOWU4NTNiNmIwNDUwHhcNMjIwMzIwMTgwNzQ4WhcNNDIwMzE1MTgw\nNzQ4WjAbMRkwFwYDVQQFExBmOTIwMDllODUzYjZiMDQ1MIICIjANBgkqhkiG9w0B\nAQEFAAOCAg8AMIICCgKCAgEAr7bHgiuxpwHsK7Qui8xUFmOr75gvMsd/dTEDDJdS\nSxtf6An7xyqpRR90PL2abxM1dEqlXnf2tqw1Ne4Xwl5jlRfdnJLmN0pTy/4lj4/7\ntv0Sk3iiKkypnEUtR6WfMgH0QZfKHM1+di+y9TFRtv6y//0rb+T+W8a9nsNL/ggj\nnar86461qO0rOs2cXjp3kOG1FEJ5MVmFmBGtnrKpa73XpXyTqRxB/M0n1n/W9nGq\nC4FSYa04T6N5RIZGBN2z2MT5IKGbFlbC8UrW0DxW7AYImQQcHtGl/m00QLVWutHQ\noVJYnFPlXTcHYvASLu+RhhsbDmxMgJJ0mcDpvsC4PjvB+TxywElgS70vE0XmLD+O\nJtvsBslHZvPBKCOdT0MS+tgSOIfga+z1Z1g7+DVagf7quvmag8jfPioyKvxnK/Eg\nsTUVi2ghzq8wm27ud/mIM7AY2qEORR8Go3TVB4HzWQgpZrt3i5MIlCaY504LzSRi\nigHCzAPlHws+W0rB5N+er5/2pJKnfBSDiCiFAVtCLOZ7gLiMm0jhO2B6tUXHI/+M\nRPjy02i59lINMRRev56GKtcd9qO/0kUJWdZTdA2XoS82ixPvZtXQpUpuL12ab+9E\naDK8Z4RHJYYfCT3Q5vNAXaiWQ+8PTWm2QgBR/bkwSWc+NpUFgNPN9PvQi8WEg5Um\nAGMCAwEAAaNjMGEwHQYDVR0OBBYEFDZh4QB8iAUJUYtEbEf/GkzJ6k8SMB8GA1Ud\nIwQYMBaAFDZh4QB8iAUJUYtEbEf/GkzJ6k8SMA8GA1UdEwEB/wQFMAMBAf8wDgYD\nVR0PAQH/BAQDAgIEMA0GCSqGSIb3DQEBCwUAA4ICAQB8cMqTllHc8U+qCrOlg3H7\n174lmaCsbo/bJ0C17JEgMLb4kvrqsXZs01U3mB/qABg/1t5Pd5AORHARs1hhqGIC\nW/nKMav574f9rZN4PC2ZlufGXb7sIdJpGiO9ctRhiLuYuly10JccUZGEHpHSYM2G\ntkgYbZba6lsCPYAAP83cyDV+1aOkTf1RCp/lM0PKvmxYN10RYsK631jrleGdcdkx\noSK//mSQbgcWnmAEZrzHoF1/0gso1HZgIn0YLzVhLSA/iXCX4QT2h3J5z3znluKG\n1nv8NQdxei2DIIhASWfu804CA96cQKTTlaae2fweqXjdN1/v2nqOhngNyz1361mF\nmr4XmaKH/ItTwOe72NI9ZcwS1lVaCvsIkTDCEXdm9rCNPAY10iTunIHFXRh+7KPz\nlHGewCq/8TOohBRn0/NNfh7uRslOSZ/xKbN9tMBtw37Z8d2vvnXq/YWdsm1+JLVw\nn6yYD/yacNJBlwpddla8eaVMjsF6nBnIgQOf9zKSe06nSTqvgwUHosgOECZJZ1Eu\nzbH4yswbt02tKtKEFhx+v+OTge/06V+jGsqTWLsfrOCNLuA8H++z+pUENmpqnnHo\nvaI47gC+TNpkgYGkkBT6B/m/U01BuOBBTzhIlMEZq9qkDWuM2cA5kW5V3FJUcfHn\nw1IdYIg2Wxg7yHcQZemFQg==\n-----END CERTIFICATE-----\n",
+      "root0PemSha256": "25c0e389777a2f3bfc5f6e812862fb15af76162fa7ee6b46d100e9d5b5738667",
+      "spkiSha256": "feb2ea7551ee316ed4bb443c8293b884dbfdea40b603ee3e4f4a897e4580fbae"
+    },
+    "googleRevocation": {
+      "url": "https://android.googleapis.com/attestation/status",
+      "fetchedAt": "2026-11-21T16:38:07Z",
+      "sha256": "2f7f9065fb0e5f20a13577f7e76089d5f615e2c01b43a46d6fe560a6828b6e15",
+      "entryCount": 2211,
+      "chainSerials": [
+        "d50ff25ba3f2d6b3",
+        "cae43ccd6b2b17c68af41c889b236134",
+        "334172e9f3d1a55ada25e0d44d4f11b1",
+        "1"
+      ],
+      "chainSerialsListed": []
+    },
+    "search": {
+      "note": "How a verifier finds the two blocks from the job id alone (readback sections 2 and 3).",
+      "localJobIdSequence": {
+        "storage": "Acurast.LocalJobIdSequence",
+        "atBlockBefore": {
+          "block": 5447853,
+          "value": "409691"
+        },
+        "atRegistrationBlock": {
+          "block": 5447854,
+          "value": "409696"
+        },
+        "atHead": {
+          "block": 5448923,
+          "value": "409975"
+        },
+        "rule": "registration block = first block where LocalJobIdSequence >= job number"
+      },
+      "jobStatus": {
+        "storage": "AcurastMarketplace.StoredJobStatus(origin, job)",
+        "atBlockBefore": {
+          "block": 5447857,
+          "hash": "0x62bbe9bd469cf39133a65c538e3f2206b0fdcbe7d4a2dd075d5842cc6fd67662",
+          "value": {
+            "matched": null
+          }
+        },
+        "atAcknowledgementBlock": {
+          "block": 5447858,
+          "value": {
+            "assigned": 1
+          }
+        }
+      },
+      "storedMatchesBefore": {
+        "block": 5447857,
+        "raw": "0x000000000000000000323cfb2c03000000000000000000000000010000000000000000000000000000000000",
+        "decoded": {
+          "acknowledged": false,
+          "pubKeys": []
+        }
+      },
+      "rule": "acknowledgement block = first block at or after registration where the processor's match is acknowledged"
+    }
+  },
+  "notOnChain": [
+    "policy digest 9f59c968116d4dd231ec9525fbcee0326fb48bcf006cc888a075232f978c0dc1 (raw scan of blocks 5447754-5448930: absent)",
+    "the launch account's application",
+    "which keys are current"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "verify-job-key",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.33.0",
+  "dependencies": {
+    "@polkadot/api": "16.4.8"
+  }
+}

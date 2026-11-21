@@ -12,6 +12,10 @@ check verifies their stable contract values. Release validation additionally:
 
 The moving `v1` workflow reference was verified at immutable release `v1.2.4`.
 
+`verify-job-key/` checks a job's signing key, artifact, and processor
+attestation from public Acurast data. The docs check runs its core on the
+recorded fixture. The live script is not part of that check.
+
 `builder-iteration/` is the input for the `453u` builder edit / diagnose / recover
 exercise; its own tests, not the docs content check, pin its exact A, B and C
 variants.

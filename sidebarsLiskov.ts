@@ -53,6 +53,7 @@ const sidebars: SidebarsConfig = {
         'operate/deployments-jobs',
         'operate/processors',
         'operate/proof-chain',
+        'operate/verify-job-keys',
         'operate/logs-activity',
         {
           type: 'category',
