@@ -47,6 +47,7 @@ const baseExpectedIds = [
   'operate/deployments-jobs',
   'operate/processors',
   'operate/proof-chain',
+  'operate/verify-job-keys',
   'operate/logs-activity',
   'operate/update',
   'operate/pause-resume',
@@ -1958,6 +1959,7 @@ for (const [fileId, required] of Object.entries({
   'organizations/service-credits': ['read-only', 'Customer funding is release-gated', 'payment details'],
   'get-started/github': ['Manifest V5', 'retained-v5-starter', 'v1.2.4', 'source-binding set', 'Pinned hello-liskov: ipfs://', 'Proof'],
   'operate/proof-chain': ['GitHub OIDC', 'policy digest', 'runtime instance'],
+  'operate/verify-job-keys': ['Preview', 'per application release', 'many consecutive jobs', '5447854', '5447858', '81eb8a4001c87f381e100cf7bd1013087e300e9f554c91f090997ad629e585ae'],
   'operate/processors': ['your org', 'whole fleet', 'Enterprise', 'storageBytes', 'read-only', 'not-found', 'Redaction and missing data are not the same state'],
   'troubleshooting/deployment': ['Normal waiting', 'Needs action', 'decision-id', 'processorAtMatchCap', 'authoringFault'],
   'troubleshooting/execution-coverage': [
@@ -2047,6 +2049,7 @@ for (const [pattern, message] of [
   // LISKOV_SIGNUP_WAITLIST was turned on. Existing sign-in stays v1; the
   // availability transition is the part that must not silently regress.
   [/\| GitHub sign-in; browser-confirmed CLI login \| v1 for an existing account\.[^\n]+invitation-only[^\n]+\|/, 'capability matrix does not state that new-account creation is invitation-only'],
+  [/\| Verify a job's signing key, artifact and processor attestation from public Acurast data \| Preview, open to anyone;/, 'capability matrix omits the public job-key verification preview'],
 ]) {
   check(pattern.test(capabilitiesPage), message);
 }
@@ -2411,7 +2414,9 @@ for (const file of files) {
   check(!googleSignInClaim.test(content), `${id}: describes Google sign-in before its release verification`);
 }
 check(!/google-sign-in/.test(readFileSync(join(root, 'src', 'pages', 'index.tsx'), 'utf8')), 'landing page links the unreleased Google sign-in guide');
-check(!/\bGoogle\b/.test(capabilitiesPage), 'capabilities classifies Google sign-in before its release verification');
+// BKLG-20261121-q47r: the job-key preview row names Google's attestation roots.
+// That is not a sign-in claim. Sign-in classification stays forbidden.
+check(!googleSignInClaim.test(capabilitiesPage), 'capabilities classifies Google sign-in before its release verification');
 for (const [token, meaning] of [
   // ADR-0155 §1: the verified mailbox is the native account the email link reaches.
   ['**the same account**', 'Google and the email link reach one account'],
@@ -2903,6 +2908,121 @@ for (const commandId of ['liskov application placement-refusals', 'liskov applic
   const command = (v6CandidateContract.commands ?? []).find((item) => item.id === commandId);
   check(command?.hidden === true, `V6 candidate: ${commandId} must stay hidden`);
   check(v6ManifestPage.includes(`proof ${commandId}`), `V6 candidate: manifest-v6 omits ${commandId}`);
+}
+
+// BKLG-20261121-q47r: the offline core checks job 409696's recorded fixture.
+{
+  const {verifyRecorded, cidV0, sha256Hex, blake2b256Hex} = await import(
+    '../examples/liskov-v1/verify-job-key/verify.mjs'
+  );
+  const fixturePath = join(root, 'examples/liskov-v1/verify-job-key/fixtures/job-409696.json');
+  const fixture = JSON.parse(readFileSync(fixturePath, 'utf8'));
+  const page = readFileSync(join(docsRoot, 'operate/verify-job-keys.md'), 'utf8');
+  const readme = readFileSync(join(root, 'examples/liskov-v1/verify-job-key/README.md'), 'utf8');
+  const passed = verifyRecorded(fixture);
+  check(passed.ok, `job-key fixture failed: ${JSON.stringify(passed.checks)}`);
+  check(passed.registrationBlock === 5447854, 'job-key fixture did not find registration block 5447854');
+  check(passed.acknowledgementBlock === 5447858, 'job-key fixture did not find acknowledgement block 5447858');
+  const differ = (before, after, label) => check(JSON.stringify(before) !== JSON.stringify(after), `${label} mutation did not change the fixture`);
+  const registration = structuredClone(fixture);
+  const registrationBefore = registration.reads.search.localJobIdSequence.atBlockBefore;
+  const registrationWas = registrationBefore.value;
+  registrationBefore.value = registration.publisher.sequence;
+  differ(registrationWas, registrationBefore.value, 'registration search');
+  const registrationResult = verifyRecorded(registration);
+  check(!registrationResult.checks.registrationSearch.ok, 'registration search accepted a sequence that already reached the job number');
+  check(registrationResult.registrationBlock !== 5447854, 'registration search still found block 5447854');
+  const acknowledgement = structuredClone(fixture);
+  const acknowledgementBefore = acknowledgement.reads.search.storedMatchesBefore.decoded;
+  const acknowledgementWas = acknowledgementBefore.acknowledged;
+  acknowledgementBefore.acknowledged = true;
+  differ(acknowledgementWas, acknowledgementBefore.acknowledged, 'acknowledgement search');
+  const acknowledgementResult = verifyRecorded(acknowledgement);
+  check(!acknowledgementResult.checks.acknowledgementSearch.ok, 'acknowledgement search accepted an earlier acknowledged match');
+  check(acknowledgementResult.acknowledgementBlock !== 5447858, 'acknowledgement search still found block 5447858');
+  const otherKey = structuredClone(fixture);
+  otherKey.publisher.jobPublicKeys.ed25519 = '11'.repeat(32);
+  differ(fixture.publisher.jobPublicKeys.ed25519, otherKey.publisher.jobPublicKeys.ed25519, 'published key');
+  check(!verifyRecorded(otherKey).checks.step1.ok, 'step 1 accepted a different ed25519 key');
+  const secondKey = structuredClone(fixture);
+  secondKey.reads.storedMatches.decoded.pubKeys.push({ed25519: `0x${'22'.repeat(32)}`});
+  differ(fixture.reads.storedMatches.decoded.pubKeys.length, secondKey.reads.storedMatches.decoded.pubKeys.length, 'second ed25519 key');
+  check(!verifyRecorded(secondKey).checks.step1.ok, 'step 1 accepted more than one ed25519 key');
+  const otherSigner = structuredClone(fixture);
+  otherSigner.reads.acknowledgementExtrinsic.signer = fixture.publisher.origin;
+  differ(fixture.reads.acknowledgementExtrinsic.signer, otherSigner.reads.acknowledgementExtrinsic.signer, 'acknowledgement signer');
+  check(!verifyRecorded(otherSigner).checks.step1.ok, 'step 1 accepted a different acknowledgement signer');
+  const otherRoot = structuredClone(fixture);
+  otherRoot.reads.googleRoot.root0Pem = fixture.reads.attestation.certificateChainRootFirstDerBase64[3];
+  differ(fixture.reads.googleRoot.root0Pem, otherRoot.reads.googleRoot.root0Pem, 'Google root');
+  check(!verifyRecorded(otherRoot).checks.step3Chain.ok, 'step 3 accepted a chain that does not verify against the Google root');
+  const later = structuredClone(fixture);
+  later.publisher.acknowledgement.blockTimestamp = '2040-01-01T00:00:00.000Z';
+  differ(fixture.publisher.acknowledgement.blockTimestamp, later.publisher.acknowledgement.blockTimestamp, 'verification time');
+  check(!verifyRecorded(later).checks.step3Validity.ok, 'step 3 accepted a time past the leaf certificate');
+  const revoked = structuredClone(fixture);
+  revoked.reads.googleRevocation.chainSerialsListed = ['d50ff25ba3f2d6b3'];
+  differ(fixture.reads.googleRevocation.chainSerialsListed, revoked.reads.googleRevocation.chainSerialsListed, 'revocation');
+  check(!verifyRecorded(revoked).checks.step3Revocation.ok, 'step 3 accepted a revoked chain serial');
+  const otherAccount = structuredClone(fixture);
+  otherAccount.publisher.processorAccountHex = `8${fixture.publisher.processorAccountHex.slice(1)}`;
+  differ(fixture.publisher.processorAccountHex, otherAccount.publisher.processorAccountHex, 'processor account');
+  check(!verifyRecorded(otherAccount).checks.step3Account.ok, 'step 3 accepted a changed processor account');
+  const hexOrigin = structuredClone(fixture);
+  hexOrigin.publisher.jobId = fixture.publisher.jobId.replace(fixture.publisher.origin, `0x${fixture.publisher.originHex}`);
+  differ(fixture.publisher.jobId, hexOrigin.publisher.jobId, 'hex origin');
+  check(verifyRecorded(hexOrigin).checks.step1.ok, 'step 1 rejected the hex form of the same origin');
+  const wrongHex = structuredClone(fixture);
+  wrongHex.publisher.jobId = fixture.publisher.jobId.replace(fixture.publisher.origin, `0x${'ab'.repeat(32)}`);
+  differ(fixture.publisher.jobId, wrongHex.publisher.jobId, 'wrong hex origin');
+  check(!verifyRecorded(wrongHex).checks.step1.ok, 'step 1 accepted a different hex origin');
+  const otherDigest = structuredClone(fixture);
+  otherDigest.publisher.artifactDigest = `sha256:${'ab'.repeat(32)}`;
+  differ(fixture.publisher.artifactDigest, otherDigest.publisher.artifactDigest, 'published digest');
+  check(!verifyRecorded(otherDigest).checks.step2.ok, 'step 2 accepted a published digest that differs from the recorded SHA-256');
+  const droppedRevocation = structuredClone(fixture);
+  const revocationWas = droppedRevocation.reads.attestation.chainRevokedSerials;
+  delete droppedRevocation.reads.attestation.chainRevokedSerials;
+  differ(revocationWas, droppedRevocation.reads.attestation.chainRevokedSerials, 'chain revocation read');
+  check(!verifyRecorded(droppedRevocation).checks.step3Revocation.ok, 'step 3 accepted a missing chain revocation read');
+  const chainRevoked = structuredClone(fixture);
+  chainRevoked.reads.attestation.chainRevokedSerials = ['01'];
+  differ(fixture.reads.attestation.chainRevokedSerials, chainRevoked.reads.attestation.chainRevokedSerials, 'chain revocation list');
+  check(!verifyRecorded(chainRevoked).checks.step3Revocation.ok, 'step 3 accepted a serial on StoredRevokedCertificate');
+  const absentAttestation = structuredClone(fixture);
+  absentAttestation.reads.attestation.atAcknowledgement.present = false;
+  differ(fixture.reads.attestation.atAcknowledgement.present, absentAttestation.reads.attestation.atAcknowledgement.present, 'stored attestation');
+  check(!verifyRecorded(absentAttestation).checks.step3Stored.ok, 'step 3 accepted a processor with no StoredAttestation at the acknowledgement block');
+  const hello = Buffer.from('hello world\n');
+  check(cidV0(hello) === 'QmT78zSuBmuS4z925WZfrqQ1qHaJ56DQaTfyMUF7F8ff5o', 'CIDv0 of hello world is wrong');
+  const changedHello = Buffer.from('hello worle\n');
+  check(cidV0(changedHello) !== cidV0(hello) && sha256Hex(changedHello) !== sha256Hex(hello), 'a changed byte did not change the CID and SHA-256');
+  check(blake2b256Hex(Buffer.alloc(0)) === '0e5751c026e543b2e8ab2eb06099daa1d1e5df47778f7787faab45cdf12fe3a8', 'BLAKE2b-256 of the empty string is wrong');
+  check(cidV0(Buffer.alloc(262144, 1)).startsWith('Qm'), 'a 262144-byte artifact was refused');
+  let refusedMultiChunk = false;
+  try {
+    cidV0(Buffer.alloc(262145, 1));
+  } catch (error) {
+    refusedMultiChunk = /multi-chunk/.test(error.message);
+  }
+  check(refusedMultiChunk, 'a 262145-byte artifact was not refused as multi-chunk');
+  for (const token of ['5447854', '5447858', 'extrinsic 68', '81eb8a4001c87f381e100cf7bd1013087e300e9f554c91f090997ad629e585ae', 'per application release', 'many consecutive jobs', ':::info Preview']) {
+    check(page.includes(token), `verify-job-keys omits ${token}`);
+  }
+  check(!/renewal[\s\S]{0,80}new keys|new job gets new keys/i.test(page), 'verify-job-keys says a renewal or a new job gets new keys');
+  check(!/hardware-backed/i.test(page), 'verify-job-keys says hardware-backed');
+  check(!/hardware-backed/i.test(readme), 'verify-job-key README says hardware-backed');
+  const sibling = structuredClone(fixture);
+  sibling.publisher.sequence = '409697';
+  sibling.publisher.jobId = sibling.publisher.jobId.replaceAll('409696', '409697');
+  sibling.reads.storedMatches.jobId = sibling.reads.storedMatches.jobId.replaceAll('409696', '409697');
+  sibling.reads.acknowledgementExtrinsic.args.job_id[1] = '409,697';
+  differ(fixture.publisher.sequence, sibling.publisher.sequence, 'second job number');
+  check(verifyRecorded(fixture).checks.step1.ok && verifyRecorded(sibling).checks.step1.ok, 'step 1 rejected the same key on a second job');
+  for (const file of files) {
+    if (!idFor(file).startsWith('get-started/')) continue;
+    check(!readFileSync(file, 'utf8').includes('verify-job-keys'), `${idFor(file)} links job-key verification from Get started`);
+  }
 }
 
 if (errors.length > 0) {
