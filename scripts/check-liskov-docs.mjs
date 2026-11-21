@@ -1,3 +1,4 @@
+import {spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {existsSync, readFileSync, readdirSync} from 'node:fs';
 import {dirname, extname, join, relative, resolve, sep} from 'node:path';
@@ -3077,7 +3078,7 @@ for (const commandId of ['liskov application placement-refusals', 'liskov applic
   const otherOrigin = verifyRecorded(fixture, {expectedOrigins: [`0x${'ab'.repeat(32)}`]});
   check(otherOrigin.ok === false, 'a different launch account was accepted');
   check(otherOrigin.launchAccountPinned === true, 'a different launch account was not marked pinned');
-  check(otherOrigin.checks.launchAccount.ok === false, 'a different launch account passed launchAccount');
+  check(otherOrigin.checks.launchAccount?.ok === false, 'a different launch account passed launchAccount');
   for (const name of ['step1', 'step2', 'step3Chain', 'step3Validity', 'step3Revocation', 'step3Stored', 'step3Account']) {
     check(otherOrigin.checks[name].ok === true, `pin failure cleared ${name}`);
   }
@@ -3085,11 +3086,11 @@ for (const commandId of ['liskov application placement-refusals', 'liskov applic
     check(JSON.stringify(otherOrigin.checks[name]) === JSON.stringify(passed.checks[name]), `pin failure changed ${name}`);
   }
   const unparseable = verifyRecorded(fixture, {expectedOrigins: ['not-an-account']});
-  check(unparseable.checks.launchAccount.ok === false, 'an unparseable launch account passed');
-  check(unparseable.checks.launchAccount.reason.includes('not-an-account'), 'unparseable launch account reason omits the entry');
+  check(unparseable.checks.launchAccount?.ok === false, 'an unparseable launch account passed');
+  check(unparseable.checks.launchAccount?.reason?.includes('not-an-account'), 'unparseable launch account reason omits the entry');
   const unparseableMatch = verifyRecorded(fixture, {expectedOrigins: ['not-an-account', fixture.publisher.origin]});
-  check(unparseableMatch.checks.launchAccount.ok === false, 'an unparseable entry passed beside a match');
-  check(unparseableMatch.checks.launchAccount.reason.includes('not-an-account'), 'mixed unparseable reason omits the entry');
+  check(unparseableMatch.checks.launchAccount?.ok === false, 'an unparseable entry passed beside a match');
+  check(unparseableMatch.checks.launchAccount?.reason?.includes('not-an-account'), 'mixed unparseable reason omits the entry');
   const unpinned = verifyRecorded(fixture);
   const emptyPin = verifyRecorded(fixture, {expectedOrigins: []});
   check(unpinned.launchAccountPinned === false, 'one-argument result was pinned');
@@ -3100,6 +3101,14 @@ for (const commandId of ['liskov application placement-refusals', 'liskov applic
   check(emptyPin.registrationBlock === unpinned.registrationBlock, 'empty pin list changed registrationBlock');
   check(emptyPin.acknowledgementBlock === unpinned.acknowledgementBlock, 'empty pin list changed acknowledgementBlock');
   check(JSON.stringify(emptyPin.checks) === JSON.stringify(unpinned.checks), 'empty pin list changed checks');
+  // BKLG-20261121-stdj: the CLI refuses a flag that names no account. The library
+  // cases above keep an empty list unpinned.
+  const scriptPath = join(root, 'examples/liskov-v1/verify-job-key/verify-job-key.mjs');
+  for (const raw of ['', ' ', ',']) {
+    const run = spawnSync(process.execPath, [scriptPath, '--fixture', fixturePath, '--expected-origin', raw], {encoding: 'utf8'});
+    check(run.status !== 0, `empty --expected-origin ${JSON.stringify(raw)} exited ${run.status}`);
+    check(String(run.stderr).includes('Missing --expected-origin'), `empty --expected-origin ${JSON.stringify(raw)} did not report a missing pin`);
+  }
   const sibling = structuredClone(fixture);
   sibling.publisher.sequence = '409697';
   sibling.publisher.jobId = sibling.publisher.jobId.replaceAll('409696', '409697');

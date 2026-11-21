@@ -31,7 +31,11 @@ function verificationOptions(args) {
   if (!Object.hasOwn(args, 'expected-origin')) return undefined;
   const raw = args['expected-origin'];
   if (typeof raw !== 'string') throw new Error('Missing --expected-origin');
-  return {expectedOrigins: raw.split(',').map((part) => part.trim()).filter((part) => part.length > 0)};
+  const expectedOrigins = raw.split(',').map((part) => part.trim()).filter((part) => part.length > 0);
+  // A present flag that names no account is missing, not an unpinned check.
+  // verifyRecorded still treats an empty list as unpinned.
+  if (expectedOrigins.length === 0) throw new Error('Missing --expected-origin');
+  return {expectedOrigins};
 }
 
 function requireText(args, name) {
