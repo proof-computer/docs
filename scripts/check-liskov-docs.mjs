@@ -3041,9 +3041,65 @@ for (const commandId of ['liskov application placement-refusals', 'liskov applic
   for (const token of ['5447854', '5447858', 'extrinsic 68', '81eb8a4001c87f381e100cf7bd1013087e300e9f554c91f090997ad629e585ae', 'per application release', 'many consecutive jobs', ':::info Preview']) {
     check(page.includes(token), `verify-job-keys omits ${token}`);
   }
+  // BKLG-20261121-stdj: the page tells a publisher to pin the launch account.
+  const pinHeading = "## Pin the application's launch account";
+  const pinStart = page.indexOf(pinHeading);
+  const pinEnd = pinStart === -1 ? -1 : page.indexOf('\n## ', pinStart + 1);
+  check(pinStart !== -1 && pinEnd > pinStart, 'verify-job-keys omits the launch-account pin heading');
+  const pinSection = pinStart === -1 ? '' : page.slice(pinStart, pinEnd);
+  for (const token of ['SS58', 'launch account', '--expected-origin']) {
+    check(pinSection.includes(token), `launch-account section omits ${token}`);
+  }
+  check(
+    page.includes('[That the launch account belongs to this application](#pin-the-applications-launch-account)'),
+    'verify-job-keys does not link the launch-account row to the pin section',
+  );
+  check(
+    page.indexOf('## What this does not prove') < pinStart && pinStart < page.indexOf('## One key per application release per processor'),
+    'launch-account section is not between the limits and the one-key section',
+  );
+  check(capabilitiesPage.includes('--expected-origin'), 'capabilities omits --expected-origin');
   check(!/renewal[\s\S]{0,80}new keys|new job gets new keys/i.test(page), 'verify-job-keys says a renewal or a new job gets new keys');
   check(!/hardware-backed/i.test(page), 'verify-job-keys says hardware-backed');
   check(!/hardware-backed/i.test(readme), 'verify-job-key README says hardware-backed');
+  // BKLG-20261121-stdj: optional expectedOrigins on the same unmodified fixture.
+  const expectPinned = (result, label) => {
+    check(result.ok === true, `${label} was not ok`);
+    check(result.launchAccountPinned === true, `${label} was not marked pinned`);
+    check(result.checks.launchAccount?.ok === true, `${label} did not pass launchAccount`);
+  };
+  expectPinned(verifyRecorded(fixture, {expectedOrigins: [fixture.publisher.origin]}), 'pinned SS58 origin');
+  expectPinned(verifyRecorded(fixture, {expectedOrigins: [`0x${fixture.publisher.originHex}`]}), 'pinned 0x origin');
+  expectPinned(
+    verifyRecorded(fixture, {expectedOrigins: [`0x${'cd'.repeat(32)}`, fixture.publisher.origin]}),
+    'pinned list with another valid account',
+  );
+  const otherOrigin = verifyRecorded(fixture, {expectedOrigins: [`0x${'ab'.repeat(32)}`]});
+  check(otherOrigin.ok === false, 'a different launch account was accepted');
+  check(otherOrigin.launchAccountPinned === true, 'a different launch account was not marked pinned');
+  check(otherOrigin.checks.launchAccount.ok === false, 'a different launch account passed launchAccount');
+  for (const name of ['step1', 'step2', 'step3Chain', 'step3Validity', 'step3Revocation', 'step3Stored', 'step3Account']) {
+    check(otherOrigin.checks[name].ok === true, `pin failure cleared ${name}`);
+  }
+  for (const name of Object.keys(passed.checks)) {
+    check(JSON.stringify(otherOrigin.checks[name]) === JSON.stringify(passed.checks[name]), `pin failure changed ${name}`);
+  }
+  const unparseable = verifyRecorded(fixture, {expectedOrigins: ['not-an-account']});
+  check(unparseable.checks.launchAccount.ok === false, 'an unparseable launch account passed');
+  check(unparseable.checks.launchAccount.reason.includes('not-an-account'), 'unparseable launch account reason omits the entry');
+  const unparseableMatch = verifyRecorded(fixture, {expectedOrigins: ['not-an-account', fixture.publisher.origin]});
+  check(unparseableMatch.checks.launchAccount.ok === false, 'an unparseable entry passed beside a match');
+  check(unparseableMatch.checks.launchAccount.reason.includes('not-an-account'), 'mixed unparseable reason omits the entry');
+  const unpinned = verifyRecorded(fixture);
+  const emptyPin = verifyRecorded(fixture, {expectedOrigins: []});
+  check(unpinned.launchAccountPinned === false, 'one-argument result was pinned');
+  check(!Object.hasOwn(unpinned.checks, 'launchAccount'), 'one-argument result has launchAccount');
+  check(emptyPin.launchAccountPinned === false, 'empty pin list was pinned');
+  check(!Object.hasOwn(emptyPin.checks, 'launchAccount'), 'empty pin list has launchAccount');
+  check(emptyPin.ok === unpinned.ok, 'empty pin list changed ok');
+  check(emptyPin.registrationBlock === unpinned.registrationBlock, 'empty pin list changed registrationBlock');
+  check(emptyPin.acknowledgementBlock === unpinned.acknowledgementBlock, 'empty pin list changed acknowledgementBlock');
+  check(JSON.stringify(emptyPin.checks) === JSON.stringify(unpinned.checks), 'empty pin list changed checks');
   const sibling = structuredClone(fixture);
   sibling.publisher.sequence = '409697';
   sibling.publisher.jobId = sibling.publisher.jobId.replaceAll('409696', '409697');

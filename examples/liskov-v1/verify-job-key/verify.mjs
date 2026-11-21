@@ -497,7 +497,27 @@ function checkStep3Account(fixture) {
   }
 }
 
-export function verifyRecorded(fixture) {
+// An unparseable entry fails the pin even when another entry matches the job origin.
+function checkLaunchAccount(fixture, expectedOrigins) {
+  const jobOrigin = jobIdentity(fixture?.publisher?.jobId)?.origin ?? null;
+  const unparsed = [];
+  let matched = false;
+  for (const entry of expectedOrigins) {
+    const parsed = accountIdHex(entry);
+    if (parsed === null) {
+      unparsed.push(String(entry));
+      continue;
+    }
+    if (jobOrigin !== null && parsed === jobOrigin) matched = true;
+  }
+  if (unparsed.length > 0) return checkResult(false, `launch account did not parse: ${unparsed.join(', ')}`);
+  if (!matched) return checkResult(false, 'job origin is not one of the pinned launch accounts');
+  return checkResult(true, '');
+}
+
+export function verifyRecorded(fixture, options) {
+  const expectedOrigins = Array.isArray(options?.expectedOrigins) ? options.expectedOrigins : [];
+  const pinned = expectedOrigins.length > 0;
   const jobNumber = String(fixture?.publisher?.sequence ?? '');
   const registrationFound = findRegistrationBlock(sequenceSamples(fixture), jobNumber);
   const registrationClaimed = Number(fixture?.reads?.registration?.atBlock);
@@ -525,11 +545,13 @@ export function verifyRecorded(fixture) {
     step3Revocation: checkStep3Revocation(fixture),
     step3Stored: checkStep3Stored(fixture),
     step3Account: checkStep3Account(fixture),
+    ...(pinned ? {launchAccount: checkLaunchAccount(fixture, expectedOrigins)} : {}),
   };
   return {
     ok: Object.values(checks).every((check) => check.ok),
     registrationBlock: registrationFound,
     acknowledgementBlock: acknowledgementFound,
+    launchAccountPinned: pinned,
     checks,
   };
 }

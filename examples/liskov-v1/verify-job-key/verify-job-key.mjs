@@ -27,6 +27,13 @@ function parseArgs(argv) {
   return parsed;
 }
 
+function verificationOptions(args) {
+  if (!Object.hasOwn(args, 'expected-origin')) return undefined;
+  const raw = args['expected-origin'];
+  if (typeof raw !== 'string') throw new Error('Missing --expected-origin');
+  return {expectedOrigins: raw.split(',').map((part) => part.trim()).filter((part) => part.length > 0)};
+}
+
 function requireText(args, name) {
   const value = args[name];
   if (typeof value !== 'string' || value.length === 0) throw new Error(`Missing --${name}`);
@@ -277,7 +284,7 @@ async function acknowledgementExtrinsic(api, block, processor, key) {
   throw new Error(`Block ${block} has no acknowledgement extrinsic signed by ${processor} for key ${key}`);
 }
 
-async function live(args) {
+async function live(args, options) {
   const origin = requireText(args, 'origin');
   const jobNumber = Number(requireText(args, 'job'));
   const key = hexKey(requireText(args, 'key'));
@@ -419,7 +426,7 @@ async function live(args) {
         },
       },
     };
-    const result = verifyRecorded(fixture);
+    const result = verifyRecorded(fixture, options);
     delete fixture.reads.artifact.bytesBase64;
     const printable = {
       endpoint,
@@ -441,13 +448,14 @@ async function live(args) {
 
 async function main() {
   const args = parseArgs(process.argv);
+  const options = verificationOptions(args);
   if (typeof args.fixture === 'string') {
     const fixture = JSON.parse(readFileSync(args.fixture, 'utf8'));
-    const result = verifyRecorded(fixture);
+    const result = verifyRecorded(fixture, options);
     console.log(JSON.stringify(result, null, 2));
     process.exit(result.ok ? 0 : 1);
   }
-  process.exit(await live(args));
+  process.exit(await live(args, options));
 }
 
 main().catch((error) => {
