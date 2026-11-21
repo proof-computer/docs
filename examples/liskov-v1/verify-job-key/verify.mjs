@@ -81,9 +81,9 @@ function blake2bCompress(state, block, byteCount, last) {
   }
 }
 
-export function blake2b256(bytes) {
+function blake2b(bytes, outlen) {
   const input = Buffer.from(bytes);
-  const state = BLAKE2B_IV.map((word, index) => (index === 0 ? word ^ 0x01010020n : word));
+  const state = BLAKE2B_IV.map((word, index) => (index === 0 ? word ^ (0x01010000n | BigInt(outlen)) : word));
   let offset = 0;
   if (input.length === 0) {
     blake2bCompress(state, Buffer.alloc(128), 0n, true);
@@ -96,9 +96,13 @@ export function blake2b256(bytes) {
       blake2bCompress(state, block, BigInt(offset), offset === input.length);
     }
   }
-  const out = Buffer.alloc(32);
-  for (let index = 0; index < 4; index += 1) store64(out, index * 8, state[index]);
+  const out = Buffer.alloc(outlen);
+  for (let index = 0; index < outlen / 8; index += 1) store64(out, index * 8, state[index]);
   return out;
+}
+
+export function blake2b256(bytes) {
+  return blake2b(bytes, 32);
 }
 
 export function blake2b256Hex(bytes) {
@@ -144,6 +148,46 @@ function base58btc(bytes) {
   return encoded || '1';
 }
 
+function base58Decode(text) {
+  if (typeof text !== 'string' || text.length === 0) throw new Error('SS58 address is empty');
+  let value = 0n;
+  for (const char of text) {
+    const digit = BASE58.indexOf(char);
+    if (digit < 0) throw new Error('SS58 address is not base58');
+    value = value * 58n + BigInt(digit);
+  }
+  const bytes = [];
+  while (value > 0n) {
+    bytes.push(Number(value & 0xffn));
+    value >>= 8n;
+  }
+  bytes.reverse();
+  let zeros = 0;
+  for (const char of text) {
+    if (char !== '1') break;
+    zeros += 1;
+  }
+  return Buffer.concat([Buffer.alloc(zeros), Buffer.from(bytes)]);
+}
+
+// SS58 checksum is the first two bytes of BLAKE2b-512("SS58PRE" || prefix || account).
+function accountIdHex(value) {
+  const text = String(value ?? '').trim();
+  if (/^(?:0x)?[0-9a-fA-F]{64}$/.test(text)) return text.replace(/^0x/i, '').toLowerCase();
+  try {
+    const decoded = base58Decode(text);
+    const prefixLength = decoded.length > 0 && (decoded[0] & 0x40) !== 0 ? 2 : 1;
+    const bodyLength = prefixLength + 32;
+    if (decoded.length !== bodyLength + 2) return null;
+    const body = decoded.subarray(0, bodyLength);
+    const checksum = blake2b(Buffer.concat([Buffer.from('SS58PRE'), body]), 64);
+    if (checksum[0] !== decoded[bodyLength] || checksum[1] !== decoded[bodyLength + 1]) return null;
+    return body.subarray(prefixLength).toString('hex');
+  } catch {
+    return null;
+  }
+}
+
 // Kubo CIDv0: dag-pb UnixFS file leaf, one chunk, no raw leaves.
 export function cidV0(bytes) {
   const body = Buffer.from(bytes);
@@ -161,7 +205,7 @@ export function cidV0(bytes) {
   return base58btc(Buffer.concat([Buffer.from([0x12, 0x20]), digest]));
 }
 
-function hexKey(value) {
+export function hexKey(value) {
   return String(value ?? '').replace(/^0x/i, '').toLowerCase();
 }
 
@@ -171,13 +215,21 @@ function serialKey(value) {
 }
 
 function jobIdentity(value) {
-  const parsed = typeof value === 'string' ? JSON.parse(value) : value;
+  let parsed = value;
+  if (typeof value === 'string') {
+    try {
+      parsed = JSON.parse(value);
+    } catch {
+      return null;
+    }
+  }
   const pair = Array.isArray(parsed) ? parsed : null;
   if (!pair || pair.length < 2) return null;
-  const origin = pair[0]?.Acurast ?? pair[0]?.acurast ?? null;
+  const originText = pair[0]?.Acurast ?? pair[0]?.acurast ?? null;
   const sequence = String(pair[1] ?? '').replace(/\D/g, '');
+  const origin = originText ? accountIdHex(originText) : null;
   if (!origin || !sequence) return null;
-  return {origin: String(origin), sequence};
+  return {origin, sequence};
 }
 
 function sameJob(left, right) {
@@ -186,7 +238,7 @@ function sameJob(left, right) {
   return Boolean(a && b && a.origin === b.origin && a.sequence === b.sequence);
 }
 
-function ed25519Keys(entries) {
+export function ed25519Keys(entries) {
   const keys = [];
   for (const entry of entries ?? []) {
     const raw = entry?.ed25519 ?? entry?.ED25519 ?? entry?.Ed25519;
@@ -289,21 +341,33 @@ function checkStep1(fixture, acknowledgementBlock) {
   return checkResult(reasons.length === 0, reasons.join('; '));
 }
 
+function digestHex(value) {
+  return hexKey(String(value ?? '').replace(/^sha256:/i, ''));
+}
+
 function checkStep2(fixture) {
   const script = String(fixture?.reads?.registration?.script ?? '');
   const cid = script.startsWith('ipfs://') ? script.slice('ipfs://'.length) : '';
   const recordedCid = fixture?.reads?.artifact?.cid;
-  const recordedSha = hexKey(fixture?.reads?.artifact?.sha256 ?? String(fixture?.publisher?.artifactDigest ?? '').replace(/^sha256:/i, ''));
+  const publishedSha = digestHex(fixture?.publisher?.artifactDigest);
+  const recordedField = fixture?.reads?.artifact?.sha256;
+  const recordedSha = recordedField === undefined || recordedField === null || recordedField === ''
+    ? ''
+    : digestHex(recordedField);
   const size = Number(fixture?.reads?.artifact?.bytes);
   const reasons = [];
   if (!cid || cid !== recordedCid) reasons.push('registration script CID differs from the artifact CID');
-  if (!recordedSha) reasons.push('artifact digest is missing');
+  if (!publishedSha) reasons.push('artifact digest is missing');
   if (!Number.isInteger(size) || size < 0) reasons.push('artifact size is missing');
   else if (size > SINGLE_CHUNK_BYTES) reasons.push('artifact is multi-chunk');
   const encoded = fixture?.reads?.artifact?.bytesBase64;
+  if (recordedSha && publishedSha && recordedSha !== publishedSha) {
+    reasons.push('published artifact digest differs from the recorded SHA-256');
+  }
+  if (!recordedSha && !encoded) reasons.push('artifact digest was not recorded or recomputed');
   if (encoded) {
     const bytes = Buffer.from(encoded, 'base64');
-    if (sha256Hex(bytes) !== recordedSha) reasons.push('artifact bytes do not hash to the digest');
+    if (publishedSha && sha256Hex(bytes) !== publishedSha) reasons.push('artifact bytes do not hash to the digest');
     try {
       if (cidV0(bytes) !== cid) reasons.push('recomputed CIDv0 differs from the registration script');
     } catch (error) {
@@ -325,11 +389,13 @@ function chainCertificates(fixture) {
 function checkStep3Chain(fixture) {
   try {
     const {chain, root} = chainCertificates(fixture);
-    if (chain.length !== 4) return checkResult(false, 'certificate chain does not have four certificates');
+    if (chain.length < 2) return checkResult(false, 'certificate chain needs a root and a leaf');
     if (!spki(chain[0]).equals(spki(root))) return checkResult(false, 'chain root SPKI differs from Google root');
-    if (!chain[1].verify(root.publicKey)) return checkResult(false, 'certificate 1 was not signed by the Google root');
-    if (!chain[2].verify(chain[1].publicKey)) return checkResult(false, 'certificate 2 was not signed by certificate 1');
-    if (!chain[3].verify(chain[2].publicKey)) return checkResult(false, 'leaf was not signed by certificate 2');
+    for (let index = 1; index < chain.length; index += 1) {
+      if (!chain[index].verify(chain[index - 1].publicKey)) {
+        return checkResult(false, `certificate ${index} was not signed by certificate ${index - 1}`);
+      }
+    }
     return checkResult(true, '');
   } catch (error) {
     return checkResult(false, error.message);
@@ -355,17 +421,59 @@ function checkStep3Validity(fixture) {
 }
 
 function revokedSerials(fixture) {
-  const google = fixture?.reads?.googleRevocation?.chainSerialsListed ?? [];
-  const chain = fixture?.reads?.attestation?.chainRevokedSerials ?? [];
-  return new Set([...google, ...chain].map(serialKey));
+  const google = fixture?.reads?.googleRevocation?.chainSerialsListed;
+  const chain = fixture?.reads?.attestation?.chainRevokedSerials;
+  if (!Array.isArray(google)) return {missing: 'Google revocation list was not read'};
+  if (!Array.isArray(chain)) return {missing: 'chain revocation list was not read'};
+  return {missing: '', serials: new Set([...google, ...chain].map(serialKey))};
 }
 
 function checkStep3Revocation(fixture) {
   try {
-    const {chain} = chainCertificates(fixture);
     const revoked = revokedSerials(fixture);
-    const listed = chain.filter((certificate) => revoked.has(serialKey(certificate.serialNumber)));
+    if (revoked.missing) return checkResult(false, revoked.missing);
+    const {chain} = chainCertificates(fixture);
+    const listed = chain.filter((certificate) => revoked.serials.has(serialKey(certificate.serialNumber)));
     return checkResult(listed.length === 0, listed.length === 0 ? '' : 'a chain serial is revoked');
+  } catch (error) {
+    return checkResult(false, error.message);
+  }
+}
+
+function checkStep3Stored(fixture) {
+  const read = fixture?.reads?.attestation?.atAcknowledgement;
+  if (!read || typeof read !== 'object') {
+    return checkResult(false, 'StoredAttestation was not read at the acknowledgement block');
+  }
+  if (read.present !== true) return checkResult(false, 'StoredAttestation is absent at the acknowledgement block');
+  const acknowledgement = Number(fixture?.publisher?.acknowledgement?.block);
+  if (Number(read.block) !== acknowledgement) {
+    return checkResult(false, 'StoredAttestation read is not at the acknowledgement block');
+  }
+  const event = String(fixture?.reads?.attestation?.onboardExtrinsic?.event ?? '');
+  if (!event.endsWith('AttestationStoredV2')) {
+    return checkResult(false, 'onboarding extrinsic has no AttestationStoredV2 event');
+  }
+  const first = Number(fixture?.reads?.attestation?.storedAttestationValueFirstPresentAt?.block);
+  const onboardBlock = Number(fixture?.reads?.attestation?.onboardExtrinsic?.block);
+  if (!Number.isInteger(first) || first !== onboardBlock || first > acknowledgement) {
+    return checkResult(false, 'onboarding extrinsic is not the block where the stored attestation appeared');
+  }
+  const storedSerials = read.certSerials;
+  if (!Array.isArray(storedSerials) || storedSerials.length < 2) {
+    return checkResult(false, 'StoredAttestation certificate ids are missing');
+  }
+  try {
+    const {chain} = chainCertificates(fixture);
+    if (chain.length !== storedSerials.length) {
+      return checkResult(false, 'certificate chain length differs from the stored certificate ids');
+    }
+    for (let index = 0; index < chain.length; index += 1) {
+      if (serialKey(chain[index].serialNumber) !== serialKey(storedSerials[index])) {
+        return checkResult(false, 'certificate serial differs from the stored certificate id');
+      }
+    }
+    return checkResult(true, '');
   } catch (error) {
     return checkResult(false, error.message);
   }
@@ -374,7 +482,8 @@ function checkStep3Revocation(fixture) {
 function checkStep3Account(fixture) {
   try {
     const {chain} = chainCertificates(fixture);
-    const leaf = chain[3];
+    if (chain.length < 2) return checkResult(false, 'certificate chain needs a root and a leaf');
+    const leaf = chain[chain.length - 1];
     const compressed = compressedP256(leaf);
     const recorded = hexKey(fixture?.reads?.attestation?.leafCompressedP256);
     if (recorded && compressed.toString('hex') !== recorded) {
@@ -414,6 +523,7 @@ export function verifyRecorded(fixture) {
     step3Chain: checkStep3Chain(fixture),
     step3Validity: checkStep3Validity(fixture),
     step3Revocation: checkStep3Revocation(fixture),
+    step3Stored: checkStep3Stored(fixture),
     step3Account: checkStep3Account(fixture),
   };
   return {

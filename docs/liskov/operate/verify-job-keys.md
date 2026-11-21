@@ -19,7 +19,7 @@ You need three values, and no Liskov account:
 - the Ed25519 public key;
 - the artifact digest (`sha256:` and 64 hex characters).
 
-A running job can read its own id and keys. In the runtime SDK, `job.id` is the JSON text of Acurast's `_STD_.job.getId()`. The key comes from `_STD_.job.getPublicKeys()`. The application can publish both beside its outputs. The artifact digest is step 2 of [Inspect the proof chain](./proof-chain.md).
+A running job can read its own id and keys. In the runtime SDK, `job.id` is the JSON text of Acurast's `_STD_.job.getId()`. Logged, that text looks like `{"origin":{"kind":"Acurast","source":"0x…"},"id":…}`. The key comes from `_STD_.job.getPublicKeys()`. The application can publish both beside its outputs. The example script takes the origin and the job number separately. Pass the SS58 address, or the `source` value from `job.id`. The check treats them as the same account. The artifact digest is step 2 of [Inspect the proof chain](./proof-chain.md).
 
 ## Find the job's blocks
 
@@ -55,7 +55,7 @@ That recompute is exact for one chunk, up to 256 KiB (262,144 bytes). A larger a
 
 ## Step 3: the processor is attested
 
-`Acurast.StoredAttestation` for the processor is present at the acknowledgement block. Storage holds certificate identifiers, not the certificates. Find the block where that stored value first appeared (a third binary search). In that block, the processor's onboarding extrinsic is `acurastProcessorManager.onboard`, with an `AttestationStoredV2` event. The extrinsic carries the certificate chain, root first.
+`Acurast.StoredAttestation` for the processor is present at the acknowledgement block. Storage holds certificate identifiers, not the certificates. Find the block, at or before the acknowledgement, where that stored value first appeared (a third binary search). In that block, the processor's onboarding extrinsic is `acurastProcessorManager.onboard`, with an `AttestationStoredV2` event. The extrinsic carries the certificate chain, root first, and its serials are the stored certificate ids.
 
 Check all of the following:
 

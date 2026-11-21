@@ -133,6 +133,16 @@
       "bytesNotRecorded": "the artifact is the application owner's code; only its digest, size and CID are recorded"
     },
     "attestation": {
+      "atAcknowledgement": {
+        "block": 5447858,
+        "present": true,
+        "certSerials": [
+          "00d50ff25ba3f2d6b3",
+          "00cae43ccd6b2b17c68af41c889b236134",
+          "334172e9f3d1a55ada25e0d44d4f11b1",
+          "01"
+        ]
+      },
       "storedAttestationValueFirstPresentAt": {
         "block": 1202890,
         "hash": "0xf8d3a2b25ca18fb00c91744288004bb2cb286f1c6ed50bbf0000e620f8b5a418",
@@ -165,7 +175,8 @@
         "notBeforeMs": 1623871031000,
         "notAfterMs": 1939231031000
       },
-      "chainRevokedCertificate": "StoredRevokedCertificate null for all four serials at head (both endpoints)"
+      "chainRevokedCertificate": "StoredRevokedCertificate null for all four serials at head (both endpoints)",
+      "chainRevokedSerials": []
     },
     "googleRoot": {
       "url": "https://android.googleapis.com/attestation/root",

@@ -1,6 +1,6 @@
 import {readFileSync} from 'node:fs';
 import {X509Certificate} from 'node:crypto';
-import {verifyRecorded} from './verify.mjs';
+import {ed25519Keys, hexKey, verifyRecorded} from './verify.mjs';
 
 const DEFAULT_ENDPOINT = 'wss://archive.mainnet.acurast.com';
 const IPFS_GATEWAYS = [
@@ -37,10 +37,6 @@ function jobIdOf(origin, jobNumber) {
   return [{Acurast: origin}, jobNumber];
 }
 
-function hexKey(value) {
-  return String(value ?? '').replace(/^0x/i, '').toLowerCase();
-}
-
 function asScript(value) {
   if (typeof value !== 'string') return '';
   if (value.startsWith('ipfs://')) return value;
@@ -50,15 +46,6 @@ function asScript(value) {
     if (text.startsWith('ipfs://')) return text;
   }
   return value;
-}
-
-function ed25519From(entries) {
-  const keys = [];
-  for (const entry of entries ?? []) {
-    const raw = entry?.ed25519 ?? entry?.ED25519 ?? entry?.Ed25519;
-    if (raw !== undefined) keys.push(hexKey(raw));
-  }
-  return keys;
 }
 
 function collect(value, visit, into = []) {
@@ -72,6 +59,25 @@ function derCertificates(value) {
   return collect(value, (item, into) => {
     if (typeof item === 'string' && /^0x308[0-9a-f]+$/i.test(item)) into.push(item.slice(2));
   });
+}
+
+function certSerialsFrom(stored) {
+  const ids = stored?.certIds ?? stored?.cert_ids;
+  if (!Array.isArray(ids)) throw new Error('StoredAttestation has no certificate ids');
+  const serials = [];
+  const visit = (value) => {
+    if (!Array.isArray(value) || value.length === 0) return;
+    if (value.every((item) => Array.isArray(item))) {
+      value.forEach(visit);
+      return;
+    }
+    if (value.length === 2 && value.every((item) => typeof item === 'string' && /^0x[0-9a-f]+$/i.test(item))) {
+      serials.push(value[1].slice(2).toLowerCase());
+    }
+  };
+  visit(ids);
+  if (serials.length < 2) throw new Error('StoredAttestation certificate ids do not name a chain');
+  return serials;
 }
 
 function pemsFrom(value) {
@@ -232,17 +238,23 @@ async function readRegistration(api, block, jobId) {
 }
 
 async function onboardAt(api, block, processor) {
-  const {hash} = await atBlock(api, block);
+  const {hash, apiAt} = await atBlock(api, block);
   const signed = await api.rpc.chain.getBlock(hash);
+  const events = await apiAt.query.system.events();
   for (let index = 0; index < signed.block.extrinsics.length; index += 1) {
     const extrinsic = signed.block.extrinsics[index];
     if (extrinsic.method.section !== 'acurastProcessorManager' || extrinsic.method.method !== 'onboard') continue;
     if (extrinsic.signer.toString() !== processor) continue;
     const ders = derCertificates(extrinsic.method.toJSON());
     if (ders.length === 0) continue;
-    return {index, hash: extrinsic.hash.toHex(), ders};
+    const storedEvent = events.some((record) => {
+      if (!record.phase.isApplyExtrinsic || record.phase.asApplyExtrinsic.toNumber() !== index) return false;
+      return record.event.section === 'acurast' && record.event.method === 'AttestationStoredV2';
+    });
+    if (!storedEvent) continue;
+    return {index, hash: extrinsic.hash.toHex(), ders, event: 'acurast.AttestationStoredV2'};
   }
-  throw new Error(`Block ${block} has no onboard extrinsic signed by ${processor}`);
+  throw new Error(`Block ${block} has no onboard extrinsic signed by ${processor} with AttestationStoredV2`);
 }
 
 async function acknowledgementExtrinsic(api, block, processor, key) {
@@ -292,7 +304,7 @@ async function live(args) {
         const found = await findAcknowledgement(api, registration, head, candidate, jobId);
         if (found === null) continue;
         const match = await matchAt(api, found, candidate, jobId);
-        if (ed25519From(match?.decoded?.pubKeys).includes(key)) {
+        if (ed25519Keys(match?.decoded?.pubKeys).includes(key)) {
           processor = candidate;
           acknowledgement = found;
           break;
@@ -320,13 +332,23 @@ async function live(args) {
       }
     }
     const extrinsic = await acknowledgementExtrinsic(api, acknowledgement, processor, key);
-    const onboarding = await firstTrue(1, head, async (block) => {
+    const storedAtAcknowledgement = await acknowledgementApi.query.acurast.storedAttestation(processor);
+    if (storedAtAcknowledgement.isEmpty) throw new Error('StoredAttestation is absent at the acknowledgement block');
+    const storedHex = storedAtAcknowledgement.toHex();
+    const certSerials = certSerialsFrom(storedAtAcknowledgement.toJSON());
+    const onboarding = await firstTrue(1, acknowledgement, async (block) => {
       const {apiAt: historic} = await atBlock(api, block);
       const stored = await historic.query.acurast.storedAttestation(processor);
-      return !stored.isEmpty;
+      return !stored.isEmpty && stored.toHex() === storedHex;
     });
-    if (!onboarding) throw new Error('StoredAttestation is absent through the finalized head');
+    if (onboarding === null) throw new Error('StoredAttestation at the acknowledgement block has no first appearance at or before that block');
     const onboard = await onboardAt(api, onboarding, processor);
+    const apiAtHead = await api.at(finalizedHash);
+    const chainRevokedSerials = [];
+    for (const serialHex of certSerials) {
+      const row = await apiAtHead.query.acurast.storedRevokedCertificate(`0x${serialHex}`);
+      if (!row.isEmpty) chainRevokedSerials.push(serialHex);
+    }
     const cid = String(registrationRead.script).replace(/^ipfs:\/\//, '');
     const artifactBytes = await fetchArtifact(cid);
     const root = await googleRootMatching(onboard.ders[0]);
@@ -370,7 +392,18 @@ async function live(args) {
           bytesBase64: artifactBytes.bytes.toString('base64'),
         },
         attestation: {
+          atAcknowledgement: {
+            block: acknowledgement,
+            present: true,
+            certSerials,
+          },
+          storedAttestationValueFirstPresentAt: {block: onboarding},
+          onboardExtrinsic: {
+            block: onboarding,
+            event: onboard.event,
+          },
           certificateChainRootFirstDerBase64: onboard.ders.map((der) => Buffer.from(der, 'hex').toString('base64')),
+          chainRevokedSerials,
         },
         googleRoot: {root0Pem: root.pem},
         googleRevocation: {chainSerialsListed: revocation.serials},

@@ -2968,6 +2968,31 @@ for (const commandId of ['liskov application placement-refusals', 'liskov applic
   otherAccount.publisher.processorAccountHex = `8${fixture.publisher.processorAccountHex.slice(1)}`;
   differ(fixture.publisher.processorAccountHex, otherAccount.publisher.processorAccountHex, 'processor account');
   check(!verifyRecorded(otherAccount).checks.step3Account.ok, 'step 3 accepted a changed processor account');
+  const hexOrigin = structuredClone(fixture);
+  hexOrigin.publisher.jobId = fixture.publisher.jobId.replace(fixture.publisher.origin, `0x${fixture.publisher.originHex}`);
+  differ(fixture.publisher.jobId, hexOrigin.publisher.jobId, 'hex origin');
+  check(verifyRecorded(hexOrigin).checks.step1.ok, 'step 1 rejected the hex form of the same origin');
+  const wrongHex = structuredClone(fixture);
+  wrongHex.publisher.jobId = fixture.publisher.jobId.replace(fixture.publisher.origin, `0x${'ab'.repeat(32)}`);
+  differ(fixture.publisher.jobId, wrongHex.publisher.jobId, 'wrong hex origin');
+  check(!verifyRecorded(wrongHex).checks.step1.ok, 'step 1 accepted a different hex origin');
+  const otherDigest = structuredClone(fixture);
+  otherDigest.publisher.artifactDigest = `sha256:${'ab'.repeat(32)}`;
+  differ(fixture.publisher.artifactDigest, otherDigest.publisher.artifactDigest, 'published digest');
+  check(!verifyRecorded(otherDigest).checks.step2.ok, 'step 2 accepted a published digest that differs from the recorded SHA-256');
+  const droppedRevocation = structuredClone(fixture);
+  const revocationWas = droppedRevocation.reads.attestation.chainRevokedSerials;
+  delete droppedRevocation.reads.attestation.chainRevokedSerials;
+  differ(revocationWas, droppedRevocation.reads.attestation.chainRevokedSerials, 'chain revocation read');
+  check(!verifyRecorded(droppedRevocation).checks.step3Revocation.ok, 'step 3 accepted a missing chain revocation read');
+  const chainRevoked = structuredClone(fixture);
+  chainRevoked.reads.attestation.chainRevokedSerials = ['01'];
+  differ(fixture.reads.attestation.chainRevokedSerials, chainRevoked.reads.attestation.chainRevokedSerials, 'chain revocation list');
+  check(!verifyRecorded(chainRevoked).checks.step3Revocation.ok, 'step 3 accepted a serial on StoredRevokedCertificate');
+  const absentAttestation = structuredClone(fixture);
+  absentAttestation.reads.attestation.atAcknowledgement.present = false;
+  differ(fixture.reads.attestation.atAcknowledgement.present, absentAttestation.reads.attestation.atAcknowledgement.present, 'stored attestation');
+  check(!verifyRecorded(absentAttestation).checks.step3Stored.ok, 'step 3 accepted a processor with no StoredAttestation at the acknowledgement block');
   const hello = Buffer.from('hello world\n');
   check(cidV0(hello) === 'QmT78zSuBmuS4z925WZfrqQ1qHaJ56DQaTfyMUF7F8ff5o', 'CIDv0 of hello world is wrong');
   const changedHello = Buffer.from('hello worle\n');
@@ -2981,7 +3006,7 @@ for (const commandId of ['liskov application placement-refusals', 'liskov applic
     refusedMultiChunk = /multi-chunk/.test(error.message);
   }
   check(refusedMultiChunk, 'a 262145-byte artifact was not refused as multi-chunk');
-  for (const token of ['5447854', '5447858', '68', '81eb8a4001c87f381e100cf7bd1013087e300e9f554c91f090997ad629e585ae', 'per application release', 'many consecutive jobs', ':::info Preview']) {
+  for (const token of ['5447854', '5447858', 'extrinsic 68', '81eb8a4001c87f381e100cf7bd1013087e300e9f554c91f090997ad629e585ae', 'per application release', 'many consecutive jobs', ':::info Preview']) {
     check(page.includes(token), `verify-job-keys omits ${token}`);
   }
   check(!/renewal[\s\S]{0,80}new keys|new job gets new keys/i.test(page), 'verify-job-keys says a renewal or a new job gets new keys');

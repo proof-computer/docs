@@ -18,7 +18,7 @@ The fixture records job 409696's decoded chain values. It does not contain the a
 
 ## Live archive read
 
-Install the pinned client, then give the job's origin account, job number, Ed25519 key, and artifact digest. Add the two block numbers when you already have them; otherwise the script searches an archive node.
+Install the pinned client, then give the job's origin account, job number, Ed25519 key, and artifact digest. The origin is the SS58 address, or the `0x` account id in `job.id` (`origin.source`). Add the two block numbers when you already have them; otherwise the script searches an archive node.
 
 ```bash
 pnpm install --frozen-lockfile
