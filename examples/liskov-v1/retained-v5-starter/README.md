@@ -8,7 +8,7 @@ It pins:
 
 - `@proof-computer/liskov-runtime` `v0.3.38`;
 - pnpm `10.33.0`; and
-- the `liskov-github-actions` `v1` interface verified at `v1.2.4`.
+- the moving `liskov-github-actions` `v2` workflow tag, verified at `v2.3.1`.
 
 Verify it locally without creating an Application or spending Service Credit:
 
@@ -23,7 +23,7 @@ proof liskov application manifest validate \
   --json
 ```
 
-Use `@proof-computer/proof-cli-liskov` `0.14.0` for the `proof` commands. When
+Use `@proof-computer/proof-cli-liskov` `0.18.1` for the `proof` commands. When
 using the GitHub workflow, create the Application and set its source binding
 before the first push to `main` that contains the workflow. The public guide
 contains that exact command order.

@@ -71,7 +71,7 @@ optional block. All `*Ms` timestamps are milliseconds since the Unix epoch.
 | `application.displayName` | `string \| null` | Display label; `null` when not available. May change. |
 | `deployment.liskovDeploymentId` | `string` | Bound Liskov deployment identity. |
 | `deployment.acurastDeploymentId` | `string \| null` | Acurast deployment identity; `null` when not recorded on the binding. |
-| `job.id` | `string` | This job's identity. |
+| `job.id` | `string` | This job's identity, always a string. Acurast's `_STD_.job.getId()` returns an object; the SDK sends it as JSON text, so the value reads like `{"origin":{"kind":"Acurast","source":"0x…"},"id":…}` when logged, but `typeof` is `"string"`. Treat it as opaque and compare it whole; do not rebuild it from `_STD_.job.getId()` yourself. |
 | `job.scheduleEndsAtMs` | `number \| null` | Scheduled end; `null` when not recorded. |
 | `processor.id` | `string` | Processor running this job. |
 | `policy.digest` | `string` | Bound policy digest. |

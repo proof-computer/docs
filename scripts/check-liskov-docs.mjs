@@ -1499,7 +1499,7 @@ check(encryptedRecipe.includes(encryptedExample), 'encrypted code module differs
 
 const cliPage = readFileSync(join(docsRoot, 'reference', 'cli.md'), 'utf8');
 check(cliContract.package === '@proof-computer/proof-cli-liskov', 'CLI fixture: wrong package');
-check(cliContract.version === '0.14.0', 'CLI fixture: wrong released version');
+check(cliContract.version === '0.18.1', 'CLI fixture: wrong released version');
 check(cliContract.command === 'liskov:application:logs', 'CLI fixture: missing logs command');
 check(cliContract.flags?.limit?.minimum === 1 && cliContract.flags?.limit?.maximum === 500, 'CLI fixture: wrong log limit bounds');
 check(
@@ -1956,7 +1956,7 @@ for (const [fileId, required] of Object.entries({
   'get-started/marketplace': ['Release-gated v1', 'engineering acceptance', 'not supported customer paths'],
   'marketplace/uptime-prober': ['Release-gated v1', 'engineering acceptance', 'not a supported customer offering'],
   'organizations/service-credits': ['read-only', 'Customer funding is release-gated', 'payment details'],
-  'get-started/github': ['Manifest V5', 'retained-v5-starter', 'v1.2.4', 'source-binding set', 'Artifact sha256:', 'Proof'],
+  'get-started/github': ['Manifest V5', 'retained-v5-starter', 'v1.2.4', 'source-binding set', 'Pinned hello-liskov: ipfs://', 'Proof'],
   'operate/proof-chain': ['GitHub OIDC', 'policy digest', 'runtime instance'],
   'operate/processors': ['your org', 'whole fleet', 'Enterprise', 'storageBytes', 'read-only', 'not-found', 'Redaction and missing data are not the same state'],
   'troubleshooting/deployment': ['Normal waiting', 'Needs action', 'decision-id', 'processorAtMatchCap', 'authoringFault'],

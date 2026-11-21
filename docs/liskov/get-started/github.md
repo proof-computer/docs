@@ -42,20 +42,32 @@ runtime startup are external waits with no fixed duration.
 
 ## 1. Install the CLI
 
-Use `@proof-computer/proof-cli-liskov` `0.14.0`. It contains the retained V5
+Use `@proof-computer/proof-cli-liskov` `0.18.1`. It contains the retained V5
 authoring, policy, and `application source-binding` verbs this path uses:
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov@0.14.0
+proof plugins install @proof-computer/proof-cli-liskov@0.18.1
+proof plugins
 proof liskov login
 proof liskov whoami
 ```
 
+`proof plugins` shows the plugin version actually installed. When you replace
+an already-installed plugin, the `install` line can still print the old
+version (`installed v…`); trust `proof plugins`.
+
 `whoami` shows the organization your commands act on, as
-`Name (ORGANIZATION_ID, slug, role …)`. If you belong to more than one
-organization, select the intended one with `proof liskov organization use`.
-Then keep that organization's ID, not its slug: the workflow needs it.
+`Name (ORGANIZATION_ID, slug, role …)`. A new CLI session starts in your
+oldest membership, which is usually your personal organization, not the one
+you last used in the Console. If you belong to more than one organization,
+list them with `proof liskov organization list` and select the intended one
+by its slug or ID — not its display name — with
+`proof liskov organization use SLUG`. Then keep that organization's ID, not
+its slug: the workflow needs it.
+
+If the login link opens without its code on Windows, copy the full URL from
+the terminal into your browser instead.
 
 ## 2. Copy the starter into your repository
 
@@ -78,7 +90,7 @@ source binding exist (step 4).
 The files you now have are the same ones the
 [Manifest V5 guide](../build/manifest-v5.md#1-build-the-checked-once-mode-starter)
 explains: `src/index.ts` bootstraps `@proof-computer/liskov-runtime`
-`v0.3.32`, and `.liskov/application-manifest.json` is a once-mode V5 document
+`v0.3.38`, and `.liskov/application-manifest.json` is a once-mode V5 document
 with a 60-second schedule, a managed-custody per-job spend, logs enabled, and
 `state.mode: off`.
 
@@ -102,7 +114,7 @@ proof liskov application manifest validate \
   --json
 ```
 
-Validation is read-only. A valid document reports `"valid": true` and
+Validation is read-only. A valid document reports `"manifestValid": true` and
 `"schemaVersion": 5`. Keep the `60s` schedule duration: the schema parses
 shorter values, but the Acurast marketplace refuses a job below its 60-second
 provider minimum, so schema acceptance alone does not prove that a schedule
@@ -165,8 +177,11 @@ credential; and attests the
 artifact digest, source commit and ref, and workflow identity to Liskov. It
 publishes nothing and deploys nothing.
 
-When the run succeeds, record two values from it: the artifact digest, printed
-in the run log as `Artifact sha256:`, and the commit the run built.
+When the run succeeds, record two values from it: the artifact digest and the
+commit the run built. The **IPFS pin (no-spend)** step prints the digest as
+`Pinned hello-liskov: ipfs://… (sha256:…)`; the digest is the whole
+`sha256:…` value in the parentheses, and the called workflow also exposes it
+as its `digest` output.
 
 ## 6. Publish from the attested build
 
@@ -198,6 +213,13 @@ Nothing is sent without `--yes`. `--binding-revision` and `--revocation-epoch`
 are the values `source-binding show` reported. `--expected-pointer-version` is
 `0` for a first publication; a stale value is refused rather than overwriting
 a concurrent publication.
+
+If your manifest declares a required secret, its value can only be set once a
+policy that declares it is published: the **Secrets** page lists nothing
+before that. Add `--paused --reason "set secrets before first run"` to the
+publish command, set the value on the Application's **Secrets** page, then
+start it with
+`proof liskov application resume hello-liskov --reason "secrets set" --yes`.
 
 ## 7. Verify the result
 
