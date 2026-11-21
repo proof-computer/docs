@@ -1518,7 +1518,7 @@ check(cliPage.includes(`\`${cliContract.package}\` \`${cliContract.version}\``),
 // BKLG-20261121-zis0: CLI 0.19.0 lists dark V8 payload commands. They stay
 // Internal, named from the CLI reference, and out of every other page.
 check(
-  /\| Native Cargo payload upload, V8 manifest validation and workload revision status \(CLI `0\.19\.0`\)<a id="cli-0-19-0-native-payload"><\/a> \| Internal;/.test(capabilitiesPage)
+  /\| Native Cargo payload upload, V8 manifest validation and workload revision status \(CLI `0\.19\.0`\) \| Internal;/.test(capabilitiesPage)
     && capabilitiesPage.includes('`v8_production_registration_not_activated`')
     && capabilitiesPage.includes('for a retained V5 Application it returns an empty list'),
   'capability matrix no longer classifies CLI 0.19.0 native payload upload, V8 validation, and workload revisions as Internal',
@@ -1528,7 +1528,7 @@ check(
   applicationReads.includes('application workload-revisions')
     && applicationReads.includes('--kind native_payload')
     && applicationReads.includes('--descriptor')
-    && applicationReads.includes('](./capabilities.md#cli-0-19-0-native-payload)')
+    && applicationReads.includes('](./capabilities.md#account-marketplace-and-release)')
     && !applicationReads.includes('| `application workload-revisions')
     && !applicationReads.includes('| `application artifact upload'),
   'CLI reference must name the Internal V8 payload commands, link the capability row, and give them no table row',

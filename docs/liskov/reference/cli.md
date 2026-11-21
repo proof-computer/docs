@@ -130,7 +130,7 @@ The installed plugin also lists `application workload-revisions` and the
 `--kind native_payload` and `--descriptor` flags of `application artifact
 upload`. They belong to the Internal V8 payload contract. See [Native Cargo
 payload upload, V8 manifest validation and workload revision status (CLI
-0.19.0)](./capabilities.md#cli-0-19-0-native-payload).
+0.19.0)](./capabilities.md#account-marketplace-and-release).
 
 ### Application log flags
 
