@@ -164,7 +164,7 @@ proof liskov application manifest validate \
   --json
 ```
 
-Use `@proof-computer/proof-cli-liskov` `0.18.1`. Its released tag contains
+Use `@proof-computer/proof-cli-liskov` `0.19.0`. Its released tag contains
 source commit `e135604ed2f6c59ffc737fce5fe08eaa19d77d0c`; the earlier `v0.7.0` tag does
 not. The `application source-binding` verbs in step 2 are included.
 

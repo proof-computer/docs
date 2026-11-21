@@ -23,7 +23,7 @@ proof liskov application manifest validate \
   --json
 ```
 
-Use `@proof-computer/proof-cli-liskov` `0.18.1` for the `proof` commands. When
+Use `@proof-computer/proof-cli-liskov` `0.19.0` for the `proof` commands. When
 using the GitHub workflow, create the Application and set its source binding
 before the first push to `main` that contains the workflow. The public guide
 contains that exact command order.
