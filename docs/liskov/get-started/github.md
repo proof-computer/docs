@@ -42,12 +42,12 @@ runtime startup are external waits with no fixed duration.
 
 ## 1. Install the CLI
 
-Use `@proof-computer/proof-cli-liskov` `0.18.1`. It contains the retained V5
+Use `@proof-computer/proof-cli-liskov` `0.19.0`. It contains the retained V5
 authoring, policy, and `application source-binding` verbs this path uses:
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov@0.18.1
+proof plugins install @proof-computer/proof-cli-liskov@0.19.0
 proof plugins
 proof liskov login
 proof liskov whoami
@@ -66,8 +66,9 @@ by its slug or ID — not its display name — with
 `proof liskov organization use SLUG`. Then keep that organization's ID, not
 its slug: the workflow needs it.
 
-If the login link opens without its code on Windows, copy the full URL from
-the terminal into your browser instead.
+On Windows, plugin `0.19.0` opens the complete login link. Earlier versions
+open it without its code; with one of those, copy the full URL from the
+terminal into your browser instead.
 
 ## 2. Copy the starter into your repository
 

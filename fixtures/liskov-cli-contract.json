@@ -1,6 +1,6 @@
 {
   "package": "@proof-computer/proof-cli-liskov",
-  "version": "0.18.1",
+  "version": "0.19.0",
   "command": "liskov:application:logs",
   "arguments": ["APP_REF"],
   "flags": {
