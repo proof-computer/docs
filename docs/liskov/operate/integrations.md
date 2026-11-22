@@ -90,7 +90,18 @@ cuts every path above immediately, including your ability to sign in.
 ### What you do on GitHub, not here
 
 Installing the App, adding a repository to the installation, removing one, and
-uninstalling all happen in GitHub's own settings. The Console page reads what
-your installation covers; it does not change it.
+uninstalling all happen on GitHub. **Install on GitHub ↗**, when the App is
+not installed, and **Manage on GitHub ↗**, when it is, open the Liskov GitHub
+App
+([github.com/apps/liskov-by-proof](https://github.com/apps/liskov-by-proof))
+in a new tab. Choose the account and the repositories there. When you finish,
+GitHub returns you to this page.
+
+The Dashboard offers **Connect GitHub ↗** when the App is not installed
+for the organization. It opens the same GitHub page in a new tab.
+GitHub returns you to the Console's GitHub App page.
+
+The Console page reads what your installation covers. You change the
+installation on GitHub.
 
 Reading the page needs the **Maintainer** or **Admin** role.

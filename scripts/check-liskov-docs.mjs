@@ -1824,6 +1824,32 @@ check(
   /\/settings\/integrations/.test(integrationsPage) && /\/settings\/runtime-ssh/.test(integrationsPage),
   'integrations: must name the Console catalogue and the one-release Runtime SSH URL',
 );
+// Availability transition (2026-11-22, BKLG-20261111-p5f2): Dashboard
+// Connect GitHub and Integrations → GitHub App open the public GitHub App
+// in a new tab. Owner: liskov-ui PR 298 (e3688387) and liskov-rs PR 2012,
+// production api build 1c20ded3aee87f5918bb70b41f4364e53f9d3341.
+check(
+  integrationsPage.includes('**Install on GitHub ↗**') && integrationsPage.includes('**Manage on GitHub ↗**'),
+  'integrations: GitHub App section must name Install on GitHub and Manage on GitHub',
+);
+check(
+  integrationsPage.includes('**Connect GitHub ↗**'),
+  'integrations: must describe the Dashboard Connect GitHub control',
+);
+check(
+  integrationsPage.includes('github.com/apps/liskov-by-proof')
+    && !/github\.com\/apps\/liskov-by-proof\//.test(integrationsPage),
+  'integrations: must name the public GitHub App page and no other GitHub App URL',
+);
+check(
+  /GitHub returns you to this page/.test(integrationsPage)
+    && /GitHub returns you to the Console's GitHub App page/.test(integrationsPage),
+  'integrations: must say GitHub returns you to the Console GitHub App page',
+);
+check(
+  !/it does not change it/.test(integrationsPage),
+  'integrations: must not say the Console page does not change the installation',
+);
 check(
   !/Tailscale network \| Preview on (Starter|Enterprise|Developer) /.test(capabilitiesPage),
   'capabilities: the retired Tailscale availability claims must not return',
@@ -2510,6 +2536,20 @@ for (const [pattern, claim] of [
 const consoleAppGuideId = 'get-started/console-application';
 const consoleAppGuideFile = join(docsRoot, `${consoleAppGuideId}.md`);
 const consoleAppGuidePage = existsSync(consoleAppGuideFile) ? readFileSync(consoleAppGuideFile, 'utf8') : '';
+// BKLG-20261111-p5f2: the Dashboard control opens GitHub. The repository-step
+// rows still send the reader to the Console status page.
+check(
+  consoleAppGuidePage.includes('**Connect GitHub ↗**')
+    && consoleAppGuidePage.includes('github.com/apps/liskov-by-proof')
+    && !/github\.com\/apps\/liskov-by-proof\//.test(consoleAppGuidePage)
+    && /GitHub returns you to the Console's GitHub App page/.test(consoleAppGuidePage),
+  'Console New application guide: Dashboard Connect GitHub must open the public GitHub App and return to the Console GitHub App page',
+);
+check(
+  consoleAppGuidePage.includes('**Connect GitHub →**')
+    && consoleAppGuidePage.includes('**Manage the GitHub integration →**'),
+  'Console New application guide: the repository-step rows still point at the Console status page',
+);
 for (const file of files) {
   const id = idFor(file);
   if (id === consoleAppGuideId) continue;
