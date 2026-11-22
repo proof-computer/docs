@@ -138,6 +138,28 @@ again today is a new Application, which counts against your organization's
 [job slots](../operate/pause-resume.md#job-slots); an explicit re-arm of the same Application is release-gated, and
 [Capabilities and limits](./capabilities.md) owns its current boundary.
 
+### `continuous`
+
+`until` is an optional UTC bound. No window starts at or after it. A window
+that would run past `until` ends there, and Liskov reserves and charges
+Service Credit pro-rata for the time that window is registered.
+
+The hand-off tolerance is twice the renewal lead and at most one window:
+20 minutes under the standard ten-minute lead when the window is at least
+20 minutes. A first window with no predecessor, opened while less than that
+tolerance remains before `until`, is the short remainder when `until` falls
+inside it: the window ends at `until`. It is booked only when more than
+7 minutes remain. Seven minutes is the standard bring-up floor. At 7 minutes
+or less, no window is booked and no Service Credit is reserved.
+
+Publishing a continuous Application that has one job returns a warning when
+`until` is in the future and closer than the hand-off tolerance. A dry run of
+`POST /api/applications/{id}/policy-versions` returns the same warning. The
+response member is `policyVersion.publicationNotices`, and it is omitted when
+empty. Each notice has severity `warning`, code
+`first_window_short_before_until`, and pointer `/execution/until`. The warning
+does not refuse the publish. The CLI and the Console do not display it.
+
 ### `interval`
 
 Fixed-interval execution is release-gated: the schema accepts it, but Liskov
