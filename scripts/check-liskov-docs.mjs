@@ -1437,6 +1437,28 @@ if (v5Mode === 'release_gated') {
   check(v5ReferencePage.includes('| Production registration | `v4_and_v5`'), 'V5 reference still claims V4-only registration');
   check(v5ReferencePage.includes('| Activation authorized | `true` |'), 'V5 reference still claims activation is unauthorized');
   check(v5ReferencePage.includes('does not run again on its own'), 'V5 reference must state the once re-run boundary (BKLG-20260903-6ni6)');
+  check(
+    v5ReferencePage.includes('The hand-off tolerance is twice the renewal lead and at most one window:'),
+    'V5 reference must state the hand-off tolerance in its own words (BKLG-20261112-9l6l)',
+  );
+  check(
+    v5ReferencePage.includes('20 minutes under the standard ten-minute lead when the window is at least'),
+    'V5 reference must keep 20 minutes beside at most one window (BKLG-20261112-9l6l)',
+  );
+  check(v5ReferencePage.includes('pro-rata'), 'V5 reference must state pro-rata charge for a window cut by until (BKLG-20261112-9l6l)');
+  check(
+    v5ReferencePage.includes('no window is booked and no Service Credit is reserved'),
+    'V5 reference must state that too little time books no window (BKLG-20261112-9l6l)',
+  );
+  check(v5ReferencePage.includes('7 minutes'), 'V5 reference must state the 7-minute bring-up floor (BKLG-20261112-9l6l)');
+  check(
+    v5ReferencePage.includes('`first_window_short_before_until`') && v5ReferencePage.includes('`policyVersion.publicationNotices`'),
+    'V5 reference must name the shipped publication warning code and response member (BKLG-20261112-9l6l)',
+  );
+  check(
+    v5ReferencePage.includes('The CLI and the Console do not display it.'),
+    'V5 reference must not claim the CLI or Console displays the near-until warning (BKLG-20261112-9l6l)',
+  );
   check(!v5GuidePage.includes('not a released package'), 'V5 promoted guide still calls the CLI commit unreleased');
   for (const stale of ['V4-only', 'not authorized', 'not available in production']) {
     for (const page of [v5GuidePage, v5ReferencePage, v5SshPage]) check(!page.includes(stale), `promoted V5 page retains stale gate text: ${stale}`);
@@ -2127,6 +2149,10 @@ check(
 check(
   /\| `v4_publication_disabled` \|[^\n]*imports[^\n]*publications[^\n]*refused/.test(statusesActionsErrorsPage),
   'error reference must name refused V4 imports and publications in the v4_publication_disabled row',
+);
+check(
+  /\| `first_window_short_before_until` \|[^\n]*[Ww]arning[^\n]*publicationNotices/.test(statusesActionsErrorsPage),
+  'error reference must list the near-until publication warning (BKLG-20261112-9l6l)',
 );
 for (const fileId of ['build/manifest-v4', 'reference/manifest-v4']) {
   const opening = readFileSync(join(docsRoot, `${fileId}.md`), 'utf8').split('\n## ')[0];

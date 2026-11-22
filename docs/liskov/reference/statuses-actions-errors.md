@@ -289,6 +289,9 @@ See [Intended capacity versus remaining charges](../troubleshooting/execution-co
 | `application_identity_mismatch` | Application ID/UID does not match the target. Stop and inspect identity. |
 | `application_already_exists` | Import target collides with an existing Application. Resolve organization/repository/UID rather than overwriting. |
 | `invalid_policy_import` | Import source or document is invalid. New Manifest V4 imports are closed; use the retained Manifest V5 source path. |
+| `first_window_short_before_until` | Warning, not a refusal. A continuous single-job publish, including a dry run, returns it on `policyVersion.publicationNotices` when `execution.until` is in the future and closer than the hand-off tolerance. The member is omitted when empty. The publish still succeeds. The CLI and the Console do not display it. See [continuous execution](./manifest-v5.md#continuous). |
+
+`first_window_short_before_until` is advice on the publish response. It is not a diagnostic to correct before publication succeeds.
 
 Publication preflight can report several independent diagnostics. Resolve all,
 then run a fresh preflight; do not rely on a stale clean result.
