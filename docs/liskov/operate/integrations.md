@@ -97,9 +97,9 @@ App
 in a new tab. Choose the account and the repositories there. When you finish,
 GitHub returns you to this page.
 
-The Dashboard offers **Connect GitHub ↗** when the App is not installed for
-the organization. It opens the same GitHub page in a new tab, and GitHub
-returns you to the Console's GitHub App page.
+The Dashboard offers **Connect GitHub ↗** when the App is not installed
+for the organization. It opens the same GitHub page in a new tab.
+GitHub returns you to the Console's GitHub App page.
 
 The Console page reads what your installation covers. You change the
 installation on GitHub.
