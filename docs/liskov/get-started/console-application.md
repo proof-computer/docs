@@ -55,8 +55,13 @@ You need:
    that panel; open `https://console.liskov.proof.computer/applications/new`
    instead.
 
-If the panel offers **Connect GitHub** instead, the GitHub App is not
-installed for this organization yet. Install it, then come back.
+If the panel offers **Connect GitHub ↗** instead, the GitHub App is not
+installed for this organization yet. **Connect GitHub ↗** opens the Liskov
+GitHub App
+([github.com/apps/liskov-by-proof](https://github.com/apps/liskov-by-proof))
+in a new tab. Choose the account and the repositories there. When you
+finish, GitHub returns you to the Console's GitHub App page. Come back to
+this flow once the App is installed.
 
 The address bar carries your choices — the organization, repository, branch,
 and policy file — so back and forward keep them. Switching to another
