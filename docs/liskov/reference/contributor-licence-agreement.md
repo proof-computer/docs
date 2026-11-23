@@ -15,7 +15,7 @@ under the Functional Source License accept first-party commits only.
 PROOF publishes the software customers run with Liskov (the runtime helper,
 the runtime SDK, the CLI and its plugins, the self-custody signer, and the
 GitHub actions) under the **Functional Source License, Version 1.1, with
-Apache 2.0 as the future licence** (`FSL-1.1-Apache-2.0`). Each version of
+Apache 2.0 as the future licence** (`FSL-1.1-ALv2`). Each version of
 that software becomes available under the Apache License, Version 2.0 on its
 change date, two years after it is released.
 

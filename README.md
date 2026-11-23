@@ -65,4 +65,4 @@ evidence bound to the exact authored and release-intent digests.
 
 ## License
 
-Documentation prose is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The pages under `docs/liskov/legal/` are all rights reserved. Code samples and `examples/` are licensed under FSL-1.1-Apache-2.0, and the licensor is Moose Labs Ltd. See [LICENSE](LICENSE).
+Documentation prose is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The pages under `docs/liskov/legal/` are all rights reserved. Code samples and `examples/` are licensed under FSL-1.1-ALv2, and the licensor is Moose Labs Ltd. See [LICENSE](LICENSE).
