@@ -1674,10 +1674,21 @@ for (const token of [
 check(!cliPage.includes('does not revoke access'), 'CLI page repeats the retracted non-revocation claim');
 // BKLG-20260925-my1k: `application vars list|set|unset` exist (Q-20260920-9s7a), so the
 // Variables page must not return to saying the CLI cannot write a value.
+const variablesPage = readFileSync(join(docsRoot, 'configure', 'variables.md'), 'utf8');
 check(
-  !readFileSync(join(docsRoot, 'configure', 'variables.md'), 'utf8').includes('does not provide a public v1 command'),
+  !variablesPage.includes('does not provide a public v1 command'),
   'Variables page still says the CLI has no v1 command for writing variable values',
 );
+// BKLG-20261002-kxf9: use the first published version that includes these commands.
+const varsRelease = 'in `0.17.0` and later.';
+check(
+  variablesPage.includes('`vars` commands are available ' + varsRelease),
+  'Variables page omits the released CLI vars version',
+);
+for (const command of ['list APP_REF', 'set APP_REF NAME VALUE', 'unset APP_REF NAME']) {
+  const row = cliPage.split('\n').find((line) => line.startsWith(`| \`application vars ${command}\` |`));
+  check(row?.endsWith(`Available ${varsRelease} |`), `CLI reference omits the released version for application vars ${command}`);
+}
 check(
   JSON.stringify(cliContract.withdrawnKeyCommands) ===
     JSON.stringify([
@@ -2066,7 +2077,6 @@ for (const [fileId, required] of Object.entries({
     'application vars set APP_REF',
     'application vars unset APP_REF',
     'put credentials',
-    '497899feccd466ae10a819c4c86f55303d9bfe88',
   ],
   'configure/secrets': ['"kind": "environment"', '"kind": "file"', '0.10.40', '0.3.32', '0.3.34', '0.11.1', '0600', 'independently'],
   'troubleshooting/config-bootstrap': ['runtime_bootstrap_customer_secrets_runtime_incompatible', 'runtime_secrets_file_installation'],
@@ -2078,8 +2088,7 @@ for (const [fileId, required] of Object.entries({
   'reference/runtime-sdk': ['LiskovRuntimeContext', 'network.geolocation.status', 'runtime_context_nonce_replayed', 'runtime_context_rate_limited'],
   'reference/capabilities': ['Job runtime context', 'diagnostic readback', 'Release-gated v1', 'Preview', 'Internal', 'Not v1', 'Encrypted JavaScript payload delivery', 'Private customer code inside Cargo images'],
   'reference/cli': ['0.13.0', 'application logs APP_REF', '1–500', 'runtime-ssh', 'exits zero', '--organization', 'organizationContext.sessionDefault', 'ssh APP', 'operator-key', 'withdrawn-key',
-    'application vars list APP_REF', 'application vars set APP_REF NAME VALUE', 'application vars unset APP_REF NAME',
-    '497899feccd466ae10a819c4c86f55303d9bfe88'],
+    'application vars list APP_REF', 'application vars set APP_REF NAME VALUE', 'application vars unset APP_REF NAME'],
   'reference/manifest-v4': ['deprecated_manifest_field', 'profileId', 'sinkName', 'future schema', 'durationMs', '60000', 'maxStartDelayMs', '3600000'],
   'reference/statuses-actions-errors': [
     'processorAtMatchCap',
