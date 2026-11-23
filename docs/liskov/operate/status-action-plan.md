@@ -263,7 +263,7 @@ add a placement control.
 If the list is cut, the section says how many more refused Applications are
 not listed, and the section tag reads the served total and how many are shown.
 If refused launches could not be read, the section says **Refused launches
-could not be read just now** and **This does not mean none were refused. The
+could not be read right now** and **This does not mean none were refused. The
 holds above are unaffected.** The fact then reads **Could not be read**.
 **Try again** rereads the page. That is not an empty list. An older server
 that does not report refused launches says **This Liskov server does not
@@ -309,8 +309,8 @@ UTC (N hours) · last tried HH:MM UTC**. When the run reaches the start of the
 read, it says **since at least**.
 
 If the Overview cannot read refusals, the panel is titled **Launch refused**
-and tagged **could not be read**: **Placement refusals could not be read just
-now. This page cannot tell whether the last launch was refused.** **Try
+and tagged **could not be read**: **Placement refusals could not be read
+right now. This page cannot tell whether the last launch was refused.** **Try
 again** rereads them. It does not launch anything, and it spends nothing.
 
 Start from [Diagnose and retry](./diagnose-retry.md#advice-and-launch-reconciliation)
