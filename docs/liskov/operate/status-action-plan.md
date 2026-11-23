@@ -1,14 +1,15 @@
 ---
 title: Application status and Action Plan
-description: Read customer posture, distinguish stopped-job decisions from optional processor-pin advice, and leave launch reconciliation to Liskov.
+description: Read customer posture, a launch refused by placement rules, stopped-job decisions, and optional processor-pin advice, and leave launch reconciliation to Liskov.
 ---
 
 # Application status and Action Plan
 
 An Application collects many detailed events into one customer posture. Start
 there for *this* Application. The **Action Plan** groups stopped work that needs
-your decision across the organization. When processor-pin advice is shown,
-it is a separate, optional suggestion, not another stopped job.
+your decision across the organization. A launch refused by placement rules has
+its own section, [Launches refused](#launches-refused). When processor-pin
+advice is shown, it is a separate, optional suggestion, not another stopped job.
 
 The Console no longer has an Application-scoped Action Plan page. Per-Application
 “what is wrong right now” lives on that Application’s Deployments index. “What
@@ -83,8 +84,8 @@ only what Liskov has served and does not guess from the last finished one.
 
 Open **Action Plan** in the organization rail. Its stopped-job buckets list
 work Liskov has **stopped** on. Retryable work is not placed in those buckets
-while Liskov is still handling it. Optional processor-pin advice, when shown,
-has its own section below them.
+while Liskov is still handling it. **Launches refused** follows those buckets.
+Optional processor-pin advice, when shown, has its own section below that.
 
 Jobs sit under their Application, because the actions work at two levels:
 
@@ -158,6 +159,9 @@ The Hold totals count held jobs, not optional advice:
   requested is not another decision owed.
 - **Applications** — distinct Applications with at least one Hold.
 
+**Launches refused** is a separate fact for Applications whose placement rules
+refused a launch. See [Launches refused](#launches-refused).
+
 The Applications summary counts Applications, so its **Needs action** number
 does not have to equal **Decisions owed**. To confirm a requested release is
 progressing, open the job's execution and wait for a later generation to
@@ -207,6 +211,110 @@ workload is working. Existing intent, pacing, spend, debug and Hold controls
 still apply. Otherwise wait, or [contact support](../troubleshooting/support.md)
 if the stated boundary passes without progress. Do not repeatedly publish or
 retry to turn an observation into a recovery action.
+
+### Launches refused
+
+When no processor passes an Application's placement rules, Liskov refuses the
+launch before spending anything. Nothing is held. Liskov tries again every
+hour. It stays refused until a processor fits or the policy changes.
+
+The organization Action Plan shows **Launches refused** after the Hold buckets
+and before **Processor pin**, when the server reports at least one such
+Application. Its lead is the Console's:
+
+**Liskov tried to launch these applications and refused before spending
+anything, because no processor passes the placement rules in their policy.
+Nothing is held and Liskov tries again every hour, but it cannot succeed until
+a processor fits or the policy changes.**
+
+There is one card per Application. The name links to that Application's
+Overview. The card counts the distinct filters, then says **No processor passes
+this application's placement rules, so Liskov has not launched it. Nothing was
+spent.** Each reason is one line: the filter **Allowed countries**,
+**Managers**, **Spread**, **Processor version**, or **Inbound IPv6**, then what
+happened and what to change. A reason this Console does not describe yet reads
+**Liskov refused for a reason this Console does not describe yet.** The card
+links to **See why on the application** and **Edit policy**. It has no button.
+There is nothing to release, retry, pause, or resume.
+
+The time line reads **Refused at** a UTC time, or **Refused every hour since**
+the first time **· last tried** the latest time. Those clocks use the same UTC
+words as **Held since**.
+
+**Launches refused** is its own fact, next to **Decisions owed**. Its count is
+added to the Action Plan badge in the organization rail, including Applications
+the page does not list when the list is cut. It is never part of **Decisions
+owed**. It does not create a Hold, and it does not by itself make the
+Application **Needs action**.
+
+When no job is held and a refused launch is listed, the empty Hold state is
+titled **Nothing is stopped** and says **No job is held or waiting for a
+release. The refused launch below still needs you.** Several refused launches
+say **launches**. The next step is still a policy change.
+
+Change the rule the line names, then publish a new policy version through the
+[publish workflow](../build/validate-import-publish.md). Publication can start
+new work and reserve Service Credits. The refusal itself spent nothing, and
+waiting for the next hour spends nothing.
+
+A filter name on the line is a rule already in the policy. The page does not
+add a placement control.
+
+If the list is cut, the section says how many more refused Applications are
+not listed, and the section tag reads the served total and how many are shown.
+If refused launches could not be read, the section says **Refused launches
+could not be read just now** and **This does not mean none were refused. The
+holds above are unaffected.** The fact then reads **Could not be read**.
+**Try again** rereads the page. That is not an empty list. An older server
+that does not report refused launches says **This Liskov server does not
+report refused launches, so this page cannot tell whether a launch was
+refused**, and the fact reads **Not reported**. The rail badge includes this
+count when the read succeeded. A reported count of zero shows **0** and no
+section.
+
+#### On the Application Overview
+
+Open the Application. When the newest refusal is from the current hour or the
+previous hour, a panel sits under the facts strip. An older refusal is not
+shown. An empty read never says the launch placed.
+
+The title and lead are the first match:
+
+- **Previous policy version.** The title stays **Launch refused**: **This
+  refusal was for the previous policy version.** When the publish time is
+  known, it continues **You published a new version at HH:MM UTC; Liskov tries
+  it at HH:MM UTC.** **Edit policy** and **Activity** are shown. The page head
+  has no **Launch refused** chip.
+- **Launch delayed.** When every reason is one only Liskov can clear, and the
+  read kept the full set: **Liskov could not launch this application in the
+  last hour, for a reason on its side. Nothing was spent, and there is nothing
+  to change in your policy.** There is no **Edit policy** link and no page-head
+  chip. **Launch delayed** stays on the Overview. **Launches refused** on the
+  Action Plan lists a refusal you can change in the policy.
+- **Launch refused.** **No processor passes this application's placement rules,
+  so Liskov has not launched it. Liskov refused before spending anything and
+  tries again every hour.** The page head shows a **Launch refused** link to
+  the panel, beside the posture and beside **Needs you** when that link is
+  also shown. The chip does not replace **Needs you**, and it does not change
+  the posture. **Edit policy** and **Activity** are shown.
+
+Each reason uses the same filter line as the Action Plan. If the attempt kept
+no reason lines, the panel says **Liskov refused this launch because no
+processor passes your placement rules.** If Liskov did not keep every reason,
+it adds **Other reasons may be missing: Liskov did not keep every reason for
+this attempt.**
+
+The foot reads **Refused at HH:MM UTC**, or **Refused every hour since HH:MM
+UTC (N hours) · last tried HH:MM UTC**. When the run reaches the start of the
+read, it says **since at least**.
+
+If the Overview cannot read refusals, the panel is titled **Launch refused**
+and tagged **could not be read**: **Placement refusals could not be read just
+now. This page cannot tell whether the last launch was refused.** **Try
+again** rereads them. It does not launch anything, and it spends nothing.
+
+Start from [Diagnose and retry](./diagnose-retry.md#advice-and-launch-reconciliation)
+when you are deciding whether to change the policy or to wait for the next hour.
 
 ### Optional processor-pin advice
 

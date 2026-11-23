@@ -46,6 +46,15 @@ shows no progress for a prolonged period, collect the non-secret
 [support bundle](../troubleshooting/support.md) and contact support. An optional
 pin suggestion does not supply a recovery action for that launch.
 
+A launch the placement rules refused is separate from that missing receipt, and
+it is not a Hold. The organization Action Plan lists it under **Launches
+refused**. The count is in the organization rail badge and never in **Decisions
+owed**, and the card has no button. Liskov spent nothing and tries again every
+hour. The fix is a change to the policy. On the Application Overview the same
+event is **Launch refused**, **Launch delayed** when only Liskov can clear it,
+or a **Launch refused** panel that says the refusal was for the previous policy
+version. See [Launches refused](./status-action-plan.md#launches-refused).
+
 ## 1. Identify the blocked decision
 
 ```bash
