@@ -72,9 +72,7 @@ does not declare (`undeclared_variable`), a Liskov built-in name
 (`variable_value_too_large`). Key automation on the `reason` code, not the
 message.
 
-The `vars` commands are in CLI source
-`497899feccd466ae10a819c4c86f55303d9bfe88`, which is not a released package.
-Set values in the Console until a later plugin release contains that commit.
+The `vars` commands are available in `0.17.0` and later.
 
 Keep environment-specific values out of the repository. Set them as managed
 values rather than committing them into the manifest as literals.
