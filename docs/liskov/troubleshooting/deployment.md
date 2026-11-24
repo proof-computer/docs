@@ -30,6 +30,21 @@ not the organization Action Plan page.
 Use the displayed stage timestamps and expected boundaries. Do not resubmit a
 normal wait.
 
+## A new release waits for its artifact to be fetchable
+
+After you publish a new artifact for a Manifest V5 Application, you may see no
+new job start. Acurast processors fetch the artifact through public IPFS
+gateways, which can take time to serve a new artifact. Liskov waits to register
+the job until one of those gateways can serve it. Liskov charges nothing for
+that launch while it waits.
+
+Run `proof liskov application policy explain APPLICATION_ID --json` and look
+in the execution history for “No processor IPFS gateway could serve the
+deployment script.”
+
+Liskov retries automatically. Keep the current release in place while it
+retries. If the wait lasts more than an hour, [contact support](./support.md).
+
 ## Degraded, but nothing is on the Action Plan
 
 If an Application says **Liskov checking launch** or **Liskov checking

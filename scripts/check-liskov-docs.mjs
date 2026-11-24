@@ -820,6 +820,11 @@ for (const code of [
 // Console lists the current open execution beside Last finished (liskov-ui cnnz).
 const statusActionPlanPage = readFileSync(join(docsRoot, 'operate', 'status-action-plan.md'), 'utf8');
 const deploymentTroubleshootingPage = readFileSync(join(docsRoot, 'troubleshooting', 'deployment.md'), 'utf8');
+const artifactWaitSection = deploymentTroubleshootingPage
+  .split(/^## A new release waits for its artifact to be fetchable$/m)[1]?.split(/^## /m)[0];
+check(artifactWaitSection !== undefined, 'deployment troubleshooting is missing the artifact wait section');
+check(artifactWaitSection === undefined || artifactWaitSection.replace(/\s+/g, ' ').includes('charges nothing'),
+  'deployment troubleshooting must say Liskov charges nothing during the artifact wait');
 for (const code of [
   'execution_reconcile_required',
   'deployment_platform_uncertainty',
@@ -2879,7 +2884,7 @@ check(capabilitiesPage.includes('| Runtime replace-after-failure | Internal; v1 
   && chainCapability.includes('no global activation is promised'),
   'chain recovery capabilities wording promotes availability or loses mode/spend boundaries');
 const chainConcept = firstContactRecoveryPage.split('### Finalized chain failure (internal, release-gated)\n')[1]?.split('\n### Never-contacted')[0] ?? '';
-const chainTroubleshooting = readFileSync(join(docsRoot, 'troubleshooting/deployment.md'), 'utf8')
+const chainTroubleshooting = deploymentTroubleshootingPage
   .split('### Finalized chain failure and recovery availability\n')[1]?.split('\n## ')[0] ?? '';
 const chainActionPlan = statusActionPlanPage.split('### Chain failure is not a customer Hold\n')[1]?.split('\n### ')[0] ?? '';
 check(chainConcept.replace(/\s+/g, ' ').includes('not a released customer capability')
