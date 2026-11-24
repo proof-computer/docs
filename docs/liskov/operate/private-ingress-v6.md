@@ -14,11 +14,6 @@ declaring `schemaVersion: 6` is refused at publication.
 available, and the [Application Manifest V6 reference](../reference/manifest-v6.md)
 is the contract this journey follows.
 
-Three commands on this page — `proof liskov placement manager-fleet`,
-`proof liskov application signer` and
-`proof liskov runtime-ssh attachment endpoints` — are in the CLI but are not
-yet listed in `--help`. Steps that have no customer path yet say so.
-
 This page is written as though final so that the journey can be reviewed
 before the release. Read it as a design, not as a path you can follow today.
 
@@ -50,7 +45,9 @@ You need:
   for Liskov jobs;
 - a `native_image` runtime: SSH, private endpoints and health probes are
   refused on `javascript`; and
-- for ACU spend, an ACU account you control and a self-custody signer.
+- for ACU spend, an ACU account you control, a configured self-custody signer
+  with that account's key, and an organization with the `custody_signer`
+  entitlement.
 
 Nothing in steps 1–4 spends or launches anything.
 
@@ -129,10 +126,22 @@ With `deployment.spend.unit: acu_planck`, your own ACU account pays the chain
 through your own paired self-custody signer. ACU spend is never Service
 Credits, and Liskov never falls back to paying for you.
 
-Pairing a signer is not yet a customer path. The pairing procedure is pinned
-when V6 is released.
+Issue a pairing token for your Application:
 
-Once a signer is paired, read its standing:
+```bash
+proof liskov application signer pair APPLICATION_ID
+```
+
+The CLI prints the token's expiry and a `Run signer` line starting with
+`liskov-self-custody-signer`. Run that line on the host that holds your
+signer's keystore, with your signer configuration and spend limits, before the
+token expires. Keep the token private. Pairing connects the signer to the
+Application and spends nothing. If pairing returns
+`self_custody_plan_required` (HTTP 403), check that the selected organization
+has the `custody_signer` entitlement.
+
+Read the signer's standing and check that its bound address is your account's
+address and that **Standing** says `online`:
 
 ```bash
 proof liskov application signer APPLICATION_ID
@@ -150,24 +159,47 @@ signature. **Standing** is the first of these that applies:
 - `N request(s) waiting … ms for a signer`;
 - `online`.
 
-The text readback does not print a funding figure. When the server reports
-funding as available, the CLI prints `Observed funding: reported by the
-server; this CLI does not render it yet.` Otherwise it prints
-`Observed funding: not reported (<the server's reason>).` `--json` returns
-the server's body from
-`GET /api/applications/:applicationId/custody/signer`. When funding is
-available that body includes `available`, `source`, `unit`, `admitted`,
-`openReserves`, `settled`, `settledPlanck`, `unresolvedHolds` and
-`oldestUnresolvedHoldAgeMs`. The only unavailable reason the route serves is
-`no_customer_funded_execution`.
+To replace the signer, run the same pairing command and start the new signer.
+Each job keeps the signer that registered it. A replaced signer can reconnect
+to sign deregistrations for those jobs. Keep its key and configuration until
+its jobs finish. If that key is gone, the affected jobs are unreclaimable.
+The readback lists connected **Replaced signers** and shows deregistration
+holds for jobs waiting on a registering signer. See
+[what to do if a key is lost or replaced](../troubleshooting/private-ingress-v6.md#a-signer-key-is-lost-or-replaced).
 
-The command's help text still says observed funding is reported as unavailable
-with the server's reason, never as a figure. That sentence is older than the
-route. Trust the lines above, and the JSON body, for what a merged CLI does.
+To remove the current signer, confirm removal:
 
-The Console's **Spend** section (`/apps/<ref>/spend`) draws the signer's
-standing and, when funding is unavailable, that reason. It does not render a
-funding figure. Your declared ACU caps are on that section.
+```bash
+proof liskov application signer unpair APPLICATION_ID --yes
+```
+
+Unpair is refused while sign requests are open. Use the request IDs in the
+refusal to check their standing and retry unpair when they finish. After
+removal, read the signer again to confirm **Standing** is `unpaired`. The
+registering signers are still needed to deregister their existing jobs.
+
+When the server reports funding, the CLI's **Observed funding** shows admitted
+launches, open reserves, settled launches and the settled amount in ACU and
+planck, **Closed, amount unknown** with its count and reasons, and unresolved
+holds. It identifies retired signers to reconnect when their addresses are
+known. If there has been no customer-funded execution, the CLI prints
+`Observed funding: not reported (no_customer_funded_execution).` Add `--json`
+for the unchanged response from
+`GET /api/applications/:applicationId/custody/signer`.
+
+In the Console, open the Application's **Spend** section (`/apps/<ref>/spend`).
+**Observed spend** shows **Launches paid by your signer**, **Settled**,
+**Still reserved**, **Closed, cost not known** with reasons, and **Waiting to
+close**. The settled amount covers launch rewards in ACU. Your policy's
+declared ACU caps appear under **Limits**. When the read reports
+`no_customer_funded_execution`, the Console says **Nothing paid yet**.
+
+**Closed, amount unknown** means the obligation is closed and Liskov could
+not prove the amount. It is excluded from unresolved holds. If a
+deregistration request expires before reaching a signer, Liskov can ask
+again with the same request ID after checking that the registration still
+exists on chain. Ambiguous requests and requests rejected by the signer
+stay held.
 
 The merged signer daemon is `liskov-self-custody-signer` `0.3.0` at
 `cfdf7fbf9b168c6ba71dc0ba742f0b6835beae4b`. Tag `v0.2.0` does not contain that
@@ -201,16 +233,20 @@ schema result. It is not permission to publish.
 
 ## 6. Publish
 
-```bash
-proof liskov application policy publish APPLICATION_ID ...
-```
+The current handler generation must authorize the Manifest V6 `source`
+publication pair before Liskov accepts a V6 document. Until that generation
+is active, publication is refused even when the document passes local
+validation.
 
-`proof liskov application policy publish` refuses a V6 document until V6 is
-released. The release names the publication pair; until then, nothing on this
-page launches a job.
+Once the pair is authorized, use
+`proof liskov application policy publish APPLICATION_ID` with the V6 manifest
+and the [attested source evidence and publication preflight](../build/validate-import-publish.md#4-review-publication-preflight).
+Review the read-only `--dry-run` before substituting `--yes`. Publication can
+start a deployment and use the funding source you set in the manifest.
 
-After publication, the Console's **Policy** section (`/apps/<ref>/policy`)
-shows the published policy.
+After publication, check the published policy in the Console's **Policy**
+section (`/apps/<ref>/policy`). If publication names a V6 integration refusal,
+see [Publication is refused for an integration](../troubleshooting/private-ingress-v6.md#publication-is-refused-for-an-integration).
 
 ## 7. Read the private endpoint
 

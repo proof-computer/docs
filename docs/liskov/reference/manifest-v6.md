@@ -18,10 +18,6 @@ the Application manifest.
 This page is written as though final so that the contract can be reviewed
 before the release. Read it as a design, not as a surface you can reach.
 
-`proof liskov application placement-refusals` and
-`proof liskov application placement-plan` are in the CLI but are not yet
-listed in `--help`.
-
 :::
 
 V6 is V5 with these authored arms added and nothing removed:
@@ -63,8 +59,8 @@ none of those commits is in a release tag.
 
 | Piece | Merged source | Released artifact |
 | --- | --- | --- |
-| CLI `@proof-computer/proof-cli-liskov` | `fd84019c6a819ca804750434f5c81d28c792f390`. `package.json` says `0.18.1`; tag `v0.18.1` does not contain this commit | Pinned when V6 is released |
-| Console `slipway-ui` | `e3688387e42322bcc2fab358079fb1046624144c`. The package version is `0.0.0`, and the repository has no release tag | Pinned when V6 is released |
+| CLI `@proof-computer/proof-cli-liskov` | `997b74b332a4cf9b66e8e465176c18172c8f36bd`. `package.json` says `0.19.0`; tag `v0.18.1` does not contain this commit | Pinned when V6 is released |
+| Console `slipway-ui` | `9b03674d4d8acfb6cb37bb2550cba1d693143363`. The package version is `0.0.0`, and the repository has no release tag | Pinned when V6 is released |
 | Cargo runtime helper `liskov-runtime-cargo` | `634ffcfab2b6d5dcc751dcbb3edec92cbf682ce5`. `Cargo.toml` says `0.12.2`; tag `v0.12.2` does not contain this commit. `src/discovery.rs` requests Tailscale discovery with `discoveryVersion` 1 | Pinned when V6 is released |
 | Tailscale provider client | Pinned by liskov-rs `4526233012b28c33a849e8f1cb1ddac220ccf179` at `crates/liskov-runtime-ssh/src/provider_clients.rs`: repository `proof-computer/tailscale`, tag `v1.98.10-liskov.1`, descriptor `tailscale-aarch64-1.98.10-liskov.1` | Pinned when V6 is released |
 | Self-custody signer `liskov-self-custody-signer` | `cfdf7fbf9b168c6ba71dc0ba742f0b6835beae4b`. The crate version is `0.3.0`; tag `v0.2.0` does not contain this commit | Pinned when V6 is released |
@@ -608,7 +604,7 @@ parameters are `fromMs` (inclusive) and `toMs` (exclusive), in Unix milliseconds
 for the observation's hourly window start, and `limit` (integer, 1–100).
 `cursor` continues a page within the same Application and time bounds.
 
-The same read from the CLI, hidden until V6 is released:
+The same read from the CLI:
 
 ```bash
 proof liskov application placement-refusals APPLICATION_ID \
@@ -676,7 +672,7 @@ and is refused before the session is read. The response schema is
 and `rules`. Each rule has `by` (`manager` or `country`), `strength`,
 `minimumDistinct`, `targetDistinct`, `plannedDistinct` and `preferredDegraded`.
 
-The CLI read is hidden until V6 is released:
+Read the accepted plan from the CLI:
 
 ```bash
 proof liskov application placement-plan APPLICATION_ID OCCURRENCE_AUTHORITY_DIGEST

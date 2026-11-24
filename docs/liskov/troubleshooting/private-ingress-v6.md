@@ -14,10 +14,6 @@ symptoms on this page can occur yet.
 available, and the [Application Manifest V6 reference](../reference/manifest-v6.md)
 is the contract.
 
-`proof liskov runtime-ssh attachment endpoints` and
-`proof liskov application signer` are in the CLI but are not yet listed in
-`--help`. Rows whose customer-visible evidence is not yet pinned say so.
-
 This page is written as though final so that it can be reviewed before the
 release.
 
@@ -33,6 +29,8 @@ safe next step. The journey itself is
 | An endpoint stays `published` | The same two places |
 | Jobs lost their tailnet access after the integration was turned off | `proof liskov runtime-ssh attachment list --include-terminal` |
 | A sign request has no legible outcome | `proof liskov application signer`, or the Application's **Spend** section |
+| Jobs are waiting on a replaced or lost signer key | `proof liskov application signer`, or **Spend** → **Waiting to close** |
+| V6 publication reports an integration refusal | [Publication is refused for an integration](#publication-is-refused-for-an-integration) |
 | A job restarted or was replaced | Pinned when V6 is released |
 | Devices or keys remain after retirement | Pinned when V6 is released |
 
@@ -121,15 +119,62 @@ The **Counts** line shows `ambiguous` with the number of such requests, and
 **Standing** reads as sent requests with no legible outcome. The Application's
 **Spend** section in the Console (`/apps/<ref>/spend`) shows the same standing.
 
-An ambiguous request is not a charge you can read here. The text readback
-does not print a funding figure. When the server reports funding as available,
-the CLI prints `Observed funding: reported by the server; this CLI does not render it yet.` Otherwise it prints `Observed funding: not reported (<the
-server's reason>).` `--json` returns the server's body. The only unavailable
-reason that route serves is `no_customer_funded_execution`. The Console's
-**Spend** section shows that reason and does not render a figure. ACU spend
-is never shown as Service Credits. Check your signer's own records, then
-collect a [support bundle](./support.md) with the Application, the operation
-id from the readback, and your signer's address.
+When the server reports funding, the CLI's **Observed funding** shows
+admitted launches, open reserves, settled launches and the settled amount in
+ACU and planck, **Closed, amount unknown** with its count and reasons, and
+unresolved holds. The Console's **Observed spend** shows **Launches paid by
+your signer**, **Settled**, **Still reserved**, **Closed, cost not known** with
+reasons, and **Waiting to close**. If the server reports
+`no_customer_funded_execution`, the CLI says funding was not reported and
+the Console says **Nothing paid yet**. Add `--json` to read the server body.
+
+**Closed, amount unknown** means the obligation is closed and Liskov could
+not prove the amount. An ambiguous signing outcome stays held. A
+deregistration request that expires before a signer receives it can be asked
+again under the same request ID after Liskov confirms the registration still
+exists on chain.
+
+Check your signer's records, then collect a [support bundle](./support.md)
+with the Application, the operation ID from the readback, and your signer's
+address.
+
+## A signer key is lost or replaced
+
+Pair a new key using the [signer pairing procedure](../operate/private-ingress-v6.md#4-pair-your-self-custody-signer-acu-spend-only).
+Each existing job still needs its registering signer to sign its
+deregistration. If you have that key, reconnect the old signer using its
+existing configuration and binding. Read the Application's signer standing
+again to check whether it appears under **Replaced signers**.
+
+If the key is lost, those jobs are unreclaimable. Look under
+**Deregistration holds** and **Retired signers to reconnect** in the CLI
+readback, or **Waiting to close** in the Console's **Spend** section. When
+Liskov knows the registering address, it identifies the signer required.
+Contact [support](./support.md) with the Application, the held launches
+and the registering address if visible.
+
+## Publication is refused for an integration
+
+Read the refusal code and the named use site. Check the declared integration
+and any override for that site, and compare them with your organization's
+**Integrations → Tailscale** page. After correcting the cause, validate the
+manifest and run the publication preflight again.
+
+| Refusal code | HTTP status | What to do |
+| --- | --- | --- |
+| `v6_integration_directory_evidence_missing` | 503 | Retry preflight shortly. Contact support if Liskov still cannot read integration evidence. |
+| `v6_integration_authority_missing` | 422 | Check that the reported SSH or HTTP endpoint site resolves to a declared integration. If it does, contact support with the code and site. |
+| `v6_integration_authority_duplicate` | 422 | Check that the site resolves to a single integration. If the declaration and override are correct, contact support with the code and site. |
+| `v6_integration_authority_unconsumed` | 422 | Check that the current manifest still contains the reported use site. Retry with the current manifest and its matching build evidence. Contact support if the refusal persists. |
+| `v6_integration_override_mangled` | 422 | Check that the site's override names the intended integration. Contact support if preflight still reports a different resolution. |
+| `v6_integration_kind_mismatch` | 409 | Select a Tailscale integration for the reported Tailscale endpoint or SSH provider. |
+| `v6_integration_cross_organization` | 403 | Use an integration owned by the Application's organization and publish under that organization. |
+| `v6_integration_unknown` | 404 | Check the integration ID against the owning organization's Tailscale integrations and correct the manifest if needed. |
+| `v6_integration_revoked` | 409 | Select an active, validated integration and update the manifest. |
+| `v6_integration_revocation_epoch_stale` | 409 | Recheck that the integration is active, then run a fresh preflight. Use a validated replacement if it has been disabled. |
+| `v6_integration_configuration_revision_stale` | 409 | Revalidate the current integration and run a fresh preflight after the configuration change. |
+| `v6_integration_scope_escaped` | 409 | Check that the integration grants the access required at the reported site. Select a validated integration with the required access, or contact support if the grant is already correct. |
+| `v6_integration_credential_pointer_missing` | 409 | Validate the integration's credential. If validation fails, rotate it and validate again. If the refusal persists, contact support with the integration ID. |
 
 ## A job restarts or is replaced
 
