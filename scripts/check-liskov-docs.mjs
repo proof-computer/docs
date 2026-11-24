@@ -3026,6 +3026,7 @@ for (const path of [
   'docs/liskov/troubleshooting/private-ingress-v6.md',
   'docs/liskov/reference/service-discovery-v6.md',
   'docs/liskov/reference/capabilities.md',
+  'docs/liskov/reference/cli.md',
 ]) {
   check(v6PromotionPaths.has(path), `V6 candidate: promotion checklist omits ${path}`);
 }
@@ -3037,20 +3038,77 @@ for (const fact of v6CandidateContract.releaseOnlyFacts ?? []) {
   check(page?.includes('pinned when V6 is released') || page?.includes('Pinned when V6 is released'), `V6 candidate: ${fact.page} lost its release deferral`);
 }
 check((v6CandidateContract.releaseOnlyFacts ?? []).length >= 10, 'V6 candidate: release-only fact list is incomplete');
-const fundingDifference = (v6CandidateContract.clientOwnerDifferences ?? []).find((item) => item.id === 'executed-funding');
-check(fundingDifference?.handoff === 'n44w', 'V6 candidate: executed-funding handoff missing');
-for (const key of ['ownerPath', 'ownerCommit', 'fact', 'cli', 'console']) {
-  check(typeof fundingDifference?.[key] === 'string' && fundingDifference[key].length > 0, `V6 candidate: executed-funding.${key} missing`);
+// BKLG-20261123-hyry: the prepared journey reflects the pinned clients and API.
+for (const [id, page] of [
+  ['operate/private-ingress-v6', v6IngressPage],
+  ['troubleshooting/private-ingress-v6', v6IngressTroublePage],
+]) {
+  const normalized = page.replace(/[*`]/gu, '').replace(/\s+/gu, ' ').toLowerCase();
+  for (const term of [
+    'admitted launches', 'open reserves', 'settled amount in acu',
+    'closed, amount unknown', 'count and reasons', 'unresolved holds',
+    'observed spend', 'closed, cost not known', 'no_customer_funded_execution',
+  ]) {
+    check(normalized.includes(term), `V6 candidate: ${id} omits observed funding wording: ${term}`);
+  }
+  for (const obsolete of [
+    'not yet a customer path', 'does not print a funding figure', 'does not render a funding figure',
+    'this cli does not render it yet', 'v6_custody_execution_not_built',
+  ]) {
+    check(!normalized.includes(obsolete), `V6 candidate: ${id} contains obsolete wording: ${obsolete}`);
+  }
 }
-const fundingSentence = 'this CLI does not render it yet';
-for (const page of [v6IngressPage, v6IngressTroublePage]) {
-  check(page.includes(fundingSentence), 'V6 candidate: prepared funding prose omits the merged CLI sentence');
-  check(!page.includes('v6_custody_execution_not_built'), 'V6 candidate: prepared funding prose still names the withdrawn reason');
+
+const v6CliVisibility = v6CandidateContract.cliCommandVisibility;
+check(
+  v6CliVisibility?.sourceCommit === v6CandidateContract.identities?.cli?.sourceCommit &&
+    v6CliVisibility?.sourceCommit === v6CandidateContract.ownersReadAt?.['proof-cli-liskov'],
+  'V6 candidate: packaged CLI visibility must use the pinned CLI source commit',
+);
+const v6OwnerHiddenByCommand = v6CliVisibility?.hiddenByCommand ?? {};
+const v6Commands = v6CandidateContract.commands ?? [];
+check(
+  JSON.stringify(v6Commands.map(({id}) => id).sort()) === JSON.stringify(Object.keys(v6OwnerHiddenByCommand).sort()),
+  'V6 candidate: command set differs from the packaged CLI visibility record',
+);
+for (const command of v6Commands) {
+  check(
+    typeof command.hidden === 'boolean' && command.hidden === v6OwnerHiddenByCommand[command.id],
+    `V6 candidate: ${command.id} visibility differs from the pinned CLI`,
+  );
 }
 for (const commandId of ['liskov application placement-refusals', 'liskov application placement-plan']) {
-  const command = (v6CandidateContract.commands ?? []).find((item) => item.id === commandId);
-  check(command?.hidden === true, `V6 candidate: ${commandId} must stay hidden`);
-  check(v6ManifestPage.includes(`proof ${commandId}`), `V6 candidate: manifest-v6 omits ${commandId}`);
+  check(
+    v6Commands.some(({id}) => id === commandId) && v6ManifestPage.includes(`proof ${commandId}`),
+    `V6 candidate: manifest-v6 omits ${commandId}`,
+  );
+}
+for (const suffix of ['', ' pair', ' unpair']) {
+  const commandId = `liskov application signer${suffix}`;
+  const command = v6Commands.find(({id}) => id === commandId);
+  const invocation = `proof ${commandId} APPLICATION_ID${suffix === ' unpair' ? ' --yes' : ''}`;
+  check(command !== undefined && v6IngressPage.includes(invocation), `V6 candidate: private-ingress omits ${invocation}`);
+}
+
+const v6PublicationRefusals = v6CandidateContract.publicationRefusals ?? [];
+const v6RefusalCodes = new Set(v6PublicationRefusals.map(({code}) => code));
+check(v6PublicationRefusals.length === 13 && v6RefusalCodes.size === 13, 'V6 candidate: expected 13 distinct integration publication refusals');
+const [, v6RefusalSection = ''] = v6IngressTroublePage.split(/^## Publication is refused for an integration$/mu);
+const v6RefusalRows = [...v6RefusalSection.split(/^## /mu, 1)[0].matchAll(/^\| `(v6_integration_\w+)` \| (\d{3}) \| (.+) \|$/gmu)];
+for (const {code, status, ownerPath, ownerCommit} of v6PublicationRefusals) {
+  check(
+    /^v6_integration_\w+$/u.test(code) && Number.isInteger(status) &&
+      typeof ownerPath === 'string' && ownerPath.length > 0 && /^[0-9a-f]{40}$/u.test(ownerCommit),
+    `V6 candidate: publication refusal lacks owner evidence: ${code}`,
+  );
+  const rows = v6RefusalRows.filter(([, rowCode]) => rowCode === code);
+  check(rows.length === 1, `V6 candidate: troubleshooting table must list ${code} exactly once (found ${rows.length})`);
+  if (rows.length === 1) {
+    check(Number(rows[0][2]) === status, `V6 candidate: troubleshooting table must give ${code} HTTP ${status}`);
+  }
+}
+for (const [, code] of v6RefusalRows) {
+  check(v6RefusalCodes.has(code), `V6 candidate: unknown integration refusal in troubleshooting table: ${code}`);
 }
 
 // BKLG-20261121-q47r: the offline core checks job 409696's recorded fixture.

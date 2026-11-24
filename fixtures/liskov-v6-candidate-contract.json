@@ -5,9 +5,9 @@
   "availability": "not_released",
   "releaseToggle": null,
   "ownersReadAt": {
-    "docs": "83b2458096574cac1bcbe34faf58b24bb3e0deb3",
-    "proof-cli-liskov": "fd84019c6a819ca804750434f5c81d28c792f390",
-    "liskov-ui": "e3688387e42322bcc2fab358079fb1046624144c",
+    "docs": "ada3da7b58096394c84c0a003b49d982b882c386",
+    "proof-cli-liskov": "997b74b332a4cf9b66e8e465176c18172c8f36bd",
+    "liskov-ui": "9b03674d4d8acfb6cb37bb2550cba1d693143363",
     "liskov-rs": "4526233012b28c33a849e8f1cb1ddac220ccf179",
     "liskov-examples": "5e2666f865556abe7e85f3fe724adc4f7b6db2af",
     "liskov-runtime-cargo": "634ffcfab2b6d5dcc751dcbb3edec92cbf682ce5",
@@ -27,8 +27,8 @@
     "cli": {
       "repository": "proof-computer/proof-cli-liskov",
       "package": "@proof-computer/proof-cli-liskov",
-      "sourceCommit": "fd84019c6a819ca804750434f5c81d28c792f390",
-      "sourceVersion": "0.18.1",
+      "sourceCommit": "997b74b332a4cf9b66e8e465176c18172c8f36bd",
+      "sourceVersion": "0.19.0",
       "sourceVersionPath": "package.json",
       "ownerPath": "package.json",
       "releasedRefContainingCommit": null,
@@ -39,7 +39,7 @@
     "console": {
       "repository": "proof-computer/liskov-ui",
       "package": "slipway-ui",
-      "sourceCommit": "e3688387e42322bcc2fab358079fb1046624144c",
+      "sourceCommit": "9b03674d4d8acfb6cb37bb2550cba1d693143363",
       "sourceVersion": "0.0.0",
       "sourceVersionPath": "package.json",
       "ownerPath": "web-app/src/ComputePlacementPage/PlacementV6Fields.tsx",
@@ -139,7 +139,7 @@
   "commands": [
     {
       "id": "liskov application placement-refusals",
-      "hidden": true,
+      "hidden": false,
       "ownerPath": "src/commands/liskov/application/placement-refusals.ts",
       "args": ["APPLICATION_ID"],
       "requiredFlags": ["--from-ms", "--to-ms", "--limit"],
@@ -147,43 +147,74 @@
     },
     {
       "id": "liskov application placement-plan",
-      "hidden": true,
+      "hidden": false,
       "ownerPath": "src/commands/liskov/application/placement-plan.ts",
       "args": ["APPLICATION_ID", "OCCURRENCE_AUTHORITY_DIGEST"],
       "optionalFlags": ["--json", "--config", "--liskov-url"]
     },
     {
       "id": "liskov placement manager-fleet",
-      "hidden": true,
+      "hidden": false,
       "ownerPath": "src/commands/liskov/placement/manager-fleet.ts",
       "args": ["MANAGER_ID"],
       "optionalFlags": ["--json", "--config", "--slipway-url"]
     },
     {
       "id": "liskov application signer",
-      "hidden": true,
+      "hidden": false,
       "ownerPath": "src/commands/liskov/application/signer.ts",
       "args": ["APPLICATION_ID"],
       "optionalFlags": ["--json", "--config", "--slipway-url"]
     },
     {
+      "id": "liskov application signer pair",
+      "hidden": false,
+      "ownerPath": "src/commands/liskov/application/signer/pair.ts",
+      "args": ["APPLICATION_ID"],
+      "optionalFlags": ["--json", "--config", "--liskov-url"]
+    },
+    {
+      "id": "liskov application signer unpair",
+      "hidden": false,
+      "ownerPath": "src/commands/liskov/application/signer/unpair.ts",
+      "args": ["APPLICATION_ID"],
+      "requiredFlags": ["--yes"],
+      "optionalFlags": ["--json", "--config", "--liskov-url"]
+    },
+    {
       "id": "liskov runtime-ssh attachment endpoints",
-      "hidden": true,
+      "hidden": false,
       "ownerPath": "src/commands/liskov/runtime-ssh/attachment/endpoints.ts",
       "args": ["APPLICATION_ID", "ATTACHMENT_ID"],
       "optionalFlags": ["--json", "--config", "--slipway-url"]
     }
   ],
-  "clientOwnerDifferences": [
-    {
-      "id": "executed-funding",
-      "handoff": "n44w",
-      "ownerPath": "crates/liskov-control-plane-api/src/application_custody_signer.rs",
-      "ownerCommit": "4526233012b28c33a849e8f1cb1ddac220ccf179",
-      "fact": "When a customer-funded root exists, executedFunding.available is true and the body includes source, unit, admitted, openReserves, settled, settledPlanck, unresolvedHolds and oldestUnresolvedHoldAgeMs. The only unavailable reason is no_customer_funded_execution.",
-      "cli": "Text output does not render figures. Available funding prints that the server reported it and this CLI does not render it yet. Otherwise the text prints Observed funding: not reported and the server's reason. --json returns the server body. Help text in application/signer.ts still says funding is reported as unavailable with the server's reason, never as a figure.",
-      "console": "web-app/src/applicationSigner.ts keeps executedFundingReason only when available is false. It does not render funding figures."
+  "cliCommandVisibility": {
+    "sourceCommit": "997b74b332a4cf9b66e8e465176c18172c8f36bd",
+    "hiddenByCommand": {
+      "liskov application placement-refusals": false,
+      "liskov application placement-plan": false,
+      "liskov placement manager-fleet": false,
+      "liskov application signer": false,
+      "liskov application signer pair": false,
+      "liskov application signer unpair": false,
+      "liskov runtime-ssh attachment endpoints": false
     }
+  },
+  "publicationRefusals": [
+    {"code": "v6_integration_directory_evidence_missing", "status": 503, "ownerPath": "crates/liskov-api-runtime/src/registered_policy_publication.rs", "ownerCommit": "ef3c1a4cac8a9ca282ad9ceb2f9e68e5903df838"},
+    {"code": "v6_integration_authority_missing", "status": 422, "ownerPath": "crates/liskov-api-runtime/src/registered_policy_publication.rs", "ownerCommit": "ef3c1a4cac8a9ca282ad9ceb2f9e68e5903df838"},
+    {"code": "v6_integration_authority_duplicate", "status": 422, "ownerPath": "crates/liskov-api-runtime/src/registered_policy_publication.rs", "ownerCommit": "ef3c1a4cac8a9ca282ad9ceb2f9e68e5903df838"},
+    {"code": "v6_integration_authority_unconsumed", "status": 422, "ownerPath": "crates/liskov-api-runtime/src/registered_policy_publication.rs", "ownerCommit": "ef3c1a4cac8a9ca282ad9ceb2f9e68e5903df838"},
+    {"code": "v6_integration_override_mangled", "status": 422, "ownerPath": "crates/liskov-api-runtime/src/registered_policy_publication.rs", "ownerCommit": "ef3c1a4cac8a9ca282ad9ceb2f9e68e5903df838"},
+    {"code": "v6_integration_kind_mismatch", "status": 409, "ownerPath": "crates/liskov-api-runtime/src/registered_policy_publication.rs", "ownerCommit": "ef3c1a4cac8a9ca282ad9ceb2f9e68e5903df838"},
+    {"code": "v6_integration_cross_organization", "status": 403, "ownerPath": "crates/liskov-api-runtime/src/registered_policy_publication.rs", "ownerCommit": "ef3c1a4cac8a9ca282ad9ceb2f9e68e5903df838"},
+    {"code": "v6_integration_unknown", "status": 404, "ownerPath": "crates/liskov-api-runtime/src/registered_policy_publication.rs", "ownerCommit": "ef3c1a4cac8a9ca282ad9ceb2f9e68e5903df838"},
+    {"code": "v6_integration_revoked", "status": 409, "ownerPath": "crates/liskov-api-runtime/src/registered_policy_publication.rs", "ownerCommit": "ef3c1a4cac8a9ca282ad9ceb2f9e68e5903df838"},
+    {"code": "v6_integration_revocation_epoch_stale", "status": 409, "ownerPath": "crates/liskov-api-runtime/src/registered_policy_publication.rs", "ownerCommit": "ef3c1a4cac8a9ca282ad9ceb2f9e68e5903df838"},
+    {"code": "v6_integration_configuration_revision_stale", "status": 409, "ownerPath": "crates/liskov-api-runtime/src/registered_policy_publication.rs", "ownerCommit": "ef3c1a4cac8a9ca282ad9ceb2f9e68e5903df838"},
+    {"code": "v6_integration_scope_escaped", "status": 409, "ownerPath": "crates/liskov-api-runtime/src/registered_policy_publication.rs", "ownerCommit": "ef3c1a4cac8a9ca282ad9ceb2f9e68e5903df838"},
+    {"code": "v6_integration_credential_pointer_missing", "status": 409, "ownerPath": "crates/liskov-api-runtime/src/registered_policy_publication.rs", "ownerCommit": "ef3c1a4cac8a9ca282ad9ceb2f9e68e5903df838"}
   ],
   "releaseOnlyFacts": [
     {"id": "rc-digest", "page": "reference/manifest-v6"},
@@ -193,7 +224,6 @@
     {"id": "production-registration", "page": "reference/manifest-v6"},
     {"id": "processor-criteria-read-surface", "page": "reference/manifest-v6"},
     {"id": "inbound-reachability-candidate-reasons", "page": "reference/manifest-v6"},
-    {"id": "signer-pairing", "page": "operate/private-ingress-v6"},
     {"id": "ssh-login-user", "page": "operate/private-ingress-v6"},
     {"id": "provider-customer-artifact", "page": "operate/private-ingress-v6"},
     {"id": "signer-customer-artifact", "page": "operate/private-ingress-v6"},
@@ -203,6 +233,7 @@
     {"id": "device-key-cleanup", "page": "troubleshooting/private-ingress-v6"}
   ],
   "promotionEdits": [
+    {"repository": "docs", "path": "docs/liskov/reference/cli.md", "key": "signer commands", "change": "Add signer read, pair and unpair --yes with the released V6 CLI version and entitlement."},
     {"repository": "docs", "path": "scripts/check-liskov-docs.mjs", "key": "unlistedIds", "change": "Remove reference/manifest-v6, operate/private-ingress-v6 and troubleshooting/private-ingress-v6."},
     {"repository": "docs", "path": "scripts/check-liskov-docs.mjs", "key": "candidateDraftIds", "change": "Remove reference/service-discovery-v6."},
     {"repository": "docs", "path": "sidebarsLiskov.ts", "key": "sidebar ids", "change": "Add reference/manifest-v6 beside reference/manifest-v5, reference/service-discovery-v6, operate/private-ingress-v6 beside operate/runtime-ssh-v5, and troubleshooting/private-ingress-v6."},
@@ -216,14 +247,10 @@
     {"repository": "docs", "path": "docs/liskov/reference/service-discovery-v6.md", "key": "draft", "change": "Remove frontmatter draft: true."},
     {"repository": "docs", "path": "docs/liskov/reference/service-discovery-v6.md", "key": "notice", "change": "Remove the Not released notice."},
     {"repository": "docs", "path": "docs/liskov/reference/capabilities.md", "key": "availability row", "change": "Add the V6 classification from the observed production result. This packet does not write that row."},
-    {"repository": "proof-cli-liskov", "path": "src/commands/liskov/placement/manager-fleet.ts", "key": "static hidden", "change": "Set hidden to false."},
-    {"repository": "proof-cli-liskov", "path": "src/commands/liskov/application/signer.ts", "key": "static hidden", "change": "Set hidden to false."},
-    {"repository": "proof-cli-liskov", "path": "src/commands/liskov/runtime-ssh/attachment/endpoints.ts", "key": "static hidden", "change": "Set hidden to false."},
-    {"repository": "proof-cli-liskov", "path": "src/commands/liskov/application/placement-refusals.ts", "key": "static hidden", "change": "Set hidden to false."},
-    {"repository": "proof-cli-liskov", "path": "src/commands/liskov/application/placement-plan.ts", "key": "static hidden", "change": "Set hidden to false."},
     {"repository": "liskov-rs", "path": "crates/liskov-policy-client-contract/bundle/policy-client-bundle.json", "key": "publicationPairs", "change": "Admit the released V6 source pair. This packet does not edit the bundle."}
   ],
   "demotionEdits": [
+    {"repository": "docs", "path": "docs/liskov/reference/cli.md", "key": "signer commands", "change": "Remove the V6 signer read, pair and unpair entries from the supported CLI reference."},
     {"repository": "docs", "path": "scripts/check-liskov-docs.mjs", "key": "unlistedIds", "change": "Put reference/manifest-v6, operate/private-ingress-v6 and troubleshooting/private-ingress-v6 back."},
     {"repository": "docs", "path": "scripts/check-liskov-docs.mjs", "key": "candidateDraftIds", "change": "Put reference/service-discovery-v6 back."},
     {"repository": "docs", "path": "sidebarsLiskov.ts", "key": "sidebar ids", "change": "Remove the four V6 page ids."},
@@ -239,6 +266,8 @@
     {"repository": "docs", "path": "docs/liskov/reference/capabilities.md", "key": "availability row", "change": "Remove the V6 customer-availability row."},
     {"repository": "proof-cli-liskov", "path": "src/commands/liskov/placement/manager-fleet.ts", "key": "static hidden", "change": "Set hidden to true."},
     {"repository": "proof-cli-liskov", "path": "src/commands/liskov/application/signer.ts", "key": "static hidden", "change": "Set hidden to true."},
+    {"repository": "proof-cli-liskov", "path": "src/commands/liskov/application/signer/pair.ts", "key": "static hidden", "change": "Set hidden to true."},
+    {"repository": "proof-cli-liskov", "path": "src/commands/liskov/application/signer/unpair.ts", "key": "static hidden", "change": "Set hidden to true."},
     {"repository": "proof-cli-liskov", "path": "src/commands/liskov/runtime-ssh/attachment/endpoints.ts", "key": "static hidden", "change": "Set hidden to true."},
     {"repository": "proof-cli-liskov", "path": "src/commands/liskov/application/placement-refusals.ts", "key": "static hidden", "change": "Set hidden to true."},
     {"repository": "proof-cli-liskov", "path": "src/commands/liskov/application/placement-plan.ts", "key": "static hidden", "change": "Set hidden to true."},
