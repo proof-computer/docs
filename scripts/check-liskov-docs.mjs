@@ -2049,7 +2049,7 @@ for (const [fileId, required] of Object.entries({
   'get-started/marketplace': ['Release-gated v1', 'engineering acceptance', 'not supported customer paths'],
   'marketplace/uptime-prober': ['Release-gated v1', 'engineering acceptance', 'not a supported customer offering'],
   'organizations/service-credits': ['read-only', 'Customer funding is release-gated', 'payment details'],
-  'get-started/github': ['Manifest V5', 'retained-v5-starter', 'v1.2.4', 'source-binding set', 'Pinned hello-liskov: ipfs://', 'Proof'],
+  'get-started/github': ['Manifest V5', 'retained-v5-starter', 'v1.2.4', 'source-binding set', 'Pinned hello-liskov: ipfs://', 'Proof', 'only non-personal organization'],
   'operate/proof-chain': ['GitHub OIDC', 'policy digest', 'runtime instance'],
   'operate/verify-job-keys': ['Preview', 'per application release', 'many consecutive jobs', '5447854', '5447858', '81eb8a4001c87f381e100cf7bd1013087e300e9f554c91f090997ad629e585ae'],
   'operate/processors': ['your org', 'whole fleet', 'Enterprise', 'storageBytes', 'read-only', 'not-found', 'Redaction and missing data are not the same state'],

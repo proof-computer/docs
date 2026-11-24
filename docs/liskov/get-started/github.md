@@ -59,12 +59,15 @@ version (`installed v…`); trust `proof plugins`.
 
 `whoami` shows the organization your commands act on, as
 `Name (ORGANIZATION_ID, slug, role …)`. A new CLI session starts in your
-oldest membership, which is usually your personal organization, not the one
-you last used in the Console. If you belong to more than one organization,
-list them with `proof liskov organization list` and select the intended one
-by its slug or ID — not its display name — with
-`proof liskov organization use SLUG`. Then keep that organization's ID, not
-its slug: the workflow needs it.
+only non-personal organization if you have exactly one active non-personal
+membership. Otherwise, it starts in the oldest organization where you have
+an active membership, based on when the organization was created. This is
+usually your personal organization. The CLI chooses independently of your
+Console selection. If you're already signed in to the CLI, your session
+keeps its selected organization. If you belong to more than one
+organization, list them with `proof liskov organization list` and select the
+intended one with `proof liskov organization use SLUG`. The command accepts
+only a slug or ID. Then keep that organization's ID for the workflow.
 
 On Windows, plugin `0.19.0` opens the complete login link. Earlier versions
 open it without its code; with one of those, copy the full URL from the
