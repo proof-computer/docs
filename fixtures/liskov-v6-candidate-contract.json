@@ -1,6 +1,6 @@
 {
   "schema": "proof.liskov.docs-v6-candidate-contract.v1",
-  "verifiedAt": "2026-11-17",
+  "verifiedAt": "2026-11-24",
   "documentationMode": "candidate",
   "availability": "not_released",
   "releaseToggle": null,
@@ -9,7 +9,7 @@
     "proof-cli-liskov": "fd84019c6a819ca804750434f5c81d28c792f390",
     "liskov-ui": "e3688387e42322bcc2fab358079fb1046624144c",
     "liskov-rs": "4526233012b28c33a849e8f1cb1ddac220ccf179",
-    "liskov-examples": "f41afc58f87c457b902f92c70f97349525a42ddf",
+    "liskov-examples": "5e2666f865556abe7e85f3fe724adc4f7b6db2af",
     "liskov-runtime-cargo": "634ffcfab2b6d5dcc751dcbb3edec92cbf682ce5",
     "liskov-self-custody-signer": "cfdf7fbf9b168c6ba71dc0ba742f0b6835beae4b"
   },
@@ -93,11 +93,11 @@
   "policyBundles": {
     "cli": {
       "repository": "proof-computer/proof-cli-liskov",
-      "sourceCommit": "fd84019c6a819ca804750434f5c81d28c792f390",
+      "sourceCommit": "4f7cc786e60dad26971f18a15d58e6388c431b01",
       "ownerPath": "src/policy-client-bundle/source.json",
-      "bundleOwnerCommit": "4473cf26b26f4ed6d2960b086506254fe4d7dea3",
-      "sourceDigest": "sha256:199861f912ffab4e6e12a250248117c11074f42328dd571acccb5c0ac1608c29",
-      "manifestDigest": "sha256:54bd5f14b62fa425915045cb414326bb9cc1b6ea0dbed60d0e6fac30ebd67dc0",
+      "bundleOwnerCommit": "bf93a1f675f3adbf5ff1abefc62fb3b24bb33d7c",
+      "sourceDigest": "sha256:1da16ea6817fde65dfe19ff2f06510d2255b309890e113846d89c076924733f1",
+      "manifestDigest": "sha256:d081e6de316015b58e2be8eb9bddd63cbc3a345955be13eb85e87a33637d7e9a",
       "manifestPath": "src/policy-client-bundle/policy-client-bundle.json",
       "supportedManifestSchemaVersions": [4, 5, 6, 7, 8],
       "publicationPairs": [
@@ -105,21 +105,32 @@
           "schema": "proof.liskov.application-manifest",
           "schemaVersion": 5,
           "releaseMode": "source"
+        },
+        {
+          "schema": "proof.liskov.application-manifest",
+          "schemaVersion": 6,
+          "releaseMode": "source"
         }
       ]
     },
     "examples": {
       "repository": "proof-computer/liskov-examples",
-      "sourceCommit": "f41afc58f87c457b902f92c70f97349525a42ddf",
+      "sourceCommit": "5e2666f865556abe7e85f3fe724adc4f7b6db2af",
       "ownerPath": "tests/policy-client-bundle.test.ts",
-      "bundleOwnerCommit": "13f039d41b8febf36db37844a7a61cc405fcec79",
-      "sourceDigest": "sha256:eb606519f755169179b09b7cdf287799e6b0450d99b412ca0f852600d4b94847",
+      "bundleOwnerCommit": "bf93a1f675f3adbf5ff1abefc62fb3b24bb33d7c",
+      "sourceDigest": "sha256:1da16ea6817fde65dfe19ff2f06510d2255b309890e113846d89c076924733f1",
+      "manifestDigest": "sha256:d081e6de316015b58e2be8eb9bddd63cbc3a345955be13eb85e87a33637d7e9a",
       "manifestPath": "policy-client-bundle/policy-client-bundle.json",
       "supportedManifestSchemaVersions": [4, 5, 6, 7, 8],
       "publicationPairs": [
         {
           "schema": "proof.liskov.application-manifest",
           "schemaVersion": 5,
+          "releaseMode": "source"
+        },
+        {
+          "schema": "proof.liskov.application-manifest",
+          "schemaVersion": 6,
           "releaseMode": "source"
         }
       ]
