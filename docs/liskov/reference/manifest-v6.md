@@ -70,22 +70,18 @@ none of those commits is in a release tag.
 | Self-custody signer `liskov-self-custody-signer` | `cfdf7fbf9b168c6ba71dc0ba742f0b6835beae4b`. The crate version is `0.3.0`; tag `v0.2.0` does not contain this commit | Pinned when V6 is released |
 
 `proof liskov application manifest validate` evaluates a local file with the
-CLI's vendored owner bundle. That bundle's source digest is
-`sha256:199861f912ffab4e6e12a250248117c11074f42328dd571acccb5c0ac1608c29`,
-from liskov-rs `4473cf26b26f4ed6d2960b086506254fe4d7dea3`. Its manifest digest
-is `sha256:54bd5f14b62fa425915045cb414326bb9cc1b6ea0dbed60d0e6fac30ebd67dc0`.
-Manifest and policy schema version 6 are supported pairs. The only publication
-pair is still Manifest V5 `source`, which is why
-`proof liskov application policy publish` refuses a V6 document. A schema-valid
-V6 file still prints `firstPublicReady: true`. That line is not a publication
-pair.
+CLI's vendored policy bundle, which supports Manifest and Policy V6 for local
+validation. Local validation can report `firstPublicReady: true` before V6
+publication is available.
 
-`liskov-examples` at `f41afc58f87c457b902f92c70f97349525a42ddf` vendors an
-older bundle, source digest
-`sha256:eb606519f755169179b09b7cdf287799e6b0450d99b412ca0f852600d4b94847`,
-from liskov-rs `13f039d41b8febf36db37844a7a61cc405fcec79`. It also supports
-schema version 6 and publishes only V5 `source`. The two bundles can disagree
-on one fragment. Validate the fragments on this page with the CLI bundle.
+The CLI and example bundles list Manifest V5 `source` and Manifest V6 `source`
+as their publication pairs. Liskov accepts V6 publication only once the V6
+release authorizes the schema pair in production.
+
+| Repository | Bundle merge commit | liskov-rs commit | Source digest | Bundle manifest SHA-256 |
+| --- | --- | --- | --- | --- |
+| `proof-computer/proof-cli-liskov` | `4f7cc786e60dad26971f18a15d58e6388c431b01` | `bf93a1f675f3adbf5ff1abefc62fb3b24bb33d7c` | `sha256:1da16ea6817fde65dfe19ff2f06510d2255b309890e113846d89c076924733f1` | `sha256:d081e6de316015b58e2be8eb9bddd63cbc3a345955be13eb85e87a33637d7e9a` |
+| `proof-computer/liskov-examples` | `5e2666f865556abe7e85f3fe724adc4f7b6db2af` | `bf93a1f675f3adbf5ff1abefc62fb3b24bb33d7c` | `sha256:1da16ea6817fde65dfe19ff2f06510d2255b309890e113846d89c076924733f1` | `sha256:d081e6de316015b58e2be8eb9bddd63cbc3a345955be13eb85e87a33637d7e9a` |
 
 ## Root document
 
