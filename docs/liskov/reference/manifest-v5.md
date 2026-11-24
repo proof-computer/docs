@@ -255,15 +255,28 @@ heartbeat, schedule, consumer access, and price before registration.
 | Field | Values and default |
 | --- | --- |
 | `renewal.leadTime` | `automatic` (default) or `fixed` with required `duration` |
-| `update.timing` | `immediate` (default): the successor starts at the next executor pass; `next_renewal`: one renewal lead before the running job's scheduled end |
-| `update.existingJobs.mode` | `stop_when_successor_ready` (default) stops the old job once the new runtime is ready; `run_until_scheduled_end` lets it run until its scheduled end |
+| `update.timing` | `immediate` (default) makes the successor eligible at the next executor pass. `next_renewal` starts it one renewal lead before the running job's scheduled end. |
+| `update.existingJobs.mode` | `stop_when_successor_ready` (default) requests a cooperative stop. `run_until_scheduled_end` lets the old runtime keep working through the scheduled end. |
+
+With the default `stop_when_successor_ready`, Liskov asks the old job's runtime
+to stop its work once the new runtime has checked in. Liskov sends the request
+in response to the old runtime's signed diagnostic check-in. The JavaScript
+runtime can act on the request only if it registers an
+[`onCease` handler](./runtime-sdk.md#cooperative-stop-oncease).
+Cooperative stop is release-gated. See
+[Capabilities and limits](./capabilities.md).
+
+The old Acurast job is charged through its scheduled end, and its Service
+Credit reserve stays open through that end. An immediate update can overlap
+for up to a full job window, with charges for both jobs during the overlap.
 
 An executor pass is the next time Liskov checks the Application and starts
 work that is due. A renewal lead is how long before the scheduled end Liskov
 starts the successor when timing is `next_renewal`. The scheduled end is the
-end time registered for the current job's window. A job that has failed, or
-that Liskov has lost contact with, is not waited for in either mode when
-timing is `immediate`.
+end time registered for the current job's window. Neither `existingJobs` mode
+requires a response from a runtime that has failed or lost contact. For the
+single-job limit on immediate starts, see
+[Schedules and updates](../configure/schedules-updates.md#updates).
 
 Renewal is valid only for continuous execution. If `existingJobs` is present,
 its `mode` is required; an empty object fails.

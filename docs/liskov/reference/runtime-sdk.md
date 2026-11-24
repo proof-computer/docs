@@ -153,6 +153,17 @@ adapter use:
 Each capability also states whether it is required. `status.ready` is true only
 when all required capabilities are ready.
 
+## Cooperative stop (onCease)
+
+`onCease` is an asynchronous bootstrap callback that lets your JavaScript
+Application stop its own work when Liskov sends a cooperative stop request.
+Registering it advertises `cooperative_cease.v1` on UID-bound V4 signed
+diagnostic check-ins. Native runtimes never advertise this capability.
+
+When the callback runs, the Acurast job keeps its original schedule and its
+Service Credit reserve stays open through the scheduled end. Cooperative stop
+is release-gated. See [Capabilities and limits](./capabilities.md).
+
 ## Common bootstrap options
 
 | Option | Values/default |

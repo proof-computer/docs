@@ -419,8 +419,8 @@ trying again; repeating publication can reserve more Service Credits.
 
 ## Renewal and updates
 
-Lifecycle defaults to immediate update with the predecessor stopping when the
-successor is ready. Use `run_until_scheduled_end` when overlap would be unsafe:
+This example waits for the next renewal and lets the old runtime keep working
+through its scheduled end.
 
 ```json
 {
@@ -434,15 +434,25 @@ successor is ready. Use `run_until_scheduled_end` when overlap would be unsafe:
 }
 ```
 
-`immediate`, the default, starts the successor at the next executor pass,
-including when only the artifact changed, and `next_renewal` starts it one
-renewal lead before the running job's scheduled end. `stop_when_successor_ready`,
-the default, stops the old job once the new runtime is ready, and
-`run_until_scheduled_end` lets the old job run until its scheduled end. An
-executor pass is the next time Liskov checks the Application and starts work
-that is due. The renewal lead is how long before a job's scheduled end Liskov
-starts the next job when you choose to wait. The scheduled end is the end
-time registered for the current job's window.
+`immediate`, the default, makes the successor eligible at the next executor
+pass, including when only the artifact changed. An executor pass is the next
+time Liskov checks the Application and starts work that is due. With
+`next_renewal`, Liskov starts the successor one renewal lead before the
+running job's scheduled end. See
+[Schedules and updates](../configure/schedules-updates.md#updates) for when
+an immediate update can wait.
+
+With the default `stop_when_successor_ready`, Liskov asks the old job's runtime
+to stop its work once the new runtime has checked in. Liskov sends the request
+in response to the old runtime's signed diagnostic check-in. The JavaScript
+runtime can act on the request only if it registers an
+[`onCease` handler](../reference/runtime-sdk.md#cooperative-stop-oncease).
+Cooperative stop is release-gated. See
+[Capabilities and limits](../reference/capabilities.md).
+
+The old Acurast job is charged through its scheduled end, and its Service
+Credit reserve stays open through that end. An immediate update can overlap
+for up to a full job window, with charges for both jobs during the overlap.
 
 Renewal is valid only for continuous execution. Lead time is `automatic` or
 `fixed`; update timing is `immediate` or `next_renewal`.

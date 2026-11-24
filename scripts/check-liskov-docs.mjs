@@ -2653,6 +2653,25 @@ check(combined.includes('v0.3.38') && combined.includes('signed runtime-env fall
 const runtimeContextSdkPin = 'github:proof-computer/liskov-runtime-js#v0.3.38';
 const runtimeContextSdkCommit = 'f3cd9d4748900ed570f76d2d25cea1676a4b3464';
 const runtimeSdkReferencePage = readFileSync(join(docsRoot, 'reference/runtime-sdk.md'), 'utf8');
+
+// BKLG-20261122-t0lw: V5 cooperative stop and scheduled-end charges.
+for (const page of [
+  'reference/manifest-v5.md',
+  'configure/schedules-updates.md',
+  'operate/update.md',
+  'build/manifest-v5.md',
+]) {
+  const content = flatPage(page);
+  check(!content.includes('until the new runtime is ready'),
+    `${page}: describes overlap as ending at runtime readiness`);
+  check(content.includes('onCease') && content.includes('charged'),
+    `${page}: must explain onCease and scheduled-end charges`);
+}
+check(flatPage('configure/schedules-updates.md').includes('two consecutive jobs'),
+  'schedules and updates: must explain the continuous single-job limit');
+check(/^## Cooperative stop \(onCease\)$/m.test(runtimeSdkReferencePage),
+  'runtime SDK: missing cooperative stop section');
+
 const runtimeBuildText = buildRuntimeSdkPage.replace(/\s+/g, ' ');
 const runtimeReferenceText = runtimeSdkReferencePage.replace(/\s+/g, ' ');
 for (const [page, content] of [
