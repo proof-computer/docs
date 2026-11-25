@@ -101,7 +101,14 @@ current job's window.
 
 A continuous single-job Application keeps at most two consecutive jobs in
 play. If you publish again while both jobs are open, the successor waits until
-the older job's scheduled end, even with `update.timing: immediate`.
+the older job's scheduled end, even with `update.timing: immediate`. If both
+waits apply, Liskov waits for the older job first.
+
+In either case, open the Application's **Activity** tab and look for
+**Policy update waiting**. The summary shows which job the update is waiting
+behind (or its generation if the job ID is unavailable) and the expected time
+in UTC. For two open jobs, that time is the older job's scheduled end. For
+`next_renewal`, it is one renewal lead before the running job's scheduled end.
 
 When you change `jobs`, Liskov starts the new jobs at once, subject to normal
 launch checks. The old jobs run to their scheduled ends.

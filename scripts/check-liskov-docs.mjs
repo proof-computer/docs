@@ -2675,6 +2675,17 @@ for (const page of [
 }
 check(flatPage('configure/schedules-updates.md').includes('two consecutive jobs'),
   'schedules and updates: must explain the continuous single-job limit');
+
+// BKLG-20261122-ynk9: V5 update waits appear in Application Activity.
+for (const page of ['configure/schedules-updates.md', 'operate/update.md']) {
+  const content = flatPage(page);
+  check(content.includes('Policy update waiting') && content.includes('next_renewal'),
+    `${page}: must explain next_renewal and the Policy update waiting entry`);
+}
+check(/^## I published, but no new job started$/m.test(
+  readFileSync(join(docsRoot, 'troubleshooting/deployment.md'), 'utf8')),
+  'troubleshooting/deployment.md: missing the published update wait heading');
+
 check(/^## Cooperative stop \(onCease\)$/m.test(runtimeSdkReferencePage),
   'runtime SDK: missing cooperative stop section');
 

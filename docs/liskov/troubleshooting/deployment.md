@@ -30,6 +30,22 @@ not the organization Action Plan page.
 Use the displayed stage timestamps and expected boundaries. Do not resubmit a
 normal wait.
 
+## I published, but no new job started
+
+In the Console, open the Manifest V5 Application's **Activity** tab and look
+for **Policy update waiting**. The entry shows which job the update is waiting
+behind (or its generation) and the expected time in UTC.
+
+- With `update.timing: next_renewal`, the update waits for the next renewal
+  window.
+- If a continuous single-job Application has two consecutive jobs open, the
+  update waits until the older job's scheduled end, even with
+  `update.timing: immediate`.
+
+Wait until the time shown, then check for the successor job. The two-job wait
+lasts until the older job ends, even if you publish again. See
+[Schedules and updates](../configure/schedules-updates.md#updates).
+
 ## A new release waits for its artifact to be fetchable
 
 After you publish a new artifact for a Manifest V5 Application, you may see no
