@@ -264,10 +264,10 @@ If the build, attestation, source binding, or publication fails, use
 If a customer wants to verify a job's signing key, run
 `proof liskov application execution show APP_REF` with Liskov CLI `0.19.1`.
 This read prints available job provenance. Share the job ID, processor,
-Ed25519 public key and acknowledgement block from the CLI, and the artifact
-digest from the proof chain. Share the registration block too if the CLI
-prints it. A job key belongs to an Application release on a processor, so
-consecutive jobs on that processor can share it. See
+Ed25519 public key and acknowledgement block number when the CLI prints them,
+along with the artifact digest from the proof chain. If the CLI shows a
+registration block hash, share that too. A job key belongs to an Application
+release on a processor, so consecutive jobs on that processor can share it. See
 [Verify a job's signing key without Liskov](../operate/verify-job-keys.md).
 
 :::

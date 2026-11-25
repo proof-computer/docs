@@ -25,7 +25,9 @@ A running job can read its own id and keys. In the runtime SDK, `job.id` is the 
 
 Acurast deletes a job's match, assignment, and registration about an hour after the job ends. Every read is a historical read on an archive node, at a known block. A latest-state node returns nothing once that hour has passed.
 
-**Publisher shortcut.** In Liskov CLI `0.19.1`, run `proof liskov application execution show APP_REF` and share the job's acknowledgement and registration block numbers when they appear. With both numbers, the verifier can skip the searches below and read the blocks directly.
+**Publisher shortcut.** In Liskov CLI `0.19.1`, run `proof liskov application execution show APP_REF` and share the acknowledgement block number if it appears. The verifier can pass it to the example script as `--acknowledgement-block` to skip the second search below.
+
+If the CLI shows a registration block hash, the verifier can read historical state at that hash. The example script's `--registration-block` option takes a block number. Leave it out to let the script find the registration block with the first search below.
 
 You can find the two blocks from the job id alone.
 
