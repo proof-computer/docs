@@ -42,12 +42,12 @@ runtime startup are external waits with no fixed duration.
 
 ## 1. Install the CLI
 
-Use `@proof-computer/proof-cli-liskov` `0.19.0`. It contains the retained V5
+Use `@proof-computer/proof-cli-liskov` `0.19.1`. It contains the retained V5
 authoring, policy, and `application source-binding` verbs this path uses:
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov@0.19.0
+proof plugins install @proof-computer/proof-cli-liskov@0.19.1
 proof plugins
 proof liskov login
 proof liskov whoami
@@ -258,6 +258,19 @@ before changing the execution mode.
 
 If the build, attestation, source binding, or publication fails, use
 [Build, attestation, import, and publication](../troubleshooting/build-publish.md).
+
+:::info Optional preview
+
+If a customer wants to verify a job's signing key, run
+`proof liskov application execution show APP_REF` with Liskov CLI `0.19.1`.
+This read prints available job provenance. Share the job ID, processor,
+Ed25519 public key and acknowledgement block number when the CLI prints them,
+along with the artifact digest from the proof chain. If the CLI shows a
+registration block hash, share that too. A job key belongs to an Application
+release on a processor, so consecutive jobs on that processor can share it. See
+[Verify a job's signing key without Liskov](../operate/verify-job-keys.md).
+
+:::
 
 ## Next
 
