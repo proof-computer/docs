@@ -51,8 +51,14 @@ lead is how long before that scheduled end Liskov starts the next job when
 you choose to wait. The scheduled end is the end time registered for the
 current job's window.
 
-If a continuous single-job Application already has two jobs open, the
-successor waits until the older job's scheduled end. See
+If a continuous single-job Application already has two consecutive jobs open,
+the successor waits until the older job's scheduled end, even with
+`update.timing: immediate`.
+
+For either wait, open the Application's **Activity** tab in the Console and
+look for **Policy update waiting**. Read the summary for the job the update
+is waiting behind and the expected time in UTC. If the job ID is unavailable,
+the summary gives its generation. See
 [Schedules and updates](../configure/schedules-updates.md#updates).
 
 With the default `stop_when_successor_ready`, Liskov asks the old job's runtime
