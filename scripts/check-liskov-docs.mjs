@@ -1528,7 +1528,7 @@ check(encryptedRecipe.includes(encryptedExample), 'encrypted code module differs
 
 const cliPage = readFileSync(join(docsRoot, 'reference', 'cli.md'), 'utf8');
 check(cliContract.package === '@proof-computer/proof-cli-liskov', 'CLI fixture: wrong package');
-check(cliContract.version === '0.19.0', 'CLI fixture: wrong released version');
+check(cliContract.version === '0.19.1', 'CLI fixture: wrong released version');
 check(cliContract.command === 'liskov:application:logs', 'CLI fixture: missing logs command');
 check(cliContract.flags?.limit?.minimum === 1 && cliContract.flags?.limit?.maximum === 500, 'CLI fixture: wrong log limit bounds');
 check(
@@ -1552,6 +1552,11 @@ check(
   'capability matrix no longer classifies CLI 0.19.0 native payload upload, V8 validation, and workload revisions as Internal',
 );
 const applicationReads = cliPage.split('## Application reads')[1]?.split('\n## ')[0] ?? '';
+const jobProvenanceVersion = '`0.19.1`';
+const executionShowRow = applicationReads.split('\n').find((line) => line.startsWith('| `application execution show APPLICATION_ID` |')) ?? '';
+for (const token of [jobProvenanceVersion, 'provenance', '`--json`', '`executions`', '`explanation`', '`schedule`']) {
+  check(executionShowRow.includes(token), `CLI execution show reference omits ${token}`);
+}
 check(
   applicationReads.includes('application workload-revisions')
     && applicationReads.includes('--kind native_payload')
@@ -2054,9 +2059,9 @@ for (const [fileId, required] of Object.entries({
   'get-started/marketplace': ['Release-gated v1', 'engineering acceptance', 'not supported customer paths'],
   'marketplace/uptime-prober': ['Release-gated v1', 'engineering acceptance', 'not a supported customer offering'],
   'organizations/service-credits': ['read-only', 'Customer funding is release-gated', 'payment details'],
-  'get-started/github': ['Manifest V5', 'retained-v5-starter', 'v1.2.4', 'source-binding set', 'Pinned hello-liskov: ipfs://', 'Proof', 'only non-personal organization'],
+  'get-started/github': ['Manifest V5', 'retained-v5-starter', 'v1.2.4', 'source-binding set', 'Pinned hello-liskov: ipfs://', 'Proof', 'only non-personal organization', 'application execution show'],
   'operate/proof-chain': ['GitHub OIDC', 'policy digest', 'runtime instance'],
-  'operate/verify-job-keys': ['Preview', 'per application release', 'many consecutive jobs', '5447854', '5447858', '81eb8a4001c87f381e100cf7bd1013087e300e9f554c91f090997ad629e585ae'],
+  'operate/verify-job-keys': ['Preview', 'per application release', 'many consecutive jobs', '5447854', '5447858', '81eb8a4001c87f381e100cf7bd1013087e300e9f554c91f090997ad629e585ae', 'execution show', jobProvenanceVersion],
   'operate/processors': ['your org', 'whole fleet', 'Enterprise', 'storageBytes', 'read-only', 'not-found', 'Redaction and missing data are not the same state'],
   'troubleshooting/deployment': ['Normal waiting', 'Needs action', 'decision-id', 'processorAtMatchCap', 'authoringFault'],
   'troubleshooting/execution-coverage': [
@@ -3301,9 +3306,18 @@ for (const [, code] of v6RefusalRows) {
   sibling.reads.acknowledgementExtrinsic.args.job_id[1] = '409,697';
   differ(fixture.publisher.sequence, sibling.publisher.sequence, 'second job number');
   check(verifyRecorded(fixture).checks.step1.ok && verifyRecorded(sibling).checks.step1.ok, 'step 1 rejected the same key on a second job');
+  const verifyResult = entryRouteGithubPage.split('## 7. Verify the result')[1]?.split('\n## ')[0] ?? '';
+  const publisherPreview = /^:::info Optional preview\n[\s\S]*?^:::[ \t]*$/m.exec(verifyResult)?.[0] ?? '';
+  check(
+    publisherPreview.includes('../operate/verify-job-keys.md') && publisherPreview.includes(jobProvenanceVersion),
+    'GitHub verification step omits the optional job-key preview link or its CLI version',
+  );
   for (const file of files) {
-    if (!idFor(file).startsWith('get-started/')) continue;
-    check(!readFileSync(file, 'utf8').includes('verify-job-keys'), `${idFor(file)} links job-key verification from Get started`);
+    const id = idFor(file);
+    if (!id.startsWith('get-started/')) continue;
+    const content = readFileSync(file, 'utf8');
+    const defaultPath = id === 'get-started/github' ? content.replace(publisherPreview, '') : content;
+    check(!defaultPath.includes('verify-job-keys'), `${id} links job-key verification from the default Get started path`);
   }
 }
 

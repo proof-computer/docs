@@ -5,14 +5,14 @@ description: Public proof liskov v1 command tree, confirmations, machine-readabl
 
 # CLI
 
-The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.19.0` and
+The active Liskov plugin is `@proof-computer/proof-cli-liskov` `0.19.1` and
 requires Node.js 22 or later. All commands begin with `proof liskov`. This
 release includes the retained V5 authoring, policy, and `application
 source-binding` verbs listed below.
 
 ```bash
 npm install --global @proof-computer/proof-cli
-proof plugins install @proof-computer/proof-cli-liskov@0.19.0
+proof plugins install @proof-computer/proof-cli-liskov@0.19.1
 proof liskov --help
 ```
 
@@ -20,7 +20,7 @@ proof liskov --help
 
 The typed `organization_over_plan_caps` explanation described in
 [Application cap refusals](./statuses-actions-errors.md#application-cap-refusals)
-is verified in released plugin `0.17.0`, and the active `0.19.0` includes it.
+is verified in released plugin `0.17.0`, and the active `0.19.1` includes it.
 If you pinned an earlier plugin, install at least that version for the feature,
 including `--json` output that preserves the received `feature`, `used`, and
 `limit` fields:
@@ -98,6 +98,7 @@ environment.
 | --- | --- |
 | `application list` | List readable Applications. Each row leads with its lifecycle — `Current`, `Retiring`, or `Retired` — and keeps the stored status beside it. Add `--retired` for retired Applications only. |
 | `application status APPLICATION_ID` | Read customer-facing Application state. |
+| `application execution show APPLICATION_ID` | Show execution details and, from plugin `0.19.1`, each V5 job's available provenance on the served page. A one-shot `--json` read adds `executions` (the served page or `null`) alongside `explanation` and `schedule`. |
 | `application activity APP_REF` | Read activity; accepts `--limit` and `--before`. |
 | `application logs APP_REF` | Read managed Application logs: recent by default, streamed live with `--follow`, or the full retained history with `--from-start`. |
 | `application action-plan APP_REF` | Read current blockers and supported actions. |
@@ -116,10 +117,8 @@ read. Source `150b7c96d0caa23e757222dd1eb0288db48a368d` is not a released
 package. Use [Intended capacity versus remaining charges](../troubleshooting/execution-coverage.md)
 on Console until a later plugin release contains that commit.
 
-The interval schedule line on `application execution show`, and the `schedule`
-key its `--json` output adds beside `explanation` and `convergence`, are in
-source `8a930c4`, which is not in npm `0.15.0`. Fixed-interval execution itself
-is release-gated; see [Capabilities and limits](./capabilities.md).
+The command can also display interval schedule details. Fixed-interval
+execution remains release-gated. See [Capabilities and limits](./capabilities.md).
 
 The installed plugin also lists `application workload-revisions` and the
 `--kind native_payload` and `--descriptor` flags of `application artifact
