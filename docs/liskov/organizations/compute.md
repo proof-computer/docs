@@ -184,26 +184,25 @@ processor is free.
 
 ### Sizing
 
-Sizing puts memory in familiar terms. For each workload size — 512 MiB, 1 GiB,
-2 GiB, 4 GiB, 8 GiB, and 16 GiB — it counts:
+For each workload size, Liskov applies placement's 1.1× headroom and compares
+the result with the device's advertised total memory. No device reserve is
+subtracted. Android and the runtime use part of that memory, as the
+operating system does on a cloud instance.
+
+The panel counts processors for six sizes (512 MiB, 1 GiB, 2 GiB, 4 GiB, 8 GiB,
+and 16 GiB).
 
 - **Devices**: placeable processors with enough memory for **one workload of
-  that size per device**, after a measured memory reserve for the device
-  itself;
+  that size per device**;
 - **Online**: of those, the ones observed heartbeating; and
 - **Available now**: of those, the ones with a free schedule slot.
 
 Each column is its own count of processors, not a network-wide share
-multiplied into the row. The panel shows the reserve it assumed and the
-evidence it was measured from.
+multiplied into the row.
 
 Sizing is about **memory only**. It is **not a CPU-speed claim**, and a row is
 not a promise that a workload of that size runs as fast as it would on any
 particular cloud instance.
-
-Until Liskov has a measured device reserve, the whole panel is
-**unavailable** with `no_measured_basis`. Liskov does not substitute an assumed
-reserve.
 
 ## Check a placement
 

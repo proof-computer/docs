@@ -2470,7 +2470,7 @@ for (const [token, meaning] of [
   // Memory sizing, one workload per device, no speed claim.
   ['**one workload of\n  that size per device**', 'one workload per device'],
   ['It is **not a CPU-speed claim**', 'no CPU-speed claim'],
-  ['Liskov does not substitute an assumed\nreserve.', 'no assumed reserve'],
+  ["Liskov applies placement's 1.1× headroom and compares\nthe result with the device's advertised total memory. No device reserve is\nsubtracted.", 'sizing uses advertised total memory with placement headroom and no reserve'],
   // Final JIT stays the allocation authority.
   ['The answer is **advisory**. It is an upper bound', 'feasibility is advisory'],
   ['**final placement at launch** is what assigns a processor', 'final JIT authority'],
@@ -2486,6 +2486,7 @@ for (const [token, meaning] of [
 for (const [pattern, claim] of [
   [/fewer[ -]than[ -]20|20 or more|at least 20|\bsuppressed\b|\bwithheld\b|hidden count/i, 'a retired count or naming restriction'],
   [/do not subtract|worked out by subtraction/i, 'the withdrawn subtraction rule'],
+  [/\bmeasured\s+(?:(?:device|memory)\s+)*reserve\b/i, 'a measured reserve requirement for sizing'],
   [/\b(?:Compute|placement check)\b(?:\*\*)?(?: page)? (?:is|are) (?:now )?(?:available|released|live)\b/i, 'a production availability claim'],
   [/processor(?:Id)?s?\s*[:=]\s*["'`]?0x|\b[1-9]\d{2,}\s+(?:processors|devices|phones)\b/i, 'a processor inventory or sample count'],
   [/\b(?:t4g|EC2|equivalent to)\b/i, 'a cloud-instance speed equivalence'],
