@@ -110,8 +110,14 @@ behind (or its generation if the job ID is unavailable) and the expected time
 in UTC. For two open jobs, that time is the older job's scheduled end. For
 `next_renewal`, it is one renewal lead before the running job's scheduled end.
 
-When you change `jobs`, Liskov starts the new jobs at once, subject to normal
-launch checks. The old jobs run to their scheduled ends.
+Raising `jobs` starts the new jobs at once, subject to normal launch checks.
+With `stop_when_successor_ready`, Liskov asks the old jobs' runtimes to stop
+their work once the first new job's runtime has checked in. The old Acurast
+jobs stay open and are charged until their scheduled ends. Their Service
+Credit reserves stay open until then.
+
+Lowering `jobs` also starts the new jobs at once, subject to normal launch
+checks. The old jobs run to their scheduled ends.
 
 With the default `stop_when_successor_ready`, Liskov asks the old job's runtime
 to stop its work once the new runtime has checked in. Liskov sends the request

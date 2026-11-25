@@ -2681,6 +2681,12 @@ for (const page of [
 check(flatPage('configure/schedules-updates.md').includes('two consecutive jobs'),
   'schedules and updates: must explain the continuous single-job limit');
 
+// BKLG-20261122-gr12: raising the V5 job count triggers a cooperative stop request.
+const jobCountParagraphs = readFileSync(join(docsRoot, 'configure/schedules-updates.md'), 'utf8')
+  .split(/\r?\n[ \t]*\r?\n/).map((paragraph) => paragraph.replace(/\s+/g, ' '));
+check(jobCountParagraphs.some((paragraph) => paragraph.includes('Raising `jobs`') && paragraph.includes('asks the old jobs')),
+  'schedules and updates: explain the cooperative stop request in the paragraph about raising the job count');
+
 // BKLG-20261122-ynk9: V5 update waits appear in Application Activity.
 for (const page of ['configure/schedules-updates.md', 'operate/update.md']) {
   const content = flatPage(page);
