@@ -208,6 +208,8 @@ const unlistedIds = new Set([
   'organizations/spend-analysis',
   // The Compute guide, prepared from the committed Compute route vectors (BKLG-20260923-5y9y); BKLG-20260922-j7nu promotes it.
   'organizations/compute',
+  // BKLG-20260926-t3sj prepares this guide. BKLG-20260926-d8pf owns deployed acceptance.
+  'organizations/change-plan',
   // The Google sign-in and invitation guide, prepared from ADR-0155 and the merged Google packets (BKLG-20260923-v8en); BKLG-20260921-spd9 promotes it.
   'get-started/google-sign-in',
   // The Console New application guide, prepared from the merged Console flow (BKLG-20260922-1g4v); BKLG-20260624-8s1v promotes it into the GitHub guide.
@@ -2059,6 +2061,12 @@ for (const [fileId, required] of Object.entries({
   'get-started/marketplace': ['Release-gated v1', 'engineering acceptance', 'not supported customer paths'],
   'marketplace/uptime-prober': ['Release-gated v1', 'engineering acceptance', 'not a supported customer offering'],
   'organizations/service-credits': ['read-only', 'Customer funding is release-gated', 'payment details'],
+  'organizations/change-plan': [
+    'owner or admin', '**Monthly** or **Annual**', 'before confirming without changing the subscription',
+    'provider amounts and effective dates', 'A zero charge is a quoted amount', 'treat it as unknown',
+    '**Confirm and pay**', '**Continue to Stripe**', 'active or scheduled', '**Contact support**',
+    '**Get a new quote**', '**Retry confirmation**',
+  ],
   'get-started/github': ['Manifest V5', 'retained-v5-starter', 'v1.2.4', 'source-binding set', 'Pinned hello-liskov: ipfs://', 'Proof', 'only non-personal organization', 'application execution show'],
   'operate/proof-chain': ['GitHub OIDC', 'policy digest', 'runtime instance'],
   'operate/verify-job-keys': ['Preview', 'per application release', 'many consecutive jobs', '5447854', '5447858', '81eb8a4001c87f381e100cf7bd1013087e300e9f554c91f090997ad629e585ae', 'execution show', jobProvenanceVersion],
@@ -2142,6 +2150,8 @@ for (const [fileId, required] of Object.entries({
 for (const [pattern, message] of [
   [/\| Service Credit balance, reservation, and ledger reads \| v1; read-only surfaces are supported/, 'capability matrix omits supported read-only Service Credit surfaces'],
   [/\| Stripe USD checkout and Service Credit issuance \| Release-gated v1;/, 'capability matrix does not gate Stripe funding'],
+  [/\| Console plan-change preview and confirmation \| Release-gated v1\./, 'capability matrix does not gate Console plan changes'],
+  [/\| Paid subscription activation \| Release-gated;/, 'capability matrix does not gate paid subscription activation'],
   [/\| Curated first-party Marketplace launch \| Release-gated v1;/, 'capability matrix does not gate Marketplace launch'],
   [/\| Uptime Prober \| Release-gated v1;/, 'capability matrix does not gate Uptime Prober'],
   [/\| Organization-gated processor record in Console \| v1;[^\n]+Enterprise \|/, 'capability matrix omits the released processor record or its Enterprise boundary'],
@@ -2152,6 +2162,33 @@ for (const [pattern, message] of [
   [/\| Verify a job's signing key, artifact and processor attestation from public Acurast data \| Preview, open to anyone;/, 'capability matrix omits the public job-key verification preview'],
 ]) {
   check(pattern.test(capabilitiesPage), message);
+}
+
+const planChangeContract = JSON.parse(readFileSync(join(root, 'fixtures/liskov-plan-change-contract.json'), 'utf8'));
+check(planChangeContract.schema === 'proof.liskov.docs-plan-change-contract.v1' &&
+  planChangeContract.decision === 'ADR-0142' &&
+  planChangeContract.availability === 'release-gated' && planChangeContract.rolloutEvidence === null,
+  'plan-change source map must keep deployed acceptance pending');
+for (const [packet, repo] of [
+  ['BKLG-20260926-7vk0', 'liskov-rs'], ['BKLG-20260926-ubwu', 'liskov-rs'],
+  ['BKLG-20260926-7lg2', 'liskov-ui'], ['BKLG-20260926-80y2', 'liskov-ui'],
+]) {
+  const owner = planChangeContract.prerequisites?.[packet];
+  check(owner?.repo === repo && /^[0-9a-f]{40}$/u.test(owner.commit),
+    `plan-change source map must pin the ${packet} merge revision in ${repo}`);
+}
+const {preview: planPreview, confirm: planConfirm} = planChangeContract.api;
+const reviewedFields = ['target', 'quoteDigest', 'idempotencyKey'];
+check(planChangeContract.consolePath === '/settings/account/change-plan' &&
+  planPreview.route === 'POST /api/organizations/:orgId/billing/subscription/preview' &&
+  planConfirm.route === 'POST /api/organizations/:orgId/billing/subscription/confirm',
+  'plan-change source map must pin the Console page and both API routes');
+check(JSON.stringify(planPreview.requestFields) === JSON.stringify(['planId', 'interval']) &&
+  reviewedFields.every((field) => planPreview.responseFields.includes(field)) &&
+  JSON.stringify(planConfirm.requestFields) === JSON.stringify([...reviewedFields, 'acknowledgement']),
+  'plan-change confirmation must bind the reviewed target, digest, and replay key');
+for (const file of files.filter((file) => idFor(file).startsWith('get-started/'))) {
+  check(!readFileSync(file, 'utf8').includes('change-plan'), `${idFor(file)} links to the gated Change plan flow`);
 }
 
 // BKLG-20261013-usew extends k3fe (ADR-0062): both new V4 imports and
