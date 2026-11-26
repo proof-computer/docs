@@ -148,8 +148,16 @@ proof liskov application signer APPLICATION_ID
 ```
 
 The readback names the policy the signer is paired against, each signer's
-liveness, open sign requests, terminal counts, dispatch lag and the last
-signature. **Standing** is the first of these that applies:
+liveness and reported version, open sign requests, terminal counts, dispatch
+lag and the last signature.
+
+The `version` column can show `(update recommended)`, `(update required)` or
+`(unknown)` after the version. The `Signer version: minimum` line gives the
+supported minimum and adds `required from` with the date when one is set.
+An outdated signer can keep signing. A signer below the minimum may stop
+signing at an Acurast runtime upgrade until you update or restart it.
+
+**Standing** is the first of these that applies:
 
 - `unpaired`, when no signer is paired;
 - `offline (disconnected)`, when a paired signer is not online and not connected;
