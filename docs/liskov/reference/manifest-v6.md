@@ -76,8 +76,8 @@ release authorizes the schema pair in production.
 
 | Repository | Bundle merge commit | liskov-rs commit | Source digest | Bundle manifest SHA-256 |
 | --- | --- | --- | --- | --- |
-| `proof-computer/proof-cli-liskov` | `4f7cc786e60dad26971f18a15d58e6388c431b01` | `bf93a1f675f3adbf5ff1abefc62fb3b24bb33d7c` | `sha256:1da16ea6817fde65dfe19ff2f06510d2255b309890e113846d89c076924733f1` | `sha256:d081e6de316015b58e2be8eb9bddd63cbc3a345955be13eb85e87a33637d7e9a` |
-| `proof-computer/liskov-examples` | `5e2666f865556abe7e85f3fe724adc4f7b6db2af` | `bf93a1f675f3adbf5ff1abefc62fb3b24bb33d7c` | `sha256:1da16ea6817fde65dfe19ff2f06510d2255b309890e113846d89c076924733f1` | `sha256:d081e6de316015b58e2be8eb9bddd63cbc3a345955be13eb85e87a33637d7e9a` |
+| `proof-computer/proof-cli-liskov` | `a5ea6a99d869746cc7b964a376b3c989aad41754` | `bbb0dbe79178a0bf74f048c664c52b5e91697697` | `sha256:4f5cba9d543ac34938f52d388f0ccbb5b8e1d457536386c6f0459ffd4c65249b` | `sha256:d2e4460aa9af497e0e0f638e470fa623bb8d50efce976fab9f721b4b7b513590` |
+| `proof-computer/liskov-examples` | `74146b88ff0551ddd016065fb93b05d583e2ec1d` | `bbb0dbe79178a0bf74f048c664c52b5e91697697` | `sha256:4f5cba9d543ac34938f52d388f0ccbb5b8e1d457536386c6f0459ffd4c65249b` | `sha256:d2e4460aa9af497e0e0f638e470fa623bb8d50efce976fab9f721b4b7b513590` |
 
 ## Root document
 
@@ -122,7 +122,7 @@ unknown field.
 | `name` | yes | matches `[a-z0-9][a-z0-9-]{0,30}`; unique across `ingress` |
 | `localPort` | yes | the port the application listens on inside the job, 1–65535 |
 | `endpoints` | yes | 1–4 endpoints |
-| `health` | no | liveness and readiness for this service |
+| `health` | yes, on `native_image` | liveness and readiness for this service |
 
 Names are bounded and unique so that every attachment has one stable pointer
 for digests and diagnostics.
@@ -152,20 +152,22 @@ Authoring `protection` is an unknown field.
 
 ### `health`
 
-Optional per service. It carries `live`, `ready`, or both; a `health` block
-with neither probe is refused at its own pointer.
+Each service on `native_image` must declare `health` with `live`, `ready`,
+or both. Validation reports missing or empty health at
+`/ingress/<service>/health`.
 
 `live` answers whether the process is up. `ready` answers whether it is serving
 correctly, which is a different question.
 
-Each probe is exactly one of three shapes, and the shape is the discriminator —
-no `kind` field states the same fact twice:
+Each probe uses exactly one of the following shapes.
 
 | Shape | Rule |
 | --- | --- |
 | `{http: PATH, contains: TEXT}` | `PATH` starts with `/` and is at most 256 characters drawn from ``A-Za-z0-9._~!$&'()*+,;=:@%/?-``. Success is a 2xx response; when `contains` is given, its body must also contain that substring. `contains` is optional. |
 | `{tcp: PORT}` | A TCP connect to a local port, 1–65535. |
-| `{exec: [ARG, …]}` | Run a command in the job, 1–32 arguments, none of them empty. Healthy on exit status zero. |
+
+V6 validation refuses an `exec` probe at `/ingress/<service>/health/<slot>`,
+where `<slot>` is `live` or `ready`.
 
 Probe timeouts and intervals are platform-owned and are not authored.
 

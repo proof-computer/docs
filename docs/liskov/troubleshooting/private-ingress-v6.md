@@ -66,7 +66,7 @@ assigned, and the endpoint's `readyAtMs` is the time it last succeeded.
 | --- | --- | --- |
 | `access_probe_failed` | The probe ran and did not succeed. | Check that the service is listening on its `localPort`, and that an `http` probe's path answers 2xx with the substring you named. |
 | `access_probe_timeout` | The probe did not answer in time. | Check that the service is not blocked or overloaded. Probe timeouts are set by the platform and are not authored. |
-| `access_probe_unsupported` | The runtime cannot run this probe shape, as with an `exec` probe. | Use an `http` or `tcp` probe instead, then validate and publish again. |
+| `access_probe_unsupported` | The runtime reported that it could not run the probe. V6 validation accepts only `http` and `tcp` probes. | If you see this for a validated V6 manifest, contact support with the attachment ID and failure code. |
 
 The probe shapes are in the
 [Application Manifest V6 reference](../reference/manifest-v6.md).

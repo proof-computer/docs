@@ -3030,9 +3030,26 @@ check(
   v6IngressPage.includes(v6CandidateContract.identities?.signer?.sourceCommit ?? 'missing-signer'),
   'V6 candidate: private-ingress omits the signer source commit',
 );
-const v6BundleNames = ['cli', 'examples'];
+// BKLG-20261126-lr1d: xyny and jese vendored the same liskov-rs bundle.
+const v6OwnerBundle = {
+  bundleOwnerCommit: 'bbb0dbe79178a0bf74f048c664c52b5e91697697',
+  sourceDigest: 'sha256:4f5cba9d543ac34938f52d388f0ccbb5b8e1d457536386c6f0459ffd4c65249b',
+  manifestDigest: 'sha256:d2e4460aa9af497e0e0f638e470fa623bb8d50efce976fab9f721b4b7b513590',
+};
+const v6BundleSources = {
+  cli: {
+    repository: 'proof-computer/proof-cli-liskov',
+    sourceCommit: 'a5ea6a99d869746cc7b964a376b3c989aad41754',
+    ...v6OwnerBundle,
+  },
+  examples: {
+    repository: 'proof-computer/liskov-examples',
+    sourceCommit: '74146b88ff0551ddd016065fb93b05d583e2ec1d',
+    ...v6OwnerBundle,
+  },
+};
 check(
-  JSON.stringify(Object.keys(v6CandidateContract.policyBundles ?? {}).sort()) === JSON.stringify(v6BundleNames),
+  JSON.stringify(Object.keys(v6CandidateContract.policyBundles ?? {}).sort()) === JSON.stringify(Object.keys(v6BundleSources).sort()),
   'V6 candidate: policy bundle set drifted',
 );
 const v6PublicationPairs = [5, 6].map(schemaVersion => ({
@@ -3041,24 +3058,31 @@ const v6PublicationPairs = [5, 6].map(schemaVersion => ({
   releaseMode: 'source',
 }));
 const v6ManifestLines = v6ManifestPage.split('\n');
-for (const bundleName of v6BundleNames) {
+for (const [bundleName, source] of Object.entries(v6BundleSources)) {
   const bundle = v6CandidateContract.policyBundles?.[bundleName];
   check(bundle != null, `V6 candidate: ${bundleName} policy bundle missing`);
   if (bundle == null) continue;
-  check(/^[0-9a-f]{40}$/u.test(bundle.sourceCommit ?? ''), `V6 candidate: ${bundleName} bundle merge commit missing`);
-  check(/^[0-9a-f]{40}$/u.test(bundle.bundleOwnerCommit ?? ''), `V6 candidate: ${bundleName} bundle owner commit missing`);
-  check(/^sha256:[0-9a-f]{64}$/u.test(bundle.sourceDigest ?? ''), `V6 candidate: ${bundleName} source digest missing`);
-  check(/^sha256:[0-9a-f]{64}$/u.test(bundle.manifestDigest ?? ''), `V6 candidate: ${bundleName} manifest digest missing`);
+  for (const [field, expected] of Object.entries(source)) {
+    check(bundle[field] === expected, `V6 candidate: ${bundleName} bundle ${field} differs from the pinned source`);
+  }
   check(Array.isArray(bundle.supportedManifestSchemaVersions) && bundle.supportedManifestSchemaVersions.includes(6), `V6 candidate: ${bundleName} must support manifest schema 6`);
   check(
     JSON.stringify(bundle.publicationPairs) === JSON.stringify(v6PublicationPairs),
     `V6 candidate: ${bundleName} publication pairs must be exactly V5 source and V6 source`,
   );
-  const bundleRow = v6ManifestLines.find(line => line.startsWith(`| \`${bundle.repository}\` |`)) ?? '';
-  for (const field of ['sourceCommit', 'bundleOwnerCommit', 'sourceDigest', 'manifestDigest']) {
-    check(bundleRow.includes(` \`${bundle[field]}\` |`), `V6 candidate: manifest-v6 omits the ${bundleName} bundle ${field}`);
-  }
+  const bundleRow = `| ${Object.values(source).map(value => `\`${value}\``).join(' | ')} |`;
+  const documentedRows = v6ManifestLines.filter(line => line.startsWith(`| \`${source.repository}\` |`));
+  check(documentedRows.length === 1 && documentedRows[0] === bundleRow,
+    `V6 candidate: manifest-v6 must have one ${bundleName} bundle row matching the pinned source`);
 }
+const [, v6HealthSection = ''] = v6ManifestPage.split(/^### `health`$/mu);
+const v6Health = v6HealthSection.split(/^## /mu, 1)[0];
+check(v6ManifestLines.some(line => line.startsWith('| `health` | yes, on `native_image` |')),
+  'V6 candidate: manifest-v6 must require service health on native_image');
+for (const pointer of ['/ingress/<service>/health', '/ingress/<service>/health/<slot>']) {
+  check(v6Health.includes(`\`${pointer}\``), `V6 candidate: manifest-v6 health section must document ${pointer}`);
+}
+check(!v6Health.includes('| `{exec:'), 'V6 candidate: manifest-v6 must omit exec from the supported probe table');
 check(
   JSON.stringify(v6CandidateContract.pages?.unlisted) === JSON.stringify(['reference/manifest-v6', 'operate/private-ingress-v6', 'troubleshooting/private-ingress-v6']),
   'V6 candidate: unlisted page list drifted',
