@@ -1,0 +1,45 @@
+{
+  "schema": "proof.liskov.docs-plan-change-contract.v1",
+  "decision": "ADR-0142",
+  "availability": "release-gated",
+  "rolloutEvidence": null,
+  "prerequisites": {
+    "BKLG-20260926-7vk0": {
+      "repo": "liskov-rs",
+      "commit": "f71637ba4bc4cd07180d6b4d1f5532f633a439fb"
+    },
+    "BKLG-20260926-ubwu": {
+      "repo": "liskov-rs",
+      "commit": "7089f011a498253c1f49f332a2d47f0990006397"
+    },
+    "BKLG-20260926-7lg2": {
+      "repo": "liskov-ui",
+      "commit": "0a11e8649ad2f1f09d20983c4dff4979412772bd"
+    },
+    "BKLG-20260926-80y2": {
+      "repo": "liskov-ui",
+      "commit": "d6ce727612b844b3a2cd026962d8d139f88da23d"
+    }
+  },
+  "consolePath": "/settings/account/change-plan",
+  "api": {
+    "sourcePath": "crates/liskov-control-plane-api/src/plan_change_preview.rs",
+    "preview": {
+      "route": "POST /api/organizations/:orgId/billing/subscription/preview",
+      "requestFields": ["planId", "interval"],
+      "intervals": ["month", "year"],
+      "responseFields": [
+        "ok", "version", "target", "effective", "currency", "unit", "tax",
+        "dueNow", "nextRenewal", "paymentRequirement", "overages", "contactUrl",
+        "currentDiscounts", "targetDiscounts", "requiredAcknowledgement",
+        "quoteDigest", "idempotencyKey"
+      ]
+    },
+    "confirm": {
+      "route": "POST /api/organizations/:orgId/billing/subscription/confirm",
+      "requestFields": ["target", "quoteDigest", "idempotencyKey", "acknowledgement"],
+      "acknowledgements": ["confirm", "lose_current_discount"],
+      "conflicts": ["plan_change_quote_moved", "plan_change_over_cap", "plan_change_acknowledgement_required"]
+    }
+  }
+}
