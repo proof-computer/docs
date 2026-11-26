@@ -220,7 +220,7 @@ grammar. A V6 manifest for this journey declares:
 
 - your integration once under `integrations.tailscale`;
 - each local HTTP service under `ingress.http`, with a Tailscale endpoint and
-  optional `live` and `ready` probes;
+  a `health` block containing `live`, `ready`, or both;
 - `access.ssh.provider.kind: tailscale`, if you want SSH;
 - `deployment.placement.allow` with a `manager` rule naming your manager id;
   and

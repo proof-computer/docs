@@ -91,8 +91,12 @@ unknown field and fails closed.
 ## `ingress`
 
 Optional. It still has one key, `http`, holding 1–8 services with 1–4
-endpoints each. Service names, endpoint names, `localPort`, and `health` are
-V6's, unchanged. A `tcp` or `udp` key is an unknown field.
+endpoints each. Service names, endpoint names, and `localPort` follow V6.
+A `tcp` or `udp` key is an unknown field.
+
+In V7, `health` is optional. A `health` block must contain `live`, `ready`,
+or both. Each slot accepts the [HTTP and TCP probe shapes](./manifest-v6.md#health)
+and an `exec` probe with 1–32 nonempty arguments.
 
 ### Endpoints
 

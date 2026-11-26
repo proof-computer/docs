@@ -93,11 +93,11 @@
   "policyBundles": {
     "cli": {
       "repository": "proof-computer/proof-cli-liskov",
-      "sourceCommit": "4f7cc786e60dad26971f18a15d58e6388c431b01",
+      "sourceCommit": "a5ea6a99d869746cc7b964a376b3c989aad41754",
       "ownerPath": "src/policy-client-bundle/source.json",
-      "bundleOwnerCommit": "bf93a1f675f3adbf5ff1abefc62fb3b24bb33d7c",
-      "sourceDigest": "sha256:1da16ea6817fde65dfe19ff2f06510d2255b309890e113846d89c076924733f1",
-      "manifestDigest": "sha256:d081e6de316015b58e2be8eb9bddd63cbc3a345955be13eb85e87a33637d7e9a",
+      "bundleOwnerCommit": "bbb0dbe79178a0bf74f048c664c52b5e91697697",
+      "sourceDigest": "sha256:4f5cba9d543ac34938f52d388f0ccbb5b8e1d457536386c6f0459ffd4c65249b",
+      "manifestDigest": "sha256:d2e4460aa9af497e0e0f638e470fa623bb8d50efce976fab9f721b4b7b513590",
       "manifestPath": "src/policy-client-bundle/policy-client-bundle.json",
       "supportedManifestSchemaVersions": [4, 5, 6, 7, 8],
       "publicationPairs": [
@@ -115,11 +115,11 @@
     },
     "examples": {
       "repository": "proof-computer/liskov-examples",
-      "sourceCommit": "5e2666f865556abe7e85f3fe724adc4f7b6db2af",
+      "sourceCommit": "74146b88ff0551ddd016065fb93b05d583e2ec1d",
       "ownerPath": "tests/policy-client-bundle.test.ts",
-      "bundleOwnerCommit": "bf93a1f675f3adbf5ff1abefc62fb3b24bb33d7c",
-      "sourceDigest": "sha256:1da16ea6817fde65dfe19ff2f06510d2255b309890e113846d89c076924733f1",
-      "manifestDigest": "sha256:d081e6de316015b58e2be8eb9bddd63cbc3a345955be13eb85e87a33637d7e9a",
+      "bundleOwnerCommit": "bbb0dbe79178a0bf74f048c664c52b5e91697697",
+      "sourceDigest": "sha256:4f5cba9d543ac34938f52d388f0ccbb5b8e1d457536386c6f0459ffd4c65249b",
+      "manifestDigest": "sha256:d2e4460aa9af497e0e0f638e470fa623bb8d50efce976fab9f721b4b7b513590",
       "manifestPath": "policy-client-bundle/policy-client-bundle.json",
       "supportedManifestSchemaVersions": [4, 5, 6, 7, 8],
       "publicationPairs": [
