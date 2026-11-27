@@ -1,17 +1,17 @@
 {
   "schema": "proof.liskov.docs-v6-candidate-contract.v1",
-  "verifiedAt": "2026-11-24",
+  "verifiedAt": "2026-11-27",
   "documentationMode": "candidate",
   "availability": "not_released",
   "releaseToggle": null,
   "ownersReadAt": {
     "docs": "ada3da7b58096394c84c0a003b49d982b882c386",
-    "proof-cli-liskov": "997b74b332a4cf9b66e8e465176c18172c8f36bd",
-    "liskov-ui": "9b03674d4d8acfb6cb37bb2550cba1d693143363",
+    "proof-cli-liskov": "a5ea6a99d869746cc7b964a376b3c989aad41754",
+    "liskov-ui": "b7a6633077ac18d170c4efcd588eaa88521b401b",
     "liskov-rs": "4526233012b28c33a849e8f1cb1ddac220ccf179",
     "liskov-examples": "5e2666f865556abe7e85f3fe724adc4f7b6db2af",
     "liskov-runtime-cargo": "634ffcfab2b6d5dcc751dcbb3edec92cbf682ce5",
-    "liskov-self-custody-signer": "cfdf7fbf9b168c6ba71dc0ba742f0b6835beae4b"
+    "liskov-self-custody-signer": "55ca4f083445e770468e01b66e6d7cfb58913011"
   },
   "pages": {
     "unlisted": [
@@ -27,19 +27,19 @@
     "cli": {
       "repository": "proof-computer/proof-cli-liskov",
       "package": "@proof-computer/proof-cli-liskov",
-      "sourceCommit": "997b74b332a4cf9b66e8e465176c18172c8f36bd",
-      "sourceVersion": "0.19.0",
+      "sourceCommit": "a5ea6a99d869746cc7b964a376b3c989aad41754",
+      "sourceVersion": "0.19.1",
       "sourceVersionPath": "package.json",
       "ownerPath": "package.json",
       "releasedRefContainingCommit": null,
-      "nearestTag": "v0.18.1",
-      "nearestTagCommit": "e438868c228cdf6e94a1aa584285141d88b86a27",
+      "nearestTag": "v0.19.1",
+      "nearestTagCommit": "e55247d18c59d0c5e2c040385b3e5c8a15352088",
       "nearestTagContainsSource": false
     },
     "console": {
       "repository": "proof-computer/liskov-ui",
       "package": "slipway-ui",
-      "sourceCommit": "9b03674d4d8acfb6cb37bb2550cba1d693143363",
+      "sourceCommit": "b7a6633077ac18d170c4efcd588eaa88521b401b",
       "sourceVersion": "0.0.0",
       "sourceVersionPath": "package.json",
       "ownerPath": "web-app/src/ComputePlacementPage/PlacementV6Fields.tsx",
@@ -80,14 +80,14 @@
     "signer": {
       "repository": "proof-computer/liskov-self-custody-signer",
       "package": "liskov-self-custody-signer",
-      "sourceCommit": "cfdf7fbf9b168c6ba71dc0ba742f0b6835beae4b",
+      "sourceCommit": "55ca4f083445e770468e01b66e6d7cfb58913011",
       "sourceVersion": "0.3.0",
       "sourceVersionPath": "crates/liskov-self-custody-signer/Cargo.toml",
       "ownerPath": "crates/liskov-self-custody-signer/Cargo.toml",
       "releasedRefContainingCommit": null,
-      "nearestTag": "v0.2.0",
-      "nearestTagCommit": "ba8b00215988dfac6b3887970c6805084257b500",
-      "nearestTagContainsSource": false
+      "nearestTag": "v0.3.0",
+      "nearestTagCommit": "a5ccfa05ddc7122e0be9525700482b8143d16afb",
+      "nearestTagContainsSource": true
     }
   },
   "policyBundles": {
@@ -190,7 +190,7 @@
     }
   ],
   "cliCommandVisibility": {
-    "sourceCommit": "997b74b332a4cf9b66e8e465176c18172c8f36bd",
+    "sourceCommit": "a5ea6a99d869746cc7b964a376b3c989aad41754",
     "hiddenByCommand": {
       "liskov application placement-refusals": false,
       "liskov application placement-plan": false,

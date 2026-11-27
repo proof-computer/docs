@@ -46,8 +46,9 @@ strings — applies here in full.
 V6 is installed but authorized by no production handler generation, and nothing
 is released or immutable until a generation lists the schema pair. The release
 digests below stay unpinned until then. The merged clients, helper, provider
-and signer are a different list: each row is a source that exists now, and
-none of those commits is in a release tag.
+and signer are a different list: each row is a source that exists now. The
+signer commit is in tag `v0.3.0`. The other commits are in no release tag.
+Every released artifact is pinned when V6 is released.
 
 | Artifact | Status |
 | --- | --- |
@@ -59,11 +60,11 @@ none of those commits is in a release tag.
 
 | Piece | Merged source | Released artifact |
 | --- | --- | --- |
-| CLI `@proof-computer/proof-cli-liskov` | `997b74b332a4cf9b66e8e465176c18172c8f36bd`. `package.json` says `0.19.0`; tag `v0.18.1` does not contain this commit | Pinned when V6 is released |
-| Console `slipway-ui` | `9b03674d4d8acfb6cb37bb2550cba1d693143363`. The package version is `0.0.0`, and the repository has no release tag | Pinned when V6 is released |
+| CLI `@proof-computer/proof-cli-liskov` | `a5ea6a99d869746cc7b964a376b3c989aad41754`. `package.json` says `0.19.1`; tag `v0.19.1` does not contain this commit | Pinned when V6 is released |
+| Console `slipway-ui` | `b7a6633077ac18d170c4efcd588eaa88521b401b`. The package version is `0.0.0`, and the repository has no release tag | Pinned when V6 is released |
 | Cargo runtime helper `liskov-runtime-cargo` | `634ffcfab2b6d5dcc751dcbb3edec92cbf682ce5`. `Cargo.toml` says `0.12.2`; tag `v0.12.2` does not contain this commit. `src/discovery.rs` requests Tailscale discovery with `discoveryVersion` 1 | Pinned when V6 is released |
 | Tailscale provider client | Pinned by liskov-rs `4526233012b28c33a849e8f1cb1ddac220ccf179` at `crates/liskov-runtime-ssh/src/provider_clients.rs`: repository `proof-computer/tailscale`, tag `v1.98.10-liskov.1`, descriptor `tailscale-aarch64-1.98.10-liskov.1` | Pinned when V6 is released |
-| Self-custody signer `liskov-self-custody-signer` | `cfdf7fbf9b168c6ba71dc0ba742f0b6835beae4b`. The crate version is `0.3.0`; tag `v0.2.0` does not contain this commit | Pinned when V6 is released |
+| Self-custody signer `liskov-self-custody-signer` | `55ca4f083445e770468e01b66e6d7cfb58913011`. The crate version is `0.3.0`; tag `v0.3.0` contains this commit | Pinned when V6 is released |
 
 `proof liskov application manifest validate` evaluates a local file with the
 CLI's vendored policy bundle, which supports Manifest and Policy V6 for local

@@ -210,7 +210,7 @@ exists on chain. Ambiguous requests and requests rejected by the signer
 stay held.
 
 The merged signer daemon is `liskov-self-custody-signer` `0.3.0` at
-`cfdf7fbf9b168c6ba71dc0ba742f0b6835beae4b`. Tag `v0.2.0` does not contain that
+`55ca4f083445e770468e01b66e6d7cfb58913011`. Tag `v0.3.0` contains that
 commit. A released signer artifact is pinned when V6 is released.
 
 ## 5. Write and validate the V6 manifest
